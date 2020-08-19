@@ -1,0 +1,46 @@
+.content {
+  margin: 15px;
+  padding: 0;
+  position: relative;
+}
+.wrapper {
+  margin: 0 20px;
+}
+.header {
+  height: 21px;
+}
+.header-btn {
+  padding: 0 10px;
+}
+.center {
+  margin-top: 20px;
+  text-align: center;
+}
+.SearchResult {
+  font-size: 18px;
+  line-height: 32px;
+}
+
+/*  表格表单  */
+.el-table__row:nth-child(even) {
+  background-color: #fafafa;
+}
+.form-item {
+  margin-bottom: 0 !important;
+}
+.must{
+  padding-right: 5px;
+  color: red
+}
+
+/* 输入框输入数字类型 样式处理 */
+/*谷歌*/
+/deep/ input::-webkit-outer-spin-button,
+/deep/ input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
+/*火狐*/
+/deep/ input[type="number"]{
+  -moz-appearance: textfield;
+}
+

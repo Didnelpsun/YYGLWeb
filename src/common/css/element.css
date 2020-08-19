@@ -1,0 +1,62 @@
+/*
+   ElementUI 样式修改
+*/
+.el-main { padding: 0 !important; }
+/*  ElementUI 撑开滚动条 */
+.el-scrollbar {height: 100%;}
+.aside .el-scrollbar__wrap,
+.scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+
+/*  图片上传  */
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px !important;
+  text-align: center;
+}
+
+/*  树形图选中的颜色  */
+
+/*.MenuTree .el-tree-node:focus>.el-tree-node__content,
+.AreaTree .el-tree-node:focus>.el-tree-node__content,
+.OrgTree .el-tree-node:focus>.el-tree-node__content,*/
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: #d2d4d7 !important;
+  border-radius: 5px !important;
+}
+
+/*  按钮禁用颜色 */
+.el-input.is-disabled .el-input__inner {
+  background-color: transparent !important;
+  color: #606266 !important;
+}
+.el-input-group__append button.el-button {
+  background: #409EFF !important;
+  color: #fff !important;
+}
+
+.table-headerStyle {
+  background: #f2f2f2 !important;
+}
+.el-select, .el-date-editor, .el-cascader { width: 100% !important; }
+/* 图片浏览 关闭按钮 */
+.el-image-viewer__btn.el-image-viewer__close { color: #fff !important; }

@@ -1,0 +1,91 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "AreaList": [
+    {
+      "name": "湖北省",
+      "area_Code": "1",
+      "area_Type": 0,
+      "parent_Area": 0,
+      "pinyin_Abbreviation": null,
+      "abbreviation": null,
+      "is_Provincial_Capital": true,
+      "status": 0,
+      "hasChild": true,
+      "id": 1
+    },
+    {
+      "name": "陕西省",
+      "area_Code": "123",
+      "area_Type": 0,
+      "parent_Area": 0,
+      "pinyin_Abbreviation": null,
+      "abbreviation": null,
+      "is_Provincial_Capital": true,
+      "status": 0,
+      "hasChild": false,
+      "id": 10,
+      "child": [
+        {
+          "name": "陕西市1111",
+          "area_Code": "222",
+          "area_Type": 0,
+          "parent_Area": 10,
+          "pinyin_Abbreviation": null,
+          "abbreviation": null,
+          "is_Provincial_Capital": true,
+          "status": 0,
+          "id": 45
+        },
+        {
+          "name": "陕西市222",
+          "area_Code": "22342",
+          "area_Type": 0,
+          "parent_Area": 10,
+          "pinyin_Abbreviation": null,
+          "abbreviation": null,
+          "is_Provincial_Capital": true,
+          "status": 0,
+          "id": 123
+        }
+      ]
+    }
+  ],
+  "AreaList2": [
+    {
+      "name": "武汉市",
+      "area_Code": "1",
+      "area_Type": 0,
+      "parent_Area": 1,
+      "pinyin_Abbreviation": null,
+      "abbreviation": null,
+      "is_Provincial_Capital": true,
+      "status": 0,
+      "id": 2
+    }
+  ],
+  "Redirect": {
+    "url": "/main/UserList",
+    "parentid": "5d3980fc-aaba-457a-8e81-db22517f1be7",
+    "parentname": null,
+    "parenticon": null,
+    "name": "系统用户",
+    "menutype": 2,
+    "sort": 8,
+    "enabled": true,
+    "resourceid": "c3047ce8-83ea-4afd-87e7-a127f5b2a96a",
+    "icon": "string",
+    "id": "0efafd67-7edc-446f-a067-28734a3102e9",
+    "createuserid": "",
+    "createtime": "2020-06-11 ",
+    "updateuserid": "6808eaf4-914f-4091-85a6-eee862c23b9b",
+    "updatetime": "2020-06-20 ",
+    "enable": true
+  }
+}
