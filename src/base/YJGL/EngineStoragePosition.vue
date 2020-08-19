@@ -64,6 +64,50 @@
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
+              <!--区域-->
+              <tr class="el-table__row" v-show="WriteState === 0">
+                <td><div class="cell"><i class="must">*</i>区域</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" class="form-item" v-model="tableData.areaid">
+                    <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" ref="csArea"></el-cascader>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--地市-->
+            <tr class="el-table__row" v-show="WriteState !== 0">
+              <td><div class="cell"><i class="must">*</i>地市</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.cityname}}</div>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--区域-->
+            <tr class="el-table__row" v-show="WriteState !== 0">
+              <td><div class="cell"><i class="must">*</i>区域</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.areaname}}</div>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> -->
+              <td><div class="cell"></div></td>
+            </tr>
               <!--经度-->
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>经度</div></td>
@@ -192,15 +236,21 @@ export default{
       WriteLoading: false,
       // 新增表格相关属性
       tableData: {
-        'longitude': 45.5,
-        'latitude': 45.5,
-        'stationid': '',
-        'stationname': '',
-        'engineid': '',
-        'machinenumber': '',
-        'storageplacetype': 0,
-        'placeinfo': '',
-        'issubmit': false
+        provinceid: '',
+        cityid: '',
+        areaid: '',
+        longitude: 45.5,
+        latitude: 45.5,
+        stationid: '',
+        stationname: '',
+        engineid: '',
+        machinenumber: '',
+        storageplacetype: '',
+        placeinfo: '',
+        issubmit: false
+      },
+      tableArea: {
+        AreaList: []
       },
       // 分页数据
       pagination: {
@@ -210,6 +260,9 @@ export default{
       },
       // 表单验证
       Rules: {
+        areaid: [
+          { required: true, message: '请选择区域', trigger: 'blur' }
+        ],
         machinenumber: [
           { required: true, message: '请选择油机', trigger: 'blur' }
         ],
@@ -274,6 +327,11 @@ export default{
     handleData (event, check) {
       if (check) {
         this.tableData.issubmit = check
+      }
+      if (this.tableArea.areaid && this.tableArea.cityid && this.tableArea.provinceid) {
+        this.tableData.provinceid = this.tableArea.provinceid
+        this.tableData.cityid = this.tableArea.cityid
+        this.tableData.areaid = this.tableArea.areaid
       }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()
@@ -340,7 +398,7 @@ export default{
       // this.$refs.tableForm.clearValidate() // 初始化表单校验
       Object.assign(this.$data.tableData, this.$options.data().tableData)
       // this.$nextTick(() => { this.$refs.tableForm.resetFields() })
-      this.showWrite = !this.showWrite
+      // this.showWrite = !this.showWrite
       this.$emit('fatherClose')
     },
     SitehandleClose () {
@@ -348,6 +406,26 @@ export default{
     },
     EnginehandleClose () {
       this.engineShow = !this.engineShow
+    },
+    getPostion () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            this.tableData.longitude = position.coords.longitude
+            this.tableData.latitude = position.coords.latitude
+          },
+          function (error) {
+            console.log(error)
+          }
+        )
+      } else {
+        console.log('只支持在HTTPS下获取地理位置')
+      }
+    }
+  },
+  updated () {
+    if (!this.WriteState) {
+      this.getPostion()
     }
   },
   components: {

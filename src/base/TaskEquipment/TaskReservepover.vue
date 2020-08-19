@@ -405,7 +405,7 @@
 <script>
 import ResourceList from 'base/Resource/ResourceList'
 import {DictionaryInfoList} from 'api/api'
-import {GetTaskEquipmentReservepoverInfo, EditTaskEquipmentReservepover} from 'api/SurveyManagement'
+import {AddReservepover, GetTaskEquipmentReservepoverInfo, EditTaskEquipmentReservepover} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {GlobalRes} from 'common/js/mixins'
 

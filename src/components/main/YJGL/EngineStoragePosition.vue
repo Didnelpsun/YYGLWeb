@@ -13,13 +13,13 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
-        <el-table-column prop="" label="油机类型" width=""></el-table-column>
+        <el-table-column prop="fueltypename" label="油机类型" width=""></el-table-column>
         <el-table-column prop="stationcode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="stationname" label="站点名称" width=""></el-table-column>
         <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column>
         <el-table-column prop="placeinfo" label="存放点位置" width=""></el-table-column>
         <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
-        <el-table-column prop="" label="提交时间" width=""></el-table-column>
+        <el-table-column prop="dateinfo" label="提交时间" width=""></el-table-column>
         <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>

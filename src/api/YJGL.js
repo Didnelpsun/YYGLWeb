@@ -94,3 +94,4 @@ export const EnginestoragepositionInfo = `${reqURL}/YJGL/enginestorageposition/G
 export const Audit = `${reqURL}/YJGL/enginestoragepositionaudit/Audit` // 固定油机审核
 // export const ApplyFor = `${reqURL}/YJGL/enginestoragepositionaudit/ApplyFor` // 获取固定油机部署列表
 export const AuditList = `${reqURL}/YJGL/enginestoragepositionaudit/AuditList` // 固定油机审核列表
+export const GtIdAuditList = `${reqURL}/YJGL/enginestoragepositionaudit/GtIdAuditList` // 固定油机审核详情
