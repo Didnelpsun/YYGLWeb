@@ -404,7 +404,7 @@
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
-                <tr class="el-table__row">
+                <tr class="el-table__row" v-if="StockStationInfo.roomtype === 5">
                   <td><div class="cell">机房细分类型 </div></td>
                   <td><div class="cell">{{StockStationInfo.roomsubdividetypename}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
@@ -412,7 +412,7 @@
                 </tr>
                 <tr class="el-table__row" v-if="StockStationInfo.roomtype === 1 || StockStationInfo.roomtype === 3 || StockStationInfo.roomtype === 4 || StockStationInfo.roomtype === 7">
                   <td><div class="cell">机房产权 </div></td>
-                  <td><div class="cell">{{StockStationInfo.roomproperty}}</div></td>
+                  <td><div class="cell">{{StockStationInfo.roompropertyname}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -423,8 +423,8 @@
                   <td><div class="cell"></div></td>
                 </tr>
                 <tr class="el-table__row" v-if="StockStationInfo.roomtype !== 5">
-                  <td><div class="cell">馈线窗空余情况 </div></td>
-                  <td><div class="cell">{{StockStationInfo.feederwindow ? '是' : '否'}}</div></td>
+                  <td><div class="cell">馈线窗空余情况(剩余孔数) </div></td>
+                  <td><div class="cell">{{StockStationInfo.feederwindow}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -549,12 +549,6 @@
                 <tr class="el-table__row">
                   <td><div class="cell">整流模块型号 </div></td>
                   <td><div class="cell">{{StockStationInfo.rectifiermodulemodel}}</div></td>
-                  <!--<td><div class="cell"></div></td>-->
-                  <td><div class="cell"></div></td>
-                </tr>
-                <tr class="el-table__row">
-                  <td><div class="cell">整流模块数量 </div></td>
-                  <td><div class="cell">{{StockStationInfo.rectifiermodulenumber}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -1046,7 +1040,7 @@ export default {
         sparederricknumber: '',
         roomtypename: '',
         roomsubdividetypename: '',
-        roomproperty: '',
+        roompropertyname: '',
         roomsize: '',
         rawcrosshangingtype: '',
         feederwindow: '',
@@ -1057,8 +1051,10 @@ export default {
         switchcurrentload: '',
         switchvoltageload: '',
         rectifiermodulemodel: '',
-        rectifiermodulenumber: '',
         rectifiermodulename: '',
+        rectifiermodulenusednumber: '',
+        rectifiermodulensparenumber: '',
+        rectifiermodulentotal: '',
         batteryburied: '',
         batterymodel: '',
         batteryage: '',

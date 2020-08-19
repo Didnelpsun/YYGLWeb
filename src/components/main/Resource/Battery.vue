@@ -145,7 +145,7 @@ export default {
         '设备单位',
         '设备维护单位',
         '电池设备厂家',
-        '设备型号',
+        '电池设备型号',
         '设备状态',
         '设备存放点类型'
       ]
@@ -166,7 +166,7 @@ export default {
             return i.type === '设备维护单位'
           })
           this.dictionaryList.modelsList = data.filter(i => {
-            return i.type === '设备型号'
+            return i.type === '电池设备型号'
           })
           this.dictionaryList.stateList = data.filter(i => {
             return i.type === '设备状态'

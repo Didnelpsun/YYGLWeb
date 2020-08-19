@@ -22,7 +22,7 @@
                 <el-input v-model="userVali" size="medium" placeholder="验证码"></el-input>
               </el-col>
               <el-col :span="8">
-                <img class="VailImg" src="http://111.47.173.162:8051/Admin/User/ImageCaptcha" alt="">
+                <img class="VailImg" :src="ImgUrl" @click="handleVailImg" alt="">
               </el-col>
             </el-row>
             <el-row>
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {loginAPI} from '../api/api'
+import {loginAPI, ValiImg} from '../api/api'
 import {mapMutations, mapGetters} from 'vuex'
 
 export default {
@@ -47,9 +47,11 @@ export default {
     return {
       username: 'sjw',
       userpassword: 'Dzl123wuh',
-      userVali: 'string',
+      userVali: '',
       fullscreenLoading: false,
-      Logging: false // 登录中
+      Logging: false, // 登录中
+      ImgUrl: '',
+      code: ''
     }
   },
   computed: {
@@ -57,6 +59,7 @@ export default {
   },
   created () {
     this.hasToken()
+    this.handleVailImg()
   },
   mounted () {
     // 绑定enter事件
@@ -90,9 +93,24 @@ export default {
         })
       }
     },
+    handleVailImg () {
+      this.$axios({
+        method: 'get',
+        url: ValiImg
+      }).then((res) => {
+        this.ImgUrl = 'data:image/png;base64,' + res.data.data
+        this.code = res.data.code
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     _login () {
       if (!this.username) return this.$message.warning('请输入用户名')
       if (!this.userpassword) return this.$message.warning('请输入密码')
+      if (this.code.toLowerCase() !== this.userVali.toLowerCase()) {
+        this.userVali = ''
+        return this.$message.error('验证码错误')
+      }
       if (this.Logging) return false
       const data = {
         username: this.username,

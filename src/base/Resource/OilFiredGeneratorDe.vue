@@ -279,7 +279,7 @@
               <td><div class="cell">设备型号</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.models}}</div>
+                  <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
                   <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
                       <el-option v-for="item in dictionaryList.modelsList" :key="item.id" :label="item.text" :value="item.value"></el-option>
@@ -447,7 +447,7 @@ export default {
         'productiontime': '',
         'maintenanceunit': '',
         'manufacturer': '',
-        'models': '0',
+        'models': null,
         'state': '',
         // 'address': '',
         'address': '测试值',

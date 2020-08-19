@@ -13,15 +13,14 @@ import 'common/js/elementUI'
 import axios from 'axios'
 import qs from 'qs'
 
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.prototype.$qs = qs
 // axios.defaults.withCredentials = true
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://192.168.0.39:8060'
-// axios.defaults.headers.common['Access-Control-Allow-Credentials'] = 'true'
-// axios.defaults.withCredentials = true
-// axios.defaults.headers.common['Set-Cookie'] = window.sessionStorage.assign
-// axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
 
 axios.defaults.timeout = 4800000 // 请求超时 8分钟
 // axios设置头部token

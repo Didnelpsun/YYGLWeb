@@ -148,7 +148,7 @@ export default {
         '设备产权单位',
         '换电柜设备厂家',
         '设备维护单位',
-        '设备型号',
+        '换电柜设备型号',
         '设备状态'
       ]
       this.Loading = true
@@ -168,7 +168,7 @@ export default {
             return i.type === '设备维护单位'
           })
           this.dictionaryList.modelsList = data.filter(i => {
-            return i.type === '设备型号'
+            return i.type === '换电柜设备型号'
           })
           this.dictionaryList.stateList = data.filter(i => {
             return i.type === '设备状态'

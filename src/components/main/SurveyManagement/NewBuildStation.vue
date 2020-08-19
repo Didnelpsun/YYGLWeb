@@ -824,7 +824,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <!--拟建机房细分类型-->
-            <tr class="el-table__row">
+            <tr class="el-table__row" v-if="tableData.roomtype === 5">
               <td><div class="cell">拟建机房细分类型</div></td>
               <td>
                 <div class="cell">
@@ -834,8 +834,14 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <tr class="el-table__row" v-if="tableData.roomtype === 1 || tableData.roomtype === 3 || tableData.roomtype === 4 || tableData.roomtype === 7">
+              <td><div class="cell">拟建机房产权 </div></td>
+              <td><div class="cell">{{tableData.roompropertyname}}</div></td>
+              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
             <!--拟建机房尺寸-->
-            <tr class="el-table__row">
+            <tr class="el-table__row" v-if="tableData.roomtype !== 5 && tableData.roomtype !== 6">
               <td><div class="cell">拟建机房尺寸</div></td>
               <td>
                 <div class="cell">
@@ -1205,9 +1211,12 @@ export default {
         // 地面站拟建场地山高（米），平面填零
         sitegrowtaller: '',
         //  拟建机房类型
+        roomtype: '',
         roomtypename: '',
         //  拟建机房细分类型
         roomsubdividetypename: '',
+        // 拟建机房产权
+        roompropertyname: '',
         // 拟建机房尺寸
         roomsize: '',
         // 引入类型

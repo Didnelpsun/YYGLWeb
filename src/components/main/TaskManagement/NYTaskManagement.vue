@@ -526,6 +526,7 @@
       <TaskReservepover v-if="showReservepover" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskReservepover>
       <TaskChangeBattery v-if="showChangeBattery" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChangeBattery>
       <TaskOilFiredGenerator v-if="showOilFiredGenerator " :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
+      <TaskBatteryGenerator v-if="showBatteryGenerator " :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
     </el-dialog>
     <ImgBox ref="ImgBox"></ImgBox>
   </div>
@@ -541,6 +542,7 @@ import TaskSwitchCabinet from 'base/TaskEquipment/TaskSwitchCabinet'
 import TaskReservepover from 'base/TaskEquipment/TaskReservepover'
 import TaskChangeBattery from 'base/TaskEquipment/TaskChangeBattery'
 import TaskOilFiredGenerator from 'base/TaskEquipment/TaskOilFiredGenerator'
+import TaskBatteryGenerator from 'base/TaskEquipment/TaskBatteryGenerator'
 import {GetEnergyTaskList, AddEnergyTask, GetTaskEquipmentList, GetTaskResourceList, UpdateTaskResource, DelTaskEquipment, GetEnergySubmitAudit, AuditEnergyTask} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
@@ -619,6 +621,7 @@ export default {
       showReservepover: false, // 备电详情
       showChangeBattery: false, // 换电池详情
       showOilFiredGenerator: false, // 燃油发电机详情
+      showBatteryGenerator: false,
       ViewTabIndex: 0,
       DicList: {},
       WriteState: null,
@@ -920,6 +923,9 @@ export default {
         case '燃油发电机':
           this.showOilFiredGenerator = true
           break
+        case '电池发电装置':
+          this.showBatteryGenerator = true
+          break
       }
     },
     DeviceDelete (index, row) {
@@ -1037,6 +1043,7 @@ export default {
         this.showReservepover = false
         this.showChangeBattery = false// 换电池详情
         this.showOilFiredGenerator = false // 燃油发电机详情
+        this.showBatteryGenerator = false
       }
     },
     'addData.TaskObject': function (newv, oldv) {
@@ -1057,7 +1064,8 @@ export default {
     TaskReservepover,
     ImgBox,
     TaskChangeBattery,
-    TaskOilFiredGenerator
+    TaskOilFiredGenerator,
+    TaskBatteryGenerator
   }
 }
 </script>

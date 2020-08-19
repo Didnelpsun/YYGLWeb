@@ -50,7 +50,7 @@
               <td><div class="cell"></div></td>
             </tr>-->
             <!--地市-->
-            <tr class="el-table__row el-table__row--striped" v-show="WriteState == 2">
+            <tr class="el-table__row" v-show="WriteState == 2">
               <td><div class="cell"><i class="must">*</i>地市</div></td>
               <td><div class="cell"><div>{{WriteData.cityname}}</div></div>
               </td>
@@ -120,7 +120,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-             <!--入网日期-->
+             <!--产权单位-->
             <tr class="el-table__row">
               <td><div class="cell">产权单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -256,7 +256,6 @@
               <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-
             <tr class="el-table__row">
               <td><div class="cell">缸号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -266,18 +265,17 @@
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cylinderno}}</div></td>
               <td @click="OpenImgBox(4)"><div class="cell">{{ImgList4.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">油机编码</div></td>
+              <td><div class="cell">装置编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="oilmachineno">
-                  <el-input v-model="WriteData.oilmachineno"></el-input>
+                <el-form-item class="form-item" prop="devicecode">
+                  <el-input v-model="WriteData.devicecode"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.oilmachineno}}</div></td>
-              <td><div class="cell"></div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.devicecode}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
@@ -289,6 +287,7 @@
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.capacity}}</div></td>
+              <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
@@ -383,12 +382,12 @@ import {DictionaryInfoList} from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
 import ImgBox from 'base/ImgBox'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
-import {EditTaskEquipmentOilFiredGenerator, AddChargingPileTaskEquipment, GetTaskEquipmentOilFiredGeneratorInfo} from 'api/SurveyManagement'
+import {GetTaskEquipmentBatteryGeneratorInfo, AddChargingPileTaskEquipment, EditTaskEquipmentBatteryGenerator} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 
 export default {
   mixins: [GlobalRes],
-  name: 'TaskOilFiredGenerator',
+  name: 'TaskBatteryGenerator',
   props: {
     DeviceID: {
       type: String,
@@ -411,14 +410,14 @@ export default {
       },
       // 表单验证
       Rules: {
-        areaid: [{ required: true, message: '请选择区域', trigger: 'change' }],
+        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
         resource_id: [{ required: true, message: '请选择站点', trigger: 'change' }],
         longitude: [
-          {required: false, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: false, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
         accessdate: [{ required: true, message: '请选择入网日期', trigger: 'blur' }],
@@ -426,8 +425,7 @@ export default {
           {required: false, message: '请填数量', trigger: 'blur'},
           { type: 'number', message: '必须为数字类型' }
         ],
-        state: [{ required: true, message: '请选择设备状态', trigger: 'change' }]
-
+        state: [{ required: false, message: '请填写设备状态', trigger: 'change' }]
       },
       DicList: {},
       ImgList1: [], // 经度
@@ -439,7 +437,7 @@ export default {
   created () {
     this.getDic()
     this.WriteLoading = true
-    this.$axios.get(GetTaskEquipmentOilFiredGeneratorInfo, {
+    this.$axios.get(GetTaskEquipmentBatteryGeneratorInfo, {
       params: {
         id: this.DeviceID
       }
@@ -452,23 +450,23 @@ export default {
   methods: {
     getDic () {
       let arr = [
-        '设备存放点类型',
-        '设备单位',
         '设备产权单位',
-        '燃油发电机设备厂家',
+        '设备单位',
         '设备维护单位',
-        '燃油发电机设备型号',
-        '设备状态'
+        '电池设备厂家',
+        '电池发电装置设备型号',
+        '设备状态',
+        '设备存放点类型'
       ]
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.unit = data.filter(i => { return i.type === '设备单位' })
           this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
-          this.DicList.manufacturer = data.filter(i => { return i.type === '燃油发电机设备厂家' })
+          this.DicList.manufacturer = data.filter(i => { return i.type === '电池设备厂家' })
           this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
+          this.DicList.models = data.filter(i => { return i.type === '电池发电装置设备型号' })
           this.DicList.state = data.filter(i => { return i.type === '设备状态' })
-          this.DicList.models = data.filter(i => { return i.type === '燃油发电机设备型号' })
         } else {
           this.$message.error(res.msg)
         }
@@ -517,7 +515,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
-          this.$axios.put(EditTaskEquipmentOilFiredGenerator, this.WriteData).then(res => {
+          this.$axios.put(EditTaskEquipmentBatteryGenerator, this.WriteData).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
@@ -534,7 +532,7 @@ export default {
       if (val === 1) this.$emit('fatherOpenImgBox', '经度', 'longitude', this.ImgList1)
       if (val === 2) this.$emit('fatherOpenImgBox', '设备厂家', 'manufacturer', this.ImgList2)
       if (val === 3) this.$emit('fatherOpenImgBox', '设备型号', 'models', this.ImgList3)
-      if (val === 4) this.$emit('fatherOpenImgBox', '缸号', 'cylinderno', this.ImgList4)
+      if (val === 4) this.$emit('fatherOpenImgBox', '容量(安时)', 'capacity', this.ImgList4)
     },
     WriteClose () {
       this.ResetWrite()

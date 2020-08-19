@@ -44,7 +44,7 @@
         <el-table-column prop="areaname" label="区域" width="75"></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
         <el-table-column prop="manufacturername" label="制造厂家" width=""></el-table-column>
-        <el-table-column prop="models" label="型号" width=""></el-table-column>
+        <el-table-column prop="modelsname" label="型号" width=""></el-table-column>
         <el-table-column prop="capacity" label="容量/功率" width=""></el-table-column>
         <el-table-column prop="linkmen" label="客户联系人" width=""></el-table-column>
         <el-table-column prop="linkmencontact" label="客户联系方式" width="" :show-overflow-tooltip="true"></el-table-column>
@@ -148,7 +148,7 @@ export default {
         '设备产权单位',
         '备电设备厂家',
         '设备维护单位',
-        '设备型号',
+        '备电设备型号',
         '设备状态'
       ]
       this.Loading = true
@@ -171,7 +171,7 @@ export default {
             return i.type === '设备维护单位'
           })
           this.dictionaryList.modelsList = data.filter(i => {
-            return i.type === '设备型号'
+            return i.type === '备电设备型号'
           })
           this.dictionaryList.stateList = data.filter(i => {
             return i.type === '设备状态'

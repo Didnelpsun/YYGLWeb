@@ -297,7 +297,7 @@
               <td><div class="cell">设备型号</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.models}}</div>
+                  <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
                   <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
                       <el-option label="请选择" value=""></el-option>

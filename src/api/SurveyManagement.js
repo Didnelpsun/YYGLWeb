@@ -22,6 +22,8 @@ export const EditTaskEquipmentBattery = `${reqURL}/ZYGL/Battery/EditTaskEquipmen
 export const GetTaskEquipmentBatteryInfo = `${reqURL}/ZYGL/Battery/GetTaskEquipmentBatteryInfo` // 获取电池任务设备详情
 export const EditTaskEquipmentOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/EditTaskEquipmentOilFiredGenerator` // 修改燃油发电机任务设备信息
 export const GetTaskEquipmentOilFiredGeneratorInfo = `${reqURL}/ZYGL/OilFiredGenerator/GetTaskEquipmentOilFiredGeneratorInfo` // 获取燃油发电机任务设备详情
+export const EditTaskEquipmentBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/EditTaskEquipmentBatteryGenerator` // 修改电池发电装置任务设备信息
+export const GetTaskEquipmentBatteryGeneratorInfo = `${reqURL}/ZYGL/BatteryGenerator/GetTaskEquipmentBatteryGeneratorInfo` // 获取电池发电装置任务设备详情
 
 // 勘察项目管理
 export const GetProjectList = `${reqURL}/KCGL/Project/GetProjectList` // 获取项目列表

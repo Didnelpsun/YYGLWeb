@@ -787,6 +787,19 @@ export default {
       this.WriteData.stockstationresults = ''
       this.WriteData.recentlyresource_id = ''
     },
+    handleExport (index, row) {
+      this.$confirm(`您确定要导出项目资料吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'get',
+          url: 'http://192.168.0.131:5000/KCGL/Project/GetKCProjectExcel',
+          fileName: '项目资料',
+          data: {constructionmode: row.constructionmode, id: row.id}
+        }
+        exportMethod(myObj)
+      })
+    },
     ...mapMutations({
       setSurveyInfo: 'SET_PROJECTSURVEY_INFO'
     })
