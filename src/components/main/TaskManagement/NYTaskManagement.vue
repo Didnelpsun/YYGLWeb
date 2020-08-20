@@ -150,7 +150,7 @@
               <template slot-scope="scope">
                 <el-button v-if="showType == 1" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">详情</el-button>
                 <el-button v-if="showType == 2" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">修改</el-button>
-                <el-button v-if="showType == 2" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
+                <el-button v-if="showType == 2 && !isDeviceTask" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -616,6 +616,7 @@ export default {
       siteChoose: false,
       showDialog: false,
       deviceChoose: false,
+      isDeviceTask: false, // 是否为设备任务
       showChargingPile: false, // 充电桩详情
       showSwitchCabinet: false, // 换电柜详情
       showReservepover: false, // 备电详情
@@ -712,6 +713,11 @@ export default {
       this.getDeviceDetail(row.id)
     },
     handleEdit (index, row) {
+      if (row.equipment_id) {
+        this.isDeviceTask = true
+      } else {
+        this.isDeviceTask = false
+      }
       this.showType = 2
       this.WriteState = 1
       this.getDeviceDetail(row.id)

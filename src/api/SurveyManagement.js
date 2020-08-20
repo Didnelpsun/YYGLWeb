@@ -1,5 +1,6 @@
 // 任务管理/勘察接口
 import {reqURL} from './api'
+import axios from 'axios/index'
 
 export const GetEqipmentList = `${reqURL}/ZYGL/Equipment/GetEqipmentList` // 根据站点id获取设备列表
 export const GetEnergyTaskList = `${reqURL}/ZYGL/Task/GetEnergyTaskList` // 获取能源任务列表
@@ -35,6 +36,7 @@ export const GetProjectInfo = `${reqURL}/KCGL/Project/GetProjectInfo` // 获取�
 export const UpdateProject = `${reqURL}/KCGL/Project/UpdateProject` // 修改项目
 export const DelProject = `${reqURL}/KCGL/Project/DelProject` // 删除项目
 export const GetProjectExcel = `${reqURL}/KCGL/Project/GetProjectExcel` // 项目管理导出
+export const GetKCProjectExcel = `${reqURL}/KCGL/Project/GetKCProjectExcel` // 项目管理项目资料导出
 
 // 勘察任务管理
 export const GetWebTaskList = `${reqURL}/KCGL/Task/GerWebTaskList` // 获取勘察任务管理列表

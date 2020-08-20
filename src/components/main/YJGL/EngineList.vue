@@ -69,7 +69,7 @@
         <el-table-column prop="enginestatename" label="油机状态" width=""></el-table-column>
         <!-- <el-table-column prop="applicanttype" label="申请类型" width="75" :formatter="applicanttypeFormat"></el-table-column> -->
         <!-- <el-table-column prop="auditorstate" label="审核状态" width="" :formatter="auditorstateFormat"></el-table-column> -->
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!ifarchivedState">编辑</el-button>

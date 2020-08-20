@@ -124,7 +124,7 @@ export default {
       }
     }
   },
-  created () {
+  activated () {
     this.iconList = ICON_LIST
     this.getMenuList()
     this.getResrouceList()

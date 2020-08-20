@@ -33,8 +33,8 @@ import Reservepover from 'components/main/Resource/Reservepover' // 备电
 import BatteryGenerator from 'components/main/Resource/BatteryGenerator' // 电池发电
 import Battery from 'components/main/Resource/Battery' // 换电电池
 import OilFiredGenerator from 'components/main/Resource/OilFiredGenerator' // 燃油发电机
-import ResourceEquipment from 'components/main/Resource/ResourceEquipment' // 资源站点设备
-import EnergyResourceEquipment from 'components/main/Resource/EnergyResourceEquipment' // 资源站点设备
+import ResourceEquipment from 'components/main/Resource/ResourceEquipment' // 资源站点设备管理
+import EnergyResourceEquipment from 'components/main/Resource/EnergyResourceEquipment' // 能源站点设备管理
 
 // 维护管理
 import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患危险

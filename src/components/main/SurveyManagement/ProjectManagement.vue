@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-loading="ExportLoading" element-loading-text="正在导出,请等待！" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query">
         <el-row>
@@ -96,8 +96,7 @@
           <template slot-scope="scope">
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleSend(scope.$index, scope.row)">派发</el-button>
             <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row)">详情</el-button>
-            <el-button type="text" size="mini">图片资料</el-button>
-            <el-button type="text" size="mini">项目资料</el-button>
+            <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">项目资料</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -361,7 +360,7 @@ import {mapMutations} from 'vuex'
 import {DictionaryInfoList, AreaList} from 'api/api'
 import SelectUser from 'base/TaskEquipment/SelectUser'
 import {exportMethod} from 'api/YDSZ'
-import {AddProject, GetProjectList, GetProjectInfo, UpdateProject, DelProject, GetResourceList, GetDistributeProject, GetProjectExcel} from 'api/SurveyManagement'
+import {GetKCProjectExcel, AddProject, GetProjectList, GetProjectInfo, UpdateProject, DelProject, GetResourceList, GetDistributeProject, GetProjectExcel} from 'api/SurveyManagement'
 export default {
   name: 'EquipmentManagement',
   mixins: [GlobalRes],
@@ -477,7 +476,8 @@ export default {
       showUser: false,
       userId: '',
       projectId: '',
-      isStockStation: false
+      isStockStation: false,
+      ExportLoading: false
     }
   },
   activated () {
@@ -791,13 +791,25 @@ export default {
       this.$confirm(`您确定要导出项目资料吗？`, '提示', {
         type: 'info'
       }).then(() => {
-        let myObj = {
+        this.ExportLoading = true
+        this.$axios({
           method: 'get',
-          url: 'http://192.168.0.131:5000/KCGL/Project/GetKCProjectExcel',
-          fileName: '项目资料',
-          data: {constructionmode: row.constructionmode, id: row.id}
-        }
-        exportMethod(myObj)
+          url: GetKCProjectExcel,
+          params: {constructionmode: row.constructionmode, id: row.id},
+          responseType: 'blob'
+        }).then((res) => {
+          this.ExportLoading = false
+          const link = document.createElement('a')
+          let blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blob)
+          link.download = '项目资料' + '.xlsx' // 下载的文件名  注意：加.xls是兼容火狐浏览器
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }).catch(error => {
+          console.log(error)
+        })
       })
     },
     ...mapMutations({

@@ -244,7 +244,7 @@
                     <el-input v-model="tableData.rawpropertyrightunit"></el-input>
                   </el-form-item>-->
                   <el-select v-model="tableData.rawpropertyrightunit" size="small">
-                    <el-option label="请选择" value=""></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.propertyrightunit" :key="i.value" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </div></td>
@@ -256,9 +256,10 @@
               <tr class="el-table__row">
                 <td class="el-table_8_column_60"><div class="cell">建站模式</div></td>
                 <td class="el-table_8_column_61"><div class="cell">
-                  <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
-                    <el-input v-model="tableData.websitebuildingmode"></el-input>
-                  </el-form-item>
+                  <el-select v-model="tableData.websitebuildingmode" size="small">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.models" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
                 </div></td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
@@ -797,8 +798,8 @@ export default {
         latitude: null, // 纬度
         lifecycle: '', // 生命周期
         propertyrights: '', // 产权性质
-        rawpropertyrightunit: '', // 设备产权单位
-        websitebuildingmode: '', // 建站模式
+        rawpropertyrightunit: null, // 设备产权单位
+        websitebuildingmode: null, // 建站模式
         computerroomposition: '', // 机房位置
         outstanding: '', // 是否拉远站
         siteterrain: '', // 站址地形
@@ -997,11 +998,14 @@ export default {
       }
     },
     async initDictionariesArray () {
-      let arr = ['站点分类', '站点类型', '站点状态', '站点类型', '设备产权单位', '站点机房类型']
+      let arr = ['站点分类', '站点类型', '站点状态', '站点类型', '设备产权单位', '站点机房类型', '建站模式']
       const res = await this.$axios.post(DictionaryInfoList, arr)
       if (res.errorCode !== '200') {
         return this.$message.error(res.msg)
       } else {
+        this.DicList.models = res.data.filter(i => {
+          return i.type === '建站模式'
+        })
         this.DicList.classify = res.data.filter(i => {
           return i.type === '站点分类'
         })
