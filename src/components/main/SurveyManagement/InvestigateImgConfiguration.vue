@@ -5,8 +5,8 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="图片名称：">
-                <el-input class="searchSelect" v-model="query.name" placeholder="请输入图片名称"></el-input>
+              <el-form-item label="归属项：">
+                <el-input class="searchSelect" v-model="query.attribution" placeholder="请输入归属项"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -41,9 +41,10 @@
       </el-row>
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-        <el-table-column prop="name" label="图片名称" width=""></el-table-column>
+        <el-table-column prop="attribution" label="归属项" width=""></el-table-column>
         <el-table-column prop="title" label="图片标题" width=""></el-table-column>
-        <el-table-column prop="constructionmodename" label="建站方式" width="100"></el-table-column>
+        <el-table-column prop="constructionmodesname" label="建站方式" width="100"></el-table-column>
+        <el-table-column prop="sort" label="排序号" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建用户" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width="100"></el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
@@ -64,7 +65,7 @@
 
     <div v-show="showWrite">
       <layuiTitle :title="WriteState === 0 ? '添加勘察图片配置' : WriteState === 1 ? '编辑勘察图片配置' : '勘察图片配置详情'"></layuiTitle>
-      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" :constructionmodeList="constructionmodeList"/>
+      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" :constructionmodeList="constructionmodeList"/>
     </div>
   </div>
 </template>
@@ -84,7 +85,7 @@ export default {
     return {
       // 查询相关属性
       query: {
-        name: '',
+        attribution: '',
         title: '',
         constructionmode: null
       },
@@ -135,7 +136,7 @@ export default {
           params: {
             pageIndex: e,
             pageSize: this.pagination.pageSize,
-            name: this.query.name,
+            attribution: this.query.attribution,
             title: this.query.title,
             constructionmode: this.query.constructionmode
           }

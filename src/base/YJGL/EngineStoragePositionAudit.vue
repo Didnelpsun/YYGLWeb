@@ -1,6 +1,6 @@
 <template>
   <div class="write" style="margin:15px">
-    <layuiTitle title="协管员审核"></layuiTitle>
+    <layuiTitle title="固定油机部署审核"></layuiTitle>
     <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
       <!--表头-->
       <div class="el-table__header-wrapper">
@@ -37,8 +37,16 @@
               <tbody>
                 <!--油机ID-->
               <tr class="el-table__row">
-                <td><div class="cell"><i class="must">*</i>油机名称</div></td>
+                <td><div class="cell"><i class="must">*</i>油机编号</div></td>
                 <td><div class="cell"><div>{{tableData.machinenumber}}</div></div></td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--油机缸号-->
+              <tr class="el-table__row">
+                <td><div class="cell"><i class="must">*</i>油机缸号</div></td>
+                <td><div class="cell"><div>{{tableData.machinebatchno}}</div></div></td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
@@ -47,6 +55,14 @@
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>站点名称</div></td>
                 <td><div class="cell"><div>{{tableData.resourcesname}}</div></div></td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--站点编码-->
+              <tr class="el-table__row">
+                <td><div class="cell"><i class="must">*</i>站点编码</div></td>
+                <td><div class="cell"><div>{{tableData.resourcescode}}</div></div></td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
@@ -65,14 +81,6 @@
                 <td> <div class="cell"><div>{{tableData.latitude}}</div></div></td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
-                <td><div class="cell"></div></td>
-              </tr>
-              <!-- 存放位置类型 -->
-              <tr class="el-table__row">
-                <td><div class="cell"><i class="must">*</i>存放位置类型</div></td>
-                <td><div class="cell"><div>{{tableData.storageplacetype}}</div></div>
-                <td><div class="cell"></div></td>
-                <!-- <td><div class="cell">{{this.writeDic(dictionaryList.stateList)}}</div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
               <!--申请人-->

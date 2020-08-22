@@ -1,6 +1,5 @@
 // 任务管理/勘察接口
 import {reqURL} from './api'
-import axios from 'axios/index'
 
 export const GetEqipmentList = `${reqURL}/ZYGL/Equipment/GetEqipmentList` // 根据站点id获取设备列表
 export const GetEnergyTaskList = `${reqURL}/ZYGL/Task/GetEnergyTaskList` // 获取能源任务列表
@@ -14,6 +13,7 @@ export const AuditEnergyTask = `${reqURL}/ZYGL/Task/AuditEnergyTask` // 能源�
 // 任务设备
 export const GetChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/GetChargingPileTaskEquipment` // 获取充电桩任务设备详情
 export const EditChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/EditChargingPileTaskEquipment` // 修改充电桩任务设备
+export const AddChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/AddChargingPileTaskEquipment` // 添加充电桩任务设备
 export const DelTaskEquipment = `${reqURL}/ZYGL/TaskEquipment/DelTaskEquipment` // 删除任务设备
 export const GetSwitchCabinetTaskEquipment = `${reqURL}/ZYGL/SwitchCabinets/GetSwitchCabinetTaskEquipment` // 获取换电柜任务设备详情
 export const EditSwitchCabinetTaskEquipment = `${reqURL}/ZYGL/SwitchCabinets/EditSwitchCabinetTaskEquipment` // 修改换电柜任务设备
@@ -26,8 +26,8 @@ export const GetTaskEquipmentOilFiredGeneratorInfo = `${reqURL}/ZYGL/OilFiredGen
 export const EditTaskEquipmentBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/EditTaskEquipmentBatteryGenerator` // 修改电池发电装置任务设备信息
 export const GetTaskEquipmentBatteryGeneratorInfo = `${reqURL}/ZYGL/BatteryGenerator/GetTaskEquipmentBatteryGeneratorInfo` // 获取电池发电装置任务设备详情
 
-export const AddReservepover = `${reqURL}`
-export const AddChargingPileTaskEquipment = `${reqURL}`
+// export const AddReservepover = `${reqURL}`
+// export const AddChargingPileTaskEquipment = `${reqURL}`
 
 // 勘察项目管理
 export const GetProjectList = `${reqURL}/KCGL/Project/GetProjectList` // 获取项目列表
@@ -53,9 +53,14 @@ export const GetStockResourceCensusInfo = `${reqURL}/KCGL/StockResourceCensus/Ge
 export const GetResourceList = `${reqURL}/KCGL/Project/GetResourceList` // 获取存量筛查列表
 export const GetDistributeProject = `${reqURL}/KCGL/Project/GetDistributeProject` // 项目派发
 // 勘察图片配置管理
-export const GetInvestigateImgConfigurationNameInfo = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/GetInvestigateImgConfigurationNameInfo` // 根据图片名称获取图片配置
-export const GetInvestigateImgConfigurationInfo = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/GetInvestigateImgConfigurationInfo` // 获取图片配置详情
-export const GetInvestigateImgConfigurationList = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/GetInvestigateImgConfigurationList` // 后台获取勘察图片配置列表
-export const AddInvestigateImgConfiguration = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/AddInvestigateImgConfiguration` // 新增勘察图片配置
-export const UpdateInvestigateImgConfiguration = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/UpdateInvestigateImgConfiguration` // 修改勘察图片配置
-export const DelInvestigateImgConfiguration = `${reqURL}/KCGL/InvestigateImgConfigurationInfo/DelInvestigateImgConfiguration` // 删除勘察图片配置
+export const GetInvestigateImgConfigurationInfo = `${reqURL}/KCGL/ImgConfiguration/GetImgConfiguration` // 获取图片配置详情
+export const GetInvestigateImgConfigurationList = `${reqURL}/KCGL/ImgConfiguration/GetImgConfigurationList` // 后台获取勘察图片配置列表
+export const AddInvestigateImgConfiguration = `${reqURL}/KCGL/ImgConfiguration/AddImgConfiguration` // 新增勘察图片配置
+export const UpdateInvestigateImgConfiguration = `${reqURL}/KCGL/ImgConfiguration/UpdateImgConfiguration` // 修改勘察图片配置
+export const DelInvestigateImgConfiguration = `${reqURL}/KCGL/ImgConfiguration/DelImgConfiguration` // 删除勘察图片配置
+
+// 开关电源
+export const GetSwitchingPowerSupplyList = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyList` // 获取开关电源列表
+export const GetSwitchingPowerSupplyInfo = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyInfo` // 获取开关电源详情
+export const AddSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/AddSwitchingPowerSupply` // 新增设备开关电源
+export const UpdateSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/UpdateSwitchingPowerSupply` // 修改设备开关电源

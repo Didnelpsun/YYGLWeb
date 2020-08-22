@@ -11,12 +11,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="工单号：">
-                <el-input v-model="query.code" placeholder="请输入工单号"></el-input>
+                <el-input v-model="query.code" placeholder="请输入工单号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点名：">
-                <el-input v-model="query.resourcesname" placeholder="请输入站点名"></el-input>
+                <el-input v-model="query.resourcesname" placeholder="请输入站点名" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

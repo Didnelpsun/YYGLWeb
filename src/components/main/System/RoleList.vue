@@ -7,12 +7,12 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="角色名称：">
-                <el-input v-model="query.role_name"></el-input>
+                <el-input v-model="query.role_name" @keyup.enter.native="searchQueryData"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="角色编码：">
-                <el-input v-model="query.rolenum"></el-input>
+                <el-input v-model="query.rolenum"  @keyup.enter.native="searchQueryData"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -25,12 +25,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="租户名称：">
-                <el-input v-model="query.tenantname"></el-input>
+                <el-input v-model="query.tenantname"  @keyup.enter.native="searchQueryData"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="角色描述：">
-                <el-input v-model="query.remarks"></el-input>
+                <el-input v-model="query.remarks"  @keyup.enter.native="searchQueryData"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

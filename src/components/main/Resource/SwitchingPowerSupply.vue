@@ -1,0 +1,231 @@
+<template>
+  <div class="content">
+    <div class="main" v-show="!showWrite">
+      <el-form :model="Query">
+        <el-row>
+          <el-col :span="18">
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+               <el-input v-model="Query.resourcename" placeholder="请添加站点名称"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="区域：">
+                <el-cascader v-model="Query.AreaList" :props="QareaProps" @change="changeArea(Query)" ref="csArea" clearable></el-cascader>
+              </el-form-item>
+            </el-col>
+          </el-col>
+          <el-col :span="6">
+            <div class="fr" style="margin-top: 0">
+              <el-button  @click="getMore(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'">查询</el-button>
+              <el-button @click="ResetQuery" icon="el-icon-refresh">重置</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="18">
+            <p class="SearchResult">查询结果</p>
+          </el-col>
+          <el-col :span="6">
+            <div class="fr" style="margin-top: 0">
+              <el-button @click="downloadQuery" type="success" icon="el-icon-download">导出</el-button>
+              <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
+            </div>
+          </el-col>
+        </el-row>
+      </el-form>
+      <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
+        <el-table-column label="序号" width="50">
+          <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
+        </el-table-column>
+        <el-table-column prop="code" label="设备编码"></el-table-column>
+        <el-table-column prop="resourcename" label="站点名称"></el-table-column>
+        <!-- <el-table-column prop="provincename" label="省份"></el-table-column> -->
+        <el-table-column prop="resourcecode" label="站点编码"></el-table-column>
+        <el-table-column prop="accessdate" label="入网日期"></el-table-column>
+        <el-table-column prop="cityname" label="地市"></el-table-column>
+        <el-table-column prop="areaname" label="区域"></el-table-column>
+        <el-table-column prop="manufacturername" label="设备厂家"></el-table-column>
+        <el-table-column prop="statename" label="设备状态"></el-table-column>
+        <el-table-column label="操作" width="140">
+          <template slot-scope="scope">
+            <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
+            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
+            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="center">
+        <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
+                       background layout="total, prev, pager, next, sizes"></el-pagination>
+      </div>
+    </div>
+    <div class="write" v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加开关电源' : WriteState === 1 ? '编辑开关电源' : '开关电源详情'"></layuiTitle>
+
+      <Details :WriteState="WriteState" :DicList="DicList" @fatherOpenImgBox="OpenImgBox"
+               @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
+
+    </div>
+
+    <ImgBox ref="ImgBox"></ImgBox>
+  </div>
+</template>
+
+<script>
+// eslint-disable-next-line no-redeclare,no-unused-vars
+import {GetSwitchingPowerSupplyList, GetSwitchingPowerSupplyInfo} from 'api/SurveyManagement'
+import {DelEquipment, DictionaryInfoList} from 'api/api'
+import { GlobalRes } from 'common/js/mixins'
+import ImgBox from '../../../base/ImgBox'
+import layuiTitle from 'base/layui-title'
+import Details from 'base/Resource/SwitchingPowerSupply'
+
+export default {
+  name: 'SwitchingPowerSupply',
+  mixins: [GlobalRes],
+  data () {
+    return {
+      Query: {
+        AreaList: [],
+        provinceid: null,
+        cityid: null,
+        areaid: null,
+        resourcename: null
+      },
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      Loading: false,
+      tableData: [],
+      tableLoading: false,
+      DicList: {
+        propertyrightunit: [],
+        unit: [],
+        manufacturer: [],
+        maintenanceunit: [],
+        models: [],
+        state: [],
+        facilitytype: [],
+        powersupply: [],
+        accesscontrolmanufacturer: []
+      },
+
+      showWrite: false,
+      WriteState: 0, // 0为添加 1为编辑 2为查看
+      WriteLoading: false
+    }
+  },
+  activated () {
+    this.getData1()
+    this.getDic()
+  },
+  methods: {
+    ResetQuery () {
+      Object.assign(this.$data, this.$options.data.call(this))
+      this.getData1()
+    },
+    getData1 () {
+      this.Loading = true
+      this.$axios.get(GetSwitchingPowerSupplyList, {
+        params: {
+          PageIndex: 1,
+          PageSize: 10
+        }}).then(res => {
+        this.Loading = false
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
+    },
+    getMore (page) {
+      this.currentPage = page
+      this.Loading = true
+      this.$axios.get(GetSwitchingPowerSupplyList, {params: Object.assign({}, this.Query, {
+        PageIndex: this.currentPage,
+        PageSize: this.pageSize
+      })}).then(res => {
+        this.Loading = false
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
+    },
+    getDic () {
+      let arr = ['开关电源设备型号', '开关电源供电类型', '开关电源设备厂家', '设备状态', '设备单位', '设备维护单位', '设备产权单位']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.models = data.filter(i => { return i.type === '开关电源设备型号' })
+          this.DicList.powersupplytype = data.filter(i => { return i.type === '开关电源供电类型' })
+          this.DicList.manufacturer = data.filter(i => { return i.type === '开关电源设备厂家' })
+          this.DicList.state = data.filter(i => { return i.type === '设备状态' })
+          this.DicList.unit = data.filter(i => { return i.type === '设备单位' })
+          this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
+          this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    changeSize1 (page) {
+      this.pageSize = page
+      this.getMore(this.currentPage)
+    },
+    downloadQuery () {
+
+    },
+    WriteClose () { this.showWrite = false },
+    OpenImgBox (title, name, list) {
+      this.$refs.ImgBox.SetData(title, name, list)
+      this.$refs.ImgBox.Open()
+      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
+    },
+    handleWrite (state, row) {
+      this.WriteState = state
+      this.showWrite = true
+      if (state) {
+        this.$refs.Details.Loading = true
+        this.$axios.get(GetSwitchingPowerSupplyInfo, {
+          params: {
+            Id: row.id
+          }
+        }).then(res => {
+          this.$refs.Details.Loading = false
+          this.$refs.Details.setWriteData(res.data)
+        }).catch(err => {
+          this.$refs.Details.Loading = false
+          console.log(err)
+        })
+      }
+    },
+    handle2 (row) {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.$axios.delete(DelEquipment, {
+          params: {id: row.id}
+        }).then(res => {
+          if (res.errorCode === '200') {
+            this.getMore(this.currentPage)
+            this.$message.success('删除成功！')
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      })
+    }
+
+  },
+  components: {
+    layuiTitle,
+    ImgBox,
+    Details
+  }
+}
+</script>
+
+<style scoped>
+  @import url('./../../../common/css/mixin.css');
+</style>

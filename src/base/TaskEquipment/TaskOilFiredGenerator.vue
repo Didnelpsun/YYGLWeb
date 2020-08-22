@@ -233,10 +233,13 @@
               <td><div class="cell">设备型号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="models">
-                  <el-input v-model="WriteData.models"></el-input>
+                  <el-select v-model="WriteData.models">
+                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.models}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
               <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
               <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
               <td><div class="cell"></div></td>

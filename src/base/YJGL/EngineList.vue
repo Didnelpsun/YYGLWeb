@@ -217,7 +217,7 @@
             </tr>
             <!--标签二维码-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>标签二维码</div></td>
+              <td><div class="cell"><i class="must">*</i>标签编码</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.modulecode}}</div>
@@ -232,7 +232,7 @@
             </tr>
             <!--采集器ID-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>采集器ID</div></td>
+              <td><div class="cell"><i class="must">*</i>采集器编码</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.swver}}</div>

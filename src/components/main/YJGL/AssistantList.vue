@@ -34,9 +34,8 @@
         <el-table-column type="expand">
           <el-table :data="boardData" v-loading="Loading">
             <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-            <el-table-column prop="type" label="类型" width="" :formatter="typeFormat"></el-table-column>
-            <el-table-column prop="resourcesname" label="类型名称" width=""></el-table-column>
-            <el-table-column prop="resourcescode" label="类型编码" width=""></el-table-column>
+            <el-table-column prop="resourcesname" label="站点名称" width=""></el-table-column>
+            <el-table-column prop="resourcescode" label="站点编码" width=""></el-table-column>
             <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
             <el-table-column prop="applytime" label="提交时间" width=""></el-table-column>
           </el-table>

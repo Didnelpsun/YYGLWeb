@@ -12,12 +12,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="需求名称：">
-                <el-input class="searchSelect" v-model="query.demandname" placeholder="请输入需求名称"></el-input>
+                <el-input class="searchSelect" v-model="query.demandname" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="需求单号：">
-                <el-input class="searchSelect" v-model="query.demandno" placeholder="请输入需求单号"></el-input>
+                <el-input class="searchSelect" v-model="query.demandno" placeholder="请输入需求单号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -34,17 +34,17 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="需求批次：">
-                <el-input class="searchSelect" v-model="query.demandbatch" placeholder="请输入需求批次"></el-input>
+                <el-input class="searchSelect" v-model="query.demandbatch" placeholder="请输入需求批次" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点编码：">
-                <el-input class="searchSelect" v-model="query.resourcecode" placeholder="请输入站点编码"></el-input>
+                <el-input class="searchSelect" v-model="query.resourcecode" placeholder="请输入站点编码" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点名称：">
-                <el-input class="searchSelect" v-model="query.resourcename" placeholder="请输入站点名称"></el-input>
+                <el-input class="searchSelect" v-model="query.resourcename" placeholder="请输入站点名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -77,7 +77,7 @@
         <el-table-column prop="constructionmodename" label="建设方式" width=""></el-table-column>
         <el-table-column prop="taskstatename" label="审核状态" width="100"></el-table-column>
         <el-table-column prop="updatetime" label="创建时间" width=""></el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        <el-table-column label="操作" width="90" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="checkDetail(scope.row)" v-if="scope.row.taskstatename!=='已完成'">审核</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="scope.row.taskstatename==='待执行'">删除</el-button>

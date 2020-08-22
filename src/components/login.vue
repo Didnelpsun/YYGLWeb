@@ -45,8 +45,8 @@ export default {
   name: 'login',
   data () {
     return {
-      username: 'sjw',
-      userpassword: 'Dzl123wuh',
+      username: '',
+      userpassword: '',
       userVali: '',
       fullscreenLoading: false,
       Logging: false, // 登录中

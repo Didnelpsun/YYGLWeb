@@ -16,6 +16,8 @@ export const JobList = `${reqURL}/YJGL/Job/GetJobList` // 任务列表
 export const JobInfo = `${reqURL}/YJGL/Job/GetJobInfo` // 任务详情
 export const TaskIdOperationLog = `${reqURL}/YJGL/Job/TaskIdOperationLog` // 调度日志
 export const TaskIdMonitoring = `${reqURL}/YJGL/Job/TaskIdMonitoring` // 告警列表
+export const AddTask = `${reqURL}/YJGL/Job/AddTask` // 添加发电任务
+export const ImportBBUExcel = `${reqURL}/YJGL/Job/ImportBBUExcel` // 工单导入
 
 // 油机
 export const AddEngine = `${reqURL}/YJGL/engine/AddEngine` // 添加油机

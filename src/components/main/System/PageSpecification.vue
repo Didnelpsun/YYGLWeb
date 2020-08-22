@@ -6,12 +6,12 @@
               <el-col :span="18">
                 <el-col :span="8">
                   <el-form-item label="表名：">
-                    <el-input v-model="query.tablename"></el-input>
+                    <el-input v-model="query.tablename" @keyup.enter.native="getMore(1)"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="字段名：">
-                    <el-input v-model="query.fieldname"></el-input>
+                    <el-input v-model="query.fieldname"  @keyup.enter.native="getMore(1)"></el-input>
                   </el-form-item>
                 </el-col>
               </el-col>

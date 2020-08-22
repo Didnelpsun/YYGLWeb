@@ -363,7 +363,7 @@
               <td><div class="cell">与规划偏移距离(米)</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.demanddistance.toFixed(2)}}</div>
+                  <div>{{tableData.demanddistance ? tableData.demanddistance.toFixed(2) : tableData.demanddistance}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -396,7 +396,7 @@
               <td><div class="cell">与存量站之间的距离(米)</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.resourcedistance.toFixed(2)}}</div>
+                  <div>{{tableData.resourcedistance ? tableData.resourcedistance.toFixed(2) : tableData.resourcedistance}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -740,10 +740,30 @@
             </tr>
             <!--楼面站拟建塔桅数量，高度（米），及塔型-->
             <tr class="el-table__row">
-              <td><div class="cell">楼面站拟建塔桅数量，高度（米），及塔型</div></td>
+              <td><div class="cell">楼面站拟建塔桅数量</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.floorstructuralmast}}</div>
+                  <div>{{tableData.towermastnumber}}</div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">楼面站拟建塔桅高度(米)</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.towermastheight}}</div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">楼面站拟建塔桅塔型</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.towermasttype}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -751,12 +771,32 @@
             </tr>
             </template>
             <template v-if="tableData.websitebuildingmode === 2">
-            <!--楼面站拟建塔桅数量、高度（米）、及塔型-->
+            <!--地面站拟建塔桅数量、高度（米）、及塔型-->
             <tr class="el-table__row">
-              <td><div class="cell">地面站拟建塔桅数量、高度（米）、及塔型</div></td>
+              <td><div class="cell">地面站拟建塔桅数量</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.groundstructuralmast}}</div>
+                  <div>{{tableData.towermastnumber}}</div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">地面站拟建塔桅高度(米)</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.towermastheight}}</div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">地面站拟建塔桅塔型</div></td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.towermasttypename}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -1002,7 +1042,7 @@
             <tr class="el-table__row">
               <td><div class="cell">360环境照片</div></td>
               <td>
-                <div class="cell" @click="OpenImgBox('environment')">
+                <div class="cell" @click="Open360ImgBox()">
                   {{formatString(tableData.environment)}}
                 </div>
               </td>
@@ -1055,6 +1095,7 @@
       <el-button type="success" @click="subAuit(1)" v-if="SurveyInfoType===2">审核通过</el-button>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
+    <EnvironmentImgBox ref="EnvironmentImgBox"></EnvironmentImgBox>
     <el-dialog title="审核" :visible.sync="auitShow" center width="30%" @close="auitClose">
       <el-form :data="auitData">
         <el-row style="margin-bottom:15px">
@@ -1077,6 +1118,7 @@
 import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask } from 'api/SurveyManagement'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from 'base/ImgBox'
+import EnvironmentImgBox from 'base/EnvironmentImgBox'
 import {mapGetters} from 'vuex'
 import ResourceList from 'base/Resource/ResourceList'
 import layuiTitle from 'base/layui-title'
@@ -1204,10 +1246,10 @@ export default {
         geologicalexploration: '',
         // 楼面站拟建楼面高度（米）
         floorheight: '',
-        // 楼面站拟建塔桅数量，高度（米），及塔型
-        floorstructuralmast: '',
-        // 地面站拟建塔桅数量，高度（米），及塔型
-        groundstructuralmast: '',
+        // 楼面站/地面站拟建塔桅数量，高度（米），及塔型
+        towermastnumber: '',
+        towermastheight: '',
+        towermasttype: '',
         // 地面站拟建场地山高（米），平面填零
         sitegrowtaller: '',
         //  拟建机房类型
@@ -1311,24 +1353,23 @@ export default {
     },
     OpenImgBox (s) {
       switch (s) {
-        case 'environment':
-          this.$refs.ImgBox.SetData('360环境照片', '360度环境照片', this.tableData.environment, true)
-          break
         case 'housingconstruction':
-          this.$refs.ImgBox.SetData('机房建设地照片', '机房建设地照片', this.tableData.housingconstruction)
+          this.$refs.ImgBox.SetData('机房建设地照片', 'housingconstruction', this.tableData.housingconstruction, true)
           break
         case 'roofing':
-          this.$refs.ImgBox.SetData('塔桅及天面照片', '塔桅及天面照片', this.tableData.roofing)
-          break
-        case 'sitesupplementarymap':
-          this.$refs.ImgBox.SetData('站点补充图片', '站点补充图片', this.tableData.sitesupplementarymap)
+          this.$refs.ImgBox.SetData('塔桅及天面照片', 'roofing', this.tableData.roofing, true)
           break
         case 'sketch':
-          this.$refs.ImgBox.SetData('勘察草图', '勘察草图', this.tableData.sketch)
+          this.$refs.ImgBox.SetData('勘察草图', 'sketch', this.tableData.sketch, true)
           break
       }
       this.$refs.ImgBox.Open()
       this.$refs.ImgBox.Flag = true
+    },
+    Open360ImgBox () {
+      this.$refs.EnvironmentImgBox.SetData('360环境照片', 'environment', this.tableData.environment, true)
+      this.$refs.EnvironmentImgBox.Open()
+      this.$refs.EnvironmentImgBox.Flag = true
     },
     // 返回关闭函数
     closeWrite () {
@@ -1404,6 +1445,7 @@ export default {
   components: {
     ResourceList,
     ImgBox,
+    EnvironmentImgBox,
     layuiTitle
   }
 }

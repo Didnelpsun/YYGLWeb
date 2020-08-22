@@ -6,7 +6,7 @@
           <el-col :span="18">
             <el-col :span="10">
               <el-form-item label="模板名称：">
-                <el-input v-model="Query.templatename"></el-input>
+                <el-input v-model="Query.templatename" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

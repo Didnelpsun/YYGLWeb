@@ -17,7 +17,7 @@
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
     <el-table :data="tableList" v-loading="Table1Loading">
       <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-      <el-table-column prop="username" label="用户名称" width=""></el-table-column>
+      <el-table-column prop="username" label="用户账号" width=""></el-table-column>
       <el-table-column prop="mobile_no" label="联系电话" width=""></el-table-column>
       <el-table-column prop="organizationname" label="部门" width=""></el-table-column>
       <el-table-column prop="" label="操作" width="50">

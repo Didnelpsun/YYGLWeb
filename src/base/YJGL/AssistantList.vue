@@ -110,12 +110,11 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--站点ID-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-show="WriteState !== 2" >
                 <td><div class="cell"><i class="must">*</i>站点名称</div></td>
                 <td>
                   <div class="cell">
-                    <div v-show="WriteState === 2">{{tableData.sitename}}</div>
-                    <div label-width="0" prop="sitename" class="form-item" v-show="WriteState !== 2" @click="siteOpen">
+                    <div label-width="0" prop="sitename" class="form-item" @click="siteOpen">
                       <el-input v-model="tableData.sitename" placeholder="请填入站点名称" readonly></el-input>
                     </div>
                   </div>

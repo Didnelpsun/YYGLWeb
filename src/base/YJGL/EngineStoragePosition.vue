@@ -132,24 +132,6 @@
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
-              <!-- 存放位置类型 -->
-              <tr class="el-table__row">
-                <td><div class="cell"><i class="must">*</i>存放位置类型</div></td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.storageplacetype}}</div>
-                    <el-form-item label-width="0" prop="storageplacetype" class="form-item" v-show="WriteState !== 2">
-                      <el-select class="tableSelect" v-model="tableData.storageplacetype" placeholder="请选择存放位置类型">
-                        <el-option label="请选择" value=""></el-option>
-                        <el-option v-for="item in dictionaryList.storageplacetypeList" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td><div class="cell"></div></td>
-                <!-- <td><div class="cell">{{this.writeDic(dictionaryList.stateList)}}</div></td> -->
-                <td><div class="cell"></div></td>
-              </tr>
               <!--存放位置-->
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>存放位置</div></td>
@@ -218,12 +200,6 @@ export default{
   name: 'EngineStoragePosition',
   mixins: [GlobalRes],
   props: {
-    dictionaryList: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
     WriteState: {
       type: Number,
       default: 0 // 0为添加 1为编辑 2为查看

@@ -6,7 +6,7 @@
           <!--区域级联选择器-->
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="是否归档：">
+              <el-form-item label="审核状态：">
                 <el-select v-model="query.ifarchived" placeholder="请选择是否归档">
                   <el-option label="已归档" :value="true"></el-option>
                   <el-option label="未归档" :value="false"></el-option>
@@ -20,22 +20,22 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="油机缸号：">
-                <el-input v-model="query.machinebatchno" placeholder="请输入油机缸号"></el-input>
+                <el-input v-model="query.machinebatchno" placeholder="请输入油机缸号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="厂家：">
-                <el-input v-model="query.manufactor" placeholder="请输入厂家"></el-input>
+                <el-input v-model="query.manufactor" placeholder="请输入厂家"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号：">
-                <el-input v-model="query.model" placeholder="请输入型号"></el-input>
+                <el-input v-model="query.model" placeholder="请输入型号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="燃油类型：">
-                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"></el-input>
+                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -68,7 +68,7 @@
         <el-table-column prop="fueltypename" label="燃油类型" width=""></el-table-column>
         <el-table-column prop="enginestatename" label="油机状态" width=""></el-table-column>
         <!-- <el-table-column prop="applicanttype" label="申请类型" width="75" :formatter="applicanttypeFormat"></el-table-column> -->
-        <!-- <el-table-column prop="auditorstate" label="审核状态" width="" :formatter="auditorstateFormat"></el-table-column> -->
+        <el-table-column prop="auditorstate" label="审核状态" width="" :formatter="auditorstateFormat"></el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>

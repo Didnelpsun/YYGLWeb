@@ -6,7 +6,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="产权单位：" label-width="100px">
-                <el-input class="searchSelect" v-model="query.propertyunit" placeholder="请输入产权单位"></el-input>
+                <el-input class="searchSelect" v-model="query.propertyunit" placeholder="请输入产权单位" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">

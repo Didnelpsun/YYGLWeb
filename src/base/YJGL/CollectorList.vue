@@ -50,20 +50,6 @@
               </td> -->
               <td><div class="cell"></div></td>
               </tr>
-              <!--省份-->
-              <tr class="el-table__row" v-show="WriteState !== 0">
-              <td><div class="cell"><i class="must">*</i>省份</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.provincename}}</div>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td>
-                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
-              </td> -->
-              <td><div class="cell"></div></td>
-              </tr>
               <!--地市-->
               <tr class="el-table__row" v-show="WriteState !== 0">
               <td><div class="cell"><i class="must">*</i>地市</div></td>
@@ -122,14 +108,14 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
               </tr>
-              <!--厂家编码-->
+              <!--生产厂家-->
               <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>厂家编码</div></td>
+              <td><div class="cell"><i class="must">*</i>生产厂家</div></td>
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.faccode}}</div>
                     <el-form-item label-width="0" prop="faccode" class="form-item" v-show="WriteState !== 2">
-                      <el-input v-model="tableData.faccode" placeholder="请填入厂家编码"></el-input>
+                      <el-input v-model="tableData.faccode" placeholder="请填入生产厂家"></el-input>
                     </el-form-item>
                   </div>
                 </td>

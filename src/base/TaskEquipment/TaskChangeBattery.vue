@@ -233,10 +233,13 @@
               <td><div class="cell">设备型号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="models">
-                  <el-input v-model="WriteData.models"></el-input>
+                  <el-select v-model="WriteData.models">
+                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.models}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
               <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
               <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
               <td><div class="cell"></div></td>
@@ -432,7 +435,7 @@ export default {
         '设备单位',
         '设备维护单位',
         '电池设备厂家',
-        '设备型号',
+        '换电电池设备型号',
         '设备状态',
         '设备存放点类型'
       ]
@@ -443,7 +446,7 @@ export default {
           this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
           this.DicList.manufacturer = data.filter(i => { return i.type === '电池设备厂家' })
           this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
-          this.DicList.models = data.filter(i => { return i.type === '设备型号' })
+          this.DicList.models = data.filter(i => { return i.type === '换电电池设备型号' })
           this.DicList.state = data.filter(i => { return i.type === '设备状态' })
         } else {
           this.$message.error(res.msg)

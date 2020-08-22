@@ -28,7 +28,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="站址名称：">
-                <el-input v-model="Query.sitename" placeholder=请输入站址名称></el-input>
+                <el-input v-model="Query.sitename" placeholder=请输入站址名称 @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -387,13 +387,13 @@ export default {
       this.WriteState = state
       this.currentId = row.id
       this.showWrite = true
-      this.WriteLoading = true
+      this.Loading = true
       this.$axios.get(GetSiteInfo, {
         params: {
           id: row.id
         }
       }).then(res => {
-        this.WriteLoading = false
+        this.Loading = false
         this.WriteData = res.data
         if (state === 1) {
           this.WriteData.longitude = this.WriteData.longitude ? this.WriteData.longitude : null

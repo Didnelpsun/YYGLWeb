@@ -224,7 +224,7 @@
                 </tr>
                 <tr class="el-table__row">
                   <td><div class="cell">与规划偏移距离(米) </div></td>
-                  <td><div class="cell">{{StockStationInfo.demanddistance.toFixed(2)}}</div></td>
+                  <td><div class="cell">{{StockStationInfo.demanddistance ? StockStationInfo.demanddistance.toFixed(2) : StockStationInfo.demanddistance}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -840,7 +840,7 @@
                 <tbody>
                 <tr class="el-table__row">
                   <td><div class="cell">360环境照片 </div></td>
-                  <td><div class="cell" @click="OpenImgBox('360环境照片')">{{formatString(StockStationInfo.environment)}}</div></td>
+                  <td><div class="cell" @click="Open360ImgBox()">{{formatString(StockStationInfo.environment)}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -869,8 +869,14 @@
                   <td><div class="cell"></div></td>
                 </tr>
                 <tr class="el-table__row">
-                  <td><div class="cell">设备照片 </div></td>
-                  <td><div class="cell" @click="OpenImgBox('设备照片')">{{formatString(StockStationInfo.equipmentimg)}}</div></td>
+                  <td><div class="cell">设备照片（机房） </div></td>
+                  <td><div class="cell" @click="OpenImgBox('设备照片（机房）')">{{formatString(StockStationInfo.roomequipmentimg)}}</div></td>
+                  <!--<td><div class="cell"></div></td>-->
+                  <td><div class="cell"></div></td>
+                </tr>
+                <tr class="el-table__row">
+                  <td><div class="cell">设备照片(室外一体化机柜) </div></td>
+                  <td><div class="cell" @click="OpenImgBox('设备照片(室外一体化机柜)')">{{formatString(StockStationInfo.cabinetquipmentimg)}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
@@ -967,6 +973,7 @@
       <el-button type="success" @click="subAuit(1)" v-if="SurveyInfoType===2">审核通过</el-button>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
+    <EnvironmentImgBox ref="EnvironmentImgBox"></EnvironmentImgBox>
     <el-dialog title="审核打回" :visible.sync="auitShow" center width="30%" @close="auitClose">
       <el-form :data="auitData">
         <el-row style="margin-bottom:15px">
@@ -989,6 +996,7 @@
 import layuiTitle from 'base/layui-title'
 import {mapGetters} from 'vuex'
 import ImgBox from 'base/ImgBox'
+import EnvironmentImgBox from 'base/EnvironmentImgBox'
 import {GetProjectInfo, GetStockResourceCensusInfo, AuitTask} from 'api/SurveyManagement'
 export default {
   name: 'StockStation',
@@ -1072,7 +1080,8 @@ export default {
         roofing: [],
         sitesupplementarymap: [],
         sketch: [],
-        equipmentimg: [],
+        roomequipmentimg: [],
+        cabinetquipmentimg: [],
         roomsarehd: [],
         roomequipmenthd: [],
         towermasthd: [],
@@ -1090,22 +1099,7 @@ export default {
       },
       table1Loading: false,
       SurveyInfo: {
-      }/*,
-      imgList: {
-        environment: [],
-        roomsintegration: [],
-        roofing: [],
-        sitesupplementarymap: [],
-        sketch: [],
-        equipmentimg: [],
-        roomsarehd: [],
-        roomequipmenthd: [],
-        towermasthd: [],
-        floorstandroofinghd: [],
-        columnfootanchorhd: [],
-        staysituationhd: [],
-        netsituationhd: []
-      } */
+      }
     }
   },
   activated () {
@@ -1175,49 +1169,53 @@ export default {
     },
     OpenImgBox (val, flag) {
       switch (val) {
-        case '360环境照片':
-          console.log(this.StockStationInfo.environment)
-          this.$refs.ImgBox.SetData('360环境照片', '360度环境照片', this.StockStationInfo.environment, true)
-          break
         case '机房照片':
-          this.$refs.ImgBox.SetData('机房照片', '机房照片', this.StockStationInfo.roomsintegration)
+          this.$refs.ImgBox.SetData('机房照片', 'roomsintegration', this.StockStationInfo.roomsintegration, true)
           break
         case '塔桅及天面照片':
-          this.$refs.ImgBox.SetData('塔桅及天面照片', '塔桅及天面照片', this.StockStationInfo.roofing)
+          this.$refs.ImgBox.SetData('塔桅及天面照片', 'roofing', this.StockStationInfo.roofing, true)
           break
         case '站点补充图':
-          this.$refs.ImgBox.SetData('站点补充图', '站点补充图', this.StockStationInfo.sitesupplementarymap)
+          this.$refs.ImgBox.SetData('站点补充图', 'sitesupplementarymap', this.StockStationInfo.sitesupplementarymap, true)
           break
         case '勘察草图':
-          this.$refs.ImgBox.SetData('勘察草图', '勘察草图', this.StockStationInfo.sketch)
+          this.$refs.ImgBox.SetData('勘察草图', 'sketch', this.StockStationInfo.sketch, true)
           break
-        case '设备照片':
-          this.$refs.ImgBox.SetData('设备照片', '设备照片', this.StockStationInfo.equipmentimg)
+        case '设备照片（机房）':
+          this.$refs.ImgBox.SetData('设备照片（机房）', 'roomequipmentimg', this.StockStationInfo.roomequipmentimg, true)
+          break
+        case '设备照片(室外一体化机柜)':
+          this.$refs.ImgBox.SetData('设备照片(室外一体化机柜)', 'cabinetquipmentimg', this.StockStationInfo.cabinetquipmentimg, true)
           break
         case '机房所处地隐患':
-          this.$refs.ImgBox.SetData('机房所处地隐患', '机房所处地隐患', this.StockStationInfo.roomsarehd)
+          this.$refs.ImgBox.SetData('机房所处地隐患', 'roomsarehd', this.StockStationInfo.roomsarehd)
           break
         case '机房内设备隐患':
-          this.$refs.ImgBox.SetData('机房内设备隐患', '机房内设备隐患', this.StockStationInfo.roomequipmenthd)
+          this.$refs.ImgBox.SetData('机房内设备隐患', 'roomequipmenthd', this.StockStationInfo.roomequipmenthd)
           break
         case '塔桅隐患':
-          this.$refs.ImgBox.SetData('塔桅隐患', '塔桅隐患', this.StockStationInfo.towermasthd)
+          this.$refs.ImgBox.SetData('塔桅隐患', 'towermasthd', this.StockStationInfo.towermasthd)
           break
         case '楼面站天面隐患':
-          this.$refs.ImgBox.SetData('楼面站天面隐患', '楼面站天面隐患', this.StockStationInfo.floorstandroofinghd)
+          this.$refs.ImgBox.SetData('楼面站天面隐患', 'floorstandroofinghd', this.StockStationInfo.floorstandroofinghd)
           break
         case '塔脚，地锚隐患':
-          this.$refs.ImgBox.SetData('塔脚，地锚隐患', '塔脚，地锚隐患', this.StockStationInfo.columnfootanchorhd)
+          this.$refs.ImgBox.SetData('塔脚，地锚隐患', 'columnfootanchorhd', this.StockStationInfo.columnfootanchorhd)
           break
         case '拉线情况隐患':
-          this.$refs.ImgBox.SetData('拉线情况隐患', '拉线情况隐患', this.StockStationInfo.staysituationhd)
+          this.$refs.ImgBox.SetData('拉线情况隐患', 'staysituationhd', this.StockStationInfo.staysituationhd)
           break
         case '地网情况隐患':
-          this.$refs.ImgBox.SetData('地网情况隐患', '地网情况隐患', this.StockStationInfo.netsituationhd)
+          this.$refs.ImgBox.SetData('地网情况隐患', 'netsituationhd', this.StockStationInfo.netsituationhd)
           break
       }
       this.$refs.ImgBox.Open()
       this.$refs.ImgBox.Flag = true
+    },
+    Open360ImgBox () {
+      this.$refs.EnvironmentImgBox.SetData('360环境照片', 'environment', this.StockStationInfo.environment, true)
+      this.$refs.EnvironmentImgBox.Open()
+      this.$refs.EnvironmentImgBox.Flag = true
     },
     subAuit (s) {
       if (this.SurveyInfoType === 2) {
@@ -1279,7 +1277,8 @@ export default {
   },
   components: {
     layuiTitle,
-    ImgBox
+    ImgBox,
+    EnvironmentImgBox
   }
 }
 </script>

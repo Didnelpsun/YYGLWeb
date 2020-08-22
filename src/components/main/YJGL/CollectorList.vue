@@ -7,7 +7,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="采集器编码：" label-width="125px">
-                <el-input v-model="query.swver" placeholder="请输入采集器编码"></el-input>
+                <el-input v-model="query.swver" placeholder="请输入采集器编码" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">

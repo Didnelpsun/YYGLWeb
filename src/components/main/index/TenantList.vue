@@ -7,7 +7,7 @@
           <el-col :span="18">
             <el-col :span="10">
               <el-form-item label="租户名称：">
-                <el-input v-model="Query.name"></el-input>
+                <el-input v-model="Query.name" @keyup.enter.native="searchTable1"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">

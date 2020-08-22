@@ -6,12 +6,12 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="运维站点名称：" label-width="150px">
-                <el-input v-model="Query.monitoringname" placeholder="请输入运维站点名称"></el-input>
+                <el-input v-model="Query.monitoringname" placeholder="请输入运维站点名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="所属站点名称：" label-width="150px">
-                <el-input v-model="Query.resourcename" placeholder="请输入所属站点名称"></el-input>
+                <el-input v-model="Query.resourcename" placeholder="请输入所属站点名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <!--<el-col :span="10">-->

@@ -25,7 +25,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label-width="130px" label="设备类型名称：">
-                <el-input v-model="Query.equipmentypename" placeholder="请输入设备类型名称"></el-input>
+                <el-input v-model="Query.equipmentypename" placeholder="请输入设备类型名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -202,7 +202,7 @@
                   <tr class="el-table__row">
                     <td><div class="cell">站点编码</div></td>
                     <td><div class="cell">{{siteInfo.code}}</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell" @click="OpenImgBox('站点编码', 'code', ImgList1)">{{ImgList1.length}}</div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
@@ -285,11 +285,15 @@
                   <tr class="el-table__row">
                     <td><div class="cell">建站模式</div></td>
                     <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
+                      <!--<el-form-item class="form-item">
                         <el-input v-model="siteInfo.websitebuildingmode"></el-input>
-                      </el-form-item>
+                      </el-form-item>-->
+                      <el-select v-model="siteInfo.websitebuildingmode" size="small">
+                        <el-option label="请选择" :value="null"></el-option>
+                        <el-option v-for="i in DicList.models" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                      </el-select>
                     </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.websitebuildingmode}}</div></td>
+                    <td v-if="showType == 1"><div class="cell">{{siteInfo.websitebuildingmodename}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -443,7 +447,7 @@
                       </el-form-item>
                     </div></td>
                     <td v-show="showType == 1"><div class="cell">{{siteInfo.longitude}}</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell" @click="OpenImgBox('经度', 'longitude', ImgList2)">{{ImgList2.length}}</div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
@@ -633,7 +637,9 @@ export default {
         resourcename: '',
         remark: '',
         task_id: ''
-      }
+      },
+      ImgList1: [],
+      ImgList2: []
     }
   },
   activated () {
@@ -642,9 +648,12 @@ export default {
   },
   methods: {
     initDictionariesArray () {
-      let arr = ['资源任务来源类型', '任务状态', '设备产权单位']
+      let arr = ['资源任务来源类型', '任务状态', '设备产权单位', '建站模式']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
+          this.DicList.models = res.data.filter(i => {
+            return i.type === '建站模式'
+          })
           this.DicList.sourcetypes = res.data.filter(i => {
             return i.type === '资源任务来源类型'
           })
@@ -837,11 +846,17 @@ export default {
           this.table1Loading = false
           if (res.errorCode === '200') {
             this.siteInfo = res.data
+            this.setImgList(res.data.imglist)
           } else {
             this.$message.error(res.msg)
           }
         })
       }
+    },
+    setImgList (list) {
+      if (list === null) return
+      this.ImgList1 = list.filter(i => { return i.field_name === 'code' })
+      this.ImgList2 = list.filter(i => { return i.field_name === 'longitude' })
     },
     handleAddTask () {
       this.$refs.AddForm.validate((vali, msg) => {
@@ -881,7 +896,7 @@ export default {
       this.$refs.ImgBox.Open()
       this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
-    handleEditSite  () {
+    handleEditSite () {
       this.$refs.siteInfoForm.validate((vali, msg) => {
         if (!vali) {
           return this.$message.error('请补全信息！')
@@ -968,6 +983,8 @@ export default {
       this.pageSize2 = 10
       this.currentTaskId = ''
       this.DeviceID = ''
+      this.ImgList1 = []
+      this.ImgList2 = []
       this.$nextTick(() => {
         this.$refs.siteInfoForm.clearValidate()
       })
@@ -1059,6 +1076,14 @@ export default {
         this.addData.TaskObject = newv
         this.deviceList = []
       }
+    },
+    ImgList (val) {
+      this.siteInfo.imglist = val
+    }
+  },
+  computed: {
+    ImgList () {
+      return this.ImgList1.concat(this.ImgList2)
     }
   },
   components: {

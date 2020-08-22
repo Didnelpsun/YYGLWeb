@@ -8,7 +8,7 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="需求名称：">
-                  <el-input v-model="Query.demandname" placeholder="请输入需求名称"></el-input>
+                  <el-input v-model="Query.demandname" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -29,7 +29,7 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="需求单号：">
-                  <el-input v-model="Query.demandno" placeholder="请输入需求单号"></el-input>
+                  <el-input v-model="Query.demandno" placeholder="请输入需求单号" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -48,17 +48,17 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="需求批次：">
-                  <el-input v-model="Query.demandbatch" placeholder="请输入需求批次"></el-input>
+                  <el-input v-model="Query.demandbatch" placeholder="请输入需求批次" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="站点编码：">
-                  <el-input v-model="Query.resourcecode" placeholder="请输入站点编码"></el-input>
+                  <el-input v-model="Query.resourcecode" placeholder="请输入站点编码" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="站点名称：">
-                  <el-input v-model="Query.resourcename" placeholder="请输入站点名称"></el-input>
+                  <el-input v-model="Query.resourcename" placeholder="请输入站点名称" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -788,6 +788,7 @@ export default {
       this.WriteData.recentlyresource_id = ''
     },
     handleExport (index, row) {
+      console.log(row)
       this.$confirm(`您确定要导出项目资料吗？`, '提示', {
         type: 'info'
       }).then(() => {
@@ -803,7 +804,7 @@ export default {
           let blob = new Blob([res], { type: 'application/vnd.ms-excel' })
           link.style.display = 'none'
           link.href = URL.createObjectURL(blob)
-          link.download = '项目资料' + '.xlsx' // 下载的文件名  注意：加.xls是兼容火狐浏览器
+          link.download = row.constructionmodename + row.demandname + '项目资料' + '.xlsx' // 下载的文件名  注意：加.xls是兼容火狐浏览器
           document.body.appendChild(link)
           link.click()
           document.body.removeChild(link)

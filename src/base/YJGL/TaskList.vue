@@ -1,6 +1,6 @@
 <template>
   <div class="write">
-    <el-tabs class="content-card" v-model="ViewTabIndex" @tab-click="resetData">
+    <el-tabs class="content-card" v-model="ViewTabIndex" @tab-click="resetData"  v-if="WriteState === 2">
       <el-tab-pane :label="WriteState===0?'任务新增':WriteState===1?'任务编辑':'任务详情'">
         <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
           <!--表头-->
@@ -19,7 +19,7 @@
             </table>
           </div>
           <!--表体-->
-          <el-form :model="tableData1" :rules="Rules" ref="tableForm"  v-loading="WriteLoading">
+          <el-form :model="tableData1" v-loading="WriteLoading">
             <div class="el-table__body-wrapper is-scrolling-none">
               <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
                 <colgroup>
@@ -279,7 +279,7 @@
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
                 </tr>
-                <tr class="el-table__row">
+                <!-- <tr class="el-table__row">
                   <td><div class="cell">资源站点名称</div></td>
                   <td><div class="cell">{{tableData4.resourcename}}</div></td>
                   <td><div class="cell"></div></td>
@@ -290,7 +290,7 @@
                   <td><div class="cell">{{tableData4.resourcecode}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
+                </tr> -->
                 <tr class="el-table__row">
                   <td><div class="cell">开通日期</div></td>
                   <td><div class="cell">{{tableData4.openingdate}}</div></td>
@@ -328,7 +328,601 @@
       </div>
       </el-tab-pane>
     </el-tabs>
+    <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small" v-if="WriteState === 0">
+      <!--表头-->
+      <div class="el-table__header-wrapper">
+        <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
+          <colgroup>
+            <col width="100"/>
+            <col width="300"/>
+            <!-- <col width="250"/> -->
+            <col width="100"/>
+          </colgroup>
+          <thead>
+          <tr>
+            <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
+            <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
+            <!-- <th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th> -->
+            <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+      <!--表体-->
+      <el-form :model="tableData" :rules="Rules" ref="tableForm" v-loading="WriteLoading" >
+        <div class="el-table__body-wrapper is-scrolling-none">
+          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
+            <colgroup>
+              <col width="100"/>
+              <col width="300"/>
+              <!-- <col width="250"/> -->
+              <col width="100"/>
+            </colgroup>
+            <tbody>
+              <!--故障单编码-->
+              <tr class="el-table__row">
+                <td><div class="cell"><i class="must">*</i>故障单编码</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="code" class="form-item">
+                      <el-input v-model="tableData.code" placeholder="请填入故障单编码"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+
+              <!--工单状态-->
+              <tr class="el-table__row">
+                <td><div class="cell"><i class="must">*</i>工单状态</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="workorderstatus" class="form-item">
+                      <el-input v-model="tableData.workorderstatus" placeholder="请填入工单状态"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--设备类型-->
+              <tr class="el-table__row">
+                <td><div class="cell">设备类型</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="devicetype" class="form-item">
+                      <el-input v-model="tableData.devicetype" placeholder="请填入设备类型"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--介绍-->
+              <tr class="el-table__row">
+                <td><div class="cell">介绍</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="description" class="form-item">
+                      <el-input v-model="tableData.description" placeholder="请填入介绍"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--等级-->
+              <tr class="el-table__row">
+                <td><div class="cell">等级</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="level" class="form-item">
+                      <el-input v-model="tableData.level" placeholder="请填入等级"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--标题-->
+              <tr class="el-table__row">
+                <td><div class="cell">标题</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="title" class="form-item">
+                      <el-input v-model="tableData.title" placeholder="请填入标题"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--默认介绍-->
+              <tr class="el-table__row">
+                <td><div class="cell">默认介绍</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="faultdescription" class="form-item">
+                      <el-input v-model="tableData.faultdescription" placeholder="请填入默认介绍"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--站点ID-->
+              <tr class="el-table__row">
+                <td><div class="cell">站点ID</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="siteid" class="form-item">
+                      <el-input v-model="tableData.siteid" placeholder="请填入站点ID"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--站点编码-->
+              <tr class="el-table__row">
+                <td><div class="cell">站点编码</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="sitecode" class="form-item">
+                      <el-input v-model="tableData.sitecode" placeholder="请填入站点编码"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--站点名称-->
+              <tr class="el-table__row">
+                <td><div class="cell">站点名称</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="sitename" class="form-item">
+                      <el-input v-model="tableData.sitename" placeholder="请填入站点名称"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--站点类型-->
+              <tr class="el-table__row">
+                <td><div class="cell">站点类型</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="sitetype" class="form-item">
+                      <el-input v-model="tableData.sitetype" placeholder="请填入站点类型"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--区域-->
+              <tr class="el-table__row">
+                <td><div class="cell">区域</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="area" class="form-item">
+                      <el-input v-model="tableData.area" placeholder="请填入区域"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--市镇-->
+              <tr class="el-table__row">
+                <td><div class="cell">市镇</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="towns" class="form-item">
+                      <el-input v-model="tableData.towns" placeholder="请填入市镇"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--所属运营站点-->
+              <tr class="el-table__row">
+                <td><div class="cell">所属运营站点</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="affiliatedoperator" class="form-item">
+                      <el-input v-model="tableData.affiliatedoperator" placeholder="请填入所属运营站点"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--是否购买发电服务-->
+              <tr class="el-table__row">
+                <td><div class="cell">是否购买发电服务</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="services" class="form-item">
+                      <el-input v-model="tableData.services" placeholder="请填入是否购买发电服务"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--开始停电时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">开始停电时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="starttime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始停电时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--蓄电池类型-->
+              <tr class="el-table__row">
+                <td><div class="cell">蓄电池类型</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="batterytype" class="form-item">
+                      <el-input v-model="tableData.batterytype" placeholder="请填入蓄电池类型"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--电池电压-->
+              <tr class="el-table__row">
+                <td><div class="cell">电池电压</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="batteryvoltage" class="form-item">
+                      <el-input v-model="tableData.batteryvoltage" placeholder="请填入电池电压"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--负载电流-->
+              <tr class="el-table__row">
+                <td><div class="cell">负载电流</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="loadcurrent" class="form-item">
+                      <el-input v-model="tableData.loadcurrent" placeholder="请填入负载电流"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--电池组1电流-->
+              <tr class="el-table__row">
+                <td><div class="cell">电池组1电流</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="batterypack1" class="form-item">
+                      <el-input v-model="tableData.batterypack1" placeholder="请填入电池组1电流"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--电池组2电流-->
+              <tr class="el-table__row">
+                <td><div class="cell">电池组2电流</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="batterypack2" class="form-item">
+                      <el-input v-model="tableData.batterypack2" placeholder="请填入电池组2电流"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--蓄电池剩余续航时间分钟-->
+              <tr class="el-table__row">
+                <td><div class="cell">蓄电池剩余续航时间分钟</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="remainingminutes" class="form-item">
+                      <el-input v-model="tableData.remainingminutes" placeholder="请填入蓄电池剩余续航时间分钟"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--接单时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">接单时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="ordertime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.ordertime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="接单时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--派单时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">派单时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="sendsingletime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.sendsingletime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="派单时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--是否上站-->
+              <tr class="el-table__row">
+                <td><div class="cell">是否上站</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="wetheron" class="form-item">
+                      <el-input v-model="tableData.wetheron" placeholder="请填入是否上站"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--告警时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">告警时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="alarmtime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.alarmtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="告警时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--告警清楚时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">告警清楚时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="knowtime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.knowtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="告警清楚时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--回单时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">回单时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="receipttime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.receipttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="回单时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--归档时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">归档时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="archivetime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.archivetime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="归档时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--代维单位-->
+              <tr class="el-table__row">
+                <td><div class="cell">代维单位</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="daiweicompany" class="form-item">
+                      <el-input v-model="tableData.daiweicompany" placeholder="请填入代维单位"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--告警历时分钟-->
+              <tr class="el-table__row">
+                <td><div class="cell">告警历时分钟</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="lastedminutes" class="form-item">
+                      <el-input v-model="tableData.lastedminutes" placeholder="请填入告警历时分钟"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--工单处理历时分钟-->
+              <tr class="el-table__row">
+                <td><div class="cell">工单处理历时分钟</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="takesminutes" class="form-item">
+                      <el-input v-model="tableData.takesminutes" placeholder="请填入工单处理历时分钟"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--机房动环维护人员-->
+              <tr class="el-table__row">
+                <td><div class="cell">机房动环维护人员</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="maintenancepersonnel" class="form-item">
+                      <el-input v-model="tableData.maintenancepersonnel" placeholder="请填入机房动环维护人员"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--机房动环维护人员联系电话-->
+              <tr class="el-table__row">
+                <td><div class="cell">机房动环维护人员联系电话</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="maintenancepersonnelcontact" class="form-item">
+                      <el-input v-model="tableData.maintenancepersonnelcontact" placeholder="请填入机房动环维护人员联系电话"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--包站人-->
+              <tr class="el-table__row">
+                <td><div class="cell">包站人</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="standpeople" class="form-item">
+                      <el-input v-model="tableData.standpeople" placeholder="请填入包站人"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--上站时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">上站时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="ontime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.ontime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="上站时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--开始发电时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">开始发电时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="powerstarttime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.powerstarttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始发电时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+               <!--结束发电时间-->
+              <tr class="el-table__row">
+                <td><div class="cell">结束发电时间</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="endgenerationtime" class="form-item">
+                      <el-date-picker class="tableSelect" v-model="tableData.endgenerationtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束发电时间">
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--接单时长分钟-->
+              <tr class="el-table__row">
+                <td><div class="cell">接单时长分钟</div></td>
+                <td>
+                  <div class="cell">
+                    <el-form-item label-width="0" prop="orderminutes" class="form-item">
+                      <el-input v-model="tableData.orderminutes" placeholder="请填入接单时长分钟"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-form>
+    </div>
     <div class="center" style="padding-bottom: 100px">
+      <el-button @click="subData" type="primary" v-show="WriteState===0" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
@@ -338,6 +932,7 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import ImgBox from 'base/ImgBox'
+import {AddTask} from 'api/YJGL'
 
 export default{
   name: 'TaskList',
@@ -353,6 +948,47 @@ export default{
       isShow: false,
       WriteLoading: false,
       // 新增表格相关属性
+      tableData: {
+        code: '',
+        workorderstatus: '',
+        devicetype: '',
+        description: '',
+        level: '',
+        title: '',
+        faultdescription: '',
+        sitecode: '',
+        sitename: '',
+        sitetype: '',
+        area: '',
+        towns: '',
+        siteid: '',
+        affiliatedoperator: '',
+        services: '',
+        starttime: '',
+        batterytype: '',
+        batteryvoltage: '',
+        loadcurrent: '',
+        batterypack1: '',
+        batterypack2: '',
+        remainingminutes: '',
+        ordertime: '',
+        sendsingletime: '',
+        whetheron: '',
+        alarmtime: '',
+        knowtime: '',
+        receipttime: '',
+        archivetime: '',
+        daiweicompany: '',
+        lastedminutes: '',
+        takesminutes: '',
+        maintenancepersonnel: '',
+        maintenancepersonnelcontact: '',
+        standpeople: '',
+        ontime: '',
+        powerstarttime: '',
+        endgenerationtime: '',
+        orderminutes: ''
+      },
       tableData1: {
         setimglist: [],
         deployimglist: [],
@@ -369,6 +1005,9 @@ export default{
       Rules: {
       }
     }
+  },
+  updated () {
+    console.log(this.WriteState)
   },
   methods: {
     // 在进行提交新增时赋值方法，在父组件中调用该方法
@@ -447,6 +1086,26 @@ export default{
       if (this.ViewTabIndex === '3') {
         this.$emit('fathersetData4')
       }
+    },
+    subData () {
+      this.$refs.tableForm.validate(async (valid, msg) => {
+        try {
+          this.WriteLoading = true
+          const res = await this.$axios.patch(AddTask, this.tableData)
+          this.WriteLoading = false
+          if (res.error === true) {
+            this.$message.warning('请补全信息')
+            console.log(res.errorMessage)
+          }
+          if (res.success === true) {
+            this.$message.success('添加成功！')
+            this.$emit('fatheretMore')
+            this.closeWrite()
+          } else { this.$message.warning(res.msg) }
+        } catch (e) {
+          console.log(e)
+        }
+      })
     },
     // 返回关闭编辑函数
     closeWrite () {

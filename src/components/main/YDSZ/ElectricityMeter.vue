@@ -7,7 +7,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="电表户号：">
-                <el-input v-model="Query.electricmeterdoorno" placeholder="请输入电表户号"></el-input>
+                <el-input v-model="Query.electricmeterdoorno" placeholder="请输入电表户号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -19,12 +19,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="电表编号：">
-                <el-input v-model="Query.electricmeterno" placeholder="请输入电表编号"></el-input>
+                <el-input v-model="Query.electricmeterno" placeholder="请输入电表编号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="资产序列号：">
-                <el-input v-model="Query.sharingnumber" placeholder="请填写资产序列号"></el-input>
+                <el-input v-model="Query.sharingnumber" placeholder="请填写资产序列号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">

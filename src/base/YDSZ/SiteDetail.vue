@@ -126,7 +126,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomtype">
                   <el-select v-model="WriteData.roomtype" size="small">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.roomtype" :key="i.value" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -154,7 +154,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="dayfacetype">
                   <el-select v-model="WriteData.dayfacetype" size="small">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.dayfacetype" :key="i.value" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -206,6 +206,32 @@
                 </el-form-item>
               </div></td>
               <td v-show="WriteState == 2"><div class="cell">{{WriteData.rrunumber}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">BBU数量</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="bbunumber">
+                  <el-input v-model="WriteData.bbunumber"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.bbunumber}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row" v-if="WriteState == 2">
+              <td><div class="cell">归属RRU数量</div></td>
+              <td><div class="cell">{{WriteData.attributionrrunumber}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row" v-if="WriteState == 2">
+              <td><div class="cell">BBU下挂RRU数量</div></td>
+              <td><div class="cell">{{WriteData.hangingrrunumber}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -323,15 +349,18 @@ export default {
         longitude: null,
         latitude: null,
         locationdescribe: '',
-        roomtype: 0,
+        roomtype: null,
         roomtypename: '',
         roomacreage: '',
         dayfacetypename: '',
-        dayfacetype: 0,
+        dayfacetype: null,
         dayfaceheight: '',
-        rrunumber: '',
+        rrunumber: 0,
         imglist: [],
         confirmtime: '',
+        bbunumber: 0,
+        attributionrrunumber: null,
+        hangingrrunumber: null,
         id: '',
         createuserid: '',
         createtime: '',

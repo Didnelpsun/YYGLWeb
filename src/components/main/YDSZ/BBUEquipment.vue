@@ -12,17 +12,17 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="基站名称：">
-                <el-input v-model="Query.logicstandname" placeholder="请填写基站名称"></el-input>
+                <el-input v-model="Query.logicstandname" placeholder="请填写基站名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="确认站址：">
-                <el-input v-model="Query.sitename" placeholder="请填写站址名称"></el-input>
+                <el-input v-model="Query.sitename" placeholder="请填写站址名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="设备标识码：">
-                <el-input v-model="Query.sharingnumber" placeholder="请填写设备标识码"></el-input>
+                <el-input v-model="Query.sharingnumber" placeholder="请填写设备标识码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

@@ -7,7 +7,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="站点名称：">
-                <el-input class="searchSelect" v-model="query.name" placeholder="请输入站点名称"></el-input>
+                <el-input class="searchSelect" v-model="query.name" placeholder="请输入站点名称" @keyup.enter.native="_getTableMore1(pagination.currentPage)"></el-input>
               </el-form-item>
             </el-col>
             <!--站点分类-->

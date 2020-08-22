@@ -13,7 +13,7 @@
         <el-table-column prop="resourcesname" label="站点名称" width=""></el-table-column>
         <el-table-column prop="realityname" label="申请人" width=""></el-table-column>
         <el-table-column prop="applicanttime" label="申请时间" width=""></el-table-column>
-        <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column>
+        <!-- <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column> -->
         <el-table-column label="操作" width="140" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>

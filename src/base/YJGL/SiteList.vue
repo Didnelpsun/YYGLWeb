@@ -249,7 +249,8 @@
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+1}}</template>
         </el-table-column>
-        <el-table-column prop="" label="产品配置"></el-table-column>
+        <el-table-column prop="" label="系统编号"></el-table-column>
+        <el-table-column prop="" label="系统名称"></el-table-column>
         <el-table-column prop="openingdate" label="入网日期"></el-table-column>
         <el-table-column prop="" label="设备功率"></el-table-column>
         <el-table-column prop="" label="起租时间"></el-table-column>
@@ -411,9 +412,7 @@
           <template slot-scope="scope">{{scope.$index+ 1}}</template>
         </el-table-column>
         <el-table-column prop="placeinfo" label="发电点位置"></el-table-column>
-        <el-table-column prop="km" label="距离"></el-table-column>
-        <el-table-column prop="" label="联系人"></el-table-column>
-        <el-table-column prop="" label="状态"></el-table-column>
+        <el-table-column prop="km" label="距离"  :formatter="toFix"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="applytime" label="提交时间"></el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
@@ -610,6 +609,9 @@ export default{
       // this.getMore(1)
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
+    },
+    toFix (row, col) {
+      return row.km.toFixed(2)
     }
   }
 }

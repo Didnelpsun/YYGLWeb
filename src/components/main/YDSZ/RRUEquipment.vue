@@ -12,12 +12,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="基站名称：">
-                <el-input v-model="Query.logicstandname" placeholder="请输入基站名称"></el-input>
+                <el-input v-model="Query.logicstandname" placeholder="请输入基站名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="确认站址：">
-                <el-input v-model="Query.sitename" placeholder="请输入确认站址"></el-input>
+                <el-input v-model="Query.sitename" placeholder="请输入确认站址"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -252,6 +252,18 @@
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">资产序列号</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="serialnumber">
+                    <el-input v-model="WriteData.serialnumber"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-show="WriteState == 2"><div class="cell">{{WriteData.serialnumber}}</div></td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -306,6 +318,7 @@ export default {
         sharinglogicstand: '',
         longitude: null,
         latitude: null,
+        serialnumber: '',
         id: '',
         logicstandid: '',
         siteid: '',

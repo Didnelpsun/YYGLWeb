@@ -12,12 +12,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="基站名称：">
-                <el-input v-model="Query.logicstandname" placeholder="请输入基站名称"></el-input>
+                <el-input v-model="Query.logicstandname" placeholder="请输入基站名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="基站编号：">
-                <el-input v-model="Query.logicstandcode" placeholder="请输入基站编号"></el-input>
+                <el-input v-model="Query.logicstandcode" placeholder="请输入基站编号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

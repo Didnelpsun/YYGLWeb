@@ -6,12 +6,12 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="用户账号：">
-                <el-input v-model="Query.username"></el-input>
+                <el-input v-model="Query.username" @keyup.enter.native="getTableData1More(currentPage)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户名称：">
-                <el-input v-model="Query.realityname"></el-input>
+                <el-input v-model="Query.realityname" @keyup.enter.native="getTableData1More(currentPage)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

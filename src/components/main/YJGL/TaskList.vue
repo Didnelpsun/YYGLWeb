@@ -6,12 +6,12 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="区域：">
-                <el-input v-model="query.areaname" placeholder="请输入区域名"></el-input>
+                <el-input v-model="query.areaname" placeholder="请输入区域名" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点名称：">
-                <el-input v-model="query.sitename" placeholder="请输入站点名称"></el-input>
+                <el-input v-model="query.sitename" placeholder="请输入站点名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -24,17 +24,17 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点编码：">
-                <el-input v-model="query.sitecode" placeholder="请输入站点编码"></el-input>
+                <el-input v-model="query.sitecode" placeholder="请输入站点编码" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="工单状态：">
-                <el-input v-model="query.workorderstatus" placeholder="请输入工单状态"></el-input>
+                <el-input v-model="query.workorderstatus" placeholder="请输入工单状态" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="工单编号：">
-                <el-input v-model="query.code" placeholder="请输入工单编号"></el-input>
+                <el-input v-model="query.code" placeholder="请输入工单编号" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -58,6 +58,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
+            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
+            <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
           </div>
         </el-col>
       </el-row>
@@ -98,12 +100,14 @@
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"
       @fathersetData1="setData1" @fathersetData2="setData2"  @fathersetData3="setData3" @fathersetData4="setData4"/>
     </div>
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
-import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog} from 'api/YJGL'
+import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog, ImportBBUExcel} from 'api/YJGL'
 import {GetOperatorSiteInfo} from 'api/api'
+import Import from 'base/Import'
 import {GlobalRes} from 'common/js/mixins'
 import Details from 'base/YJGL/TaskList'
 
@@ -142,6 +146,11 @@ export default {
   },
   created () {
     this.getMore(1)
+  },
+  activated () {
+    this.getMore(1)
+    this.$refs.ImportBox.searchName = '油机任务模板'
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
     getMore (e) {
@@ -304,10 +313,16 @@ export default {
     closeWrite () {
       this.getMore(1)
       this.showWrite = false
+    },
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = ImportBBUExcel
+      this.$refs.ImportBox.fileName = '油机任务数据'
     }
   },
   components: {
-    Details
+    Details,
+    Import
   }
 }
 </script>

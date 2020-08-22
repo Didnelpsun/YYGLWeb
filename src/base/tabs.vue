@@ -48,7 +48,7 @@ export default {
       if (this.data.length === 1) return // 如果标签页只有一个 就停止删除操作
       this.data.splice(index, 1)
       if (Cindex === index) {
-        index -= 1
+        if (index) { index -= 1 }
         this.$emit('changeCurrent', this.data[index])
         return false
       }

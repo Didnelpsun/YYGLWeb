@@ -16,7 +16,7 @@
         <el-table-column prop="fueltypename" label="油机类型" width=""></el-table-column>
         <el-table-column prop="stationcode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="stationname" label="站点名称" width=""></el-table-column>
-        <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column>
+        <!-- <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column> -->
         <el-table-column prop="placeinfo" label="存放点位置" width=""></el-table-column>
         <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
         <el-table-column prop="dateinfo" label="提交时间" width=""></el-table-column>
@@ -38,14 +38,13 @@
     </div>
 
     <div v-show="showWrite">
-      <Details :WriteState="WriteState" :dictionaryList="dictionaryList" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
   </div>
 </template>
 
 <script>
 import { EnginestoragepositionInfo, EnginestoragepositionList, DeteleEnginestorageposition, MachineUnbundling } from 'api/YJGL'
-import { DictionaryInfoList } from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/EngineStoragePosition'
 
@@ -74,30 +73,11 @@ export default {
     }
   },
   activated () {
-    // this.check(AreaList)
-    this.getList()
     this.getMore(1)
   },
   created () {
   },
   methods: {
-    getList () {
-      let s = [
-        '油机存放位置类型'
-      ]
-      this.Loading = true
-      this.$axios.post(DictionaryInfoList, s).then(res => {
-        if (res.errorCode === '200') {
-          let data = res.data
-          this.dictionaryList.storageplacetypeList = data.filter(i => {
-            return i.type === '油机存放位置类型'
-          })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-      this.Loading = false
-    },
     getMore (e) {
       this.Loading = true
       this.pagination.currentPage = e
@@ -189,14 +169,14 @@ export default {
       this.$confirm(`您确定要解绑 ${row.machinenumber} 固定部署吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(MachineUnbundling, {
+        this.$axios.get(MachineUnbundling, {
           params: {
             id: row.id
           }
         }).then(res => {
           if (res.errorCode === '200') {
             this.getMore(this.pagination.currentPage)
-            this.$message.success('删除成功！')
+            this.$message.success('解绑成功！')
           } else {
             this.$message.error(res.msg)
           }

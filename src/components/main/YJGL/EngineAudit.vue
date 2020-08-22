@@ -6,7 +6,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="油机缸号：">
-                <el-input v-model="query.machinebatchno" placeholder="请输入油机缸号"></el-input>
+                <el-input v-model="query.machinebatchno" placeholder="请输入油机缸号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -16,17 +16,17 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="厂家：">
-                <el-input v-model="query.manufactor" placeholder="请输入厂家"></el-input>
+                <el-input v-model="query.manufactor" placeholder="请输入厂家"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号：">
-                <el-input v-model="query.model" placeholder="请输入型号"></el-input>
+                <el-input v-model="query.model" placeholder="请输入型号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="燃油类型：">
-                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"></el-input>
+                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>

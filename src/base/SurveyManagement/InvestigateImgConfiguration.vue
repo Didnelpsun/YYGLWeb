@@ -31,14 +31,14 @@
               <col width="100"/>
             </colgroup>
             <tbody>
-            <!--图片名称-->
+            <!--归属项-->
             <tr class="el-table__row el-table__row--striped">
-              <td><div class="cell"><i class="must">*</i>图片名称</div></td>
+              <td><div class="cell"><i class="must">*</i>归属项</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.name}}</div>
+                  <div v-show="WriteState == 2">{{tableData.attribution}}</div>
                   <div v-show="WriteState !== 2">
-                    <el-input v-model="tableData.name" placeholder="请输入图片名称"></el-input>
+                    <el-input v-model="tableData.attribution" placeholder="请输入归属项"></el-input>
                   </div>
                 </div>
               </td>
@@ -76,6 +76,20 @@
                 </div>
               </td>
               <!-- <td><div class="cell">{{this.writeDic(constructionmodeList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--排序号-->
+            <tr class="el-table__row el-table__row--striped">
+              <td><div class="cell"><i class="must">*</i>排序号</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.sort}}</div>
+                  <div v-show="WriteState !== 2">
+                    <el-input v-model="tableData.sort" placeholder="请输入排序号"></el-input>
+                  </div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--创建人-->
@@ -140,20 +154,24 @@ export default{
       WriteLoading: false,
       // 新增表格相关属性
       tableData: {
-        name: '',
+        attribution: '',
         title: '',
-        constructionmode: ''
+        constructionmode: '',
+        sort: ''
       },
       // 表单验证
       Rules: {
-        name: [
-          { required: true, message: '请输入图片名称', trigger: 'blur' }
+        attribution: [
+          { required: true, message: '请输入归属项', trigger: 'blur' }
         ],
         title: [
           { required: true, message: '请选择图片标题', trigger: 'blur' }
         ],
         constructionmodename: [
           { required: true, message: '请选择建站方式', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '请输入排序号', trigger: 'blur' }
         ]
       }
     }
@@ -182,7 +200,6 @@ export default{
           }
           if (res.success === true) {
             this.$message.success('添加成功！')
-            this.$emit('fatheretMore')
             this.closeWrite()
           } else { this.$message.warning(res.msg) }
         } catch (e) {
@@ -202,7 +219,6 @@ export default{
           }
           if (res.success === true) {
             this.$message.success('修改成功！')
-            this.$emit('fatheretMore')
             this.closeWrite()
           } else { this.$message.warning(res.msg) }
         } catch (e) {

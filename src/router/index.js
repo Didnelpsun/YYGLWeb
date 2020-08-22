@@ -35,6 +35,7 @@ import Battery from 'components/main/Resource/Battery' // 换电电池
 import OilFiredGenerator from 'components/main/Resource/OilFiredGenerator' // 燃油发电机
 import ResourceEquipment from 'components/main/Resource/ResourceEquipment' // 资源站点设备管理
 import EnergyResourceEquipment from 'components/main/Resource/EnergyResourceEquipment' // 能源站点设备管理
+import SwitchingPowerSupply from '../components/main/Resource/SwitchingPowerSupply' // 开关电源
 
 // 维护管理
 import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患危险
@@ -169,6 +170,11 @@ export default new Router({
           path: 'SwitchCabinetList',
           name: 'SwitchCabinetList',
           component: SwitchCabinetList
+        },
+        {// 开关电源
+          path: 'SwitchingPowerSupply',
+          name: 'SwitchingPowerSupply',
+          component: SwitchingPowerSupply
         },
         {
           path: 'ZYResource',
