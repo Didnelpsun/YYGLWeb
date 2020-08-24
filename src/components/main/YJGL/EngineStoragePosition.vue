@@ -17,7 +17,6 @@
         <el-table-column prop="stationcode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="stationname" label="站点名称" width=""></el-table-column>
         <!-- <el-table-column prop="storageplacetype" label="存放点位置类型" width=""></el-table-column> -->
-        <el-table-column prop="placeinfo" label="存放点位置" width=""></el-table-column>
         <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
         <el-table-column prop="dateinfo" label="提交时间" width=""></el-table-column>
         <el-table-column label="操作" width="180" fixed="right">

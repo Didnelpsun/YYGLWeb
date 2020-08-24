@@ -231,24 +231,30 @@
               </tr>
               <tr class="el-table__row">
                 <td><div class="cell">经度</div></td>
-                <td v-show="WriteState !== 2"><div class="cell">
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="longitude">
-                    <el-input v-model="WriteData.longitude"></el-input>
+                    <el-input v-model="WriteData.longitude" readonly style="width: 80%"></el-input>
+                    <i class="el-icon-location-information" style="font-size: 20px;"></i>
                   </el-form-item>
                 </div></td>
-                <td v-show="WriteState == 2"><div class="cell">{{WriteData.longitude}}</div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)">
+                  <div class="cell">{{WriteData.longitude}}<i class="el-icon-location-information" style="font-size: 20px;"></i></div>
+                </td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
                 <td><div class="cell">纬度</div></td>
-                <td v-show="WriteState !== 2"><div class="cell">
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="latitude">
-                    <el-input v-model="WriteData.latitude"></el-input>
+                    <el-input v-model="WriteData.latitude" readonly style="width: 80%"></el-input>
+                    <i class="el-icon-location-information" style="font-size: 20px;"></i>
                   </el-form-item>
                 </div></td>
-                <td v-show="WriteState == 2"><div class="cell">{{WriteData.latitude}}</div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)">
+                  <div class="cell">{{WriteData.latitude}}<i class="el-icon-location-information" style="font-size: 20px;"></i></div>
+                </td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
@@ -269,6 +275,7 @@
     </el-dialog>
     <ImgBox ref="ImgBox"></ImgBox>
     <Import ref="ImportBox" @fatherGetData="getData1"></Import>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
@@ -277,6 +284,7 @@ import {GlobalRes} from 'common/js/mixins'
 import ImgBox from 'base/ImgBox'
 import Import from 'base/Import'
 import layuiTitle from 'base/layui-title'
+import GoogleMap from 'base/GoogleMap'
 import {formatDate} from 'common/js/cache'
 import SiteList from 'base/YDSZ/SiteList'
 import LogicStationList from 'base/YDSZ/LogicStationList'
@@ -347,7 +355,8 @@ export default {
       Loading: false,
       isShow: false,
       showSite: false,
-      showLogicStation: false
+      showLogicStation: false,
+      showMap: false
     }
   },
   activated () {
@@ -550,6 +559,24 @@ export default {
       this.$refs.ImportBox.Open()
       this.$refs.ImportBox.uploadURL = ImportBBUExcel
       this.$refs.ImportBox.fileName = '错误BBU数据'
+    },
+    OpenMap (val) {
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.WriteData.longitude
+        this.$refs.GoogleMap.latitude = this.WriteData.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.WriteData.longitude = longitude
+      }
+      if (latitude) {
+        this.WriteData.latitude = latitude
+      }
     }
   },
   computed: {
@@ -567,7 +594,8 @@ export default {
     ImgBox,
     Import,
     SiteList,
-    LogicStationList
+    LogicStationList,
+    GoogleMap
   }
 }
 </script>

@@ -5,11 +5,11 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-              <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">新增</el-button>
+              <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">新增台区</el-button>
           </div>
         </el-col>
       </el-row>
-      <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px" :row-key="getRowKeys" :expand-row-keys="expandKey" @expand-change="changeKey">
+      <el-table :data="tableList"  v-loading="Loading" style="margin-top: 15px" :row-key="getRowKeys" :expand-row-keys="expandKey" @expand-change="changeKey">
         <el-table-column type="expand">
           <el-table :data="boardData" v-loading="Loading">
             <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
@@ -29,11 +29,12 @@
         <el-table-column prop="powersupplycontact" label="供电联系人" width=""></el-table-column>
         <el-table-column prop="createusername" label="提交人" width=""></el-table-column>
         <el-table-column prop="createdatetime" label="提交时间" width=""></el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="150" fixed="right">
           <template slot-scope="scope">
             <!-- <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button> -->
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="text" size="mini" @click="add(scope.row)">新增站点</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,6 +49,9 @@
     <div v-show="showWrite">
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" />
     </div>
+    <el-dialog top="1%" :visible.sync="isShow" title="选择站点ID" width="80%" :before-close="DetailhandleClose">
+      <SitePicker @selectSite="selectSite" ref="site"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -55,6 +59,7 @@
 import { GetCourtsList, GetIdCourtsInfo, GetCourtsIdScope, DeleteCourts } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/CourtsList'
+import SitePicker from 'base/YJGL/SitePicker'
 
 export default {
   name: 'CourtsList',
@@ -62,6 +67,7 @@ export default {
   mixins: [GlobalRes],
   data () {
     return {
+      isShow: false, //
       // 加载
       Loading: false,
       tableList: [
@@ -109,6 +115,9 @@ export default {
           console.log(error)
         })
     },
+    selectSite () {
+      this.isShow = false
+    },
     changeKey (row, rowList) {
       this.Loading = true
       if (rowList.length) {
@@ -150,6 +159,12 @@ export default {
     closeWrite () {
       this.getMore(1)
       this.showWrite = !this.showWrite
+    },
+    add (row) {
+      this.isShow = true
+    },
+    DetailhandleClose () {
+      this.isShow = !this.isShow
     },
     // 处理编辑函数
     handleWrite (state, row) {
@@ -203,7 +218,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    SitePicker
   }
 }
 </script>

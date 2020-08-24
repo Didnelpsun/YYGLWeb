@@ -46,8 +46,8 @@
         <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
-            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>
-            <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!scope.row.Isbinding">删除</el-button>
+            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!showIsbinding">编辑</el-button>
+            <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!showIsbinding">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,10 +79,11 @@ export default {
       // 查询相关属性
       query: {
         swver: '',
-        Isbinding: true
+        Isbinding: false
       },
       // 加载
       Loading: false,
+      showIsbinding: true,
       tableList: [
       ],
       tableData: {},
@@ -117,6 +118,7 @@ export default {
           )
         })
         .then(res => {
+          this.query.Isbinding ? this.showIsbinding = true : this.showIsbinding = false
           this.Loading = false
           this.tableList = res.data.list
           this.pagination.total = res.data.total

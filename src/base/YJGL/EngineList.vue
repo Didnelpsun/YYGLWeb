@@ -232,12 +232,12 @@
             </tr>
             <!--采集器ID-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>采集器编码</div></td>
+              <td><div class="cell"><i class="must">*</i>采集器ID</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.swver}}</div>
-                  <div label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2" @click="collectorOpen">
-                    <el-input v-model="tableData.swver" placeholder="请填入采集器ID" readonly></el-input>
+                  <div v-show="WriteState == 2">{{tableData.collectorid}}</div>
+                  <div label-width="0" prop="collectorid" class="form-item" v-show="WriteState !== 2" @click="collectorOpen">
+                    <el-input v-model="tableData.collectorid" placeholder="请填入采集器ID" readonly></el-input>
                   </div>
                 </div>
               </td>

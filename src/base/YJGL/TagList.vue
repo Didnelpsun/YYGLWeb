@@ -5,10 +5,10 @@
       <div class="el-table__header-wrapper">
         <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
           <colgroup>
-            <col width="100"/>
-            <col width="300"/>
+            <col width="150"/>
+            <col width="200"/>
             <!-- <col width="250"/> -->
-            <col width="100"/>
+            <col width="150"/>
           </colgroup>
           <thead>
           <tr>
@@ -25,10 +25,10 @@
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
-              <col width="100"/>
-              <col width="300"/>
+              <col width="150"/>
+              <col width="200"/>
               <!-- <col width="250"/> -->
-              <col width="100"/>
+              <col width="150"/>
             </colgroup>
             <tbody>
               <!--地市-->
@@ -41,7 +41,6 @@
                   </el-form-item>
                 </div>
               </td>
-              <td><div class="cell"></div></td>
               <!-- <td>
                 <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
               </td> -->
@@ -55,7 +54,6 @@
                   <div>{{tableData.provincename}}</div>
                 </div>
               </td>
-              <td><div class="cell"></div></td>
               <!-- <td>
                 <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
               </td> -->
@@ -69,7 +67,6 @@
                   <div>{{tableData.cityname}}</div>
                 </div>
               </td>
-              <td><div class="cell"></div></td>
               <!-- <td>
                 <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
               </td> -->
@@ -103,7 +100,6 @@
                   </el-form-item>
                 </div>
               </td>
-              <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
