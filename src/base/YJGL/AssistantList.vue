@@ -168,7 +168,7 @@
       </el-form>
     </div>
     <div class="center" style="padding-bottom: 100px">
-      <el-button @click="handleData" type="primary" v-if="WriteState!==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
+      <el-button @click="handleData(false)" type="primary" v-if="WriteState!==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="handleData(true)" type="primary" v-if="WriteState!==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
     </div>
@@ -222,7 +222,7 @@ export default{
             resourcesname: ''
           }
         ],
-        'siteid': '',
+        'siteid': [],
         'sitename': '',
         'engineid': [],
         'enginename': [],
@@ -256,7 +256,7 @@ export default{
       for (let i = 0; i < this.tableData.resource.length; i++) {
         if (this.tableData.resource[i]['resourcescode']) {
           if (this.tableData.resource[i]['type'] === 1) {
-            this.tableData.siteid = this.tableData.resource[i]['resourcescode']
+            this.tableData.siteid.push(this.tableData.resource[i]['resourcescode'])
             this.tableData.sitename = this.tableData.resource[i]['resourcesname']
           } else if (this.tableData.resource[i]['type'] === 2) {
             this.tableData.engineid.push(this.tableData.resource[i]['resourcescode'])
@@ -279,7 +279,7 @@ export default{
     },
     selectSite (id, name) {
       this.siteShow = false
-      this.tableData.siteid = id
+      this.tableData.siteid[0] = id
       this.tableData.sitename = name
     },
     selectEngine (id, name) {
@@ -288,9 +288,11 @@ export default{
       this.tableData.enginename = name
     },
     // 提交函数
-    handleData (issubmit = false) {
+    handleData (issubmit) {
       if (issubmit) {
         this.tableData.issubmit = issubmit
+      } else {
+        this.tableData.issubmit = false
       }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()

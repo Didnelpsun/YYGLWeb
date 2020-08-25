@@ -51,7 +51,7 @@
               <td><div class="cell"></div></td>
             </tr>-->
             <!--地市-->
-            <tr class="el-table__row" v-show="WriteState == 2">
+            <!--<tr class="el-table__row" v-show="WriteState == 2">
               <td><div class="cell"><i class="must">*</i>地市</div></td>
               <td>
                 <div class="cell">
@@ -59,13 +59,13 @@
                 </div>
               </td>
               <td><div class="cell"></div></td>
-              <!-- <td>
+              &lt;!&ndash; <td>
                 <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
-              </td> -->
+              </td> &ndash;&gt;
               <td><div class="cell"></div></td>
-            </tr>
+            </tr>-->
             <!--区域-->
-            <tr class="el-table__row" v-show="WriteState == 2">
+            <!--<tr class="el-table__row" v-show="WriteState == 2">
               <td><div class="cell"><i class="must">*</i>区域</div></td>
               <td>
                 <div class="cell">
@@ -73,15 +73,40 @@
                 </div>
               </td>
               <td><div class="cell"></div></td>
-              <!-- <td>
+              &lt;!&ndash; <td>
                 <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
-              </td> -->
+              </td> &ndash;&gt;
               <td><div class="cell"></div></td>
+            </tr>-->
+            <!--站点编码-->
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">
+                  站点编码
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.resourcecode}}</div>
+                  <div v-show="WriteState !== 2">
+                    <el-input v-model="tableData.resourcecode" readonly placeholder="请选择"></el-input>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="cell"></div>
+              </td>
+              <!-- <td>
+                <div class="cell"></div>
+              </td> -->
+              <td>
+                <div class="cell"></div>
+              </td>
             </tr>
             <!--站点名称-->
             <tr class="el-table__row">
               <td>
-                <div class="cell"><i class="must">*</i>站点名称</div>
+                <div class="cell">站点名称</div>
               </td>
               <td>
                 <div class="cell">
@@ -89,6 +114,100 @@
                   <div v-show="WriteState !== 2" @click="isShow = true">
                     <el-input v-model="tableData.resourcename" readonly placeholder="请选择"></el-input>
                   </div>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备类型-->
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">
+                  设备类型
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.equipmenttypename}}</div>
+                  <div v-show="WriteState !== 2">
+                    <el-input v-model="tableData.equipmenttypename" placeholder="请选择"></el-input>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="cell"></div>
+              </td>
+              <!-- <td>
+                <div class="cell"></div>
+              </td> -->
+              <td>
+                <div class="cell"></div>
+              </td>
+            </tr>
+            <!--设备厂家-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备厂家</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.manufacturername}}</div>
+                  <el-form-item label-width="0" prop="manufacturer" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.manufacturer" placeholder="请选择设备厂家">
+                      <el-option label="请选择" value=""></el-option>
+                      <el-option v-for="item in dictionaryList.manufacturerList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('manufacturer')"><div class="cell">{{this.manufacturerImgList.length}}</div></td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.manufacturerList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备型号-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备型号</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
+                  <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
+                      <el-option label="请选择" value=""></el-option>
+                      <el-option v-for="item in dictionaryList.modelsList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('models')">
+                <div class="cell">{{this.modelsImgList.length}}</div>
+              </td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.modelsList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--入网日期-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>入网日期</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.accessdate}}</div>
+                  <el-form-item label-width="0" prop="accessdate" class="form-item" v-show="WriteState !== 2">
+                    <el-date-picker class="tableSelect" v-model="tableData.accessdate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择入网日期">
+                    </el-date-picker>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--标识码-->
+            <tr class="el-table__row">
+              <td><div class="cell">标识码</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.identificationcode}}</div>
+                  <el-form-item label-width="0" prop="identificationcode" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.identificationcode" placeholder="请填入标识码"></el-input>
+                  </el-form-item>
                 </div>
               </td>
               <td><div class="cell"></div></td>
@@ -125,43 +244,9 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--入网日期-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>入网日期</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.accessdate}}</div>
-                  <el-form-item label-width="0" prop="accessdate" class="form-item" v-show="WriteState !== 2">
-                    <el-date-picker class="tableSelect" v-model="tableData.accessdate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择入网日期">
-                    </el-date-picker>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!-- 设备状态 -->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>设备状态</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.statename}}</div>
-                  <el-form-item label-width="0" prop="state" class="form-item" v-show="WriteState !== 2">
-                    <el-select class="tableSelect" v-model="tableData.state" placeholder="请选择设备状态">
-                      <el-option label="请选择" value=""></el-option>
-                      <el-option v-for="item in dictionaryList.stateList" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.stateList)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--产权单位-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>产权单位</div></td>
+              <td><div class="cell">产权单位</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.propertyrightunitname}}</div>
@@ -194,7 +279,7 @@
             </tr>
             <!--单位-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>单位</div></td>
+              <td><div class="cell">单位</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.unitname}}</div>
@@ -225,21 +310,6 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--标识码-->
-            <tr class="el-table__row">
-              <td><div class="cell">标识码</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.identificationcode}}</div>
-                  <el-form-item label-width="0" prop="identificationcode" class="form-item" v-show="WriteState !== 2">
-                    <el-input v-model="tableData.identificationcode" placeholder="请填入标识码"></el-input>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
@@ -258,7 +328,7 @@
             </tr>
             <!--维护单位-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>维护单位</div></td>
+              <td><div class="cell">维护单位</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
@@ -272,42 +342,6 @@
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell">{{this.writeDic(dictionaryList.maintenanceList)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--设备厂家-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>设备厂家</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.manufacturername}}</div>
-                  <el-form-item label-width="0" prop="manufacturer" class="form-item" v-show="WriteState !== 2">
-                    <el-select class="tableSelect" v-model="tableData.manufacturer" placeholder="请选择设备厂家">
-                      <el-option label="请选择" value=""></el-option>
-                      <el-option v-for="item in dictionaryList.manufacturerList" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </td>
-              <td @click="OpenImgBox('manufacturer')"><div class="cell">{{this.manufacturerImgList.length}}</div></td>
-              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.manufacturerList)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--设备型号-->
-            <tr class="el-table__row">
-              <td><div class="cell">设备型号</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
-                  <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
-                    <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
-                      <el-option label="请选择" value=""></el-option>
-                      <el-option v-for="item in dictionaryList.modelsList" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.modelsList)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--线缆型号-->
@@ -327,7 +361,7 @@
             </tr>
             <!--容量-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>容量</div></td>
+              <td><div class="cell"><i class="must">*</i>容量(安时)</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.capacity}}</div>
@@ -351,6 +385,20 @@
                   </el-form-item>
                 </div>
               </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row" v-if="WriteState === 2">
+              <td><div class="cell">创建人</div></td>
+              <td><div class="cell">{{tableData.createusername}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row" v-if="WriteState === 2">
+              <td><div class="cell">创建时间</div></td>
+              <td><div class="cell">{{tableData.createtime}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -402,19 +450,22 @@ export default{
       WriteLoading: false,
       // 图片列表
       manufacturerImgList: [],
+      modelsImgList: [],
       cableassemblyImgList: [],
       capacityImgList: [],
       // 新增表格相关属性
       tableData: {
         // 'resource_id': '',
         'resourcename': '',
+        'resourcecode': '',
         'provinceid': 0,
         'cityid': 0,
         'areaid': 0,
         'longitude': null,
         'latitude': null,
+        'equipmenttypename': '',
+        'equipmenttype': null,
         'accessdate': '',
-        'state': '',
         'propertyrightunit': '',
         'number': null,
         'unit': '',
@@ -454,9 +505,6 @@ export default{
         accessdate: [
           { required: true, message: '请选择入网时间', trigger: 'blur' }
         ],
-        state: [
-          { required: true, message: '请选择设备状态', trigger: 'blur' }
-        ],
         propertyrightunit: [
           { required: true, message: '请选择产权单位', trigger: 'blur' }
         ],
@@ -493,6 +541,9 @@ export default{
         case 'manufacturer':
           this.$emit('fatherOpenImgBox', '设备厂家', 'manufacturer', this.manufacturerImgList)
           break
+        case 'models':
+          this.$emit('fatherOpenImgBox', '设备型号', 'models', this.modelsImgList)
+          break
         case 'cableassembly':
           this.$emit('fatherOpenImgBox', '线缆型号', 'cableassembly', this.cableassemblyImgList)
           break
@@ -509,6 +560,9 @@ export default{
     validImgList () {
       if (!this.manufacturerImgList.length) {
         return this.$message.warning('设备厂家图片必须上传')
+      }
+      if (!this.modelsImgList.length) {
+        return this.$message.warning('设备型号图片必须上传')
       }
       if (!this.cableassemblyImgList.length) {
         return this.$message.warning('线缆型号图片必须上传')
@@ -590,6 +644,7 @@ export default{
       if (list !== null && list !== undefined) {
         list.forEach((item) => {
           if (item.field_name === 'manufacturer') this.manufacturerImgList.push(item)
+          if (item.field_name === 'models') this.modelsImgList.push(item)
           if (item.field_name === 'cableassembly') this.cableassemblyImgList.push(item)
           if (item.field_name === 'capacity') this.capacityImgList.push(item)
         })
@@ -604,6 +659,7 @@ export default{
       this.tableArea.AreaList.splice(0, this.tableArea.AreaList.length)
       // this.getMore(1)
       this.manufacturerImgList = []
+      this.modelsImgList = []
       this.cableassemblyImgList = []
       this.capacityImgList = []
       this.showWrite = !this.showWrite
@@ -620,7 +676,7 @@ export default{
   },
   computed: {
     ImgList () {
-      return this.manufacturerImgList.concat(this.cableassemblyImgList, this.capacityImgList)
+      return this.manufacturerImgList.concat(this.modelsImgList, this.cableassemblyImgList, this.capacityImgList)
     }
   },
   watch: {

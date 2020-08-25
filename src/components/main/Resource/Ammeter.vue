@@ -15,10 +15,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="设备状态：">
-                <el-select class="searchSelect" v-model="Query.dayfacetypes">
+              <el-form-item label="电表编号：">
+                <el-input v-model="Query.electricmeterno" placeholder=请输入电表编号 @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="供电方式：">
+                <el-select class="searchSelect" v-model="Query.powersupplymode">
                   <el-option label="请选择" :value="null"></el-option>
-                  <el-option v-for="i in DicList.state" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                  <el-option v-for="i in DicList.powersupplymode" :key="i.value" :label="i.text" :value="i.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -57,15 +62,14 @@
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
-        <el-table-column prop="code" label="设备编码" width="110"></el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="cylinderno" label="缸号" width=""></el-table-column>
-        <el-table-column prop="devicecode" label="装置编码" width=""></el-table-column>
-        <el-table-column prop="cityname" label="地市" width="80"></el-table-column>
-        <el-table-column prop="areaname" label="区域" width="100"></el-table-column>
-        <el-table-column prop="manufacturername" label="设备厂家" width=""></el-table-column>
-        <el-table-column prop="statename" label="设备状态" width=""></el-table-column>
+        <el-table-column prop="statename" label="电表状态" width=""></el-table-column>
+        <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
+        <el-table-column prop="electricmeterno" label="电表编号" width=""></el-table-column>
+        <el-table-column prop="powersupplymode" label="供电方式" width=""></el-table-column>
+        <el-table-column prop="powersupplytheowner" label="供电业主" width=""></el-table-column>
+        <el-table-column prop="theownerphone" label="供电联系方式" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
@@ -84,9 +88,9 @@
     </div>
 
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加电池发电装置' : WriteState === 1 ? '修改电池发电装置' : '电池发电装置详情'"></layuiTitle>
-      <BatteryDetail :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
-                     @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></BatteryDetail>
+      <layuiTitle :title="WriteState === 0 ? '添加电表' : WriteState === 1 ? '修改电表' : '电表详情'"></layuiTitle>
+      <AmmeterDetail :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+                     @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></AmmeterDetail>
     </div>
 
     <ImgBox ref="ImgBox"></ImgBox>
@@ -99,10 +103,10 @@ import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
-import BatteryDetail from 'base/Resource/BatteryGenerator'
+import AmmeterDetail from 'base/Resource/Ammeter'
 
 export default {
-  name: 'BatteryGenerator',
+  name: 'Ammeter',
   mixins: [GlobalRes],
   data () {
     return {
@@ -112,7 +116,8 @@ export default {
         cityid: 0,
         areaid: 0,
         resourcename: '',
-        dayfacetypes: null,
+        electricmeterno: '',
+        powersupplymode: null,
         starttime: '',
         endtime: ''
       },
@@ -147,15 +152,11 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['设备状态', '设备产权单位', '设备存放点类型', '设备单位', '设备维护单位', '电池发电装置设备厂家', '电池发电装置设备型号']
+      let arr = ['移动上站供电方式', '设备状态']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.unitList = res.data.filter(i => { return i.type === '设备单位' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '移动上站供电方式' })
           this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
-          this.DicList.propertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
-          this.DicList.maintenanceunit = res.data.filter(i => { return i.type === '设备维护单位' })
-          this.DicList.manufacturer = res.data.filter(i => { return i.type === '电池发电装置设备厂家' })
-          this.DicList.models = res.data.filter(i => { return i.type === '电池发电装置设备型号' })
         } else {
           this.$message.error(res.msg)
         }
@@ -252,7 +253,7 @@ export default {
       this.getMore1(this.currentPage)
     }
   },
-  components: {BatteryDetail, layuiTitle, ImgBox}
+  components: {AmmeterDetail, layuiTitle, ImgBox}
 }
 </script>
 

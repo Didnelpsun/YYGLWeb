@@ -1,5 +1,5 @@
 <template>
-  <el-dialog width="80%" :visible.sync="show" title="选择经纬度" :close-on-click-modal="false" :before-close="Open">
+  <el-dialog width="80%" :visible.sync="show" :title="showType === 1 ? '选择经纬度' : '查看经纬度'" :close-on-click-modal="false" :before-close="Open">
     <iframe id="show-iframe" :src="src" ref="iframe" width="100%"></iframe>
   </el-dialog>
 </template>

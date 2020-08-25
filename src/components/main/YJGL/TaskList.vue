@@ -55,9 +55,11 @@
         </el-row>
       </el-form>
       <el-row>
-        <el-col :span="4" class="SearchResult">查询结果</el-col>
-        <el-col :offset="2" :span="18" class="fr">
-          <div class="fr">
+        <el-col :span="18" class="SearchResult">查询结果</el-col>
+        <el-col :span="6">
+          <div class="fr" style="margin-top: 0">
+            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
+            <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
             <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
           </div>
@@ -110,6 +112,7 @@ import {GetOperatorSiteInfo} from 'api/api'
 import Import from 'base/Import'
 import {GlobalRes} from 'common/js/mixins'
 import Details from 'base/YJGL/TaskList'
+import Import from 'base/Import'
 
 export default {
   name: 'TaskList',
@@ -142,10 +145,14 @@ export default {
       tableData4: {},
       showWrite: false,
       WriteState: 2 // 1为编辑 2为查看
+
     }
   },
-  created () {
+
+  activated () {
     this.getMore(1)
+    this.$refs.ImportBox.searchName = '油机调度任务工单导入'
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   activated () {
     this.getMore(1)
@@ -171,6 +178,11 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = ImportBBUExcel
+      this.$refs.ImportBox.fileName = '错误油机调度任务工单导入数据'
     },
     // 重置表单按钮
     resetQueryForm () {

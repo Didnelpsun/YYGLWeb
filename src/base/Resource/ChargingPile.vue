@@ -34,66 +34,104 @@
               <col width="100"/>
             </colgroup>
             <tbody>
-            <tr class="el-table__row" v-show="WriteState">
-              <td><div class="cell"><i class="must">*</i>地市</div></td>
-              <td><div class="cell">{{WriteData.cityname}}</div></td>
+            <!--站点编码-->
+            <tr class="el-table__row">
+              <td><div class="cell">站点编码</div></td>
+              <td><div class="cell">
+                <div v-show="WriteState == 2">{{WriteData.resourcecode}}</div>
+                <div v-show="WriteState !== 2">
+                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
+                </div></div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteState">
-              <td><div class="cell"><i class="must">*</i>区域</div></td>
-              <td><div class="cell">{{WriteData.areaname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState == 2">
-              <td><div class="cell">所属站点</div></td>
-              <td><div class="cell">{{WriteData.resourcename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--<tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>区域</div></td>
-              <td v-if="!WriteState"><div class="cell">
-                <el-form-item class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" :props="areaProps" @change="changeArea(WriteData)"
-                               ref="csArea"></el-cascader>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState"><div class="cell">{{WriteData.areaname}}</div></td>
-              <td><div class="cell"></div></td>
-              &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
-              <td><div class="cell"></div></td>
-            </tr>-->
-            <tr class="el-table__row" v-show="WriteState">
-              <td><div class="cell">设备编码</div></td>
-              <td><div class="cell">{{WriteData.code}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState">
-              <td><div class="cell">设备类型</div></td>
-              <td><div class="cell">{{WriteData.equipmenttypename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState !== 2">
-              <td><div class="cell"><i class="must">*</i>站点名称</div></td>
-              <td><div class="cell" @click="isShow = true">
-                <el-form-item class="form-item" prop="resourcename">
+            <!--站点名称-->
+            <tr class="el-table__row">
+              <td><div class="cell">站点名称</div></td>
+              <td><div class="cell">
+                <div v-show="WriteState == 2">{{WriteData.resourcename}}</div>
+                <div v-show="WriteState !== 2" @click="isShow = true">
                   <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
-                </el-form-item>
-              </div></td>
+                </div></div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--经纬度-->
+            <!--设备类型-->
+            <tr class="el-table__row">
+              <td><div class="cell">设备类型</div></td>
+              <td><div class="cell">
+                <div v-show="WriteState == 2">{{WriteData.equipmenttypename}}</div>
+                <div v-show="WriteState !== 2">
+                  <el-input v-model="WriteData.equipmenttypename"></el-input>
+                </div></div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备厂家-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备厂家</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="manufacturer">
+                  <el-select v-model="WriteData.manufacturer">
+                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option v-for="i in DicList.manufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.manufacturername}}</div></td>
+              <td @click="OpenImgBox(2)"><div class="cell">{{ImgList2.length}}</div></td>
+              <!-- <td><div class="cell">{{writeDic(DicList.manufacturer)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备型号-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备型号</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="models">
+                  <el-select v-model="WriteData.models">
+                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
+              <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
+              <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--入网日期-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>入网日期</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="accessdate">
+                  <el-date-picker v-model="WriteData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.accessdate}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--标识码-->
+            <tr class="el-table__row">
+              <td><div class="cell">标识码</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="identificationcode">
+                  <el-input v-model="WriteData.identificationcode"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.identificationcode}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--经度-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>经度</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -106,6 +144,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--纬度-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>纬度</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -119,20 +158,9 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--产权单位-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>入网日期</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="accessdate">
-                  <el-date-picker v-model="WriteData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState == 2"><div class="cell">{{WriteData.accessdate}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">产权单位</div></td>
+              <td><div class="cell"><i class="must">*</i>产权单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="propertyrightunit">
                   <el-select v-model="WriteData.propertyrightunit">
@@ -146,6 +174,7 @@
               <!-- <td><div class="cell">{{writeDic(DicList.propertyrightunit)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--数量-->
             <tr class="el-table__row">
               <td><div class="cell">数量</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -158,6 +187,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--单位-->
             <tr class="el-table__row">
               <td><div class="cell">单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -173,6 +203,7 @@
               <!-- <td><div class="cell">{{writeDic(DicList.unit)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--质保编号-->
             <tr class="el-table__row">
               <td><div class="cell">质保编号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -185,18 +216,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">标识码</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="identificationcode">
-                  <el-input v-model="WriteData.identificationcode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.identificationcode}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+            <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -209,21 +229,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">设备厂家</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="manufacturer">
-                  <el-select v-model="WriteData.manufacturer">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.manufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.manufacturername}}</div></td>
-              <td @click="OpenImgBox(2)"><div class="cell">{{ImgList2.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.manufacturer)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+            <!--维护单位-->
             <tr class="el-table__row">
               <td><div class="cell">维护单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -239,21 +245,7 @@
               <!-- <td><div class="cell">{{writeDic(DicList.maintenanceunit)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">设备型号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="models">
-                  <el-select v-model="WriteData.models">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
-              <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+            <!--设备状态-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>设备状态</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -282,7 +274,8 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteState !== 2">
+            <!--细分类型-->
+            <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>细分类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="facilitytype">
@@ -297,6 +290,7 @@
               <!-- <td><div class="cell">{{writeDic(DicList.facilitytype)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--充电桩类型-->
             <tr class="el-table__row" v-show="WriteState === 2">
               <td><div class="cell">充电桩类型</div></td>
               <td><div class="cell">{{WriteData.facilitytypename}}</div></td>
@@ -304,8 +298,9 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--端口数-->
             <tr class="el-table__row">
-              <td><div class="cell">端口数</div></td>
+              <td><div class="cell"><i class="must">*</i>端口数</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="portnumber">
                   <el-input v-model.number="WriteData.portnumber"></el-input>
@@ -316,6 +311,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--供电类型-->
             <tr class="el-table__row">
               <td><div class="cell">供电类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
@@ -333,7 +329,7 @@
             </tr>
             <!-- 雨棚 -->
             <tr class="el-table__row">
-              <td><div class="cell">是否有雨棚</div></td>
+              <td><div class="cell"><i class="must">*</i>是否有雨棚</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="canopy">
                   <el-select v-model="WriteData.canopy">
@@ -373,7 +369,7 @@
             </tr>
             <!-- 门禁 -->
             <tr class="el-table__row">
-              <td><div class="cell">是否安装门禁卡</div></td>
+              <td><div class="cell"><i class="must">*</i>是否安装门禁卡</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="accesscontrol">
                   <el-select v-model="WriteData.accesscontrol">
@@ -414,7 +410,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
+            <tr class="el-table__row" v-if="WriteState === 2">
               <td><div class="cell">创建人</div></td>
               <td><div class="cell">
                 <el-form-item class="form-item">{{WriteData.createusername}}</el-form-item>
@@ -423,7 +419,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
+            <tr class="el-table__row" v-if="WriteState === 2">
               <td><div class="cell">创建时间</div></td>
               <td><div class="cell">
                 <el-form-item class="form-item">{{WriteData.createtime}}</el-form-item>
@@ -487,10 +483,14 @@ export default {
         cityid: 0,
         areaid: 0,
         resource_id: '', // 站点id
+        resourcecode: '',
+        resourcename: '',
         latitude: null,
         longitude: null,
         accessdate: '', // 入网日期
         propertyrightunit: 0, // 产权单位
+        equipmenttypename: '',
+        equipmenttype: null,
         number: 0, // 数量
         unit: 0, // 单位
         qualitycode: '', // 质保编号

@@ -33,6 +33,16 @@
   color: red
 }
 
+.location {
+  display: flex;
+  flex-direction: row;
+}
+
+.icon_location {
+  font-size: 20px;
+  color:#F64245;
+}
+
 /* 输入框输入数字类型 样式处理 */
 /*谷歌*/
 /deep/ input::-webkit-outer-spin-button,

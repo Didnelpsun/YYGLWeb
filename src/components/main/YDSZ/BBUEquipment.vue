@@ -234,11 +234,11 @@
                 <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="longitude">
                     <el-input v-model="WriteData.longitude" readonly style="width: 80%"></el-input>
-                    <i class="el-icon-location-information" style="font-size: 20px;"></i>
+                    <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
                   </el-form-item>
                 </div></td>
                 <td v-show="WriteState == 2" @click="OpenMap(0)">
-                  <div class="cell">{{WriteData.longitude}}<i class="el-icon-location-information" style="font-size: 20px;"></i></div>
+                  <div class="cell location"><span>{{WriteData.longitude}}</span><i class="el-icon-location icon_location"></i></div>
                 </td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->
@@ -249,11 +249,10 @@
                 <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="latitude">
                     <el-input v-model="WriteData.latitude" readonly style="width: 80%"></el-input>
-                    <i class="el-icon-location-information" style="font-size: 20px;"></i>
                   </el-form-item>
                 </div></td>
                 <td v-show="WriteState == 2" @click="OpenMap(0)">
-                  <div class="cell">{{WriteData.latitude}}<i class="el-icon-location-information" style="font-size: 20px;"></i></div>
+                  <div class="cell">{{WriteData.latitude}}</div>
                 </td>
                 <td><div class="cell"></div></td>
                 <!-- <td><div class="cell"></div></td> -->

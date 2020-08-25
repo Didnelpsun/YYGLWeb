@@ -36,6 +36,9 @@ import OilFiredGenerator from 'components/main/Resource/OilFiredGenerator' // �
 import ResourceEquipment from 'components/main/Resource/ResourceEquipment' // 资源站点设备管理
 import EnergyResourceEquipment from 'components/main/Resource/EnergyResourceEquipment' // 能源站点设备管理
 import SwitchingPowerSupply from '../components/main/Resource/SwitchingPowerSupply' // 开关电源
+import Ammeter from '../components/main/Resource/Ammeter' // 电表
+import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduced' // 电表
+
 
 // 维护管理
 import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患危险
@@ -175,6 +178,16 @@ export default new Router({
           path: 'SwitchingPowerSupply',
           name: 'SwitchingPowerSupply',
           component: SwitchingPowerSupply
+        },
+        {// 电表
+          path: 'Ammeter',
+          name: 'Ammeter',
+          component: Ammeter
+        },
+        {// 外电引入
+          path: 'AnElectricIntroduced',
+          name: 'AnElectricIntroduced',
+          component: AnElectricIntroduced
         },
         {
           path: 'ZYResource',

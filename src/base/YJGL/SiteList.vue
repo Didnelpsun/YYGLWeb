@@ -249,8 +249,8 @@
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+1}}</template>
         </el-table-column>
-        <el-table-column prop="" label="系统编号"></el-table-column>
-        <el-table-column prop="" label="系统名称"></el-table-column>
+        <el-table-column prop="systemcode" label="系统编号"></el-table-column>
+        <el-table-column prop="systemname" label="系统名称"></el-table-column>
         <el-table-column prop="openingdate" label="入网日期"></el-table-column>
         <el-table-column prop="" label="设备功率"></el-table-column>
         <el-table-column prop="" label="起租时间"></el-table-column>
