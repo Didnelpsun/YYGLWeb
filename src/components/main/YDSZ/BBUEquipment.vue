@@ -559,7 +559,7 @@ export default {
       this.$refs.ImportBox.uploadURL = ImportBBUExcel
       this.$refs.ImportBox.fileName = '错误BBU数据'
     },
-    OpenMap (val) {
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
       this.showMap = true
       this.$nextTick(() => {
         this.$refs.GoogleMap.Open()

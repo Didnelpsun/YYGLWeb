@@ -62,8 +62,8 @@ export default {
       default: 1
     },
     isSite: {
-      type: String,
-      default: '2'
+      type: Number,
+      default: 2
     },
     resource_id: {
       type: Array,

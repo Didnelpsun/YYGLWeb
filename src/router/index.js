@@ -77,6 +77,9 @@ import NewBuildStation from 'components/main/SurveyManagement/NewBuildStation' /
 import InvestigateImgConfiguration from 'components/main/SurveyManagement/InvestigateImgConfiguration' // 勘察图片配置管理
 import TaskAuitLog from 'components/main/SurveyManagement/TaskAuitLog' // 任务审核记录
 
+// 备件调度管理
+import Sparetype from 'components/main/SpareManagement/Sparetype' // 备件类型列表
+import SpareconModel from 'components/main/SpareManagement/SpareconModel' // 备件型号列表
 Vue.use(Router)
 
 export default new Router({
@@ -188,6 +191,16 @@ export default new Router({
           path: 'AnElectricIntroduced',
           name: 'AnElectricIntroduced',
           component: AnElectricIntroduced
+        },
+        {// 备件类型列表
+          path: 'Sparetype',
+          name: 'Sparetype',
+          component: Sparetype
+        },
+        {// 备件型号列表
+          path: 'SpareconModel',
+          name: 'SpareconModel',
+          component: SpareconModel
         },
         {
           path: 'ZYResource',

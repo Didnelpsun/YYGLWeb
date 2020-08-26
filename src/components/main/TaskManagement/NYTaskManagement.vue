@@ -5,27 +5,44 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="来源类型：" label-width="130px">
-                <el-select class="searchSelect" v-model="Query.sourcetypes">
-                  <el-option v-for="i in DicList.sourcetypes" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="任务状态：">
-                <el-select class="searchSelect" v-model="Query.states">
-                  <el-option v-for="i in DicList.states" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                </el-select>
+              <el-form-item label="区域：">
+                <el-cascader v-model="Query.AreaList" :props="QareaProps" clearable @change="changeArea(Query)"></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点名称：">
-                <el-input v-model="Query.resourcename" placeholder="请输入站点名称"></el-input>
+                <el-input v-model="Query.name" placeholder="请输入站点名称"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label-width="130px" label="设备类型名称：">
-                <el-input v-model="Query.equipmentypename" placeholder="请输入设备类型名称" @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="站点编码：">
+                <el-input v-model="Query.code" placeholder="请输入站点编码"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点分类：">
+                <el-select class="searchSelect" v-model="Query.classify">
+                  <el-option v-for="i in DicList.classify" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="创建时间：">
+                <el-date-picker class="tableSelect" v-model="Query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="至：">
+                <el-date-picker class="tableSelect" v-model="Query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="任务状态：">
+                <el-select class="searchSelect" v-model="Query.state">
+                  <el-option v-for="i in DicList.states" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-col>
@@ -54,17 +71,19 @@
         <el-table-column prop="cityname" label="地市" width="100"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="100"></el-table-column>
         <el-table-column prop="resourcename" label="站点名称"></el-table-column>
-        <el-table-column prop="sourcetypename" label="来源类型"></el-table-column>
-        <el-table-column prop="equipmentypename" label="设备类型" width=""></el-table-column>
-        <el-table-column prop="statename" label="任务状态"></el-table-column>
-        <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
+        <el-table-column prop="code" label="站点编码"></el-table-column>
+        <el-table-column prop="classifyname" label="站点分类"></el-table-column>
+        <el-table-column prop="statename" label="任务状态" width=""></el-table-column>
+        <el-table-column prop="taskbatch" label="任务批次"></el-table-column>
+        <el-table-column prop="" label="完成时间"></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width="" :formatter="formatDate"></el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
+        <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             <el-button v-if="scope.row.statename === '待执行'" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button v-if="scope.row.statename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>
-            <el-button v-if="scope.row.statename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2)">审核</el-button>
+            <!--<el-button v-if="scope.row.statename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>-->
+            <el-button v-if="scope.row.statename === '待审核'" type="text" size="mini" @click="handleByExamine(scope.$index, scope.row)">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,17 +99,8 @@
       <el-form :model="addData" :rules="AddRules" ref="AddForm">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="任务对象：" prop="TaskObject">
-              <el-select v-model="addData.TaskObject">
-                <el-option label="请选择" value=""></el-option>
-                <el-option label="站点" value="1"></el-option>
-                <el-option label="设备" value="2"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item label="任务批次：" prop="taskbatch">
-              <el-input v-model="addData.taskbatch"></el-input>
+              <el-input v-model="addData.taskbatch" placeholder="请填写任务批次"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -98,14 +108,18 @@
               <el-date-picker v-model="addData.completetime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="6" style="margin-left: 25px;">
+            <!--<div class="fr" style="margin-top: 0">-->
+              <el-button @click="handleSiteChoose" type="success" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-plus'">添加站点</el-button>
+              <el-button @click="handleAddDevice" type="success" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-plus'">添加设备</el-button>
+            <!--</div>-->
+          </el-col>
         </el-row>
-        <div class="center" style="margin-bottom: 20px">
-          <el-button v-if="addData.TaskObject=='2'" @click="handleAddDevice" type="success" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-plus'">添加</el-button>
-          <el-button v-else @click="handleSiteChoose" type="success" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-plus'">添加</el-button>
-          <el-button @click="handleDelDevice" type="danger" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-delete'">删除</el-button>
-        </div>
+        <!--<div class="center" style="margin-bottom: 20px">
+          &lt;!&ndash;<el-button @click="handleDelDevice" type="danger" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-delete'">删除</el-button>&ndash;&gt;
+        </div>-->
       </el-form>
-      <el-table v-if="addData.TaskObject === '1'" :data="deviceList" v-loading="table1Loading" ref="table1" @selection-change="handleSelect1">
+      <el-table :data="deviceList" v-loading="table1Loading" ref="table1" @selection-change="handleSelect1">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
@@ -116,17 +130,6 @@
         <el-table-column prop="code" label="站点编码" width="120"></el-table-column>
         <el-table-column prop="classifyname" label="站点分类" width=""></el-table-column>
       </el-table>
-      <el-table v-else :data="deviceList" v-loading="table1Loading" ref="table1" @selection-change="handleSelect1">
-        <el-table-column type="selection" width="40"></el-table-column>
-        <el-table-column label="序号" width="50">
-          <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
-        </el-table-column>
-        <el-table-column prop="cityname" label="城市" width=""></el-table-column>
-        <el-table-column prop="areaname" label="区域" width=""></el-table-column>
-        <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
-        <el-table-column prop="equipmenttypename" label="设备类型名称" width=""></el-table-column>
-        <el-table-column prop="statename" label="设备状态" width=""></el-table-column>
-      </el-table>
       <div class="center" style="padding-bottom: 100px">
         <el-button @click="handleAddTask" type="primary" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
         <el-button @click="closeShowAdd" type="primary" :disabled="table1Loading" :icon="table1Loading ? 'el-icon-loading' : 'el-icon-arrow-left'">返回</el-button>
@@ -136,21 +139,34 @@
     <div v-show="showType === 1 || showType === 2">
       <layuiTitle title="任务设备列表"></layuiTitle>
       <el-tabs class="content-card" v-model="ViewTabIndex" @tab-click="handleTabs">
+        <el-row v-if="ViewTabIndex !== '1'" style="margin-bottom: 15px;">
+          <el-col :span="4" class="SearchResult">查询结果</el-col>
+          <el-col :offset="2" :span="18" class="fr">
+            <div class="fr">
+              <el-button @click="AddTaskDevice" type="success" icon="el-icon-plus">添加</el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-tab-pane label="设备信息">
           <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
               <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
             </el-table-column>
-            <el-table-column prop="resourcename" label="站点名称"></el-table-column>
             <el-table-column prop="equipmenttypename" label="设备类型"></el-table-column>
-            <el-table-column prop="cityname" label="城市"></el-table-column>
-            <el-table-column prop="areaname" label="区域"></el-table-column>
+            <el-table-column prop="accessdate" label="入网日期"></el-table-column>
             <el-table-column prop="statename" label="设备状态"></el-table-column>
+            <el-table-column prop="censusstatename" label="普查状态"></el-table-column>
+            <el-table-column prop="auditusername" label="审核人"></el-table-column>
+            <el-table-column prop="audittime" label="审核时间"></el-table-column>
+            <el-table-column prop="createtime" label="创建日期"></el-table-column>
+            <el-table-column prop="createusername" label="创建人"></el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button v-if="showType == 1" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">详情</el-button>
-                <el-button v-if="showType == 2" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">修改</el-button>
-                <el-button v-if="showType == 2 && !isDeviceTask" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
+                <el-button type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 2)">详情</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>
+                <el-button v-if="showType == 4 && scope.row.statename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2)">审核</el-button>
+                <el-button v-if="showType !== 1" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -192,8 +208,15 @@
                   <tbody>
                   <!--省市区-->
                   <tr class="el-table__row">
+                    <td><div class="cell">地市</div></td>
+                    <td><div class="cell">{{siteInfo.cityname}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <tr class="el-table__row">
                     <td><div class="cell">区域</div></td>
-                    <td><div class="cell">{{ `${siteInfo.provincename} / ${siteInfo.cityname} / ${siteInfo.areaname}` }}</div></td>
+                    <td><div class="cell">{{siteInfo.areaname}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -201,7 +224,12 @@
                   <!--站点编码-->
                   <tr class="el-table__row">
                     <td><div class="cell">站点编码</div></td>
-                    <td><div class="cell">{{siteInfo.code}}</div></td>
+                    <td v-show="showType == 2"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.code"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1"><div class="cell">{{siteInfo.code}}</div></td>
                     <td><div class="cell" @click="OpenImgBox('站点编码', 'code', ImgList1)">{{ImgList1.length}}</div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -209,23 +237,12 @@
                   <!--站点名称-->
                   <tr class="el-table__row">
                     <td><div class="cell">站点名称</div></td>
-                    <td><div class="cell">{{siteInfo.name}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--站点类型-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">站点类型</div></td>
-                    <td><div class="cell">{{siteInfo.resourcetypename}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell">{{writeDic(DicList.resourcetype)}}</div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--入网日期-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">入网日期</div></td>
-                    <td><div class="cell">{{siteInfo.accessdate}}</div></td>
+                    <td v-show="showType == 2"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.name"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1"><div class="cell">{{siteInfo.name}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -238,197 +255,36 @@
                     <!--<td><div class="cell">{{writeDic(DicList.classify)}}</div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
-                  <!--原产权单位-->
+                  <!--入网日期-->
                   <tr class="el-table__row">
-                    <td><div class="cell">原产权单位</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <!--<el-form-item class="form-item">
-                        <el-input v-model="siteInfo.rawpropertyrightunitname"></el-input>
-                      </el-form-item>-->
-                      <el-select v-model="siteInfo.rawpropertyrightunit" size="small">
-                        <el-option label="请选择" value=""></el-option>
-                        <el-option v-for="i in DicList.propertyrightunit" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                      </el-select>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.rawpropertyrightunitname}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell">{{writeDic(DicList.propertyrightunit)}}</div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--生命周期-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">生命周期</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.lifecycle"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.lifecycle}}</div></td>
+                    <td><div class="cell">入网日期</div></td>
+                    <td><div class="cell">{{siteInfo.accessdate}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
-                  <!--产权性质-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">产权性质</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.propertyrights"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.propertyrights}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--建站模式-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">建站模式</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <!--<el-form-item class="form-item">
-                        <el-input v-model="siteInfo.websitebuildingmode"></el-input>
-                      </el-form-item>-->
-                      <el-select v-model="siteInfo.websitebuildingmode" size="small">
-                        <el-option label="请选择" :value="null"></el-option>
-                        <el-option v-for="i in DicList.models" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                      </el-select>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.websitebuildingmodename}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--机房位置-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">机房位置</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.computerroomposition"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.computerroomposition}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--是否拉远站-->
-                  <tr class="el-table__row">
-                    <td><div class="cell"><i class="must">*</i>是否拉远站</div></td>
-                    <td v-show="showType == 2">
-                      <div class="cell">
-                        <el-form-item class="form-item" prop="outstanding">
-                          <el-select class="tableSelect" v-model="siteInfo.outstanding" size="mini">
-                            <el-option label="请选择" value=""></el-option>
-                            <el-option label="是" :value="true"></el-option>
-                            <el-option label="否" :value="false"></el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
+                  <!--经度-->
+                  <tr class="el-table__row" v-if="siteInfo.classify == 1">
+                    <td><div class="cell">经度</div></td>
+                    <!--<td><div class="cell">{{siteInfo.longitude}}</div></td>-->
+                    <td @click="OpenMap(0)">
+                      <div class="cell location"><span>{{siteInfo.longitude}}</span><i class="el-icon-location icon_location"></i></div>
                     </td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.outstanding ? '是' : '否'}}</div></td>
+                    <td><div class="cell" @click="OpenImgBox('经度', 'longitude', ImgList2)">{{ImgList2.length}}</div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--纬度-->
+                  <tr class="el-table__row" v-if="siteInfo.classify == 1">
+                    <td><div class="cell">纬度</div></td>
+                    <td @click="OpenMap(0)"><div class="cell">{{siteInfo.latitude}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
-                  <!--站址地形-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">站址地形</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.siteterrain"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.siteterrain}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--覆盖场景-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">覆盖场景</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.coversthescenario"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.coversthescenario}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--合同签订主体-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">合同签订主体</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.contractsigning"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.contractsigning}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--移交批次-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">移交批次</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.handoverbatch"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.handoverbatch}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--是否共享-->
-                  <tr class="el-table__row">
-                    <td><div class="cell"><i class="must">*</i>是否共享</div></td>
-                    <td v-show="showType == 2">
-                      <div class="cell">
-                        <el-form-item class="form-item" prop="shared">
-                          <el-select class="tableSelect" v-model="siteInfo.shared" size="mini">
-                            <el-option label="请选择" value=""></el-option>
-                            <el-option label="是" :value="true"></el-option>
-                            <el-option label="否" :value="false"></el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.shared ? '是' : '否'}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--共享单位-->
-                  <tr class="el-table__row" v-if="siteInfo.shared === true || siteInfo.shared === '是' || siteInfo.shared === ''">
-                    <td><div class="cell">共享单位</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.sharedunit"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.sharedunit}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <tr class="el-table__row">
-                    <td><div class="cell">资产识别码</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item">
-                        <el-input v-model="siteInfo.identificationcode"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.identificationcode}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--地址-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">地址</div></td>
+                  <!--详细地址-->
+                  <tr class="el-table__row" v-if="siteInfo.classify == 1">
+                    <td><div class="cell">详细地址</div></td>
                     <td v-show="showType == 2"><div class="cell">
                       <el-form-item class="form-item">
                         <el-input v-model="siteInfo.address"></el-input>
@@ -439,60 +295,78 @@
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
                   </tr>
-                  <tr class="el-table__row">
-                    <td><div class="cell"><i class="must">*</i>经度</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item" prop="longitude">
-                        <el-input v-model="siteInfo.longitude" @mousewheel.native.prevent type="number"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-show="showType == 1"><div class="cell">{{siteInfo.longitude}}</div></td>
-                    <td><div class="cell" @click="OpenImgBox('经度', 'longitude', ImgList2)">{{ImgList2.length}}</div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--纬度-->
-                  <tr class="el-table__row">
-                    <td><div class="cell"><i class="must">*</i>纬度</div></td>
-                    <td v-show="showType == 2"><div class="cell">
-                      <el-form-item class="form-item" prop="latitude">
-                        <el-input v-model="siteInfo.latitude" @mousewheel.native.prevent type="number"></el-input>
-                      </el-form-item>
-                    </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.latitude}}</div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--提交人-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">提交人</div></td>
-                    <td><div class="cell">
-                      <el-form-item class="form-item">{{siteInfo.createusername}}</el-form-item>
-                    </div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
-                  <!--创建时间-->
-                  <tr class="el-table__row">
-                    <td><div class="cell">创建时间</div></td>
-                    <td><div class="cell">
-                      <el-form-item class="form-item">{{siteInfo.createtime}}</el-form-item>
-                    </div></td>
-                    <td><div class="cell"></div></td>
-                    <!--<td><div class="cell"></div></td>-->
-                    <td><div class="cell"></div></td>
-                  </tr>
                   </tbody>
                 </table>
               </div>
             </el-form>
           </div>
           <div class="center" style="padding-bottom: 100px">
-            <el-button v-if="showType == 2" @click="handleEditSite" type="primary" icon="el-icon-check">提交</el-button>
+            <el-button v-if="showType == 2" @click="handleEditSite" type="primary" icon="el-icon-check">保存</el-button>
             <el-button @click="closeShowEdit" type="primary" icon="el-icon-arrow-left">返回</el-button>
           </div>
+        </el-tab-pane>
+        <el-tab-pane label="电表">
+          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+            <el-table-column label="序号" width="50">
+              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+            </el-table-column>
+            <el-table-column prop="statename" label="电表状态"></el-table-column>
+            <el-table-column prop="accessdate" label="入网日期"></el-table-column>
+            <el-table-column prop="electricmeterno" label="电表编号"></el-table-column>
+            <el-table-column prop="powersupplymode" label="供电方式"></el-table-column>
+            <el-table-column prop="powersupplytheowner" label="供电业主"></el-table-column>
+            <el-table-column prop="theownerphone" label="供电联系方式"></el-table-column>
+            <el-table-column prop="censusstatename" label="普查状态"></el-table-column>
+            <el-table-column prop="createtime" label="创建日期"></el-table-column>
+            <el-table-column prop="createusername" label="创建人"></el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">详情</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">修改</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>
+                <el-button v-if="showType == 4 && scope.row.statename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2)">审核</el-button>
+                <el-button v-if="showType !== 1" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="隐患">
+          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+            <el-table-column label="序号" width="50">
+              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+            </el-table-column>
+            <el-table-column prop="hiddendangertype" label="隐患类型"></el-table-column>
+            <el-table-column prop="hiddendangerlevel" label="隐患级别"></el-table-column>
+            <el-table-column prop="hiddendangerdescribe" label="隐患描述"></el-table-column>
+            <el-table-column prop="handlingsuggestions" label="处理建议"></el-table-column>
+            <el-table-column prop="createtime" label="创建日期"></el-table-column>
+            <el-table-column prop="createusername" label="创建人"></el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="mini" @click="">详情</el-button>
+                <el-button type="text" size="mini" @click="">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="代维">
+          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+            <el-table-column label="序号" width="50">
+              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+            </el-table-column>
+            <el-table-column prop="hiddendangertypename" label="隐患类型"></el-table-column>
+            <el-table-column prop="maintainproject" label="维护项目"></el-table-column>
+            <el-table-column prop="describe" label="问题描述"></el-table-column>
+            <el-table-column prop="treatment" label="处理情况"></el-table-column>
+            <el-table-column prop="createtime" label="创建时间"></el-table-column>
+            <el-table-column prop="createusername" label="创建人"></el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button type="text" size="mini" @click="">详情</el-button>
+                <el-button type="text" size="mini" @click="">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
       </el-tabs>
       <div class="center" v-show="ViewTabIndex === '0'">
@@ -500,9 +374,27 @@
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize2" :total="total2"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
-      <div class="center"  v-show="ViewTabIndex == 0">
+      <div class="center"  v-show="ViewTabIndex !== '1'">
         <el-button @click="closeShowEdit" type="primary" icon="el-icon-arrow-left">返回</el-button>
       </div>
+      <el-dialog center append-to-body :visible.sync="showTaskDialog" width="60%" title="请选择设备类型" :close-on-click-modal="false" :before-close="TaskhandleClose">
+        <el-form :data="DeviceType">
+          <el-row>
+            <el-col>
+              <el-form-item label="设备类型：">
+                <el-select class="searchSelect" v-model="SelectDeviceType">
+                  <el-option label="请选择" value=""></el-option>
+                  <el-option v-for="(i, index) in DeviceType" :key="index" :label="i" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="center">
+            <el-button type="success" @click="handleSelectDeviceType" icon="el-icon-check">确定</el-button>
+            <el-button type="primary" @click="TaskhandleClose" icon="el-icon-arrow-left">返回</el-button>
+          </el-row>
+        </el-form>
+      </el-dialog>
     </div>
 
     <el-dialog title="审核"  :visible.sync="auitShow" center width="30%">
@@ -523,7 +415,7 @@
     </el-dialog>
 
     <el-dialog top="1%" append-to-body :visible.sync="showDialog" width="80%" :title="dialogTitle" :close-on-click-modal="false" :before-close="AddhandleClose">
-      <ResourceList v-if="siteChoose" :isSite="addData.TaskObject" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseDevice" @selectResource="selectResource"/>
+      <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseDevice" @selectResource="selectResource"/>
       <deviceList v-if="deviceChoose" :resourcetype="1" :equipment_id="currentEquipmentId" @chooseDevice="chooseDevice"></deviceList>
       <TaskChargingPile v-if="showChargingPile" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChargingPile>
       <TaskSwitchCabinet v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
@@ -533,6 +425,7 @@
       <TaskBatteryGenerator v-if="showBatteryGenerator " :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
     </el-dialog>
     <ImgBox ref="ImgBox"></ImgBox>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
@@ -541,6 +434,7 @@ import {GlobalRes} from 'common/js/mixins'
 import {DictionaryInfoList} from 'api/api'
 import ResourceList from 'base/Resource/ResourceList'
 import deviceList from 'base/Resource/deviceList'
+import GoogleMap from 'base/GoogleMap'
 import TaskChargingPile from 'base/TaskEquipment/TaskChargingPile'
 import TaskSwitchCabinet from 'base/TaskEquipment/TaskSwitchCabinet'
 import TaskReservepover from 'base/TaskEquipment/TaskReservepover'
@@ -557,12 +451,20 @@ export default {
   name: 'TaskManagement',
   data () {
     return {
-      showType: 0, //  0:列表 1:查看 2:编辑 3:新增
+      showMap: false,
+      showType: 0, //  0:列表 1:查看 2:编辑 3:新增 4:审核
       Query: {
+        AreaList: [],
+        provinceid: null, // 省份
+        cityid: null, // 城市
+        areaid: null, // 区域
         states: null,
-        sourcetypes: null,
-        resourcename: '',
-        equipmentypename: ''
+        name: '',
+        code: '',
+        classify: null,
+        state: null,
+        starttime: '',
+        endtime: ''
       },
       total: 0,
       currentPage: 1,
@@ -575,12 +477,12 @@ export default {
         completetime: '',
         resourcename: '',
         resource_id: [],
-        equipment_id: [],
-        TaskObject: ''
+        equipment_id: []
       },
       tableList: [], // 任务列表
       deviceList: [], // 任务设备列表
       deviceInfo: [], // 任务信息
+      AmmeterInfo: [], // 任务电表
       siteInfo: {}, // 任务站点信息
       selectList: [], // 选择任务设备
       currentEquipmentId: [],
@@ -611,22 +513,19 @@ export default {
         ],
         completetime: [
           { required: true, message: '请选择完成时间', trigger: 'change' }
-        ],
-        TaskObject: [
-          {required: true, message: '请选择任务对象', trigger: 'change'}
         ]
       },
       table1Loading: false,
       siteChoose: false,
       showDialog: false,
       deviceChoose: false,
-      isDeviceTask: false, // 是否为设备任务
       showChargingPile: false, // 充电桩详情
       showSwitchCabinet: false, // 换电柜详情
       showReservepover: false, // 备电详情
       showChangeBattery: false, // 换电池详情
       showOilFiredGenerator: false, // 燃油发电机详情
       showBatteryGenerator: false,
+      showTaskDialog: false, // 选择任务设备类型弹框
       ViewTabIndex: 0,
       DicList: {},
       WriteState: null,
@@ -639,7 +538,9 @@ export default {
         task_id: ''
       },
       ImgList1: [],
-      ImgList2: []
+      ImgList2: [],
+      DeviceType: ['外电引入', '换电柜', '燃油发电机', '换电电池', '电池发电装置', '充电桩', '备电'],
+      SelectDeviceType: ''
     }
   },
   activated () {
@@ -648,14 +549,14 @@ export default {
   },
   methods: {
     initDictionariesArray () {
-      let arr = ['资源任务来源类型', '任务状态', '设备产权单位', '建站模式']
+      let arr = ['任务状态', '设备产权单位', '建站模式', '站点分类']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
+          this.DicList.classify = res.data.filter(i => {
+            return i.type === '站点分类'
+          })
           this.DicList.models = res.data.filter(i => {
             return i.type === '建站模式'
-          })
-          this.DicList.sourcetypes = res.data.filter(i => {
-            return i.type === '资源任务来源类型'
           })
           this.DicList.states = res.data.filter(i => {
             return i.type === '任务状态'
@@ -722,11 +623,6 @@ export default {
       this.getDeviceDetail(row.id)
     },
     handleEdit (index, row) {
-      if (row.equipment_id) {
-        this.isDeviceTask = true
-      } else {
-        this.isDeviceTask = false
-      }
       this.showType = 2
       this.WriteState = 1
       this.getDeviceDetail(row.id)
@@ -808,6 +704,11 @@ export default {
         this.auitData.resourcename = row.resourcename
       }
     },
+    handleByExamine (index, row) {
+      this.showType = 4
+      this.WriteState = 2
+      this.getDeviceDetail(row.id)
+    },
     subAuit (type) {
       if (type === 4 || type === 5) {
         if (!this.auitData.remark) {
@@ -832,6 +733,50 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    AddTaskDevice () {
+      switch (this.ViewTabIndex) {
+        case '0':
+          this.showTaskDialog = true
+          break
+        case '2':
+          break
+        case '3':
+          break
+        case '4':
+          break
+      }
+    },
+    TaskhandleClose () {
+      this.SelectDeviceType = ''
+      this.showTaskDialog = false
+    },
+    handleSelectDeviceType () {
+      if (!this.SelectDeviceType) this.$message.error('请选择设备类型！')
+      this.dialogTitle = '新增' + this.SelectDeviceType
+      this.showTaskDialog = false
+      this.showDialog = true
+      this.WriteState = 0
+      switch (this.SelectDeviceType) {
+        case '充电桩':
+          this.showChargingPile = true
+          break
+        case '换电柜':
+          this.showSwitchCabinet = true
+          break
+        case '备电':
+          this.showReservepover = true
+          break
+        case '换电电池':
+          this.showChangeBattery = true
+          break
+        case '燃油发电机':
+          this.showOilFiredGenerator = true
+          break
+        case '电池发电装置':
+          this.showBatteryGenerator = true
+          break
+      }
     },
     handleTabs () {
       if (this.ViewTabIndex === '0') {
@@ -924,7 +869,8 @@ export default {
         this.dialogTitle = '新增' + name
       }
     },
-    showDeviceDetail (index, row) {
+    showDeviceDetail (index, row, type) {
+      this.WriteState = type
       this.DeviceID = row.id
       this.showDialog = true
       this.setTitle(row.equipmenttypename)
@@ -1032,30 +978,37 @@ export default {
     },
     AddhandleClose () {
       this.showDialog = !this.showDialog
+      this.DeviceID = ''
     },
     selectResource (name, id) {
       this.showDialog = false
       this.addData.resource_id = id
       this.addData.resourcename = name
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.siteInfo.longitude
+        this.$refs.GoogleMap.latitude = this.siteInfo.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      /* if (longitude) {
+        this.WriteData.longitude = longitude
+      }
+      if (latitude) {
+        this.WriteData.latitude = latitude
+      } */
     }
   },
   watch: {
     deviceList (val) {
-      if (this.addData.TaskObject === '1') {
-        this.currentSiteId = val.map((item) => {
-          return item.id
-        })
-        this.addData.resource_id = val.map((item) => {
-          return item.id
-        })
-      } else if (this.addData.TaskObject === '2') {
-        this.currentEquipmentId = val.map((item) => {
-          return item.id
-        })
-        this.addData.equipment_id = val.map((item) => {
-          return item.id
-        })
-      }
+      this.addData.resource_id = val.map((item) => {
+        return item.id
+      })
     },
     showDialog (val) {
       if (!val) {
@@ -1069,14 +1022,6 @@ export default {
         this.showBatteryGenerator = false
       }
     },
-    'addData.TaskObject': function (newv, oldv) {
-      if (!oldv) return
-      if (newv !== oldv) {
-        Object.assign(this.$data.addData, this.$options.data().addData)
-        this.addData.TaskObject = newv
-        this.deviceList = []
-      }
-    },
     ImgList (val) {
       this.siteInfo.imglist = val
     }
@@ -1088,6 +1033,7 @@ export default {
   },
   components: {
     layuiTitle,
+    GoogleMap,
     ResourceList,
     deviceList,
     TaskChargingPile,
