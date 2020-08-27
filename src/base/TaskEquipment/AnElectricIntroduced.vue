@@ -34,32 +34,6 @@
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <tbody>
-            <!--站点名称-->
-            <tr class="el-table__row">
-              <td><div class="cell">站点名称</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcename}}</div>
-                <div v-show="WriteState !== 2" @click="isShow = true">
-                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--站点编码-->
-            <tr class="el-table__row">
-              <td><div class="cell">站点编码</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcecode}}</div>
-                <div v-show="WriteState !== 2">
-                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--外电是否报装-->
             <tr class="el-table__row">
               <td><div class="cell">外电是否报装</div></td>
@@ -108,7 +82,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
+            <tr class="el-table__row" v-if="WriteData.poleline && WriteData.externalpacking">
               <td><div class="cell">杆路数量</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="polelinenumber">
@@ -120,7 +94,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
+            <tr class="el-table__row" v-if="WriteData.poleline && WriteData.externalpacking">
               <td><div class="cell">杆路高度(米)</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="polelineheight">
@@ -132,7 +106,7 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
+            <tr class="el-table__row" v-if="WriteData.poleline && WriteData.externalpacking">
               <td><div class="cell">杆路长度(米)</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="polelinelength">
@@ -164,7 +138,7 @@
 
 <script>
 import ResourceList from 'base/Resource/ResourceList'
-import {AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
+import {DictionaryInfoList, AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 
@@ -176,11 +150,9 @@ export default {
       type: Number,
       default: 0 // 0为添加 1为编辑 2为查看
     },
-    DicList: {
-      type: Object,
-      default () {
-        return {}
-      }
+    DeviceID: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -190,27 +162,52 @@ export default {
       ImgList1: [],
       WriteData: {
         resource_id: '',
-        resourcename: '',
-        resourcecode: '',
+        externalpacking: true,
         externalpackingname: '',
         manufactor: '',
-        poleline: '',
+        poleline: false,
         polelinenumber: '',
         polelineheight: '',
         polelinelength: '',
         imglist: []
       },
       Rules: {
-      }
+      },
+      DicList: {}
+    }
+  },
+  created () {
+    this.getDicList()
+    if (this.WriteState) {
+      this.WriteLoading = true
+      this.$axios.get(GetSwitchCabinetTaskEquipment, {
+        params: {
+          id: this.DeviceID
+        }
+      }).then(res => {
+        this.WriteLoading = false
+        this.WriteData = res.data
+        this.setImgList(res.data.imglist)
+      })
     }
   },
   methods: {
+    getDicList () {
+      let arr = ['电缆厂家']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          this.DicList.manufactor = res.data.filter(i => { return i.type === '电缆厂家' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
-      this.$nextTick(() => {
-        this.$refs.WriteForm.clearValidate()
-      })
+      this.$refs.WriteForm.clearValidate()
     },
     formatDate (str) { return formatDate(str) },
     setWriteData (data) {

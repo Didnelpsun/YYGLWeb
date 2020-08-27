@@ -411,7 +411,7 @@ export default {
         resourcename: '',
         resourcecode: '',
         AreaList: [],
-        unit: '',
+        unit: null,
         provinceid: 0,
         areaid: 0,
         cityid: 0,
@@ -420,37 +420,42 @@ export default {
         accessdate: '',
         equipmenttypename: '',
         equipmenttype: null,
-        propertyrightunit: 0,
+        propertyrightunit: null,
         number: null,
         qualitycode: '',
         identificationcode: '',
         productiontime: '',
-        maintenanceunit: 1,
-        manufacturer: 1,
-        models: 0,
-        state: 1,
+        maintenanceunit: null,
+        manufacturer: null,
+        models: null,
+        state: null,
         devicecode: '',
         cylinderno: '',
-        capacity: 1,
+        capacity: 0,
         powergenerationuser: '',
         powergenerationphone: '',
         imglist: []
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
-        resourcename: [{ required: true, message: '请选择站点', trigger: 'change' }],
-        accessdate: [{ required: true, message: '请选择日期', trigger: 'blur' }],
+        manufacturer: [
+          { required: true, message: '请选择设备厂家', trigger: 'change' }
+        ],
+        models: [
+          { required: true, message: '请选择设备型号', trigger: 'change' }
+        ],
+        accessdate: [
+          { required: true, message: '请选择入网日期', trigger: 'change' }
+        ],
         longitude: [
-          {required: false, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: false, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
         number: [{ type: 'number', message: '请输入数字', trigger: 'blur' }],
-        unit: [{ type: 'number', message: '请输入数字', trigger: 'blur' }],
-        state: [{ required: true, message: '请填写站点类型', trigger: 'blur' }],
+        state: [{ required: true, message: '请填写设备状态', trigger: 'blur' }],
         capacity: [{ required: true, message: '请填写功率', trigger: 'blur' }],
         cylinderno: [{ required: true, message: '请填写缸号', trigger: 'blur' }],
         devicecode: [{ required: true, message: '请填写装置编码', trigger: 'blur' }],

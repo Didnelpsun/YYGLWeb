@@ -34,112 +34,54 @@
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <tbody>
-            <!--站点名称-->
+            <!--隐患类型-->
             <tr class="el-table__row">
-              <td><div class="cell">站点名称</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcename}}</div>
-                <div v-show="WriteState !== 2" @click="isShow = true">
-                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell"><i class="must">*</i>隐患类型</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="hiddendangertype">
+                  <el-input v-model="WriteData.hiddendangertype"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangertype}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--站点编码-->
+            <!--隐患级别-->
             <tr class="el-table__row">
-              <td><div class="cell">站点编码</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcecode}}</div>
-                <div v-show="WriteState !== 2">
-                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell"><i class="must">*</i>隐患级别</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="hiddendangerlevel">
+                  <el-input v-model="WriteData.hiddendangerlevel"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerlevel}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--外电是否报装-->
+            <!--隐患描述-->
             <tr class="el-table__row">
-              <td><div class="cell">外电是否报装</div></td>
+              <td><div class="cell">隐患描述</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="externalpacking">
-                  <el-select v-model="WriteData.externalpacking">
-                    <el-option label="是" :value="true"></el-option>
-                    <el-option label="否" :value="false"></el-option>
-                  </el-select>
+                <el-form-item class="form-item" prop="hiddendangerdescribe">
+                  <el-input v-model="WriteData.hiddendangerdescribe"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.externalpackingname}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerdescribe}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--电缆厂家-->
-            <tr class="el-table__row" v-if="WriteData.externalpacking">
-              <td><div class="cell">电缆厂家</div></td>
+            <!--处理建议-->
+            <tr class="el-table__row">
+              <td><div class="cell">处理建议</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="manufactor">
-                  <el-select v-model="WriteData.manufactor">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.manufactor" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
+                <el-form-item class="form-item" prop="handlingsuggestions">
+                  <el-input v-model="WriteData.handlingsuggestions"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.manufactorname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--有无杆路-->
-            <tr class="el-table__row" v-if="WriteData.externalpacking">
-              <td><div class="cell">有无杆路</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="poleline">
-                  <el-select v-model="WriteData.poleline">
-                    <el-option label="有" :value="true"></el-option>
-                    <el-option label="无" :value="false"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.poleline}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
-              <td><div class="cell">杆路数量</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="polelinenumber">
-                  <el-input v-model="WriteData.polelinenumber"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.polelinenumber}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
-              <td><div class="cell">杆路高度(米)</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="polelineheight">
-                  <el-input v-model="WriteData.polelineheight"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.polelineheight}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteData.poleline && WriteData.externalpacking">
-              <td><div class="cell">杆路长度(米)</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="polelinelength">
-                  <el-input v-model="WriteData.polelinelength"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.polelinelength}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.handlingsuggestions}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -154,63 +96,68 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
-
-    <el-dialog top="1%" :visible.sync="isShow" width="80%" :before-close="DetailhandleClose">
-      <ResourceList @selectResource="selectResource"/>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import ResourceList from 'base/Resource/ResourceList'
 import {AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 
 export default {
-  name: 'AnElectricIntroducedDetail',
+  name: 'HiddenDanger',
   mixins: [GlobalRes],
   props: {
     WriteState: {
       type: Number,
       default: 0 // 0为添加 1为编辑 2为查看
     },
-    DicList: {
-      type: Object,
-      default () {
-        return {}
-      }
+    DeviceID: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-      isShow: false,
       Loading: false,
       ImgList1: [],
       WriteData: {
         resource_id: '',
-        resourcename: '',
-        resourcecode: '',
-        externalpackingname: '',
-        manufactor: '',
-        poleline: '',
-        polelinenumber: '',
-        polelineheight: '',
-        polelinelength: '',
-        imglist: []
+        hiddendangertype: '',
+        hiddendangerlevel: '',
+        hiddendangerdescribe: '',
+        handlingsuggestions: '',
       },
       Rules: {
-      }
+        hiddendangertype: [
+          { required: true, message: '请输入隐患类型', trigger: 'blur' }
+        ],
+        hiddendangerlevel: [
+          { required: true, message: '请输入隐患级别', trigger: 'blur' }
+        ]
+      },
+      DicList: {}
+    }
+  },
+  created () {
+    if (this.WriteState) {
+      this.WriteLoading = true
+      this.$axios.get(GetSwitchCabinetTaskEquipment, {
+        params: {
+          id: this.DeviceID
+        }
+      }).then(res => {
+        this.WriteLoading = false
+        this.WriteData = res.data
+        this.setImgList(res.data.imglist)
+      })
     }
   },
   methods: {
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
-      this.$nextTick(() => {
-        this.$refs.WriteForm.clearValidate()
-      })
+      this.$refs.WriteForm.clearValidate()
     },
     formatDate (str) { return formatDate(str) },
     setWriteData (data) {
@@ -226,16 +173,7 @@ export default {
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
     },
-    DetailhandleClose () {
-      this.isShow = !this.isShow
-    },
-    selectResource (name, id) {
-      this.isShow = false
-      this.WriteData.resource_id = id
-      this.WriteData.resourcename = name
-    },
     SubAdd () {
-      if (this.validImgList()) return
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
@@ -257,7 +195,6 @@ export default {
       })
     },
     SubEdit () {
-      if (this.validImgList()) return
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
@@ -283,11 +220,6 @@ export default {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
-    validImgList () {
-      if (!this.ImgList1.length) {
-        return this.$message.warning('电表编号图片必须上传')
-      }
-    },
     setImgList (list) {
       if (list === null) return
       this.ImgList1 = list.filter(i => { return i.field_name === 'electricmeterno' })
@@ -302,8 +234,7 @@ export default {
     ImgList (val) {
       this.WriteData.imglist = val
     }
-  },
-  components: { ResourceList }
+  }
 }
 </script>
 

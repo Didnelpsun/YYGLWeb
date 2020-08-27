@@ -125,7 +125,7 @@
                   <div v-show="WriteState == 2">{{tableData.manufacturername}}</div>
                   <el-form-item label-width="0" prop="manufacturer" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.manufacturer" placeholder="请选择备电设备厂家">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.manufacturerList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -225,7 +225,7 @@
                   <div v-show="WriteState == 2">{{tableData.propertyrightunitname}}</div>
                   <el-form-item label-width="0" prop="propertyrightunit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.propertyrightunit" placeholder="请选择产权单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.propertyrightunitList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -258,7 +258,7 @@
                   <div v-show="WriteState == 2">{{tableData.unitname}}</div>
                   <el-form-item label-width="0" prop="unit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.unit" placeholder="请选择单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.unitList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -307,7 +307,7 @@
                   <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
                   <el-form-item label-width="0" prop="maintenanceunit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.maintenanceunit" placeholder="请选择维护单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.maintenanceList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -325,7 +325,7 @@
                   <div v-show="WriteState == 2">{{tableData.statename}}</div>
                   <el-form-item label-width="0" prop="state" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.state" placeholder="请选择设备状态">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.stateList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -358,7 +358,7 @@
                   <div v-show="WriteState == 2">{{tableData.type_name}}</div>
                   <el-form-item label-width="0" prop="type_name" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.type" placeholder="请选择备电设备厂家">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.tyList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -478,22 +478,25 @@ export default {
       // 新增表格相关属性
       tableData: {
         'resourcename': '',
-        'type': '', // 设备类型id
+        'type': null, // 设备类型id
+        'provinceid': 0,
+        'cityid': 0,
+        'areaid': 0,
         'longitude': null,
         'latitude': null,
         'accessdate': '',
-        'propertyrightunit': '',
+        'propertyrightunit': null,
         'number': null,
-        'unit': '',
+        'unit': null,
         'qualitycode': '',
         'identificationcode': '',
         'productiontime': '',
-        'maintenanceunit': '',
-        'manufacturer': '',
+        'maintenanceunit': null,
+        'manufacturer': null,
         'models': null,
-        'state': '',
+        'state': null,
         // 'address': '',
-        'address': '',
+        'address': '测试值',
         'capacity': null,
         'linkmen': '',
         'linkmencontact': '',

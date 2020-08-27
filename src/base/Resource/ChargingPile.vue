@@ -79,7 +79,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="manufacturer">
                   <el-select v-model="WriteData.manufacturer">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.manufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -95,7 +95,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="models">
                   <el-select v-model="WriteData.models">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -164,7 +164,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="propertyrightunit">
                   <el-select v-model="WriteData.propertyrightunit">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.propertyrightunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -193,7 +193,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="unit">
                   <el-select v-model="WriteData.unit">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.unit" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -235,7 +235,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="maintenanceunit">
                   <el-select v-model="WriteData.maintenanceunit">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.maintenanceunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -251,7 +251,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="state">
                   <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -280,12 +280,12 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="facilitytype">
                   <el-select v-model="WriteData.facilitytype">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.facilitytype" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.facilitytype}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.facilitytypename}}</div></td>
               <td @click="OpenImgBox(4)"><div class="cell">{{ImgList4.length}}</div></td>
               <!-- <td><div class="cell">{{writeDic(DicList.facilitytype)}}</div></td> -->
               <td><div class="cell"></div></td>
@@ -317,7 +317,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupply">
                   <el-select v-model="WriteData.powersupply">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.powersupply" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -388,7 +388,7 @@
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="accesscontrolmanufacturer">
                   <el-select v-model="WriteData.accesscontrolmanufacturer">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.accesscontrolmanufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -488,33 +488,43 @@ export default {
         latitude: null,
         longitude: null,
         accessdate: '', // 入网日期
-        propertyrightunit: 0, // 产权单位
+        propertyrightunit: null, // 产权单位
         equipmenttypename: '',
         equipmenttype: null,
         number: 0, // 数量
-        unit: 0, // 单位
+        unit: null, // 单位
         qualitycode: '', // 质保编号
         identificationcode: '', // 标识码
         productiontime: null, // 生产日期
-        manufacturer: 0, // 设备厂家
-        maintenanceunit: 0, // 维护单位
-        models: 0, // 设备型号
-        state: 0, // 设备状态
+        manufacturer: null, // 设备厂家
+        maintenanceunit: null, // 维护单位
+        models: null, // 设备型号
+        state: null, // 设备状态
         address: '', // 安装地址
-        facilitytype: 0, // 细分类型id
+        facilitytype: null, // 细分类型id
         portnumber: 0, // 端口数
-        powersupply: 0, // 供电类型id
+        powersupply: null, // 供电类型id
         canopy: false, // 是否有雨棚
         canopyarea: '', // 雨棚面积
         canopymaterial: '', // 雨棚材质
         accesscontrol: false, // 是否安装门禁
-        accesscontrolmanufacturer: 0, // 门禁厂家
+        accesscontrolmanufacturer: null, // 门禁厂家
         accesscontrolno: '', // 门禁编号
         imglist: []
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
-        resource_id: [{ required: true, message: '请选择站点', trigger: 'change' }],
+        manufacturer: [
+          { required: true, message: '请选择设备厂家', trigger: 'change' }
+        ],
+        models: [
+          { required: true, message: '请选择设备型号', trigger: 'change' }
+        ],
+        accessdate: [
+          { required: true, message: '请选择入网日期', trigger: 'change' }
+        ],
+        propertyrightunit: [
+          { required: true, message: '请选择产权单位', trigger: 'change' }
+        ],
         longitude: [
           {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
@@ -523,7 +533,6 @@ export default {
           {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
-        accessdate: [{ required: true, message: '请选择入网日期', trigger: 'blur' }],
         number: [
           {required: false, message: '请填数量', trigger: 'blur'},
           { type: 'number', message: '必须为数字类型' }

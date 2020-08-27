@@ -73,6 +73,7 @@
         <el-table-column prop="resourcename" label="站点名称"></el-table-column>
         <el-table-column prop="code" label="站点编码"></el-table-column>
         <el-table-column prop="classifyname" label="站点分类"></el-table-column>
+        <el-table-column prop="equipmentypename" label="设备类型"></el-table-column>
         <el-table-column prop="statename" label="任务状态" width=""></el-table-column>
         <el-table-column prop="taskbatch" label="任务批次"></el-table-column>
         <el-table-column prop="" label="完成时间"></el-table-column>
@@ -143,7 +144,7 @@
           <el-col :span="4" class="SearchResult">查询结果</el-col>
           <el-col :offset="2" :span="18" class="fr">
             <div class="fr">
-              <el-button @click="AddTaskDevice" type="success" icon="el-icon-plus">添加</el-button>
+              <el-button v-if="showType === 2" @click="AddTaskDevice" type="success" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
         </el-row>
@@ -306,7 +307,8 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="电表">
-          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+          <!--<el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">-->
+          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
               <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
             </el-table-column>
@@ -321,17 +323,17 @@
             <el-table-column prop="createusername" label="创建人"></el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">详情</el-button>
-                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row)">修改</el-button>
-                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>
-                <el-button v-if="showType == 4 && scope.row.statename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2)">审核</el-button>
-                <el-button v-if="showType !== 1" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
+                <el-button type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 2)">详情</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="AmmeterExamine(scope.$index, scope.row, 1)">提交审核</el-button>
+                <el-button v-if="showType == 4 && scope.row.statename === '待审核'" type="text" size="mini" @click="AmmeterExamine(scope.$index, scope.row, 2)">审核</el-button>
+                <el-button v-if="showType !== 1" type="text" size="mini" @click="AmmeterDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="隐患">
-          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
               <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
             </el-table-column>
@@ -343,14 +345,14 @@
             <el-table-column prop="createusername" label="创建人"></el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="">详情</el-button>
-                <el-button type="text" size="mini" @click="">删除</el-button>
+                <el-button v-if="showType === 2" type="text" size="mini" @click="EditHiddenDanger(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button v-if="showType === 2" type="text" size="mini" @click="DeleteHiddenDanger(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="代维">
-          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
+          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
               <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
             </el-table-column>
@@ -362,8 +364,8 @@
             <el-table-column prop="createusername" label="创建人"></el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="">详情</el-button>
-                <el-button type="text" size="mini" @click="">删除</el-button>
+                <el-button v-if="showType === 2" type="text" size="mini" @click="EditMaintain(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button v-if="showType === 2" type="text" size="mini" @click="DeleteMaintain(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -421,8 +423,12 @@
       <TaskSwitchCabinet v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
       <TaskReservepover v-if="showReservepover" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskReservepover>
       <TaskChangeBattery v-if="showChangeBattery" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChangeBattery>
-      <TaskOilFiredGenerator v-if="showOilFiredGenerator " :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
-      <TaskBatteryGenerator v-if="showBatteryGenerator " :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
+      <TaskOilFiredGenerator v-if="showOilFiredGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
+      <TaskBatteryGenerator v-if="showBatteryGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
+      <AnElectricIntroduced v-if="showAnElectricIntroduced" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AnElectricIntroduced>
+      <Ammeter v-if="showAmmeter" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
+      <HiddenDanger v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
+      <Maintain v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
     </el-dialog>
     <ImgBox ref="ImgBox"></ImgBox>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
@@ -441,6 +447,10 @@ import TaskReservepover from 'base/TaskEquipment/TaskReservepover'
 import TaskChangeBattery from 'base/TaskEquipment/TaskChangeBattery'
 import TaskOilFiredGenerator from 'base/TaskEquipment/TaskOilFiredGenerator'
 import TaskBatteryGenerator from 'base/TaskEquipment/TaskBatteryGenerator'
+import AnElectricIntroduced from 'base/TaskEquipment/AnElectricIntroduced'
+import Ammeter from 'base/TaskEquipment/Ammeter'
+import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
+import Maintain from 'base/TaskEquipment/Maintain'
 import {GetEnergyTaskList, AddEnergyTask, GetTaskEquipmentList, GetTaskResourceList, UpdateTaskResource, DelTaskEquipment, GetEnergySubmitAudit, AuditEnergyTask} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
@@ -525,6 +535,10 @@ export default {
       showChangeBattery: false, // 换电池详情
       showOilFiredGenerator: false, // 燃油发电机详情
       showBatteryGenerator: false,
+      showAnElectricIntroduced: false, // 外电引入详情
+      showAmmeter: false, // 电表详情
+      showHiddenDanger: false, // 隐患详情
+      showMaintain: false,
       showTaskDialog: false, // 选择任务设备类型弹框
       ViewTabIndex: 0,
       DicList: {},
@@ -679,6 +693,9 @@ export default {
         this.deviceList = arr
       })
     },
+    AmmeterExamine (index, row, type) {
+
+    },
     handleExamine (index, row, type) {
       if (type === 1) {
         this.$confirm('您确认要提交审核吗？', '提示', {
@@ -740,10 +757,22 @@ export default {
           this.showTaskDialog = true
           break
         case '2':
+          this.showDialog = true
+          this.showAmmeter = true
+          this.dialogTitle = '新增电表'
+          this.WriteState = 0
           break
         case '3':
+          this.showDialog = true
+          this.showHiddenDanger = true
+          this.dialogTitle = '新增隐患'
+          this.WriteState = 0
           break
         case '4':
+          this.showDialog = true
+          this.showMaintain = true
+          this.dialogTitle = '新增上站维护'
+          this.WriteState = 0
           break
       }
     },
@@ -775,6 +804,9 @@ export default {
           break
         case '电池发电装置':
           this.showBatteryGenerator = true
+          break
+        case '外电引入':
+          this.showAnElectricIntroduced = true
           break
       }
     },
@@ -869,6 +901,27 @@ export default {
         this.dialogTitle = '新增' + name
       }
     },
+    showAmmeterDetail (index, row, type) {
+      this.WriteState = type
+      this.DeviceID = row.id
+      this.showDialog = true
+      this.setTitle('电表')
+      this.showAmmeter = true
+    },
+    EditHiddenDanger (index, row, type) {
+      this.WriteState = type
+      this.DeviceID = row.id
+      this.showDialog = true
+      this.setTitle('隐患')
+      this.showHiddenDanger = true
+    },
+    EditMaintain (index, row, type) {
+      this.WriteState = type
+      this.DeviceID = row.id
+      this.showDialog = true
+      this.setTitle('上站维护')
+      this.showMaintain = true
+    },
     showDeviceDetail (index, row, type) {
       this.WriteState = type
       this.DeviceID = row.id
@@ -893,7 +946,31 @@ export default {
         case '电池发电装置':
           this.showBatteryGenerator = true
           break
+        case '外电引入':
+          this.showAnElectricIntroduced = true
+          break
       }
+    },
+    AmmeterDelete (index, row) {
+      this.$confirm('您确认要删除当前电表吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+
+      })
+    },
+    DeleteHiddenDanger (index, row) {
+      this.$confirm('您确认要删除当前隐患吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+
+      })
+    },
+    DeleteMaintain (index, row) {
+      this.$confirm('您确认要删除当前上站维护吗？', '提示', {
+        type: 'warning'
+      }).then(() => {
+
+      })
     },
     DeviceDelete (index, row) {
       this.$confirm('您确认要删除当前任务设备吗？', '提示', {
@@ -1012,6 +1089,7 @@ export default {
     },
     showDialog (val) {
       if (!val) {
+        this.SelectDeviceType = ''
         this.siteChoose = false
         this.deviceChoose = false
         this.showChargingPile = false
@@ -1020,6 +1098,10 @@ export default {
         this.showChangeBattery = false// 换电池详情
         this.showOilFiredGenerator = false // 燃油发电机详情
         this.showBatteryGenerator = false
+        this.showAnElectricIntroduced = false
+        this.showAmmeter = false
+        this.showHiddenDanger = false
+        this.showMaintain = false
       }
     },
     ImgList (val) {
@@ -1042,7 +1124,11 @@ export default {
     ImgBox,
     TaskChangeBattery,
     TaskOilFiredGenerator,
-    TaskBatteryGenerator
+    TaskBatteryGenerator,
+    AnElectricIntroduced,
+    Ammeter,
+    HiddenDanger,
+    Maintain
   }
 }
 </script>

@@ -1,343 +1,349 @@
 <template>
-  <div class="write" >
-    <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small" v-loading="WriteLoading">
+  <div class="write">
+    <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
       <!--表头-->
       <div class="el-table__header-wrapper">
         <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
           <colgroup>
-            <col name="el-table_8_column_60" width="80"/>
-            <col name="el-table_8_column_61" width="140"/>
-            <col name="el-table_8_column_62" width="50"/>
-            <!--<col name="el-table_8_column_63" width="400"/>-->
-            <col name="el-table_8_column_64" width="100"/>
+            <col width="80"/>
+            <col width="100"/>
+            <col width="50"/>
+            <!-- <col width="400"/> -->
+            <col width="100"/>
           </colgroup>
           <thead>
           <tr>
             <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
             <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
             <th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>
-            <!--<th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th>-->
+            <!-- <th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th> -->
             <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
           </tr>
           </thead>
         </table>
       </div>
       <!--表体-->
-      <!--表体-->
-      <el-form :model="WriteData" :rules="Rules" ref="WriteForm" label-width="0" :show-message="false">
+      <el-form :model="tableData" :rules="Rules" ref="tableForm" v-loading="WriteLoading">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
-              <col name="el-table_8_column_60" width="80"/>
-              <col name="el-table_8_column_61" width="140"/>
-              <col name="el-table_8_column_62" width="50"/>
-              <!--<col name="el-table_8_column_63" width="400"/>-->
-              <col name="el-table_8_column_64" width="100"/>
+              <col width="80"/>
+              <col width="100"/>
+              <col width="50"/>
+              <!-- <col width="400"/> -->
+              <col width="100"/>
             </colgroup>
             <tbody>
-            <!--选择区域-->
-            <!--<tr class="el-table__row" v-if="WriteState !==2">
-              <td><div class="cell">区域</div></td>
-              <td v-if="WriteState <= 1"><div class="cell">
-                <el-form-item class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" :props="areaProps" @change="changeArea(WriteData)"
-                               ref="csArea"></el-cascader>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState == 2"><div class="cell">{{`${WriteData.provincename} / ${WriteData.cityname} / ${WriteData.areaname}`}}</div></td>
+            <!--区域-->
+            <!--<tr class="el-table__row" v-show="WriteState !== 2">
+              <td><div class="cell"><i class="must">*</i>区域</div></td>
+              <td>
+                <div class="cell">
+                  <el-form-item label-width="0" class="form-item" v-model="tableData.areaid">
+                    <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" :options="areaOption" ref="csArea"></el-cascader>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
-              &lt;!&ndash;<td><div class="cell"></div></td>&ndash;&gt;
+              &lt;!&ndash; <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> &ndash;&gt;
               <td><div class="cell"></div></td>
             </tr>-->
             <!--地市-->
-            <tr class="el-table__row el-table__row--striped" v-show="WriteState == 2">
+            <!--<tr class="el-table__row" v-show="WriteState == 2">
               <td><div class="cell"><i class="must">*</i>地市</div></td>
-              <td><div class="cell"><div>{{WriteData.cityname}}</div></div>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.cityname}}</div>
+                </div>
               </td>
               <td><div class="cell"></div></td>
+              &lt;!&ndash; <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> &ndash;&gt;
               <td><div class="cell"></div></td>
-            </tr>
+            </tr>-->
             <!--区域-->
-            <tr class="el-table__row" v-show="WriteState == 2">
+            <!--<tr class="el-table__row" v-show="WriteState == 2">
               <td><div class="cell"><i class="must">*</i>区域</div></td>
-              <td><div class="cell"><div>{{WriteData.areaname}}</div></div></td>
-              <td><div class="cell"></div></td>
-              <td><div class="cell"></div></td>
-            </tr>
-          <!--站点名称-->
-          <tr class="el-table__row">
-            <td>
-              <div class="cell"><i class="must">*</i>站点名称</div>
-            </td>
-            <td>
-              <div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcename}}</div>
-                <div v-show="WriteState !== 2" @click="isShow = true">
-                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
+              <td>
+                <div class="cell">
+                  <div>{{tableData.areaname}}</div>
                 </div>
-              </div>
-            </td>
-            <td><div class="cell"></div></td>
-            <!-- <td><div class="cell"></div></td> -->
-            <td><div class="cell"></div></td>
-          </tr>
-            <!--经纬度-->
+              </td>
+              <td><div class="cell"></div></td>
+              &lt;!&ndash; <td>
+                <div class="cell" v-show="WriteState === 1">{{tableData.provincename}}/{{tableData.cityname}}/{{tableData.areaname}}</div>
+              </td> &ndash;&gt;
+              <td><div class="cell"></div></td>
+            </tr>-->
+            <!--站点编码-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>经度</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="longitude">
-                  <el-input v-model="WriteData.longitude" @mousewheel.native.prevent type="number"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState == 2"><div class="cell">{{WriteData.longitude}}</div></td>
-              <td @click="OpenImgBox(1)"><div class="cell">{{ImgList1.length}}</div></td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell">站点编码</div></td>
+              <td><div class="cell">{{tableData.resourcecode}}</div></td>
+              <td><div class="cell"></div></td>
+              <!--<td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
+            <!--站点名称-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>纬度</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="latitude">
-                  <el-input v-model="WriteData.latitude" @mousewheel.native.prevent type="number"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.latitude}}</div></td>
-
+              <td><div class="cell">站点名称</div></td>
+              <td><div class="cell">{{tableData.resourcename}}</div></td>
               <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备类型-->
+            <tr class="el-table__row">
+              <td><div class="cell">设备类型</div></td>
+              <td><div class="cell">{{tableData.equipmenttypename}}</div></td>
+              <td><div class="cell"></div></td>
+              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备厂家-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备厂家</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.manufacturername}}</div>
+                  <el-form-item label-width="0" prop="manufacturer" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.manufacturer" placeholder="请选择设备厂家">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="item in dictionaryList.manufacturer" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('manufacturer')"><div class="cell">{{this.manufacturerImgList.length}}</div></td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.manufacturerList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备型号-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备型号</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
+                  <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="item in dictionaryList.models" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('models')">
+                <div class="cell">{{this.modelsImgList.length}}</div>
+              </td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.modelsList)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--入网日期-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>入网日期</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="accessdate">
-                  <el-date-picker v-model="WriteData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState == 2"><div class="cell">{{WriteData.accessdate}}</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.accessdate}}</div>
+                  <el-form-item label-width="0" prop="accessdate" class="form-item" v-show="WriteState !== 2">
+                    <el-date-picker class="tableSelect" v-model="tableData.accessdate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择入网日期">
+                    </el-date-picker>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-             <!--入网日期-->
-            <tr class="el-table__row">
-              <td><div class="cell">产权单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="propertyrightunit">
-                  <el-select v-model="WriteData.propertyrightunit">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.propertyrightunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.propertyrightunitname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.propertyrightunit)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">数量</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="number">
-                  <el-input v-model.number="WriteData.number"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.number}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="unit">
-                  <el-select v-model="WriteData.unit">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.unit" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.unitname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.unit)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">质保编号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="qualitycode">
-                  <el-input v-model="WriteData.qualitycode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.qualitycode}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+            <!--标识码-->
             <tr class="el-table__row">
               <td><div class="cell">标识码</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="identificationcode">
-                  <el-input v-model="WriteData.identificationcode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.identificationcode}}</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.identificationcode}}</div>
+                  <el-form-item label-width="0" prop="identificationcode" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.identificationcode" placeholder="请填入标识码"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--经度-->
+            <tr class="el-table__row">
+              <td><div class="cell">经度</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.longitude}}</div>
+                  <el-form-item label-width="0" prop="longitude" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.longitude" placeholder="请填入经度"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--纬度-->
+            <tr class="el-table__row">
+              <td><div class="cell">纬度</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.latitude}}</div>
+                  <el-form-item label-width="0" prop="latitude" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.latitude" placeholder="请填入纬度"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--产权单位-->
+            <tr class="el-table__row">
+              <td><div class="cell">产权单位</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.propertyrightunitname}}</div>
+                  <el-form-item label-width="0" prop="propertyrightunit" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.propertyrightunit" placeholder="请选择产权单位">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="item in dictionaryList.propertyrightunit" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.propertyrightunitList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--数量-->
+            <tr class="el-table__row">
+              <td><div class="cell">数量</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.number}}</div>
+                  <el-form-item label-width="0" prop="number" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model.number="tableData.number" placeholder="请填入数量"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--单位-->
+            <tr class="el-table__row">
+              <td><div class="cell">单位</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.unitname}}</div>
+                  <el-form-item label-width="0" prop="unit" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.unit" placeholder="请选择单位">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="item in dictionaryList.unit" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.unitList)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--质保编号-->
+            <tr class="el-table__row">
+              <td><div class="cell">质保编号</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.qualitycode}}</div>
+                  <el-form-item label-width="0" prop="qualitycode" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.qualitycode" placeholder="请填入质保编号"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="productiontime">
-                  <el-date-picker v-model="WriteData.productiontime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState == 2"><div class="cell">{{WriteData.productiontime}}</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.productiontime}}</div>
+                  <el-form-item label-width="0" prop="productiontime" class="form-item" v-show="WriteState !== 2">
+                    <el-date-picker class="tableSelect" v-model="tableData.productiontime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择生产日期">
+                    </el-date-picker>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--维护单位-->
             <tr class="el-table__row">
               <td><div class="cell">维护单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="maintenanceunit">
-                  <el-select v-model="WriteData.maintenanceunit">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.maintenanceunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.maintenanceunitname}}</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
+                  <el-form-item label-width="0" prop="maintenanceunit" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.maintenanceunit" placeholder="请选择维护单位">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="item in dictionaryList.maintenanceunit" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.maintenanceunit)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">设备厂家</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="manufacturer">
-                  <el-select v-model="WriteData.manufacturer">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.manufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.manufacturername}}</div></td>
-              <td @click="OpenImgBox(2)"><div class="cell">{{ImgList2.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.manufacturer)}}</div></td> -->
+              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.maintenanceList)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--线缆型号-->
             <tr class="el-table__row">
-              <td><div class="cell">设备型号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="models">
-                  <el-select v-model="WriteData.models">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
-              <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>设备状态</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="state">
-                  <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.statename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">线缆型号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="cableassembly">
-                  <el-input v-model="WriteData.cableassembly"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.cableassembly}}</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell"><i class="must">*</i>线缆型号</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.cableassembly}}</div>
+                  <el-form-item label-width="0" prop="cableassembly" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model="tableData.cableassembly" placeholder="请填入线缆型号"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('cableassembly')"><div class="cell">{{this.cableassemblyImgList.length}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--容量-->
             <tr class="el-table__row">
-              <td><div class="cell">容量(安时)</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="capacity">
-                  <el-input v-model="WriteData.capacity"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.capacity}}</div></td>
-               <td @click="OpenImgBox(4)"><div class="cell">{{ImgList4.length}}</div></td>
+              <td><div class="cell"><i class="must">*</i>容量(安时)</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.capacity}}</div>
+                  <el-form-item label-width="0" prop="capacity" class="form-item" v-show="WriteState !== 2">
+                    <el-input v-model.number="tableData.capacity" placeholder="请填入容量"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
+              <td @click="OpenImgBox('capacity')"><div class="cell">{{capacityImgList.length}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--备注-->
             <tr class="el-table__row">
               <td><div class="cell">备注</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="Remarks">
-                  <el-input v-model="WriteData.Remarks"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.Remarks}}</div></td>
+              <td>
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.Remarks}}</div>
+                  <el-form-item label-width="0" prop="remarks" class="form-item" v-show="WriteState !== 2">
+                    <el-input type="textarea" :autosize="{ minRows: 1, maxRows: 8}" v-model="tableData.Remarks" placeholder="请填入备注"></el-input>
+                  </el-form-item>
+                </div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
-              <td><div class="cell">提交人</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createusername}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
-              <td><div class="cell">提交时间</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createtime}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
-              <td><div class="cell">审核人</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.auditusername}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
-              <td><div class="cell">审核时间</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{formatDate(WriteData.audittime)}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState !== 0">
-              <td><div class="cell">审核意见</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.auditremark}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -346,21 +352,15 @@
       </el-form>
     </div>
     <div class="center" style="padding-bottom: 10px">
-      <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
-      <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
+      <el-button @click="SubWrite" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
+      <el-button @click="WriteClose" type="primary" icon="el-icon-back">返回</el-button>
     </div>
-    <ImgBox ref="ImgBox"></ImgBox>
-    <el-dialog append-to-body top="1%" :visible.sync="isShow" title="选择站点" width="80%" :before-close="DetailhandleClose">
-      <ResourceList @selectResource="selectResource"/>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import ResourceList from 'base/Resource/ResourceList'
 import {DictionaryInfoList} from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
-import ImgBox from 'base/ImgBox'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {GetTaskEquipmentBatteryInfo, AddChargingPileTaskEquipment, EditTaskEquipmentBattery} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
@@ -380,18 +380,61 @@ export default {
   },
   data () {
     return {
-      resList: [],
-      Loading: false,
+      // 填写区域属性
+      tableArea: {
+        AreaList: []
+      },
+      areaOption: [],
       WriteLoading: false,
-      ResourceChoose: false,
-      isShow: false,
-      WriteData: {
-
+      // 图片列表
+      manufacturerImgList: [],
+      modelsImgList: [],
+      cableassemblyImgList: [],
+      capacityImgList: [],
+      // 新增表格相关属性
+      tableData: {
+        // 'resource_id': '',
+        'resourcename': '',
+        'resourcecode': '',
+        'provinceid': 0,
+        'cityid': 0,
+        'areaid': 0,
+        'longitude': null,
+        'latitude': null,
+        'equipmenttypename': '',
+        'equipmenttype': null,
+        'accessdate': '',
+        'propertyrightunit': null,
+        'number': null,
+        'unit': null,
+        'qualitycode': '',
+        'identificationcode': '',
+        'productiontime': '',
+        'maintenanceunit': null,
+        'manufacturer': null,
+        'models': null,
+        'cableassembly': '',
+        'capacity': null,
+        'Remarks': '',
+        'imglist': [
+          {
+            'field_name': '',
+            'url': '',
+            'remarks': ''
+          }
+        ]
       },
       // 表单验证
       Rules: {
-        areaid: [{ required: true, message: '请选择区域', trigger: 'change' }],
-        resource_id: [{ required: true, message: '请选择站点', trigger: 'change' }],
+        manufacturer: [
+          { required: true, message: '请选择设备厂家', trigger: 'change' }
+        ],
+        models: [
+          { required: true, message: '请选择设备型号', trigger: 'change' }
+        ],
+        accessdate: [
+          { required: true, message: '请选择入网日期', trigger: 'change' }
+        ],
         longitude: [
           {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
@@ -400,33 +443,34 @@ export default {
           {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
-        accessdate: [{ required: true, message: '请选择入网日期', trigger: 'blur' }],
         number: [
-          {required: false, message: '请填数量', trigger: 'blur'},
           { type: 'number', message: '必须为数字类型' }
         ],
-        state: [{ required: true, message: '请填写设备状态', trigger: 'change' }]
-
+        cableassembly: [
+          { required: true, message: '请输入线缆型号', trigger: 'blur' }
+        ],
+        capacity: [
+          { required: true, message: '请输入容量（安时）', trigger: 'blur' },
+          { type: 'number', message: '必须为数字类型' }
+        ]
       },
-      DicList: {},
-      ImgList1: [], // 经度
-      ImgList2: [], // 设备厂家
-      ImgList3: [], // 设备型号
-      ImgList4: [] // 容量(安时)
+      dictionaryList: {}
     }
   },
   created () {
     this.getDic()
-    this.WriteLoading = true
-    this.$axios.get(GetTaskEquipmentBatteryInfo, {
-      params: {
-        id: this.DeviceID
-      }
-    }).then(res => {
-      this.WriteLoading = false
-      this.WriteData = res.data
-      this.setImgList(res.data.imglist)
-    })
+    if (this.WriteState) {
+      this.WriteLoading = true
+      this.$axios.get(GetTaskEquipmentBatteryInfo, {
+        params: {
+          id: this.DeviceID
+        }
+      }).then(res => {
+        this.WriteLoading = false
+        this.tableData = res.data
+        this.setImgList(res.data.imglist)
+      })
+    }
   },
   methods: {
     getDic () {
@@ -442,23 +486,26 @@ export default {
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
-          this.DicList.unit = data.filter(i => { return i.type === '设备单位' })
-          this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
-          this.DicList.manufacturer = data.filter(i => { return i.type === '电池设备厂家' })
-          this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
-          this.DicList.models = data.filter(i => { return i.type === '换电电池设备型号' })
-          this.DicList.state = data.filter(i => { return i.type === '设备状态' })
+          this.$set(this.dictionaryList, 'unit', data.filter(i => { return i.type === '设备单位' }))
+          this.dictionaryList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
+          this.dictionaryList.manufacturer = data.filter(i => { return i.type === '电池设备厂家' })
+          this.dictionaryList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
+          this.dictionaryList.models = data.filter(i => { return i.type === '换电电池设备型号' })
+          this.dictionaryList.state = data.filter(i => { return i.type === '设备状态' })
         } else {
           this.$message.error(res.msg)
         }
       })
     },
     setImgList (list) {
-      if (list === null) return
-      this.ImgList1 = list.filter(i => { return i.field_name === 'longitude' })
-      this.ImgList2 = list.filter(i => { return i.field_name === 'manufacturer' })
-      this.ImgList3 = list.filter(i => { return i.field_name === 'models' })
-      this.ImgList4 = list.filter(i => { return i.field_name === 'capacity' })
+      if (list !== null && list !== undefined) {
+        list.forEach((item) => {
+          if (item.field_name === 'manufacturer') this.manufacturerImgList.push(item)
+          if (item.field_name === 'models') this.modelsImgList.push(item)
+          if (item.field_name === 'cableassembly') this.cableassemblyImgList.push(item)
+          if (item.field_name === 'capacity') this.capacityImgList.push(item)
+        })
+      }
     },
     formatDate (str) { return formatDate(str) },
     SubWrite () {
@@ -466,19 +513,19 @@ export default {
       if (this.WriteState === 1) this.SubEdit()
     },
     SubAdd () {
-      this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.tableForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
           if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
-          this.WriteData.operatorsitetype = 2
-          this.$axios.post(AddChargingPileTaskEquipment, this.WriteData).then(res => {
+          this.tableData.operatorsitetype = 2
+          this.$axios.post(AddChargingPileTaskEquipment, this.tableData).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('添加成功!')
-              this.$emit('fatheretMore')
+              // this.$emit('fatheretMore')
               this.WriteClose()
             } else {
               this.$message.error(res.msg)
@@ -491,16 +538,16 @@ export default {
       })
     },
     SubEdit () {
-      this.$refs.WriteForm.validate(vali => {
+      this.$refs.tableForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
-          this.$axios.put(EditTaskEquipmentBattery, this.WriteData).then(res => {
+          this.$axios.put(EditTaskEquipmentBattery, this.tableData).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
-              this.$emit('fatheretMore')
+              // this.$emit('fatheretMore')
               this.WriteClose()
             } else {
               this.$message.error(res.msg)
@@ -509,42 +556,49 @@ export default {
         }
       })
     },
-    OpenImgBox (val) {
-      if (val === 1) this.$emit('fatherOpenImgBox', '经度', 'longitude', this.ImgList1)
-      if (val === 2) this.$emit('fatherOpenImgBox', '设备厂家', 'manufacturer', this.ImgList2)
-      if (val === 3) this.$emit('fatherOpenImgBox', '设备型号', 'models', this.ImgList3)
-      if (val === 4) this.$emit('fatherOpenImgBox', '容量(安时)', 'capacity', this.ImgList4)
+    OpenImgBox (s) {
+      switch (s) {
+        case 'manufacturer':
+          this.$emit('fatherOpenImgBox', '设备厂家', 'manufacturer', this.manufacturerImgList)
+          break
+        case 'models':
+          this.$emit('fatherOpenImgBox', '设备型号', 'models', this.modelsImgList)
+          break
+        case 'cableassembly':
+          this.$emit('fatherOpenImgBox', '线缆型号', 'cableassembly', this.cableassemblyImgList)
+          break
+        case 'capacity':
+          this.$emit('fatherOpenImgBox', '容量/功(KW)', 'capacity', this.capacityImgList)
+          break
+      }
     },
     WriteClose () {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
     ResetWrite () {
-      // Object.assign(this.WriteData, this.$options.data().WriteDatas)
-      this.$refs.WriteForm.clearValidate()
-    },
-    selectResource (name, id) {
-      this.isShow = false
-      this.WriteData.resource_id = id
-      this.WriteData.resourcename = name
-    },
-    DetailhandleClose () {
-      this.isShow = !this.isShow
+      this.$refs.tableForm.clearValidate() // 初始化表单校验
+      Object.assign(this.$data.tableData, this.$options.data().tableData)
+      this.$refs.tableForm.resetFields()
+      this.areaOption = []
+      this.tableArea.AreaList.splice(0, this.tableArea.AreaList.length)
+      // this.getMore(1)
+      this.manufacturerImgList = []
+      this.modelsImgList = []
+      this.cableassemblyImgList = []
+      this.capacityImgList = []
+      this.showWrite = !this.showWrite
     }
   },
   computed: {
     ImgList () {
-      return this.ImgList1.concat(this.ImgList2, this.ImgList3, this.ImgList4)
+      return this.manufacturerImgList.concat(this.modelsImgList, this.cableassemblyImgList, this.capacityImgList)
     }
   },
   watch: {
     ImgList (val) {
-      this.WriteData.imglist = val
+      this.tableData.imglist = val
     }
-  },
-  components: {
-    ImgBox,
-    ResourceList
   }
 }
 </script>

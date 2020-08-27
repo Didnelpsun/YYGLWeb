@@ -623,7 +623,11 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')
+          if (this.WriteData.rawoperator.length) {
+            this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')
+          } else {
+            this.WriteData.rawoperator = this.WriteData.rawoperator.toString()
+          }
           this.WriteData.demandside = this.WriteData.demandside.join(',')
           this.WriteData.planninglongitude = this.WriteData.planninglongitude ? this.WriteData.planninglongitude : 0
           this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : 0
@@ -648,7 +652,11 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')
+          if (this.WriteData.rawoperator.length) {
+            this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')
+          } else {
+            this.WriteData.rawoperator = this.WriteData.rawoperator.toString()
+          }
           this.WriteData.demandside = this.WriteData.demandside.join(',')
           this.WriteData.planninglongitude = this.WriteData.planninglongitude ? this.WriteData.planninglongitude : 0
           this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : 0
@@ -711,7 +719,8 @@ export default {
         this.isStockStation = false
         this.WriteData.planninglongitude = this.WriteData.planninglongitude ? this.WriteData.planninglongitude : null
         this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : null
-        this.WriteData.rawoperator = this.WriteData.rawoperator.split(',')
+        // this.WriteData.rawoperator = this.WriteData.rawoperator.split(',')
+        this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
         this.WriteData.demandside = this.WriteData.demandside.split(',')
       })
     },

@@ -153,7 +153,7 @@
                   <div v-show="WriteState == 2">{{tableData.manufacturername}}</div>
                   <el-form-item label-width="0" prop="manufacturer" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.manufacturer" placeholder="请选择设备厂家">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.manufacturerList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -171,6 +171,7 @@
                   <div v-show="WriteState == 2">{{tableData.modelsname}}</div>
                   <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.models" placeholder="请选择设备型号">
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.modelsList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -251,7 +252,7 @@
                   <div v-show="WriteState == 2">{{tableData.propertyrightunitname}}</div>
                   <el-form-item label-width="0" prop="propertyrightunit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.propertyrightunit" placeholder="请选择产权单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.propertyrightunitList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -284,7 +285,7 @@
                   <div v-show="WriteState == 2">{{tableData.unitname}}</div>
                   <el-form-item label-width="0" prop="unit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.unit" placeholder="请选择单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.unitList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -333,7 +334,7 @@
                   <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
                   <el-form-item label-width="0" prop="maintenanceunit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.maintenanceunit" placeholder="请选择维护单位">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.maintenanceList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -351,7 +352,7 @@
                   <div v-show="WriteState == 2">{{tableData.statename}}</div>
                   <el-form-item label-width="0" prop="state" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.state" placeholder="请选择设备状态">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" :value="null"></el-option>
                       <el-option v-for="item in dictionaryList.stateList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -509,16 +510,16 @@ export default {
         'equipmenttypename': '',
         'equipmenttype': null,
         'accessdate': '',
-        'propertyrightunit': '',
-        'unit': '',
+        'propertyrightunit': null,
+        'unit': null,
         'number': null,
         'qualitycode': '',
         'identificationcode': '',
         'productiontime': '',
-        'maintenanceunit': '',
-        'manufacturer': '',
+        'maintenanceunit': null,
+        'manufacturer': null,
         'models': null,
-        'state': '',
+        'state': null,
         // 'address': '',
         'address': '测试值',
         'capacity': null,
@@ -536,40 +537,43 @@ export default {
       },
       // 表单验证
       Rules: {
-        resourcename: [
-          { required: true, message: '请输入站点名称', trigger: 'change' }
+        manufacturer: [
+          { required: true, message: '请选择设备厂家', trigger: 'change' }
         ],
-        areaid: [
-          { required: true, message: '请选择区域', trigger: 'change' }
+        models: [
+          { required: true, message: '请选择设备型号', trigger: 'change' }
+        ],
+        accessdate: [
+          { required: true, message: '请选择入网日期', trigger: 'change' }
         ],
         longitude: [
-          {required: false, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: false, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
-        ],
-        accessdate: [
-          { required: true, message: '请选择入网时间', trigger: 'blur' }
-        ],
-        propertyrightunit: [
-          { required: true, message: '请输入产权单位', trigger: 'blur' }
         ],
         number: [
           { type: 'number', message: '必须为数字类型' }
         ],
-        unit: [
-          { required: true, message: '请选择单位', trigger: 'blur' }
-        ],
-        manufacturer: [
-          { required: true, message: '请选择备电设备厂家', trigger: 'blur' }
-        ],
-        maintenanceunit: [
-          { required: true, message: '请选择维护单位', trigger: 'blur' }
-        ],
         state: [
-          { required: true, message: '请选择状态', trigger: 'blur' }
+          { required: true, message: '请选择状态', trigger: 'change' }
+        ],
+        oilmachineno: [
+          { required: true, message: '请输入油机编码', trigger: 'blur' }
+        ],
+        cylinderno: [
+          { required: true, message: '请输入缸号', trigger: 'blur' }
+        ],
+        capacity: [
+          { required: true, message: '请输入容量/功率', trigger: 'blur' }
+        ],
+        powergenerationuser: [
+          { required: true, message: '请输入发电联系人', trigger: 'blur' }
+        ],
+        powergenerationphone: [
+          { required: true, message: '请输入发电联系方式', trigger: 'blur' }
         ]
       }
     }

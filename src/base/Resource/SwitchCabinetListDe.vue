@@ -205,7 +205,7 @@
                         v-model="tableData.manufacturer"
                         placeholder="请选择设备厂家"
                       >
-                        <el-option label="请选择" value></el-option>
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.manufacturerList"
                           :key="item.id"
@@ -240,6 +240,7 @@
                         v-model="tableData.models"
                         placeholder="请选择设备型号"
                       >
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.modelsList"
                           :key="item.id"
@@ -389,7 +390,7 @@
                     >
                       <el-select class="tableSelect" v-model="tableData.propertyrightunit" placeholder="请选择产权单位"
                       >
-                        <el-option label="请选择" value></el-option>
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.propertyrightunitList"
                           :key="item.id"
@@ -445,7 +446,7 @@
                     <div v-show="WriteState == 2">{{tableData.unitname}}</div>
                     <el-form-item label-width="0" prop="unit" class="form-item" v-show="WriteState !== 2">
                       <el-select class="tableSelect" v-model="tableData.unit" placeholder="请选择单位">
-                        <el-option label="请选择" value></el-option>
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.unitList"
                           :key="item.id"
@@ -550,7 +551,7 @@
                         v-model="tableData.maintenanceunit"
                         placeholder="请选择维护单位"
                       >
-                        <el-option label="请选择" value></el-option>
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.maintenanceList"
                           :key="item.id"
@@ -587,7 +588,7 @@
                         v-model="tableData.state"
                         placeholder="请选择设备状态"
                       >
-                        <el-option label="请选择" value></el-option>
+                        <el-option label="请选择" :value="null"></el-option>
                         <el-option
                           v-for="item in dictionaryList.stateList"
                           :key="item.id"
@@ -892,16 +893,16 @@ export default {
         'accessdate': '',
         'equipmenttypename': '',
         'equipmenttype': null,
-        'propertyrightunit': '',
+        'propertyrightunit': null,
         'number': null,
-        'unit': '',
+        'unit': null,
         'qualitycode': '',
         'identificationcode': '',
         'productiontime': '',
-        'maintenanceunit': '',
-        'manufacturer': '',
+        'maintenanceunit': null,
+        'manufacturer': null,
         'models': null,
-        'state': '',
+        'state': null,
         'address': '',
         'warehousenumber': null, // 仓库编码
         'commonsite': true, // 普通站点
@@ -918,18 +919,39 @@ export default {
       },
       // 表单验证
       Rules: {
-        resourcename: [
-          { required: true, message: '请输入站点id', trigger: 'blur' }
+        manufacturer: [
+          { required: true, message: '请选择设备厂家', trigger: 'change' }
         ],
-        areaid: [
-          { required: true, message: '请选择区域', trigger: 'blur' }
+        models: [
+          { required: true, message: '请选择设备型号', trigger: 'change' }
+        ],
+        accessdate: [
+          { required: true, message: '请选择入网日期', trigger: 'change' }
+        ],
+        propertyrightunit: [
+          { required: true, message: '请选择产权单位', trigger: 'change' }
+        ],
+        state: [
+          { required: true, message: '请选择设备状态', trigger: 'change' }
+        ],
+        bodycode: [
+          { required: true, message: '请填写机身编码', trigger: 'blur' }
+        ],
+        warehousenumber: [
+          { required: true, message: '请填写仓位数', trigger: 'blur' }
+        ],
+        commonsite: [
+          { required: true, message: '请选择是否共址站点', trigger: 'change' }
+        ],
+        canopy: [
+          { required: true, message: '请选择是否有雨棚', trigger: 'change' }
         ],
         longitude: [
-          {required: false, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'blur'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: false, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'blur'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
         number: [
