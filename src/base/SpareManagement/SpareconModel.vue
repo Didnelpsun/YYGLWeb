@@ -7,7 +7,7 @@
           <colgroup>
             <col width="80"/>
             <col width="100"/>
-          <!--  <col width="50"/>-->
+            <!--  <col width="50"/>-->
             <col width="100"/>
           </colgroup>
           <thead>
@@ -27,11 +27,11 @@
             <colgroup>
               <col width="80"/>
               <col width="100"/>
-            <!--  <col width="50"/>-->
+              <!--  <col width="50"/>-->
               <col width="100"/>
             </colgroup>
             <tbody>
-           <tr class="el-table__row">
+            <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>城市</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
@@ -42,37 +42,35 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>类型名称</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typename">
-                  <el-input v-model="WriteData.typename"  placeholder="请填写类型名称" clearable></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typename}}</div></td>
+              <td><div class="cell"><i class="must">*</i>厂家</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.manufacturersname}}</div>
+                <div v-if="WriteState !== 2" @click="manufactureridShow=true">
+                  <el-input v-model="WriteData.manufacturersname" readonly placeholder="请选择厂家"></el-input>
+                </div></div>
+              </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>所属类型</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="belongtype">
-                  <el-select v-model="WriteData.belongtype">
-                    <el-option v-for="i in DicList.Belongtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择所属类型"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.belongtype}}</div></td>
+              <td><div class="cell"><i class="must">*</i>备件类型</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.sparetypeid}}</div>
+                <div v-if="WriteState !== 2" @click="sparetypeidShow=true">
+                  <el-input v-model="WriteData.sparetypesname" readonly placeholder="请选择备件类型"></el-input>
+                </div></div>
+              </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>类型编码</div></td>
+              <td><div class="cell"><i class="must">*</i>备件型号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typeencoding">
-                  <el-input v-model="WriteData.typeencoding"  placeholder="请填写类型编码" clearable></el-input>
+                <el-form-item class="form-item" prop="sparemodel">
+                  <el-input v-model="WriteData.sparemodel"  placeholder="请填写备件型号" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typeencoding}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.sparemodel}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
@@ -109,26 +107,28 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <el-dialog top="1%" :visible.sync="sparetypeidShow" title="选择备件类型" width="80%" :before-close="sparetypeidClose">
+      <Selsparetypeid @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
+    <el-dialog top="1%" :visible.sync="manufactureridShow" title="选择厂家" width="80%" :before-close="manufactureridClose">
+      <Selmanufacturerid @Selmanufacturerid="Selmanufacturerid"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
-import {EditSpareTyp, AddSpareTyp} from 'api/BJGL'
+import {EditSpareConfig, AddSpareConfig} from 'api/BJGL'
+import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
+import Selmanufacturerid from 'base/SpareManagement/Selmanufacturerid'
 export default {
-  name: 'Sparetype',
+  name: 'SpareconModel',
   mixins: [GlobalRes],
   props: {
     WriteState: {
       type: Number,
       default: 0
-    },
-    DicList: {
-      type: Object,
-      default () {
-        return []
-      }
     }
   },
   data () {
@@ -161,28 +161,35 @@ export default {
       },
       isShow: false,
       Loading: false,
+      manufactureridShow: false,
+      sparetypeidShow: false,
       WriteData: {
         AreaList: [],
         provinceid: 0,
         cityid: 0,
+        areaid: 0,
         id: null,
         cityname: '',
-        typename: null,
-        belongtype: null,
-        typeencoding: '',
+        sparetypeid: '',
+        manufacturerid: '',
+        sparemodel: '',
         remark: '',
         realityname: '',
-        createtime: null
+        createtime: null,
+        manufacturersname: '',
+        sparetypesname:""
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
-        typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
-        typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
+        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
+        manufacturerid: [{ required: true, message: '请选择厂家id', trigger: 'blur' }],
+        sparetypeid: [{ required: true, message: '请选择备件类型', trigger: 'blur' }],
+        sparemodel: [{ required: true, message: '请填入备件型号', trigger: 'change' }]
       }
     }
   },
-
+  created () {
+    window.i = this
+  },
   methods: {
     changecityArea (obj) {
       // console.log(obj)
@@ -201,6 +208,18 @@ export default {
       }
       return list
     },
+    Selsparetypeid (name, id) {
+      this.sparetypeidShow = false
+      this.WriteData.sparetypeid = id
+      this.WriteData.sparetypesname = name
+    },
+    Selmanufacturerid (name, id) {
+      this.manufactureridShow = false
+      this.WriteData.manufacturerid = id
+      this.WriteData.manufacturersname = name
+    },
+    sparetypeidClose () { this.sparetypeidShow = !this.sparetypeidShow },
+    manufactureridClose () { this.manufactureridShow = !this.manufactureridShow },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
@@ -209,9 +228,6 @@ export default {
       this.WriteData = data
       this.WriteData.AreaList = [ data.provinceid, data.cityid ]
       this.setArea(this.WriteData.AreaList, 'csArea')
-      if (parseInt(this.WriteState) === 2) {
-        this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'
-      }
     },
     WriteClose () {
       this.setArea([])
@@ -230,11 +246,12 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddSpareTyp, this.WriteData).then(res => {
+          this.$axios.post(AddSpareConfig, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
             this.$emit('fatheretMore')
+            this.ResetWrite()
             this.WriteClose()
           })
         }
@@ -248,7 +265,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditSpareTyp, this.WriteData).then(res => {
+          this.$axios.put(EditSpareConfig, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -259,6 +276,10 @@ export default {
         }
       })
     }
+  },
+  components: {
+    Selsparetypeid,
+    Selmanufacturerid
   }
 }
 </script>

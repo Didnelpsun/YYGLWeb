@@ -6,3 +6,16 @@ export const GetIdSpareTypList = `${reqURL}/BJGL/SpareType/GetIdSpareTypList` //
 export const DeleteSpareTyp = `${reqURL}/BJGL/SpareType/DeleteSpareTyp` // 删除备件类型
 export const EditSpareTyp = `${reqURL}/BJGL/SpareType/EditSpareTyp` // 修改备件类型
 export const AddSpareTyp = `${reqURL}/BJGL/SpareType/AddSpareTyp` // 添加备件类型
+
+// 备件型号列表
+export const GetSpareConfigList = `${reqURL}/BJGL/SpareConfig/GetSpareConfigList` // 获取备件型号列表
+export const DeleteSpareConfig = `${reqURL}/BJGL/SpareConfig/DeleteSpareConfig` // 删除备件型号
+export const EditSpareConfig = `${reqURL}/BJGL/SpareConfig/EditSpareConfig` // 修改备件型号
+export const AddSpareConfig = `${reqURL}/BJGL/SpareConfig/AddSpareConfig` // 添加备件型号
+export const GetSpareConfigIdList = `${reqURL}/BJGL/SpareConfig/GetSpareConfigIdList` // 根据id备件型号详情
+
+// 备件厂家
+export const Addsparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Addsparepartsmanufacturer` // 添加备件厂家
+export const Editsparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Editsparepartsmanufacturer` // 修改备件厂家
+export const Deletesparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Deletesparepartsmanufacturer` // 删除备件厂家
+export const GetsparepartsmanufacturerList = `${reqURL}/BJGL/sparepartsmanufacturerSevice/GetsparepartsmanufacturerList` //  获取备件厂家列表

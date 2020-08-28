@@ -10,6 +10,8 @@ export const Deletepowerposition = `${reqURL}/YJGL/powerposition/Deletepowerposi
 
 // 发电
 export const GetSitepowerposition = `${reqURL}/YJGL/powerposition/GetSitepowerposition` // 根据站点获取发电列表
+// 油机调度发电记录
+export const DeletepowerrecordInfo = `${reqURL}/YJGL/powerrecordInfo/DeletepowerrecordInfo` // 删除发电记录
 
 // 任务
 export const JobList = `${reqURL}/YJGL/Job/GetJobList` // 任务列表

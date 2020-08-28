@@ -6,7 +6,7 @@
           <!--区域级联选择器-->
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="采集器编码：" label-width="125px">
+              <el-form-item label="采集器id：" label-width="125px">
                 <el-input v-model="query.swver" placeholder="请输入采集器编码" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
@@ -40,8 +40,7 @@
         <!-- <el-table-column prop="provincename" label="省份" width=""></el-table-column> -->
         <el-table-column prop="cityname" label="地市" width=""></el-table-column>
         <!-- <el-table-column prop="areaname" label="区域" width=""></el-table-column> -->
-        <el-table-column prop="swver" label="采集器编码" width=""></el-table-column>
-        <el-table-column prop="equipmentid" label="设备ID" width=""></el-table-column>
+        <el-table-column prop="swver" label="采集器id" width=""></el-table-column>
         <el-table-column prop="faccode" label="厂家编码" width=""></el-table-column>
         <el-table-column label="操作" width="180" fixed="right">
           <template slot-scope="scope">
@@ -78,7 +77,7 @@ export default {
     return {
       // 查询相关属性
       query: {
-        swver: '',
+        swver: '', // 采集器id
         Isbinding: false
       },
       // 加载

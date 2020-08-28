@@ -416,10 +416,8 @@
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="applytime" label="提交时间"></el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
-          <template>
-            <el-button type="text" size="mini">启用</el-button>
-            <el-button type="text" size="mini">复用</el-button>
-            <el-button type="text" size="mini">作废</el-button>
+          <template slot-scope="scope">
+            <el-button type="text" size="mini" @click="Sitedelete(scope.row)">作废</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -435,6 +433,7 @@
 <script>
 import { EditBattery } from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
+import { DeletepowerrecordInfo } from 'api/YJGL'
 
 export default{
   name: 'BatteryDe',
@@ -492,6 +491,22 @@ export default{
     }
   },
   methods: {
+    Sitedelete (row) {
+      this.$confirm(`您确定要将 ${row.code} 作废吗？`, '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.$axios.delete(DeletepowerrecordInfo, {
+          params: {id: row.id}
+        }).then(res => {
+          if (res.errorCode === '200') {
+            this.$emit('fathersetData5')
+            this.$message.success('删除成功！')
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      })
+    },
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData1 (data1) {
       // console.log('setWriteData1->data1:')

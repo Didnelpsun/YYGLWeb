@@ -182,17 +182,17 @@
       <el-tab-pane label="调度日志">
         <el-table :data="tableData2" v-loading="WriteLoading">
           <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
-          <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-          <el-table-column prop="" label="调度类型" width=""></el-table-column>
-          <el-table-column prop="" label="油机编号" width=""></el-table-column>
-          <el-table-column prop="" label="油机缸号" width=""></el-table-column>
+          <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+1}}</template></el-table-column>
+          <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
+          <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
+          <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
           <el-table-column prop="" label="是否自动监控" width=""></el-table-column>
-          <el-table-column prop="" label="油机位置偏差" width=""></el-table-column>
+          <el-table-column prop="km" label="油机位置偏差" width=""></el-table-column>
           <el-table-column prop="" label="位置监控时间" width=""></el-table-column>
-          <el-table-column prop="" label="油机状态" width=""></el-table-column>
+          <el-table-column prop="enginestate" label="油机状态" width=""></el-table-column>
           <el-table-column prop="" label="状态监控时间" width=""></el-table-column>
-          <el-table-column prop="" label="操作人" width=""></el-table-column>
-          <el-table-column prop="" label="操作时间" width=""></el-table-column>
+          <el-table-column prop="realityname" label="操作人" width=""></el-table-column>
+          <el-table-column prop="dateinfo" label="操作时间" width=""></el-table-column>
           <el-table-column prop="" label="操作" width="50">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
@@ -203,7 +203,7 @@
       <el-tab-pane label="告警">
         <el-table :data="tableData3" v-loading="WriteLoading">
           <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
-          <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
+          <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
           <el-table-column prop="" label="模块编号" width=""></el-table-column>
           <el-table-column prop="" label="IP" width=""></el-table-column>
           <el-table-column prop="" label="手机卡号" width=""></el-table-column>
@@ -977,7 +977,8 @@ export default{
     }
   },
   updated () {
-    console.log(this.WriteState)
+
+    // console.log(this.WriteState)
   },
   methods: {
     // 在进行提交新增时赋值方法，在父组件中调用该方法
@@ -1079,7 +1080,7 @@ export default{
     },
     // 返回关闭编辑函数
     closeWrite () {
-      this.$refs.tableForm.clearValidate() // 初始化表单校验
+      //  this.$refs.tableForm.clearValidate() // 初始化表单校验
       this.ViewTabIndex = '0'
       Object.assign(this.$data.tableData1, this.$options.data().tableData1)
       Object.assign(this.$data.tableData2, this.$options.data().tableData2)

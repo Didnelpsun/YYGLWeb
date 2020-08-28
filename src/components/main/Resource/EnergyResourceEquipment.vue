@@ -69,7 +69,7 @@
 import layuiTitle from 'base/layui-title'
 import { GetEnergyResourceEquipmentList, GetResourceEquipmentInfo, DelResourceEquipment, GetEquipmentTypeList } from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
-import Details from 'base/Resource/ResourceEquipmentDe'
+import Details from 'base/Resource/EnergyResourceEquipmentDe'
 
 export default {
   name: 'ResourceEquipment',

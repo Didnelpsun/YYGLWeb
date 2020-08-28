@@ -91,6 +91,26 @@
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
+            <!--是否单记录-->
+            <tr class="el-table__row el-table__row--striped">
+              <td class="el-table_8_column_60">
+                <div class="cell">是否单记录</div>
+              </td>
+              <td class="el-table_8_column_61">
+                <div class="cell">
+                  <div v-show="WriteState == 2">{{tableData.manyrecords}}</div>
+                  <el-form-item label-width="0" prop="manyrecords" class="form-item" v-show="WriteState !== 2">
+                    <el-select v-model="tableData.manyrecords">
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </td>
+              <td class="el-table_8_column_62"><div class="cell"></div></td>
+              <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
+              <td class="el-table_8_column_64"><div class="cell"></div></td>
+            </tr>
               <!--创建人-->
               <tr class="el-table__row el-table__row--striped" v-show="WriteState == 2">
                 <td class="el-table_8_column_60">
@@ -156,7 +176,8 @@ export default {
       tableData: {
         resourcecode: '',
         equipmenttype_id: '0',
-        necessary: true
+        necessary: true,
+        manyrecords: false
       },
       // 表单验证
       Rules: {

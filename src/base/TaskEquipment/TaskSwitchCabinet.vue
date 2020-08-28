@@ -747,20 +747,6 @@
                 <div class="cell"></div>
               </td>
             </tr>
-            <tr class="el-table__row" v-if="WriteState === 2">
-              <td><div class="cell">创建人</div></td>
-              <td><div class="cell">{{tableData.createusername}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState === 2">
-              <td><div class="cell">创建时间</div></td>
-              <td><div class="cell">{{tableData.createtime}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             </tbody>
           </table>
         </div>

@@ -796,7 +796,7 @@
               <td><div class="cell">地面站拟建塔桅塔型</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.towermasttypename}}</div>
+                  <div>{{tableData.towermasttype}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->

@@ -3,12 +3,14 @@ import {reqURL} from './api'
 
 export const GetEqipmentList = `${reqURL}/ZYGL/Equipment/GetEqipmentList` // 根据站点id获取设备列表
 export const GetEnergyTaskList = `${reqURL}/ZYGL/Task/GetEnergyTaskList` // 获取能源任务列表
-export const AddEnergyTask = `${reqURL}/ZYGL/Task/AddEnergyTask` // 能源任务新增
+export const AddTask = `${reqURL}/ZYGL/Task/AddTask` // 能源任务新增
 export const GetTaskEquipmentList = `${reqURL}/ZYGL/TaskEquipment/GetTaskEquipmentList` // 查看任务设备列表
 export const GetTaskResourceList = `${reqURL}/ZYGL/TaskResource/GetTaskResourceList` // 获取能源任务列表
 export const UpdateTaskResource = `${reqURL}/ZYGL/TaskResource/UpdateTaskResource` // 修改任务站点信息
-export const GetEnergySubmitAudit = `${reqURL}/ZYGL/Task/GetEnergySubmitAudit` // 能源提交审核
+export const GetsubmitEquipmentaudit = `${reqURL}/ZYGL/ZY/GetsubmitEquipmentaudit` // 能源提交审核
 export const AuditEnergyTask = `${reqURL}/ZYGL/Task/AuditEnergyTask` // 能源审核
+export const TaskEquipment = `${reqURL}/ZYGL/Task/TaskEquipment` // 添加任务-选择添加设备-返回设备所在站点
+export const GetEquipmentInfoList = `${reqURL}/ZYGL/Task/GetEquipmentInfoList` // 根据设备ID获取设备详情
 
 // 任务设备
 export const GetChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/GetChargingPileTaskEquipment` // 获取充电桩任务设备详情

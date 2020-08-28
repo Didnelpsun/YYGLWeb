@@ -96,7 +96,7 @@
           <template slot-scope="scope">
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleSend(scope.$index, scope.row)">派发</el-button>
             <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row)">详情</el-button>
-            <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">项目资料</el-button>
+            <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -345,7 +345,7 @@
           <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
           <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
           <el-table-column prop="" label="起租情况" width=""></el-table-column>
-          <el-table-column prop="M" label="需求距离（m）" width=""></el-table-column>
+          <el-table-column prop="M" label="需求距离（m）" width="" :formatter="formatDistance"></el-table-column>
         </el-table>
       </div>
       <SelectUser v-if="showUser" @selectUser="selectUser"></SelectUser>
@@ -821,6 +821,9 @@ export default {
           console.log(error)
         })
       })
+    },
+    formatDistance (row) {
+      return row.M.toFixed(2)
     },
     ...mapMutations({
       setSurveyInfo: 'SET_PROJECTSURVEY_INFO'

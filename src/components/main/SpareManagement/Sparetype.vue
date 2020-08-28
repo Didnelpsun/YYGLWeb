@@ -6,7 +6,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="区域：" label-width="80px">
-                <el-cascader v-model="Query.AreaList" :props="areaProps" @change="changeArea(Query)" ref="csArea" clearable></el-cascader>
+                <el-cascader v-model="Query.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(Query)" ref="csArea" clearable></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -76,19 +76,44 @@
 <script>
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
+import {AreaList, DictionaryInfoList} from 'api/api'
 import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
-import {DictionaryInfoList} from 'api/api'
 import Details from 'base/SpareManagement/Sparetype'
 export default {
   name: 'Sparetype',
   mixins: [GlobalRes],
   data () {
+    var _this = this
     return {
+      cityareaProps: {
+        lazy: true,
+        label: 'name',
+        value: 'id',
+        lazyLoad (node, resolve) {
+          if (!node.level) {
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          } else {
+            if (!node.hasChildren) return resolve([])
+            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          }
+        }
+      },
       Query: {
         AreaList: [],
         provinceid: 0,
-        cityid: 0,
-        areaid: 0
+        cityid: 0
       },
       currentPage: 1,
       pageSize: 10,
@@ -107,17 +132,22 @@ export default {
     this.getDic()
   },
   methods: {
-    changeArea (obj) {
+    changecityArea (obj) {
       // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
-      obj.areaid = obj.AreaList[2]
     },
     setArea (list, key = 'csArea') {
       this.nodes = list
       this.$refs[key].panel.activePath = []
       this.$refs[key].panel.loadCount = 0
       this.$refs[key].panel.lazyLoad()
+    },
+    _normalizeCityAreaLevel (list) {
+      for (let i in list) {
+        if (list[i].leveltype >= 2) list[i].leaf = true
+      }
+      return list
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
@@ -149,6 +179,7 @@ export default {
       })
     },
     getMore (page) {
+      console.log(this.Query.AreaList)
       this.currentPage = page
       this.Loading = true
       this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
@@ -177,8 +208,6 @@ export default {
             Id: row.id
           }
         }).then(res => {
-          this.Query.AreaList = [ res.data.provinceid, res.data.cityid, res.data.areaid ]
-          this.setArea(this.Query.AreaList, 'csArea')
           this.$refs.Details.Loading = false
           this.$refs.Details.setWriteData(res.data)
         }).catch(err => {

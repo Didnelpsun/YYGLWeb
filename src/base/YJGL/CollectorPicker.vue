@@ -20,7 +20,7 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="cityname" label="地市" width=""></el-table-column>
         <el-table-column prop="areaname" label="区域" width=""></el-table-column>
-        <el-table-column prop="swver" label="设备软件版本号" width=""></el-table-column>
+        <el-table-column prop="swver" label="采集器id" width=""></el-table-column>
         <el-table-column prop="faccode" label="厂家编码" width=""></el-table-column>
         <el-table-column prop="typename" label="状态" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">

@@ -23,7 +23,7 @@
         </table>
       </div>
       <!--表体-->
-      <el-form :model="WriteData" :rules="Rules" v-loading="Loading" ref="WriteForm" label-width="0" :show-message="false">
+      <el-form :model="WriteData" :rules="Rules" v-loading="WriteLoading" ref="WriteForm" label-width="0" :show-message="false">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -326,24 +326,6 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-show="WriteState === 2">
-              <td><div class="cell">创建人</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createusername}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState === 2">
-              <td><div class="cell">创建时间</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createtime}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             </tbody>
           </table>
         </div>
@@ -382,6 +364,7 @@ export default {
   data () {
     return {
       Loading: false,
+      WriteLoading: false,
       ImgList1: [],
       ImgList2: [],
       ImgList3: [],

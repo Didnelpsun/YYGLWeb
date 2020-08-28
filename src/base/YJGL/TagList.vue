@@ -91,12 +91,12 @@
             </tr>
             <!--编码-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>编码</div></td>
+              <td><div class="cell"><i class="must">*</i>标签编码</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.modulecode}}</div>
                   <el-form-item label-width="0" prop="modulecode" class="form-item" v-show="WriteState !== 2">
-                    <el-input v-model="tableData.modulecode" placeholder="请填入编码"></el-input>
+                    <el-input v-model="tableData.modulecode" placeholder="请填入标签编码"></el-input>
                   </el-form-item>
                 </div>
               </td>

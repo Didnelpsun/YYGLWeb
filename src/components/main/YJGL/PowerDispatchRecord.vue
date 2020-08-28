@@ -10,22 +10,20 @@
       </el-row>
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-        <el-table-column prop="" label="编号" width=""></el-table-column>
-        <el-table-column prop="" label="调度类型" width=""></el-table-column>
-        <el-table-column prop="" label="位置偏差" width=""></el-table-column>
-        <el-table-column prop="" label="功率" width=""></el-table-column>
-        <el-table-column prop="" label="频率" width=""></el-table-column>
-        <el-table-column prop="" label="电压" width=""></el-table-column>
-        <el-table-column prop="" label="疑似市电" width=""></el-table-column>
-        <el-table-column prop="" label="故障单编码" width="150"></el-table-column>
-        <el-table-column prop="" label="工单状态" width=""></el-table-column>
-        <el-table-column prop="" label="油机缸号" width=""></el-table-column>
-        <el-table-column prop="" label="油机编号" width=""></el-table-column>
-        <el-table-column prop="" label="二维码编号" width="150"></el-table-column>
-        <el-table-column prop="" label="站点名称" width=""></el-table-column>
-        <el-table-column prop="" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="" label="调度人" width=""></el-table-column>
-        <el-table-column prop="" label="调度时间" width=""></el-table-column>
+        <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
+        <el-table-column prop="positiondeviation" label="位置偏差" width=""></el-table-column>
+        <el-table-column prop="power" label="功率" width="60"></el-table-column>
+        <el-table-column prop="frequency" label="频率" width=""></el-table-column>
+        <el-table-column prop="voltage" label="电压" width="60"></el-table-column>
+        <el-table-column prop="seemingmain" label="疑似市电" width=""></el-table-column>
+        <el-table-column prop="code" label="故障单编码" width="180"></el-table-column>
+        <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
+        <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
+        <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
+        <el-table-column prop="stationname" label="站点名称" width=""></el-table-column>
+        <el-table-column prop="stationcode" label="站点编码" width=""></el-table-column>
+        <el-table-column prop="realityname" label="调度人" width="60"></el-table-column>
+        <el-table-column prop="dateinfo" label="调度时间" width=""></el-table-column>
       </el-table>
 
       <div class="center">
@@ -79,7 +77,11 @@ export default {
         })
         .then(res => {
           this.Loading = false
-          this.tableList = res.data.list
+          // 数据改变
+          this.tableList = res.data.list.map(function (val) {
+            val.power = val.power.toFixed(2)
+            return val
+          })
           this.pagination.total = res.data.total
         })
         .catch(error => {

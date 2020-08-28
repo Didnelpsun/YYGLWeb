@@ -79,7 +79,7 @@
               <!-- <td><div class="cell"></div></td>
               </tr> -->
               <!--设备id-->
-              <tr class="el-table__row">
+             <!-- <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>设备id</div></td>
               <td>
                 <div class="cell">
@@ -90,17 +90,17 @@
                 </div>
               </td>
               <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+              &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
               <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--设备软件版本号-->
               <tr class="el-table__row">
-              <td><div class="cell">设备软件版本号</div></td>
+              <td><div class="cell">采集器id</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.swver}}</div>
                   <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
-                    <el-input v-model="tableData.swver" placeholder="请填入设备软件版本号"></el-input>
+                    <el-input v-model="tableData.swver" placeholder="请填入采集器id"></el-input>
                   </el-form-item>
                 </div>
               </td>
