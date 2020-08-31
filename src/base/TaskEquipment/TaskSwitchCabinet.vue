@@ -752,13 +752,8 @@
         </div>
       </el-form>
       <div class="center" style="padding-bottom: 10px">
-        <el-button
-          @click="subData"
-          type="primary"
-          v-show="WriteState !==2"
-          :disabled="WriteLoading"
-          :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'"
-        >提交</el-button>
+        <el-button @click="subData(1)" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'" >提交审核</el-button>
+        <el-button @click="subData(0)" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'" >提交</el-button>
         <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
       </div>
     </div>
@@ -768,7 +763,7 @@
 <script>
 import {DictionaryInfoList} from 'api/api'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
-import {GetSwitchCabinetTaskEquipment, EditSwitchCabinetTaskEquipment} from 'api/SurveyManagement'
+import {GetSwitchCabinetTaskEquipment, EditSwitchCabinetTaskEquipment, AddSwitchCabinetTaskEquipment} from 'api/SurveyManagement'
 import {GlobalRes} from 'common/js/mixins'
 
 export default {
@@ -802,9 +797,11 @@ export default {
       WriteLoading: false,
       // 新增表格相关属性
       tableData: {
+        'task_id': '',
         'resourcename': '',
         'resourcecode': '',
         'resource_id': '',
+        'equipmenttype_id': '',
         'provinceid': 0,
         'cityid': 0,
         'areaid': 0,
@@ -959,9 +956,9 @@ export default {
       }
     },
     // 提交函数
-    subData () {
-      if (this.WriteState === 0) this.add()
-      if (this.WriteState === 1) this.edit()
+    subData (state) {
+      if (this.WriteState === 0) this.add(state)
+      if (this.WriteState === 1) this.edit(state)
     },
     // 检查图片
     validImgList () {
@@ -988,7 +985,7 @@ export default {
       }
     },
     // 抽离共有的逻辑
-    async add () {
+    async add (state) {
       if (this.validImgList()) return
       this.$refs.tableForm.validate(async (valid, msg) => {
         // console.log(this.tableData)
@@ -1002,7 +999,11 @@ export default {
             this.tableData.cityid = this.tableArea.cityid
             this.tableData.areaid = this.tableArea.areaid
             this.WriteLoading = true
-            const res = await this.$axios.post(AddSwitchCabinet, this.tableData)
+            const res = await this.$axios.post(AddSwitchCabinetTaskEquipment, this.tableData, {
+              params: {
+                censusstate: state
+              }
+            })
             this.WriteLoading = false
             if (res.error === true) {
               this.$message.warning('请补全信息')
@@ -1020,7 +1021,7 @@ export default {
         }
       })
     },
-    async edit () {
+    async edit (state) {
       if (this.validImgList()) return
       this.$refs.tableForm.validate(async (valid, msg) => {
         // console.log(this.tableData)
@@ -1036,7 +1037,11 @@ export default {
               this.tableData.areaid = this.tableArea.areaid
             }
             this.WriteLoading = true
-            const res = await this.$axios.put(EditSwitchCabinetTaskEquipment, this.tableData)
+            const res = await this.$axios.put(EditSwitchCabinetTaskEquipment, this.tableData, {
+              params: {
+                censusstate: state
+              }
+            })
             this.WriteLoading = false
             if (res.error === true) {
               // console.log(res.error)

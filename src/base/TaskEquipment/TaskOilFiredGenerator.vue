@@ -400,7 +400,8 @@
       </el-form>
     </div>
     <div class="center" style="padding-bottom: 10px">
-      <el-button @click="SubWrite" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
+      <el-button @click="SubWrite(1)" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button @click="SubWrite(0)" type="primary" v-show="WriteState !==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-back">返回</el-button>
     </div>
   </div>
@@ -412,7 +413,7 @@ import {DictionaryInfoList} from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
 import ImgBox from 'base/ImgBox'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
-import {EditTaskEquipmentOilFiredGenerator, AddChargingPileTaskEquipment, GetTaskEquipmentOilFiredGeneratorInfo} from 'api/SurveyManagement'
+import {EditTaskEquipmentOilFiredGenerator, AddTaskEquipmentOilFiredGenerator, GetTaskEquipmentOilFiredGeneratorInfo} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 
 export default {
@@ -440,6 +441,9 @@ export default {
       WriteLoading: false,
       // 新增表格相关属性
       tableData: {
+        'resource_id': '',
+        'task_id': '',
+        'equipmenttype_id': '',
         'resourcename': '',
         'resourcecode': '',
         'provinceid': 0,
@@ -568,11 +572,11 @@ export default {
       })
     },
     formatDate (str) { return formatDate(str) },
-    SubWrite () {
-      if (this.WriteState === 0) this.SubAdd()
-      if (this.WriteState === 1) this.SubEdit()
+    SubWrite (state) {
+      if (this.WriteState === 0) this.SubAdd(state)
+      if (this.WriteState === 1) this.SubEdit(state)
     },
-    SubAdd () {
+    SubAdd (state) {
       this.$refs.tableForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
@@ -581,7 +585,11 @@ export default {
         } else {
           this.WriteLoading = true
           this.tableData.operatorsitetype = 2
-          this.$axios.post(AddChargingPileTaskEquipment, this.tableData).then(res => {
+          this.$axios.post(AddTaskEquipmentOilFiredGenerator, this.tableData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('添加成功!')
@@ -597,13 +605,17 @@ export default {
         }
       })
     },
-    SubEdit () {
+    SubEdit (state) {
       this.$refs.tableForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
-          this.$axios.put(EditTaskEquipmentOilFiredGenerator, this.tableData).then(res => {
+          this.$axios.put(EditTaskEquipmentOilFiredGenerator, this.tableData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')

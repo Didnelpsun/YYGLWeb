@@ -40,7 +40,7 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="equipmenttype_id" label="设备类型" width=""></el-table-column>
+        <el-table-column prop="equipmenttypename" label="设备类型" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column label="操作" width="140" fixed="right">

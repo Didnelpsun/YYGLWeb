@@ -59,7 +59,7 @@
 
       <el-table :data="tableList" v-loading="table1Loading" style="margin-top: 15px;" ref="table1">
         <el-table-column label="序号" width="50">
-          <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
+          <template slot-scope="scope">{{scope.$index+(currentPage[0] - 1) * pageSize[0] + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市" width="100"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="100"></el-table-column>
@@ -80,8 +80,8 @@
         </el-table-column>
       </el-table>
       <div class="center">
-        <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
-                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
+        <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage[0]"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[0]" :total="total[0]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
     </div>
@@ -114,7 +114,7 @@
       <el-table :data="deviceList" v-loading="table1Loading" ref="table1" :row-key="getRowKeys" :expand-row-keys="expandKey" @expand-change="changeKey">
         <el-table-column type="expand">
           <el-table :data="boardData">
-            <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template></el-table-column>
+            <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(1 - 1) * 10 + 1}}</template></el-table-column>
             <el-table-column prop="cityname" label="城市" width=""></el-table-column>
             <el-table-column prop="areaname" label="区域" width=""></el-table-column>
             <el-table-column prop="equipmenttypename" label="设备类型名称" width=""></el-table-column>
@@ -127,7 +127,7 @@
           </el-table>
         </el-table-column>
         <el-table-column label="序号" width="50">
-          <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
+          <template slot-scope="scope">{{scope.$index+(1 - 1) * 10 + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="城市" width=""></el-table-column>
         <el-table-column prop="areaname" label="区域" width=""></el-table-column>
@@ -160,7 +160,7 @@
         <el-tab-pane label="设备信息">
           <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+              <template slot-scope="scope">{{scope.$index+(currentPage[1] - 1) * pageSize[1] + 1}}</template>
             </el-table-column>
             <el-table-column prop="equipmenttypename" label="设备类型"></el-table-column>
             <el-table-column prop="accessdate" label="入网日期"></el-table-column>
@@ -234,12 +234,12 @@
                   <!--站点编码-->
                   <tr class="el-table__row">
                     <td><div class="cell">站点编码</div></td>
-                    <td v-show="showType == 2"><div class="cell">
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
                       <el-form-item class="form-item">
                         <el-input v-model="siteInfo.code"></el-input>
                       </el-form-item>
                     </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.code}}</div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.code}}</div></td>
                     <td><div class="cell" @click="OpenImgBox('站点编码', 'code', ImgList1)">{{ImgList1.length}}</div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -247,12 +247,12 @@
                   <!--站点名称-->
                   <tr class="el-table__row">
                     <td><div class="cell">站点名称</div></td>
-                    <td v-show="showType == 2"><div class="cell">
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
                       <el-form-item class="form-item">
                         <el-input v-model="siteInfo.name"></el-input>
                       </el-form-item>
                     </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.name}}</div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.name}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -295,12 +295,12 @@
                   <!--详细地址-->
                   <tr class="el-table__row" v-if="siteInfo.classify == 1">
                     <td><div class="cell">详细地址</div></td>
-                    <td v-show="showType == 2"><div class="cell">
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
                       <el-form-item class="form-item">
                         <el-input v-model="siteInfo.address"></el-input>
                       </el-form-item>
                     </div></td>
-                    <td v-if="showType == 1"><div class="cell">{{siteInfo.address}}</div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.address}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -311,15 +311,15 @@
             </el-form>
           </div>
           <div class="center" style="padding-bottom: 100px">
-            <el-button v-if="showType == 2" @click="handleEditSite" type="primary" icon="el-icon-check">保存</el-button>
+            <el-button v-if="showType == 2 && siteInfo.censusstatename == '待执行'" @click="handleEditSite(1)" type="primary" icon="el-icon-check">提交审核</el-button>
+            <el-button v-if="showType == 2 && siteInfo.censusstatename == '待执行'" @click="handleEditSite(0)" type="primary" icon="el-icon-check">保存</el-button>
             <el-button @click="closeShowEdit" type="primary" icon="el-icon-arrow-left">返回</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="电表">
-          <!--<el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">-->
-          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
+          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+              <template slot-scope="scope">{{scope.$index+(currentPage[2] - 1) * pageSize[2] + 1}}</template>
             </el-table-column>
             <el-table-column prop="statename" label="电表状态"></el-table-column>
             <el-table-column prop="accessdate" label="入网日期"></el-table-column>
@@ -342,9 +342,9 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="隐患">
-          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
+          <el-table :data="HiddenDangerList" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+              <template slot-scope="scope">{{scope.$index+(currentPage[3] - 1) * pageSize[3] + 1}}</template>
             </el-table-column>
             <el-table-column prop="hiddendangertype" label="隐患类型"></el-table-column>
             <el-table-column prop="hiddendangerlevel" label="隐患级别"></el-table-column>
@@ -361,9 +361,9 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="代维">
-          <el-table :data="deviceInfo" v-loading="table1Loading" ref="">
+          <el-table :data="MaintainList" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(currentPage2 - 1) * pageSize2 + 1}}</template>
+              <template slot-scope="scope">{{scope.$index+(currentPage[4] - 1) * pageSize[4] + 1}}</template>
             </el-table-column>
             <el-table-column prop="hiddendangertypename" label="隐患类型"></el-table-column>
             <el-table-column prop="maintainproject" label="维护项目"></el-table-column>
@@ -380,9 +380,24 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
-      <div class="center" v-show="ViewTabIndex === '0'">
-        <el-pagination @current-change="currentChange2" @size-change="SizeChange2" :current-page="currentPage2"
-                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize2" :total="total2"
+      <div class="center" v-if="ViewTabIndex === '0'">
+        <el-pagination @current-change="currentChange2" @size-change="SizeChange2" :current-page="currentPage[1]"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[1]" :total="total[1]"
+                       background layout="total, prev, pager, next, sizes"></el-pagination>
+      </div>
+      <div class="center" v-if="ViewTabIndex === '2'">
+        <el-pagination @current-change="currentChange3" @size-change="SizeChange3" :current-page="currentPage[2]"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[2]" :total="total[2]"
+                       background layout="total, prev, pager, next, sizes"></el-pagination>
+      </div>
+      <div class="center" v-if="ViewTabIndex === '3'">
+        <el-pagination @current-change="currentChange4" @size-change="SizeChange4" :current-page="currentPage[3]"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[3]" :total="total[3]"
+                       background layout="total, prev, pager, next, sizes"></el-pagination>
+      </div>
+      <div class="center" v-if="ViewTabIndex === '4'">
+        <el-pagination @current-change="currentChange5" @size-change="SizeChange5" :current-page="currentPage[4]"
+                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[4]" :total="total[4]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
       <div class="center"  v-show="ViewTabIndex !== '1'">
@@ -428,14 +443,14 @@
     <el-dialog top="1%" append-to-body :visible.sync="showDialog" width="80%" :title="dialogTitle" :close-on-click-modal="false" :before-close="AddhandleClose">
       <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseSite" @selectResource="selectResource"/>
       <deviceList v-if="deviceChoose" :resourcetype="1" :equipment_id="currentEquipmentId" @chooseDevice="chooseDevice"></deviceList>
-      <TaskChargingPile v-if="showChargingPile" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChargingPile>
-      <TaskSwitchCabinet v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
-      <TaskReservepover v-if="showReservepover" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskReservepover>
-      <TaskChangeBattery v-if="showChangeBattery" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChangeBattery>
-      <TaskOilFiredGenerator v-if="showOilFiredGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
-      <TaskBatteryGenerator v-if="showBatteryGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
-      <AnElectricIntroduced v-if="showAnElectricIntroduced" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AnElectricIntroduced>
-      <Ammeter v-if="showAmmeter" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
+      <TaskChargingPile ref="TaskChargingPile" v-if="showChargingPile" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChargingPile>
+      <TaskSwitchCabinet ref="TaskSwitchCabinet" v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
+      <TaskReservepover ref="TaskReservepover" v-if="showReservepover" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskReservepover>
+      <TaskChangeBattery ref="TaskChangeBattery" v-if="showChangeBattery" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChangeBattery>
+      <TaskOilFiredGenerator ref="TaskOilFiredGenerator" v-if="showOilFiredGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
+      <TaskBatteryGenerator ref="TaskBatteryGenerator" v-if="showBatteryGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
+      <AnElectricIntroduced ref="AnElectricIntroduced" v-if="showAnElectricIntroduced" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AnElectricIntroduced>
+      <Ammeter ref="Ammeter" v-if="showAmmeter" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
       <HiddenDanger v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
       <Maintain v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
     </el-dialog>
@@ -460,7 +475,9 @@ import AnElectricIntroduced from 'base/TaskEquipment/AnElectricIntroduced'
 import Ammeter from 'base/TaskEquipment/Ammeter'
 import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
-import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, AuditEnergyTask, TaskEquipment, GetEquipmentInfoList} from 'api/SurveyManagement'
+import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetTaskElectricMeterList, GetMaintainList,
+  UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetEnergyResourecEquipmentList, GetHiddenDangerList,
+  AuditEnergyTask, TaskEquipment, GetEquipmentInfoList} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
 import ImgBox from 'base/ImgBox'
@@ -490,12 +507,9 @@ export default {
         starttime: '',
         endtime: ''
       },
-      total: 0,
-      currentPage: 1,
-      pageSize: 10,
-      total2: 0,
-      currentPage2: 1,
-      pageSize2: 10,
+      total: [0, 0, 0, 0, 0],
+      currentPage: [1, 1, 1, 1, 1],
+      pageSize: [10, 10, 10, 10, 10],
       addData: {
         taskbatch: '',
         completetime: '',
@@ -506,11 +520,17 @@ export default {
       deviceList: [], // 任务设备列表
       deviceInfo: [], // 任务信息
       AmmeterInfo: [], // 任务电表
+      MaintainList: [], // 上站维护列表
+      HiddenDangerList: [], // 隐患列表
       siteInfo: {}, // 任务站点信息
       selectList: [], // 选择任务设备
       currentEquipmentId: [],
       currentSiteId: [],
       currentTaskId: '', // 当前任务id
+      editSiteId: '', // 编辑时的站点ID
+      editResourcecode: '', // 编辑时的站点编码
+      editResourcename: '', // 编辑是的站点名称
+      DeviceTypeList: [],
       siteRules: {
         outstanding: [
           { required: true, message: '是否拉远站', trigger: 'change' }
@@ -566,7 +586,7 @@ export default {
       },
       ImgList1: [],
       ImgList2: [],
-      DeviceType: ['外电引入', '换电柜', '燃油发电机', '换电电池', '电池发电装置', '充电桩', '备电'],
+      DeviceType: [],
       SelectDeviceType: ''
     }
   },
@@ -602,41 +622,41 @@ export default {
     },
     getMore (e) {
       this.table1Loading = true
-      this.currentPage = e
+      this.$set(this.currentPage, 0, e)
       this.$axios.get(GetEnergyTaskList, {params: Object.assign({}, this.Query, {
         PageIndex: e,
-        PageSize: this.pageSize
+        PageSize: this.pageSize[0]
       })}).then(res => {
         this.table1Loading = false
         if (res.errorCode === '200') {
           this.tableList = res.data.list
-          this.total = res.data.total
+          this.$set(this.total, 0, res.data.total)
         } else {
           this.$message.error(res.msg)
         }
       })
     },
     getData1 () {
-      this.currentPage = 1
+      this.$set(this.currentPage, 0, 1)
       this.table1Loading = true
       this.$axios.get(GetEnergyTaskList, {
         params: {
           PageIndex: 1,
-          PageSize: this.pageSize
+          PageSize: this.pageSize[0]
         }
       }).then(res => {
         this.table1Loading = false
         if (res.errorCode === '200') {
           this.tableList = res.data.list
-          this.total = res.data.total
+          this.$set(this.total, 0, res.data.total)
         } else {
           this.$message.error(res.msg)
         }
       })
     },
     changeSize1 (page) {
-      this.pageSize = page
-      this.getMore(this.currentPage)
+      this.$set(this.pageSize, 0, page)
+      this.getMore(1)
     },
     formatDate (row) {
       return formatDate(row.audittime)
@@ -652,23 +672,83 @@ export default {
     handleEdit (index, row) {
       this.showType = 2
       this.WriteState = 1
+      this.editSiteId = row.resource_id
+      this.editResourcecode = row.resourcecode
+      this.editResourcename = row.resourcename
       this.getDeviceDetail(row.id)
     },
     getDeviceDetail (id) {
       this.table1Loading = true
-      this.currentPage2 = 1
+      this.$set(this.currentPage, 1, 1)
       this.currentTaskId = id
       this.$axios.get(GetTaskEquipmentList, {
         params: {
           taskid: id,
           PageIndex: 1,
-          PageSize: this.pageSize2
+          PageSize: this.pageSize[1]
         }
       }).then(res => {
         this.table1Loading = false
         if (res.errorCode === '200') {
           this.deviceInfo = res.data.list
-          this.total2 = res.data.total
+          this.$set(this.total, 1, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    GetTaskAmmeterList (id) {
+      this.table1Loading = true
+      this.$set(this.currentPage, 2, 1)
+      this.$axios.get(GetTaskElectricMeterList, {
+        params: {
+          task_id: id,
+          PageIndex: 1,
+          PageSize: this.pageSize[2]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.AmmeterInfo = res.data.list
+          this.$set(this.total, 2, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    GetHiddenDangerList () {
+      this.table1Loading = true
+      this.$set(this.currentPage, 3, 1)
+      this.$axios.get(GetHiddenDangerList, {
+        params: {
+          resource_id: this.editSiteId,
+          PageIndex: 1,
+          PageSize: this.pageSize[2]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.HiddenDangerList = res.data.list
+          this.$set(this.total, 3, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    GetMaintainList () {
+      this.table1Loading = true
+      this.$set(this.currentPage, 4, 1)
+      this.$axios.get(GetMaintainList, {
+        params: {
+          resource_id: this.editSiteId,
+          PageIndex: 1,
+          PageSize: this.pageSize[4]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.MaintainList = res.data.list
+          this.$set(this.total, 4, res.data.total)
         } else {
           this.$message.error(res.msg)
         }
@@ -704,7 +784,24 @@ export default {
         if (res.errorCode !== '200') {
           this.$message.error(res.msg)
         } else {
-          this.deviceList.push(...res.data)
+          // this.deviceList.push(...res.data)
+          if (!this.deviceList.length) {
+            this.deviceList.push(...res.data)
+          } else {
+            this.deviceList.forEach((i) => {
+              res.data.forEach((k) => {
+                console.log(k.resource_id)
+                console.log(i.resource_id)
+                if (i.resource_id.indexOf(k.resource_id) !== -1) {
+                  console.log(333)
+                  i.equipment_id = i.equipment_id.concat(k.equipment_id)
+                } else {
+                  console.log(123)
+                  this.deviceList.push(k)
+                }
+              })
+            })
+          }
         }
       })
     },
@@ -776,7 +873,7 @@ export default {
               this.$message.error(res.msg)
             } else {
               this.$message.success('提交成功！')
-              this.currentPage = 1
+              this.$set(this.currentPage, 0, 1)
               this.getDeviceDetail(this.currentTaskId)
             }
           })
@@ -810,7 +907,7 @@ export default {
           this.$message.success('操作成功！')
           Object.assign(this.$data.auitData, this.$options.data().auitData)
           this.auitShow = false
-          this.currentPage = 1
+          this.$set(this.currentPage, 0, 1)
           this.getData1()
         } else {
           this.$message.error(res.msg)
@@ -821,6 +918,20 @@ export default {
       switch (this.ViewTabIndex) {
         case '0':
           this.showTaskDialog = true
+          this.$axios.get(GetEnergyResourecEquipmentList, {
+            params: {
+              resource_id: this.editSiteId,
+              PageIndex: 1,
+              PageSize: 200
+            }
+          }).then(res => {
+            this.DeviceTypeList = res.data.list
+            this.DeviceType = res.data.list.map((item) => {
+              return item.equipmenttypename
+            })
+          }).catch(error => {
+            console.log(error)
+          })
           break
         case '2':
           this.showDialog = true
@@ -852,48 +963,119 @@ export default {
       this.showTaskDialog = false
       this.showDialog = true
       this.WriteState = 0
+      const obj = this.DeviceTypeList.filter(i => {
+        return i.equipmenttypename === this.SelectDeviceType
+      })
       switch (this.SelectDeviceType) {
         case '充电桩':
           this.showChargingPile = true
+          this.$nextTick(() => {
+            this.$refs.TaskChargingPile.WriteData.task_id = this.currentTaskId
+            this.$refs.TaskChargingPile.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskChargingPile.WriteData.resource_id = this.editSiteId
+            this.$refs.TaskChargingPile.WriteData.resourcecode = this.editResourcecode
+            this.$refs.TaskChargingPile.WriteData.resourcename = this.editResourcename
+            this.$refs.TaskChargingPile.WriteData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '换电柜':
           this.showSwitchCabinet = true
+          this.$nextTick(() => {
+            this.$refs.TaskSwitchCabinet.tableData.task_id = this.currentTaskId
+            this.$refs.TaskSwitchCabinet.tableData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskSwitchCabinet.tableData.resource_id = this.editSiteId
+            this.$refs.TaskSwitchCabinet.tableData.resourcecode = this.editResourcecode
+            this.$refs.TaskSwitchCabinet.tableData.resourcename = this.editResourcename
+            this.$refs.TaskSwitchCabinet.tableData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '备电':
           this.showReservepover = true
+          this.$nextTick(() => {
+            this.$refs.TaskReservepover.tableData.task_id = this.currentTaskId
+            this.$refs.TaskReservepover.tableData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskReservepover.tableData.resource_id = this.editSiteId
+            this.$refs.TaskReservepover.tableData.resourcecode = this.editResourcecode
+            this.$refs.TaskReservepover.tableData.resourcename = this.editResourcename
+            this.$refs.TaskReservepover.tableData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '换电电池':
           this.showChangeBattery = true
+          this.$nextTick(() => {
+            this.$refs.TaskChangeBattery.tableData.task_id = this.currentTaskId
+            this.$refs.TaskChangeBattery.tableData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskChangeBattery.tableData.resource_id = this.editSiteId
+            this.$refs.TaskChangeBattery.tableData.resourcecode = this.editResourcecode
+            this.$refs.TaskChangeBattery.tableData.resourcename = this.editResourcename
+            this.$refs.TaskChangeBattery.tableData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '燃油发电机':
           this.showOilFiredGenerator = true
+          this.$nextTick(() => {
+            this.$refs.TaskOilFiredGenerator.tableData.task_id = this.currentTaskId
+            this.$refs.TaskOilFiredGenerator.tableData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskOilFiredGenerator.tableData.resource_id = this.editSiteId
+            this.$refs.TaskOilFiredGenerator.tableData.resourcecode = this.editResourcecode
+            this.$refs.TaskOilFiredGenerator.tableData.resourcename = this.editResourcename
+            this.$refs.TaskOilFiredGenerator.tableData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '电池发电装置':
           this.showBatteryGenerator = true
+          this.$nextTick(() => {
+            this.$refs.TaskBatteryGenerator.WriteData.task_id = this.currentTaskId
+            this.$refs.TaskBatteryGenerator.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.TaskBatteryGenerator.WriteData.resource_id = this.editSiteId
+            this.$refs.TaskBatteryGenerator.WriteData.resourcecode = this.editResourcecode
+            this.$refs.TaskBatteryGenerator.WriteData.resourcename = this.editResourcename
+            this.$refs.TaskBatteryGenerator.WriteData.equipmenttypename = this.SelectDeviceType
+          })
           break
         case '外电引入':
           this.showAnElectricIntroduced = true
+          this.$nextTick(() => {
+            this.$refs.AnElectricIntroduced.WriteData.task_id = this.currentTaskId
+            this.$refs.AnElectricIntroduced.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.AnElectricIntroduced.WriteData.resource_id = this.editSiteId
+            this.$refs.AnElectricIntroduced.WriteData.resourcecode = this.editResourcecode
+            this.$refs.AnElectricIntroduced.WriteData.resourcename = this.editResourcename
+            this.$refs.AnElectricIntroduced.WriteData.equipmenttypename = this.SelectDeviceType
+          })
           break
       }
     },
     handleTabs () {
-      if (this.ViewTabIndex === '0') {
-        this.getDeviceDetail(this.currentTaskId)
-      } else {
-        this.table1Loading = true
-        this.$axios.get(GetTaskResourceList, {
-          params: {
-            task_id: this.currentTaskId
-          }
-        }).then(res => {
-          this.table1Loading = false
-          if (res.errorCode === '200') {
-            this.siteInfo = res.data
-            this.setImgList(res.data.imglist)
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
+      switch (this.ViewTabIndex) {
+        case '0':
+          this.getDeviceDetail(this.currentTaskId)
+          break
+        case '1':
+          this.table1Loading = true
+          this.$axios.get(GetTaskResourceList, {
+            params: {
+              task_id: this.currentTaskId
+            }
+          }).then(res => {
+            this.table1Loading = false
+            if (res.errorCode === '200') {
+              this.siteInfo = res.data
+              this.setImgList(res.data.imglist)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+          break
+        case '2':
+          this.GetTaskAmmeterList(this.currentTaskId)
+          break
+        case '3':
+          this.GetHiddenDangerList()
+          break
+        case '4':
+          this.GetMaintainList()
+          break
       }
     },
     setImgList (list) {
@@ -936,14 +1118,19 @@ export default {
       this.$refs.ImgBox.Open()
       this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
-    handleEditSite () {
+    handleEditSite (state) {
       this.$refs.siteInfoForm.validate((vali, msg) => {
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
           this.table1Loading = true
-          this.siteInfo.imglist = []
-          this.$axios.put(UpdateTaskResource, this.siteInfo).then(res => {
+          this.siteInfo.imglist = this.siteInfo.imglist ? this.siteInfo.imglist : []
+          this.siteInfo.auditstate = state
+          this.$axios.put(UpdateTaskResource, this.siteInfo, {
+            params: {
+              auditstate: state
+            }
+          }).then(res => {
             this.table1Loading = false
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
@@ -1070,7 +1257,7 @@ export default {
             this.$message.error(res.msg)
           } else {
             this.$message.success('删除成功！')
-            this.currentPage2 = 1
+            this.$set(this.currentPage, 1, 1)
             this.getDeviceDetail(this.currentTaskId)
           }
         })
@@ -1086,13 +1273,18 @@ export default {
       this.ViewTabIndex = '0'
       this.siteInfo = {}
       this.deviceInfo = []
-      this.total2 = 0
-      this.currentPage2 = 1
-      this.pageSize2 = 10
+      this.$set(this.total, 1, 0)
+      this.$set(this.currentPage, 1, 1)
+      this.$set(this.pageSize, 1, 10)
       this.currentTaskId = ''
       this.DeviceID = ''
       this.ImgList1 = []
       this.ImgList2 = []
+      this.editSiteId = ''
+      this.DeviceType = []
+      this.DeviceTypeList = []
+      this.editResourcecode = ''
+      this.editResourcename = ''
       this.$nextTick(() => {
         this.$refs.siteInfoForm.clearValidate()
       })
@@ -1107,26 +1299,95 @@ export default {
     },
     currentChange2 (e) {
       this.table1Loading = true
-      this.currentPage2 = e
+      this.$set(this.currentPage, 1, e)
       this.$axios.get(GetTaskEquipmentList, {
         params: {
           taskid: this.currentTaskId,
           PageIndex: e,
-          PageSize: this.pageSize2
+          PageSize: this.pageSize[1]
         }
       }).then(res => {
         this.table1Loading = false
         if (res.errorCode === '200') {
           this.deviceInfo = res.data.list
-          this.total2 = res.data.total
+          this.$set(this.total, 1, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    currentChange3 (e) {
+      this.table1Loading = true
+      this.$set(this.currentPage, 2, e)
+      this.$axios.get(GetTaskElectricMeterList, {
+        params: {
+          task_id: this.currentTaskId,
+          PageIndex: e,
+          PageSize: this.pageSize[2]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.AmmeterInfo = res.data.list
+          this.$set(this.total, 2, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    currentChange4 (e) {
+      this.table1Loading = true
+      this.$set(this.currentPage, 3, e)
+      this.$axios.get(GetHiddenDangerList, {
+        params: {
+          resource_id: this.editSiteId,
+          PageIndex: e,
+          PageSize: this.pageSize[3]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.HiddenDangerList = res.data.list
+          this.$set(this.total, 3, res.data.total)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    currentChange5 (e) {
+      this.table1Loading = true
+      this.$set(this.currentPage, 4, e)
+      this.$axios.get(GetMaintainList, {
+        params: {
+          resource_id: this.editSiteId,
+          PageIndex: e,
+          PageSize: this.pageSize[4]
+        }
+      }).then(res => {
+        this.table1Loading = false
+        if (res.errorCode === '200') {
+          this.MaintainList = res.data.list
+          this.$set(this.total, 4, res.data.total)
         } else {
           this.$message.error(res.msg)
         }
       })
     },
     SizeChange2 (page) {
-      this.pageSize2 = page
-      this.currentChange2(this.currentPage2)
+      this.$set(this.pageSize, 1, page)
+      this.currentChange2(1)
+    },
+    SizeChange3 (page) {
+      this.$set(this.pageSize, 2, page)
+      this.currentChange3(1)
+    },
+    SizeChange4 (page) {
+      this.$set(this.pageSize, 3, page)
+      this.currentChange4(1)
+    },
+    SizeChange5 (page) {
+      this.$set(this.pageSize, 4, page)
+      this.currentChange5(1)
     },
     handleSiteChoose () {
       this.$refs.AddForm.validate((vali, msg) => {

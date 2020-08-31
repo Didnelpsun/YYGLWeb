@@ -45,25 +45,9 @@
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.externalpackingname}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.externalpacking ? '是' : '否'}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--电缆厂家-->
-            <tr class="el-table__row" v-if="WriteData.externalpacking">
-              <td><div class="cell">电缆厂家</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="manufactor">
-                  <el-select v-model="WriteData.manufactor">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.manufactor" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.manufactorname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--有无杆路-->
@@ -77,7 +61,7 @@
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.poleline}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.poleline ? '是' : '否'}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -125,22 +109,18 @@
     </div>
 
     <div class="center">
-      <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
-
-    <el-dialog top="1%" :visible.sync="isShow" width="80%" :before-close="DetailhandleClose">
-      <ResourceList @selectResource="selectResource"/>
-    </el-dialog>
 
   </div>
 </template>
 
 <script>
-import ResourceList from 'base/Resource/ResourceList'
-import {DictionaryInfoList, AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
+import {GetTaskElectricIntroducedInfo, AddTaskAnElectricIntroduced, UpdateTaskElectricIntroduced} from 'api/SurveyManagement'
 
 export default {
   name: 'AnElectricIntroducedDetail',
@@ -157,15 +137,15 @@ export default {
   },
   data () {
     return {
-      isShow: false,
       Loading: false,
       ImgList1: [],
       WriteData: {
+        task_id: '',
+        equipmenttype_id: '',
         resource_id: '',
         externalpacking: true,
         externalpackingname: '',
-        manufactor: '',
-        poleline: false,
+        poleline: true,
         polelinenumber: '',
         polelineheight: '',
         polelinelength: '',
@@ -177,33 +157,20 @@ export default {
     }
   },
   created () {
-    this.getDicList()
     if (this.WriteState) {
-      this.WriteLoading = true
-      this.$axios.get(GetSwitchCabinetTaskEquipment, {
+      this.Loading = true
+      this.$axios.get(GetTaskElectricIntroducedInfo, {
         params: {
           id: this.DeviceID
         }
       }).then(res => {
-        this.WriteLoading = false
+        this.Loading = false
         this.WriteData = res.data
         this.setImgList(res.data.imglist)
       })
     }
   },
   methods: {
-    getDicList () {
-      let arr = ['电缆厂家']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          this.DicList.manufactor = res.data.filter(i => { return i.type === '电缆厂家' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
@@ -219,20 +186,11 @@ export default {
         this.$emit('fatherOpenImgBox', '电表编号', 'electricmeterno', this.ImgList1)
       }
     },
-    SubWrite () {
-      if (this.WriteState === 0) this.SubAdd()
-      if (this.WriteState === 1) this.SubEdit()
+    SubWrite (state) {
+      if (this.WriteState === 0) this.SubAdd(state)
+      if (this.WriteState === 1) this.SubEdit(state)
     },
-    DetailhandleClose () {
-      this.isShow = !this.isShow
-    },
-    selectResource (name, id) {
-      this.isShow = false
-      this.WriteData.resource_id = id
-      this.WriteData.resourcename = name
-    },
-    SubAdd () {
-      if (this.validImgList()) return
+    SubAdd (state) {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
@@ -240,11 +198,15 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.post(AddTaskAnElectricIntroduced, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             this.$message.success('添加成功!')
-            this.$emit('fatheretMore')
+            // this.$emit('fatheretMore')
             this.WriteClose()
           }).catch(err => {
             this.Loading = false
@@ -253,19 +215,22 @@ export default {
         }
       })
     },
-    SubEdit () {
-      if (this.validImgList()) return
+    SubEdit (state) {
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.put(UpdateTaskElectricIntroduced, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
-              this.$emit('fatheretMore')
+              // this.$emit('fatheretMore')
               this.WriteClose()
             } else {
               this.$message.error(res.errorMessage)
@@ -280,11 +245,6 @@ export default {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
-    validImgList () {
-      if (!this.ImgList1.length) {
-        return this.$message.warning('电表编号图片必须上传')
-      }
-    },
     setImgList (list) {
       if (list === null) return
       this.ImgList1 = list.filter(i => { return i.field_name === 'electricmeterno' })
@@ -298,9 +258,20 @@ export default {
   watch: {
     ImgList (val) {
       this.WriteData.imglist = val
+    },
+    'WriteData.poleline': function (newv) {
+      if (!newv) {
+        this.WriteData.polelinenumber = ''
+        this.WriteData.polelineheight = ''
+        this.WriteData.polelinelength = ''
+      }
+    },
+    'WriteData.externalpacking': function (newv) {
+      if (!newv) {
+        this.WriteData.poleline = false
+      }
     }
-  },
-  components: { ResourceList }
+  }
 }
 </script>
 

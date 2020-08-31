@@ -333,7 +333,8 @@
     </div>
 
     <div class="center">
-      <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
 
@@ -346,7 +347,7 @@ import {DictionaryInfoList} from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
 import ImgBox from 'base/ImgBox'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
-import {GetTaskEquipmentBatteryGeneratorInfo, AddChargingPileTaskEquipment, EditTaskEquipmentBatteryGenerator} from 'api/SurveyManagement'
+import {GetTaskEquipmentBatteryGeneratorInfo, AddTaskEquipmentBatteryGenerator, EditTaskEquipmentBatteryGenerator} from 'api/SurveyManagement'
 
 export default {
   mixins: [GlobalRes],
@@ -369,6 +370,8 @@ export default {
       ImgList2: [],
       ImgList3: [],
       WriteData: {
+        task_id: '',
+        equipmenttype_id: '',
         resource_id: '',
         resourcename: '',
         resourcecode: '',
@@ -473,11 +476,11 @@ export default {
       this.ImgList2 = list.filter(i => { return i.field_name === 'cylinderno' })
       this.ImgList3 = list.filter(i => { return i.field_name === 'models' })
     },
-    SubWrite () {
-      if (this.WriteState === 0) this.SubAdd()
-      if (this.WriteState === 1) this.SubEdit()
+    SubWrite (state) {
+      if (this.WriteState === 0) this.SubAdd(state)
+      if (this.WriteState === 1) this.SubEdit(state)
     },
-    SubAdd () {
+    SubAdd (state) {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
@@ -486,7 +489,11 @@ export default {
         } else {
           this.WriteLoading = true
           this.WriteData.operatorsitetype = 2
-          this.$axios.post(AddChargingPileTaskEquipment, this.WriteData).then(res => {
+          this.$axios.post(AddTaskEquipmentBatteryGenerator, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('添加成功!')
@@ -502,13 +509,17 @@ export default {
         }
       })
     },
-    SubEdit () {
+    SubEdit (state) {
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
-          this.$axios.put(EditTaskEquipmentBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.put(EditTaskEquipmentBatteryGenerator, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.WriteLoading = false
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')

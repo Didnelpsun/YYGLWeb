@@ -121,13 +121,7 @@ export default {
       pageSize: 10,
       total: 0,
       DicList: {
-        state: [],
-        propertyrightunit: [],
-        maintenanceunit: [],
-        manufacturer: [],
-        models: []
       },
-
       showWrite: false,
       WriteData: {},
       WriteState: 0 // 0为添加 1为编辑 2为详情
@@ -146,16 +140,7 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['电缆厂家']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          this.DicList.manufactor = res.data.filter(i => { return i.type === '电缆厂家' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
+
     },
     getTable1 () {
       this.Loading = true
