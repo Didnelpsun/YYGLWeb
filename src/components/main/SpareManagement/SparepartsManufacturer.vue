@@ -5,13 +5,18 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparetypeid" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="区域：" label-width="80px">
+                <el-cascader v-model="Query.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(Query)" ref="csArea" clearable></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodel" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="厂家名称：">
+                <el-input v-model="Query.name" placeholder="请填写厂家名称"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="厂家编码：">
+                <el-input v-model="Query.code" placeholder="请填写厂家编码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -38,9 +43,8 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-        <el-table-column prop="typename" label="备件类型"></el-table-column>
-        <el-table-column prop="manufacturersname" label="厂家编码"></el-table-column>
+        <el-table-column prop="name" label="厂家名称"></el-table-column>
+        <el-table-column prop="code" label="厂家类型"></el-table-column>
         <el-table-column prop="remark" label="说明"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
@@ -59,10 +63,10 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加备件型号' : WriteState === 1 ? '编辑备件型号' : '备件型号详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加备件厂家' : WriteState === 1 ? '编辑备件厂家' : '备件型号厂家'"></layuiTitle>
 
       <Details :WriteState="WriteState"
-               @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
+               @fatheretMore="getData1 () " @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
 
@@ -71,17 +75,47 @@
 
 <script>
 import { GlobalRes } from 'common/js/mixins'
+import {AreaList} from 'api/api'
 import layuiTitle from 'base/layui-title'
-import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig} from 'api/BJGL'
-import Details from 'base/SpareManagement/SpareconModel'
+import {GetsparepartsmanufacturerList, Deletesparepartsmanufacturer, GetIdsparepartsmanufacturerList} from 'api/BJGL'
+import Details from 'base/SpareManagement/SparepartsManufacturer'
 export default {
-  name: 'SpareconModel',
+  name: 'SparepartsManufacturer',
   mixins: [GlobalRes],
   data () {
+    var _this = this
     return {
+      cityareaProps: {
+        lazy: true,
+        label: 'name',
+        value: 'id',
+        lazyLoad (node, resolve) {
+          if (!node.level) {
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          } else {
+            if (!node.hasChildren) return resolve([])
+            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          }
+        }
+      },
       Query: {
-        sparetypeid: '',
-        sparemodel: ''
+        AreaList: [],
+        provinceid: null,
+        cityid: null,
+        code: null,
+        name: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -92,19 +126,37 @@ export default {
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
       WriteLoading: false
+
     }
   },
   activated () {
     this.getData1()
   },
   methods: {
+    changecityArea (obj) {
+      // console.log(obj)
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
+    },
+    setArea (list, key = 'csArea') {
+      this.nodes = list
+      this.$refs[key].panel.activePath = []
+      this.$refs[key].panel.loadCount = 0
+      this.$refs[key].panel.lazyLoad()
+    },
+    _normalizeCityAreaLevel (list) {
+      for (let i in list) {
+        if (list[i].leveltype >= 2) list[i].leaf = true
+      }
+      return list
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
     },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetSpareConfigList, {
+      this.$axios.get(GetsparepartsmanufacturerList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -118,7 +170,7 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetsparepartsmanufacturerList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -137,8 +189,10 @@ export default {
       this.WriteState = state
       this.showWrite = true
       if (state) {
+        this.$refs.Details.Loading = false
+        this.$refs.Details.setWriteData({code: 1})
         this.$refs.Details.Loading = true
-        this.$axios.get(GetSpareConfigIdList, {
+        this.$axios.get(GetIdsparepartsmanufacturerList, {
           params: {
             Id: row.id
           }
@@ -155,7 +209,7 @@ export default {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareConfig, {
+        this.$axios.delete(Deletesparepartsmanufacturer, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {

@@ -25,7 +25,7 @@
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
+            <el-button type="text" size="mini" @click="handleDetails( scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!scope.row.Isbinding">删除</el-button>
           </template>
@@ -39,16 +39,20 @@
       </div>
     </div>
 
-    <div v-show="showWrite">
+    <div v-show="showWrite&&!isShow">
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+    </div>
+    <div v-show="isShow">
+      <PowerWarningListDetails  @fatherCloses="closeWrite" ref="WarningListDetails" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
   </div>
 </template>
 
 <script>
-import { GetIdPowerwarningInfo, GetPowerwarningList, DeletePowerwarning } from 'api/YJGL'
+import { GetIdPowerwarningInfo, JobInfo, GetPowerwarningList, DeletePowerwarning } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/PowerWarningList'
+import PowerWarningListDetails from 'base/YJGL/PowerWarningListDetails'
 
 export default {
   name: 'PowerWarningList',
@@ -57,10 +61,12 @@ export default {
   data () {
     return {
       // 加载
+      isShow: false,
       Loading: false,
       tableList: [
       ],
       tableData: {},
+      tableData1: {},
       // 分页相关属性
       pagination: {
         total: 0,
@@ -78,6 +84,33 @@ export default {
   created () {
   },
   methods: {
+    handleDetails (row) {
+      let params = { id: row.id }
+      this.$refs.WarningListDetails.WriteLoading = true
+      this.isShow = true
+      this.showWrite = true
+      this.$axios.get(JobInfo, {
+        params
+      }).then(res => {
+        if (res.success) {
+          try {
+            this.tableData1 = res.data
+            if (this.tableData1) {
+              this.$nextTick(this.$refs.Details.setWriteData1(this.tableData1))
+              return true
+            } else {
+              return false
+            }
+          } catch (e) {
+            console.log(e)
+          }
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.$refs.WarningListDetails.WriteLoading = false
+      console.log(this.isShow)
+    },
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
       this.Loading = true
@@ -107,6 +140,7 @@ export default {
     closeWrite () {
       this.getMore(1)
       this.showWrite = !this.showWrite
+      this.isShow = false
     },
     setData (state, id) {
       if (state) {
@@ -166,7 +200,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    PowerWarningListDetails
   }
 }
 </script>

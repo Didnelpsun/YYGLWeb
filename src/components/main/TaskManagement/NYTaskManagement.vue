@@ -146,7 +146,7 @@
       </div>
     </div>
     <!--详情-->
-    <div v-show="showType === 1 || showType === 2">
+    <div v-show="showType === 1 || showType === 2 || showType === 4">
       <layuiTitle title="任务设备列表"></layuiTitle>
       <el-tabs class="content-card" v-model="ViewTabIndex" @tab-click="handleTabs">
         <el-row v-if="ViewTabIndex !== '1'" style="margin-bottom: 15px;">
@@ -174,9 +174,9 @@
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 2)">详情</el-button>
                 <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 1)">修改</el-button>
-                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1)">提交审核</el-button>
-                <el-button v-if="showType == 4 && scope.row.censusstatename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2)">审核</el-button>
-                <el-button v-if="showType !== 1" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
+                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1, 1)">提交审核</el-button>
+                <el-button v-if="showType == 4 && scope.row.censusstatename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2, 1)">审核</el-button>
+                <el-button v-if="showType === 2" type="text" size="mini" @click="DeviceDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -311,6 +311,7 @@
             </el-form>
           </div>
           <div class="center" style="padding-bottom: 100px">
+            <el-button v-if="showType == 4 && siteInfo.censusstatename === '待审核'" type="primary" icon="el-icon-check" @click="handleExamine(0, 0, 2, 2)">审核</el-button>
             <el-button v-if="showType == 2 && siteInfo.censusstatename == '待执行'" @click="handleEditSite(1)" type="primary" icon="el-icon-check">提交审核</el-button>
             <el-button v-if="showType == 2 && siteInfo.censusstatename == '待执行'" @click="handleEditSite(0)" type="primary" icon="el-icon-check">保存</el-button>
             <el-button @click="closeShowEdit" type="primary" icon="el-icon-arrow-left">返回</el-button>
@@ -321,21 +322,21 @@
             <el-table-column label="序号" width="50">
               <template slot-scope="scope">{{scope.$index+(currentPage[2] - 1) * pageSize[2] + 1}}</template>
             </el-table-column>
-            <el-table-column prop="statename" label="电表状态"></el-table-column>
+            <el-table-column prop="statename" label="电表状态" width="60"></el-table-column>
             <el-table-column prop="accessdate" label="入网日期"></el-table-column>
             <el-table-column prop="electricmeterno" label="电表编号"></el-table-column>
-            <el-table-column prop="powersupplymode" label="供电方式"></el-table-column>
+            <el-table-column prop="powersupplymodename" label="供电方式"></el-table-column>
             <el-table-column prop="powersupplytheowner" label="供电业主"></el-table-column>
             <el-table-column prop="theownerphone" label="供电联系方式"></el-table-column>
             <el-table-column prop="censusstatename" label="普查状态"></el-table-column>
             <el-table-column prop="createtime" label="创建日期"></el-table-column>
             <el-table-column prop="createusername" label="创建人"></el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="200">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 2)">详情</el-button>
-                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 1)">修改</el-button>
-                <el-button v-if="showType !== 1 && scope.row.statename === '待执行'" type="text" size="mini" @click="AmmeterExamine(scope.$index, scope.row, 1)">提交审核</el-button>
-                <el-button v-if="showType == 4 && scope.row.statename === '待审核'" type="text" size="mini" @click="AmmeterExamine(scope.$index, scope.row, 2)">审核</el-button>
+                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1, 1)">提交审核</el-button>
+                <el-button v-if="showType == 4 && scope.row.censusstatename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2, 1)">审核</el-button>
                 <el-button v-if="showType !== 1" type="text" size="mini" @click="AmmeterDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
@@ -355,7 +356,6 @@
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
                 <el-button v-if="showType === 2" type="text" size="mini" @click="EditHiddenDanger(scope.$index, scope.row, 1)">修改</el-button>
-                <el-button v-if="showType === 2" type="text" size="mini" @click="DeleteHiddenDanger(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -374,7 +374,6 @@
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
                 <el-button v-if="showType === 2" type="text" size="mini" @click="EditMaintain(scope.$index, scope.row, 1)">修改</el-button>
-                <el-button v-if="showType === 2" type="text" size="mini" @click="DeleteMaintain(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -423,14 +422,18 @@
       </el-dialog>
     </div>
 
-    <el-dialog title="审核"  :visible.sync="auitShow" center width="30%">
+    <el-dialog title="审核"  :visible.sync="auitShow" v-loading="table1Loading" center width="30%" @close="auitClose">
       <el-form :data="auitData">
+        <el-row style="margin-bottom:15px" v-if="ViewTabIndex === '0' || ViewTabIndex === '2'">
+          <el-col :span="6">设备类型</el-col>
+          <el-col :span="16">{{auitData.equipmenttypename}}</el-col>
+        </el-row>
         <el-row style="margin-bottom:15px">
           <el-col :span="6">站点名称</el-col>
           <el-col :span="16">{{auitData.resourcename}}</el-col>
         </el-row>
         <el-row style="margin-bottom:15px">
-          <el-input type="textarea" :autosize="{ minRows: 2}" placeholder="请输入审核意见" v-model="auitData.remark"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2}" placeholder="请输入审核意见" v-model="auitData.auditremark"></el-input>
         </el-row>
         <el-row type="flex" justify="end">
           <el-button type="success" @click="subAuit(3)">审核通过</el-button>
@@ -441,7 +444,7 @@
     </el-dialog>
 
     <el-dialog top="1%" append-to-body :visible.sync="showDialog" width="80%" :title="dialogTitle" :close-on-click-modal="false" :before-close="AddhandleClose">
-      <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseSite" @selectResource="selectResource"/>
+      <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseSite"/>
       <deviceList v-if="deviceChoose" :resourcetype="1" :equipment_id="currentEquipmentId" @chooseDevice="chooseDevice"></deviceList>
       <TaskChargingPile ref="TaskChargingPile" v-if="showChargingPile" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChargingPile>
       <TaskSwitchCabinet ref="TaskSwitchCabinet" v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
@@ -451,8 +454,8 @@
       <TaskBatteryGenerator ref="TaskBatteryGenerator" v-if="showBatteryGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
       <AnElectricIntroduced ref="AnElectricIntroduced" v-if="showAnElectricIntroduced" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AnElectricIntroduced>
       <Ammeter ref="Ammeter" v-if="showAmmeter" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
-      <HiddenDanger v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
-      <Maintain v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
+      <HiddenDanger ref="HiddenDanger" v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
+      <Maintain ref="Maintain" v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
     </el-dialog>
     <ImgBox ref="ImgBox"></ImgBox>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
@@ -477,7 +480,7 @@ import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
 import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetTaskElectricMeterList, GetMaintainList,
   UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetEnergyResourecEquipmentList, GetHiddenDangerList,
-  AuditEnergyTask, TaskEquipment, GetEquipmentInfoList} from 'api/SurveyManagement'
+  TaskAudit, TaskEquipment, GetEquipmentInfoList, GetTaskState} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
 import ImgBox from 'base/ImgBox'
@@ -531,6 +534,7 @@ export default {
       editResourcecode: '', // 编辑时的站点编码
       editResourcename: '', // 编辑是的站点名称
       DeviceTypeList: [],
+      result: '', // 任务状态
       siteRules: {
         outstanding: [
           { required: true, message: '是否拉远站', trigger: 'change' }
@@ -580,9 +584,12 @@ export default {
       dialogTitle: '',
       auitShow: false,
       auitData: {
-        resourcename: '',
-        remark: '',
-        task_id: ''
+        taskid: '',
+        taskequipment_id: '',
+        taskresource_id: '',
+        auditremark: '',
+        equipmenttypename: '',
+        resourcename: ''
       },
       ImgList1: [],
       ImgList2: [],
@@ -667,6 +674,7 @@ export default {
     handleDetail (index, row) {
       this.showType = 1
       this.WriteState = 2
+      this.editSiteId = row.resource_id
       this.getDeviceDetail(row.id)
     },
     handleEdit (index, row) {
@@ -679,12 +687,12 @@ export default {
     },
     getDeviceDetail (id) {
       this.table1Loading = true
-      this.$set(this.currentPage, 1, 1)
+      // this.$set(this.currentPage, 1, 1)
       this.currentTaskId = id
       this.$axios.get(GetTaskEquipmentList, {
         params: {
           taskid: id,
-          PageIndex: 1,
+          PageIndex: this.currentPage[1],
           PageSize: this.pageSize[1]
         }
       }).then(res => {
@@ -699,11 +707,11 @@ export default {
     },
     GetTaskAmmeterList (id) {
       this.table1Loading = true
-      this.$set(this.currentPage, 2, 1)
+      // this.$set(this.currentPage, 2, 1)
       this.$axios.get(GetTaskElectricMeterList, {
         params: {
           task_id: id,
-          PageIndex: 1,
+          PageIndex: this.currentPage[2],
           PageSize: this.pageSize[2]
         }
       }).then(res => {
@@ -770,6 +778,7 @@ export default {
       this.deviceList.forEach((val, index) => {
         val.resource_id = val.id
         // val.equipment_id = []
+        val.equipment_id = val.equipment_id ? val.equipment_id : []
       })
       this.showDialog = !this.showDialog
     },
@@ -856,10 +865,7 @@ export default {
         this.deviceList = arr
       })
     },
-    AmmeterExamine (index, row, type) {
-
-    },
-    handleExamine (index, row, type) {
+    handleExamine (index, row, type, state) { // type 1: 提交审核 2: 审核  state: 1:任务设备 2: 任务站点
       if (type === 1) {
         this.$confirm('您确认要提交审核吗？', '提示', {
           type: 'warning'
@@ -873,33 +879,95 @@ export default {
               this.$message.error(res.msg)
             } else {
               this.$message.success('提交成功！')
-              this.$set(this.currentPage, 0, 1)
-              this.getDeviceDetail(this.currentTaskId)
+              // this.checkState()
+              this.table1Loading = true
+              this.checkState().then((res) => {
+                this.table1Loading = false
+                if (res.errorCode === '200') {
+                  this.result = res.msg
+                  switch (this.ViewTabIndex) {
+                    case '0':
+                      // this.$set(this.currentPage, 0, 1)
+                      if (this.result === '待执行') {
+                        this.getDeviceDetail(this.currentTaskId)
+                      } else {
+                        this.closeShowEdit()
+                      }
+                      break
+                    case '1':
+                      // this.$set(this.currentPage, 1, 1)
+                      this.table1Loading = true
+                      this.$axios.get(GetTaskResourceList, {
+                        params: {
+                          task_id: this.currentTaskId
+                        }
+                      }).then(res => {
+                        this.table1Loading = false
+                        if (res.errorCode === '200') {
+                          this.siteInfo = res.data
+                          this.setImgList(res.data.imglist)
+                        } else {
+                          this.$message.error(res.msg)
+                        }
+                      })
+                      break
+                    case '2':
+                      // this.$set(this.currentPage, 2, 1)
+                      if (this.result === '待执行') {
+                        this.GetTaskAmmeterList(this.currentTaskId)
+                      } else {
+                        this.closeShowEdit()
+                      }
+                      break
+                  }
+                } else {
+                  this.$message.error(res.msg)
+                }
+              })
             }
           })
         })
       } else {
         this.auitShow = true
-        this.auitData.task_id = row.id
-        this.auitData.resourcename = row.resourcename
+        if (state === 1) {
+          this.auitData.taskequipment_id = row.id
+          this.auitData.equipmenttypename = row.equipmenttypename
+        } else if (state === 2) {
+          this.auitData.taskresource_id = this.siteInfo.id
+          this.auitData.resourcename = this.siteInfo.name
+        }
+        this.auitData.taskid = this.currentTaskId
       }
+    },
+    checkState () {
+      return this.$axios.get(GetTaskState, {
+        params: {
+          task_id: this.currentTaskId
+        }
+      }).then((res) => {
+        return Promise.resolve(res)
+      })
     },
     handleByExamine (index, row) {
       this.showType = 4
       this.WriteState = 2
+      this.editSiteId = row.resource_id
       this.getDeviceDetail(row.id)
     },
     subAuit (type) {
       if (type === 4 || type === 5) {
-        if (!this.auitData.remark) {
+        if (!this.auitData.auditremark) {
           return this.$message.error('请填写审核意见！')
         }
       }
-      this.$axios.get(AuditEnergyTask, {
+      this.table1Loading = true
+      this.$axios.get(TaskAudit, {
         params: {
-          task_id: this.auitData.task_id,
+          taskid: this.auitData.taskid,
           state: type,
-          auditremark: this.auitData.remark
+          taskequipment_id: this.auitData.taskequipment_id,
+          taskresource_id: this.auitData.taskresource_id,
+          auditremark: this.auitData.auditremark
         }
       }).then(res => {
         this.table1Loading = false
@@ -907,12 +975,43 @@ export default {
           this.$message.success('操作成功！')
           Object.assign(this.$data.auitData, this.$options.data().auitData)
           this.auitShow = false
-          this.$set(this.currentPage, 0, 1)
-          this.getData1()
+          /* this.$set(this.currentPage, 0, 1)
+          this.getData1() */
+          switch (this.ViewTabIndex) {
+            case '0':
+              this.$set(this.currentPage, 0, 1)
+              this.getDeviceDetail(this.currentTaskId)
+              break
+            case '1':
+              this.$set(this.currentPage, 1, 1)
+              this.table1Loading = true
+              this.$axios.get(GetTaskResourceList, {
+                params: {
+                  task_id: this.currentTaskId
+                }
+              }).then(res => {
+                this.table1Loading = false
+                if (res.errorCode === '200') {
+                  this.siteInfo = res.data
+                  this.setImgList(res.data.imglist)
+                } else {
+                  this.$message.error(res.msg)
+                }
+              })
+              break
+            case '2':
+              this.$set(this.currentPage, 2, 1)
+              this.GetTaskAmmeterList(this.currentTaskId)
+              break
+          }
         } else {
           this.$message.error(res.msg)
         }
       })
+    },
+    auitClose () {
+      Object.assign(this.$data.auitData, this.$options.data().auitData)
+      this.auitShow = false
     },
     AddTaskDevice () {
       switch (this.ViewTabIndex) {
@@ -938,18 +1037,32 @@ export default {
           this.showAmmeter = true
           this.dialogTitle = '新增电表'
           this.WriteState = 0
+          this.$nextTick(() => {
+            this.$refs.Ammeter.WriteData.task_id = this.currentTaskId
+            // this.$refs.Ammeter.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+            this.$refs.Ammeter.WriteData.resource_id = this.editSiteId
+            this.$refs.Ammeter.WriteData.resourcecode = this.editResourcecode
+            this.$refs.Ammeter.WriteData.resourcename = this.editResourcename
+            this.$refs.Ammeter.WriteData.equipmenttypename = '电表'
+          })
           break
         case '3':
           this.showDialog = true
           this.showHiddenDanger = true
           this.dialogTitle = '新增隐患'
           this.WriteState = 0
+          this.$nextTick(() => {
+            this.$refs.HiddenDanger.WriteData.resource_id = this.editSiteId
+          })
           break
         case '4':
           this.showDialog = true
           this.showMaintain = true
           this.dialogTitle = '新增上站维护'
           this.WriteState = 0
+          this.$nextTick(() => {
+            this.$refs.Maintain.WriteData.resource_id = this.editSiteId
+          })
           break
       }
     },
@@ -1227,21 +1340,19 @@ export default {
       this.$confirm('您确认要删除当前电表吗？', '提示', {
         type: 'warning'
       }).then(() => {
-
-      })
-    },
-    DeleteHiddenDanger (index, row) {
-      this.$confirm('您确认要删除当前隐患吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-
-      })
-    },
-    DeleteMaintain (index, row) {
-      this.$confirm('您确认要删除当前上站维护吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-
+        this.$axios.delete(DelTaskEquipment, {
+          params: {
+            id: row.id
+          }
+        }).then((res) => {
+          if (res.errorCode !== '200') {
+            this.$message.error(res.msg)
+          } else {
+            this.$message.success('删除成功！')
+            this.$set(this.currentPage, 2, 1)
+            this.GetTaskAmmeterList(this.currentTaskId)
+          }
+        })
       })
     },
     DeviceDelete (index, row) {
@@ -1264,15 +1375,47 @@ export default {
       })
     },
     WriteClose () {
-      this.getDeviceDetail(this.currentTaskId)
       this.DeviceID = ''
       this.showDialog = false
+      switch (this.ViewTabIndex) {
+        case '0':
+          this.getDeviceDetail(this.currentTaskId)
+          break
+        case '1':
+          this.table1Loading = true
+          this.$axios.get(GetTaskResourceList, {
+            params: {
+              task_id: this.currentTaskId
+            }
+          }).then(res => {
+            this.table1Loading = false
+            if (res.errorCode === '200') {
+              this.siteInfo = res.data
+              this.setImgList(res.data.imglist)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+          break
+        case '2':
+          this.GetTaskAmmeterList(this.currentTaskId)
+          break
+        case '3':
+          this.GetHiddenDangerList()
+          break
+        case '4':
+          this.GetMaintainList()
+          break
+      }
     },
     closeShowEdit () {
       this.showType = 0
       this.ViewTabIndex = '0'
       this.siteInfo = {}
       this.deviceInfo = []
+      this.AmmeterInfo = []
+      this.HiddenDangerList = []
+      this.MaintainList = []
       this.$set(this.total, 1, 0)
       this.$set(this.currentPage, 1, 1)
       this.$set(this.pageSize, 1, 10)
@@ -1288,6 +1431,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.siteInfoForm.clearValidate()
       })
+      this.getMore(1)
     },
     closeShowAdd () {
       this.showType = 0

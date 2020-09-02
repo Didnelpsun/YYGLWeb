@@ -34,6 +34,21 @@
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <tbody>
+            <!--隐患类型-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>隐患类型</div></td>
+              <td><div class="cell">
+                <div v-show="WriteState == 2">{{WriteData.hiddendangertypename}}</div>
+                <div v-show="WriteState !== 2" @click="isShow = true">
+                  <el-form-item class="form-item" prop="hiddendangertypename">
+                    <el-input v-model="WriteData.hiddendangertypename" readonly placeholder="请选择"></el-input>
+                  </el-form-item>
+                </div></div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
             <!--维护项目-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>维护项目</div></td>
@@ -83,12 +98,16 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <el-dialog append-to-body top="1%" :visible.sync="isShow" title="选择隐患" width="80%" :before-close="handleClose">
+      <HiddenDanger v-if="isShow" :resource_id="WriteData.resource_id" @handleChoose="handleChoose"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
+import {GetMaintainInfo, AddMaintain, UpdateMaintain} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
+import HiddenDanger from 'base/Resource/HiddenDanger'
 import {GlobalRes} from 'common/js/mixins'
 
 export default {
@@ -106,18 +125,21 @@ export default {
   },
   data () {
     return {
+      isShow: false,
       Loading: false,
       ImgList1: [],
       WriteData: {
         resource_id: '',
-        hiddendangertype: '',
+        hiddendangertypename: '',
+        hiddendanger_id: '',
         maintainproject: '',
         describe: '',
-        treatment: ''
+        treatment: '',
+        imglist: []
       },
       Rules: {
-        hiddendangertype: [
-          { required: true, message: '请输入隐患类型', trigger: 'blur' }
+        hiddendangertypename: [
+          { required: true, message: '请输入隐患类型', trigger: 'change' }
         ],
         maintainproject: [
           { required: true, message: '请输入隐患级别', trigger: 'blur' }
@@ -128,13 +150,13 @@ export default {
   },
   created () {
     if (this.WriteState) {
-      this.WriteLoading = true
-      this.$axios.get(GetSwitchCabinetTaskEquipment, {
+      this.Loading = true
+      this.$axios.get(GetMaintainInfo, {
         params: {
           id: this.DeviceID
         }
       }).then(res => {
-        this.WriteLoading = false
+        this.Loading = false
         this.WriteData = res.data
         this.setImgList(res.data.imglist)
       })
@@ -168,7 +190,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.post(AddMaintain, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             this.$message.success('添加成功!')
@@ -187,7 +209,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.put(UpdateMaintain, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             if (res.errorCode === '200') {
@@ -210,6 +232,14 @@ export default {
     setImgList (list) {
       if (list === null) return
       this.ImgList1 = list.filter(i => { return i.field_name === 'electricmeterno' })
+    },
+    handleClose () {
+      this.isShow = !this.isShow
+    },
+    handleChoose (id, name) {
+      this.isShow = false
+      this.WriteData.hiddendanger_id = id
+      this.WriteData.hiddendangertypename = name
     }
   },
   computed: {
@@ -221,7 +251,8 @@ export default {
     ImgList (val) {
       this.WriteData.imglist = val
     }
-  }
+  },
+  components: { HiddenDanger }
 }
 </script>
 

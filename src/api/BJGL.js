@@ -19,3 +19,11 @@ export const Addsparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerS
 export const Editsparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Editsparepartsmanufacturer` // 修改备件厂家
 export const Deletesparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Deletesparepartsmanufacturer` // 删除备件厂家
 export const GetsparepartsmanufacturerList = `${reqURL}/BJGL/sparepartsmanufacturerSevice/GetsparepartsmanufacturerList` //  获取备件厂家列表
+export const GetIdsparepartsmanufacturerList = `${reqURL}/BJGL/sparepartsmanufacturerSevice/GetIdsparepartsmanufacturerList` //  根据id备件厂家详情
+
+// 备件存放点
+export const Addwarehouse = `${reqURL}/BJGL/warehouseSevcie/Addwarehouse` // 添加存放点
+export const Editwarehouse = `${reqURL}/BJGL/warehouseSevcie/Editwarehouse` // 修改存放点
+export const Deletewarehouse = `${reqURL}/BJGL/warehouseSevcie/Deletewarehouse` // 删除存放点
+export const GetwarehouseList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseList` //  获取存放点列表
+export const GetwarehouseIdList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseIdList` //  根据id获取存放点

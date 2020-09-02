@@ -76,7 +76,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <!--台区名称-->
-            <tr class="el-table__row">
+            <tr class="el-table__row" v-show="WriteState !== 3">
               <td><div class="cell"><i class="must">*</i>台区名称</div></td>
               <td>
                 <div class="cell">
@@ -94,8 +94,8 @@
               <td><div class="cell"><i class="must">*</i>供电所</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.powersubstation}}</div>
-                  <el-form-item label-width="0" prop="powersubstation" class="form-item" v-show="WriteState !== 2">
+                  <div v-show="WriteState == 2||WriteState == 3">{{tableData.powersubstation}}</div>
+                  <el-form-item label-width="0" prop="powersubstation" class="form-item" v-show="WriteState !== 2&&WriteState !== 3">
                     <el-input v-model="tableData.powersubstation" placeholder="请填入供电所"></el-input>
                   </el-form-item>
                 </div>
@@ -109,8 +109,8 @@
               <td><div class="cell"><i class="must">*</i>供电联系人</div></td>
               <td>
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.powersupplycontact}}</div>
-                  <el-form-item label-width="0" prop="powersupplycontact" class="form-item" v-show="WriteState !== 2">
+                  <div v-show="WriteState == 2||WriteState == 3">{{tableData.powersupplycontact}}</div>
+                  <el-form-item label-width="0" prop="powersupplycontact" class="form-item" v-show="WriteState !== 2&&WriteState !== 3">
                     <el-input v-model="tableData.powersupplycontact" placeholder="请填入供电联系人"></el-input>
                   </el-form-item>
                 </div>
@@ -187,7 +187,8 @@ export default{
     WriteState: {
       type: Number,
       default: 0 // 0为添加 1为编辑 2为查看
-    }
+    },
+    id: ''
   },
   data () {
     return {
@@ -212,6 +213,7 @@ export default{
       tableArea: {
         AreaList: []
       },
+      params: {},
       areaOption: [],
       // 表单验证
       Rules: {
@@ -248,6 +250,33 @@ export default{
       }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()
+      if (this.WriteState === 3) this.sendadd()
+    },
+    sendadd () {
+      this.$refs.tableForm.validate(async (valid, msg) => {
+        try {
+          this.WriteLoading = true
+
+          const res = await this.$axios.post(AddCourts, {
+
+            stationid: this.tableData.stationid,
+            id: this.id
+
+          })
+          this.WriteLoading = false
+          if (res.error === true) {
+            this.$message.warning('请补全信息')
+            console.log(res.errorMessage)
+          }
+          if (res.success === true) {
+            this.$message.success('添加成功！')
+            this.$emit('fatheretMore')
+            this.closeWrite()
+          } else { this.$message.warning(res.msg) }
+        } catch (e) {
+          console.log(e)
+        }
+      })
     },
     // 添加提交
     async add () {

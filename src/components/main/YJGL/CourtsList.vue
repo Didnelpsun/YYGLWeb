@@ -29,9 +29,10 @@
         <el-table-column prop="powersupplycontact" label="供电联系人" width=""></el-table-column>
         <el-table-column prop="createusername" label="提交人" width=""></el-table-column>
         <el-table-column prop="createdatetime" label="提交时间" width=""></el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
             <!-- <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button> -->
+            <el-button type="text" size="mini" @click="handleWrite(3,scope.row)">添加</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)">删除</el-button>
             <el-button type="text" size="mini" @click="add(scope.row)">新增站点</el-button>
@@ -47,7 +48,7 @@
     </div>
 
     <div v-show="showWrite">
-      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" />
+      <Details :WriteState="WriteState" :id="id" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" />
     </div>
     <el-dialog top="1%" :visible.sync="isShow" title="选择站点ID" width="80%" :before-close="DetailhandleClose">
       <SitePicker @selectSite="selectSite" ref="site"/>
@@ -84,7 +85,9 @@ export default {
         pageSize: 10,
         currentPage: 1
       },
+      id: '',
       showWrite: false,
+      showWrite1: false,
       WriteState: 0 // 0为添加 1为编辑 2为查看
     }
   },
@@ -95,6 +98,7 @@ export default {
   created () {
   },
   methods: {
+
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
       this.Loading = true
@@ -168,6 +172,7 @@ export default {
     },
     // 处理编辑函数
     handleWrite (state, row) {
+      this.id = row.id
       this.$refs.Details.WriteLoading = true
       if (this.tableData) {
         // this.$data.tableData = {}

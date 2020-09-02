@@ -1,13 +1,51 @@
 <template>
   <div class="content">
     <div class="main">
-      <el-row>
-        <el-col :span="4" class="SearchResult">查询结果</el-col>
-        <el-col :offset="2" :span="18" class="fr">
-          <div class="fr">
-          </div>
-        </el-col>
-      </el-row>
+      <el-form :model="Query">
+        <el-row >
+          <el-col :span="18">
+            <el-col :span="8">
+              <el-form-item label="调度类型：">
+                <el-input v-model="Query.dispatchtype" placeholder="请填写调度类型"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="故障单编码：">
+                <el-input v-model="Query.code" placeholder="请填写故障单编码"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="油机缸号：">
+                <el-input v-model="Query.machinebatchno" placeholder="请填写油机缸号"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input v-model="Query.stationname" placeholder="请填写站点名称"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点编码：">
+                <el-input v-model="Query.stationcode" placeholder="请填写站点编码"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-col>
+          <el-col :span="6">
+            <div class="fr" style="margin-top: 0">
+              <el-button  @click="getMore1(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'">查询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="18">
+            <p class="SearchResult">查询结果</p>
+          </el-col>
+          <el-col :span="6">
+            <div class="fr" style="margin-top: 0">
+            </div>
+          </el-col>
+        </el-row>
+      </el-form>
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
@@ -46,6 +84,13 @@ export default {
   data () {
     return {
       // 加载
+      Query: {
+        dispatchtype: null,
+        code: null,
+        machinebatchno: null,
+        stationname: null,
+        stationcode: null
+      },
       Loading: false,
       tableList: [
       ],
@@ -64,6 +109,28 @@ export default {
   created () {
   },
   methods: {
+    getMore1 (e) {
+      this.Loading = true
+      this.pagination.currentPage = e
+      this.$axios.get(PowerDispatchRecordList,
+        {params: Object.assign({}, this.Query, {
+          PageIndex: this.currentPage,
+          PageSize: this.pageSize
+        })
+        })
+        .then(res => {
+          this.Loading = false
+          // 数据改变
+          this.tableList = res.data.list.map(function (val) {
+            val.power = val.power.toFixed(2)
+            return val
+          })
+          this.pagination.total = res.data.total
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
       this.Loading = true

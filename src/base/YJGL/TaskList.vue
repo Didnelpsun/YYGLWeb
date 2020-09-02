@@ -100,8 +100,8 @@
                     <td><div class="cell"></div></td>
                   </tr>
                   <tr class="el-table__row">
-                    <td colspan="4"><div class="cell">工单事件</div></td>
-                    <td colspan="4"><div class="cell">油机事件</div></td>
+                    <td colspan="4" style="background-color: rgb(230, 189, 189)"><div class="cell" >工单事件</div></td>
+                    <td colspan="4" style="background-color:rgb(156, 186, 95)"><div class="cell">油机事件</div></td>
                   </tr>
                   <tr class="el-table__row">
                     <td><div class="cell">工单事件</div></td>
@@ -220,16 +220,33 @@
         </el-table-column>
       </el-table>
       </el-tab-pane>
-      <el-tab-pane label="运营商站点">
-        <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small" v-loading="WriteLoading">
-        <!--表头-->
+      <el-tab-pane label="运营商站点" >
+        <el-table :data="tableData4" v-loading="WriteLoading" >
+          <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
+          <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
+          <el-table-column prop="" label="运营商" width=""></el-table-column>
+          <el-table-column prop="systemcode" label="系统编码" width=""></el-table-column>
+          <el-table-column prop="systemname" label="系统名称" width=""></el-table-column>
+          <el-table-column prop="openingdate" label="开通日期" width=""></el-table-column>
+          <el-table-column prop="createname" label="创建人" width=""></el-table-column>
+          <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
+          <el-table-column prop="" label="操作" width="50">
+            <template slot-scope="scope">
+              <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <!--<el-tab-pane label="运营商站点">
+        <div class="el-table el-table&#45;&#45;striped el-table&#45;&#45;enable-row-hover el-table&#45;&#45;border el-table&#45;&#45;enable-row-transition el-table&#45;&#45;small" v-loading="WriteLoading">
+        &lt;!&ndash;表头&ndash;&gt;
         <div class="el-table__header-wrapper">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
             <colgroup>
               <col width="120"/>
               <col width="100"/>
               <col width="50"/>
-            <!-- <col width="400"/> -->
+            &lt;!&ndash; <col width="400"/> &ndash;&gt;
               <col width="100"/>
             </colgroup>
             <thead>
@@ -237,13 +254,13 @@
                 <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
                 <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
                 <th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>
-                <!-- <th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th> -->
+                &lt;!&ndash; <th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th> &ndash;&gt;
                 <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
               </tr>
             </thead>
           </table>
         </div>
-        <!--表体-->
+        &lt;!&ndash;表体&ndash;&gt;
         <el-form :model="tableData4" ref="WriteForm" label-width="0" :show-message="false">
           <div class="el-table__body-wrapper is-scrolling-none">
             <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
@@ -253,8 +270,8 @@
                 <col width="40"/>
                 <col width="80"/>
               </colgroup>
-              <tbody>
-                <tr class="el-table__row">
+              <tbody>-->
+              <!--  <tr class="el-table__row">
                   <td><div class="cell">城市</div></td>
                   <td><div class="cell">{{tableData4.cityname}}</div></td>
                   <td><div class="cell"></div></td>
@@ -265,20 +282,26 @@
                   <td><div class="cell">{{tableData4.areaname}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
-                <tr class="el-table__row">
+                </tr>-->
+              <!--<tr class="el-table__row">
+                <td><div class="cell">运营商</div></td>
+                <td><div class="cell"></div></td>
+                <td><div class="cell"></div></td>
+                <td><div class="cell"></div></td>
+              </tr>-->
+              <!--  <tr class="el-table__row">
                   <td><div class="cell">系统编码</div></td>
                   <td><div class="cell">{{tableData4.systemcode}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
+                </tr>-->
                 <!--系统名称-->
-                <tr class="el-table__row">
+                <!--<tr class="el-table__row">
                   <td><div class="cell">系统名称</div></td>
                   <td><div class="cell">{{tableData4.systemname}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
+                </tr>-->
                 <!-- <tr class="el-table__row">
                   <td><div class="cell">资源站点名称</div></td>
                   <td><div class="cell">{{tableData4.resourcename}}</div></td>
@@ -291,13 +314,13 @@
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
                 </tr> -->
-                <tr class="el-table__row">
+               <!-- <tr class="el-table__row">
                   <td><div class="cell">开通日期</div></td>
                   <td><div class="cell">{{tableData4.openingdate}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
-                <tr class="el-table__row">
+                </tr>-->
+                <!--<tr class="el-table__row">
                   <td><div class="cell">产权单位</div></td>
                   <td><div class="cell">{{tableData4.propertyrightunitname}}</div></td>
                   <td><div class="cell"></div></td>
@@ -308,14 +331,14 @@
                   <td><div class="cell">{{tableData4.lifecycle}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
-                <tr class="el-table__row">
+                </tr>-->
+               <!-- <tr class="el-table__row">
                   <td><div class="cell">创建人</div></td>
                   <td><div class="cell">{{tableData4.createname}}</div></td>
                   <td><div class="cell"></div></td>
                   <td><div class="cell"></div></td>
-                </tr>
-                <tr class="el-table__row">
+                </tr>-->
+               <!-- <tr class="el-table__row">
                   <td><div class="cell">创建时间</div></td>
                   <td><div class="cell">{{tableData4.createtime}}</div></td>
                   <td><div class="cell"></div></td>
@@ -326,7 +349,7 @@
           </div>
         </el-form>
       </div>
-      </el-tab-pane>
+      </el-tab-pane>-->
     </el-tabs>
     <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small" v-if="WriteState === 0">
       <!--表头-->
@@ -359,17 +382,16 @@
               <col width="150"/>
             </colgroup>
             <tbody>
-              <!--故障单编码-->
+              <!--工单号-->
               <tr class="el-table__row">
-                <td><div class="cell"><i class="must">*</i>故障单编码</div></td>
+                <td><div class="cell"><i class="must">*</i>工单号</div></td>
                 <td>
                   <div class="cell">
                     <el-form-item label-width="0" prop="code" class="form-item">
-                      <el-input v-model="tableData.code" placeholder="请填入故障单编码"></el-input>
+                      <el-input v-model="tableData.code" placeholder="请填入工单号"></el-input>
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
 
@@ -387,7 +409,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--故障设备类型-->
-              <tr class="el-table__row">
+            <!--  <tr class="el-table__row">
                 <td><div class="cell"> 故障设备类型 </div></td>
                 <td>
                   <div class="cell">
@@ -396,10 +418,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--告警描述-->
+              &lt;!&ndash;告警描述&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">告警描述</div></td>
                 <td>
@@ -409,11 +431,11 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--告警等级-->
-              <tr class="el-table__row">
+            <!--  <tr class="el-table__row">
                 <td><div class="cell">告警等级</div></td>
                 <td>
                   <div class="cell">
@@ -422,10 +444,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--故障标题-->
+              &lt;!&ndash;故障标题&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">故障标题</div></td>
                 <td>
@@ -435,10 +457,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--故障描述-->
+              &lt;!&ndash;故障描述&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell"> 故障描述</div></td>
                 <td>
@@ -448,9 +470,9 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--站址编码-->
               <tr class="el-table__row">
                 <td><div class="cell">站址编码 </div></td>
@@ -518,7 +540,7 @@
                 &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>-->
-              <tr class="el-table__row">
+           <!--   <tr class="el-table__row">
                 <td><div class="cell"> 区域</div></td>
                 <td>
                   <div class="cell">
@@ -528,9 +550,9 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--所属运营站点-->
-              <tr class="el-table__row">
+             <!-- <tr class="el-table__row">
                 <td><div class="cell"> 站址运维ID</div></td>
                 <td>
                   <div class="cell">
@@ -539,10 +561,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--所属运营站点-->
+              &lt;!&ndash;所属运营站点&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">  所属运营商  </div></td>
                 <td>
@@ -552,10 +574,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--是否购买发电服务-->
+              &lt;!&ndash;是否购买发电服务&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">是否购买发电服务</div></td>
                 <td>
@@ -565,10 +587,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-               <!--开始停电时间-->
+               &lt;!&ndash;开始停电时间&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">停电开始时间</div></td>
                 <td>
@@ -579,10 +601,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--蓄电池类型-->
+              &lt;!&ndash;蓄电池类型&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">蓄电池类型</div></td>
                 <td>
@@ -592,10 +614,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--电池电压-->
+              &lt;!&ndash;电池电压&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">电池电压V</div></td>
                 <td>
@@ -605,10 +627,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--负载电流-->
+              &lt;!&ndash;负载电流&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">负载电流A</div></td>
                 <td>
@@ -618,10 +640,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--电池组1电流-->
+              &lt;!&ndash;电池组1电流&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">电池组1电流</div></td>
                 <td>
@@ -631,10 +653,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--电池组2电流-->
+              &lt;!&ndash;电池组2电流&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">电池组2电流</div></td>
                 <td>
@@ -644,10 +666,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--蓄电池剩余续航时间分钟-->
+              &lt;!&ndash;蓄电池剩余续航时间分钟&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">蓄电池剩余续航时间分钟</div></td>
                 <td>
@@ -657,9 +679,9 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
                <!--派单时间-->
               <tr class="el-table__row">
                 <td><div class="cell">派单时间</div></td>
@@ -675,7 +697,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--接单时间-->
-              <tr class="el-table__row">
+            <!--  <tr class="el-table__row">
                 <td><div class="cell">接单时间</div></td>
                 <td>
                   <div class="cell">
@@ -685,10 +707,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--是否上站-->
+              &lt;!&ndash;是否上站&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">是否上站</div></td>
                 <td>
@@ -698,9 +720,9 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
                <!--告警时间-->
               <tr class="el-table__row">
                 <td><div class="cell">告警时间</div></td>
@@ -716,7 +738,7 @@
                 <td><div class="cell"></div></td>
               </tr>
        <!--  告警清楚时间-->
-              <tr class="el-table__row">
+           <!--   <tr class="el-table__row">
                 <td><div class="cell">告警清楚时间</div></td>
                 <td>
                   <div class="cell">
@@ -727,9 +749,9 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
                <!--回单时间-->
-              <tr class="el-table__row">
+             <!-- <tr class="el-table__row">
                 <td><div class="cell">回单时间</div></td>
                 <td>
                   <div class="cell">
@@ -739,10 +761,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-               <!--归档时间-->
+               &lt;!&ndash;归档时间&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">归档时间</div></td>
                 <td>
@@ -753,10 +775,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--代维单位-->
+              &lt;!&ndash;代维单位&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">代维公司</div></td>
                 <td>
@@ -766,10 +788,10 @@
                     </el-form-item>
                   </div>
                 </td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
               </tr>
-              <!--告警历时分钟-->
+              &lt;!&ndash;告警历时分钟&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">告警历时分钟</div></td>
                 <td>
@@ -781,7 +803,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-              <!--工单处理历时分钟-->
+              &lt;!&ndash;工单处理历时分钟&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">工单处理历时分钟</div></td>
                 <td>
@@ -793,7 +815,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-              <!--接单时长分钟-->
+              &lt;!&ndash;接单时长分钟&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">接单时长分钟</div></td>
                 <td>
@@ -805,7 +827,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-              <!--机房动环维护人员-->
+              &lt;!&ndash;机房动环维护人员&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">机房动环维护人员</div></td>
                 <td>
@@ -817,7 +839,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-              <!--机房动环维护人员联系电话-->
+              &lt;!&ndash;机房动环维护人员联系电话&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">机房动环维护人员联系电话</div></td>
                 <td>
@@ -829,7 +851,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-              <!--包站人-->
+              &lt;!&ndash;包站人&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">包站人</div></td>
                 <td>
@@ -841,7 +863,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-               <!--上站时间-->
+               &lt;!&ndash;上站时间&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">上站时间</div></td>
                 <td>
@@ -854,7 +876,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-               <!--开始发电时间-->
+               &lt;!&ndash;开始发电时间&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">开始发电时间</div></td>
                 <td>
@@ -867,7 +889,7 @@
                 </td>
                 <td><div class="cell"></div></td>
               </tr>
-               <!--结束发电时间-->
+               &lt;!&ndash;结束发电时间&ndash;&gt;
               <tr class="el-table__row">
                 <td><div class="cell">结束发电时间</div></td>
                 <td>
@@ -879,7 +901,7 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
             </tbody>
           </table>
         </div>
@@ -968,8 +990,7 @@ export default{
       },
       tableData2: [],
       tableData3: [],
-      tableData4: {
-      },
+      tableData4: [],
       ViewTabIndex: '0',
       // 表单验证
       Rules: {
@@ -1100,4 +1121,7 @@ export default{
 
 <style scoped>
   @import url('../../common/css/mixin.css');
+  .borderColor{
+    border-top-color: #F64245;
+  }
 </style>

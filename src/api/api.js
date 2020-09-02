@@ -6,9 +6,9 @@ export const reqURL = 'http://192.168.0.50:8081' // 阮
 
 // process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://111.47.173.162:8051'
 // 赵
-// process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://192.168.0.131:8051'
+// process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://192.168.0.131:5000'
 // 阮
-// process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://192.168.0.50:8081'
+// process.env.NODE_ENV === 'production' ? reqURL = 'http://192.168.0.50:8081' : reqURL = 'http://192.168.0.50:8067'
 
 export const test = `${reqURL}`
 
@@ -177,7 +177,7 @@ export const GetOilFiredGeneratorList = `${reqURL}/ZYGL/OilFiredGenerator/GetOil
 
 // ResourceEquipment 站点设备配置
 export const AddResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/AddResourecEquipment` // 新增资源站点配置
-export const AddEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/AddEnergyResourecEquipment` // 新增能源站点配置
+export const AddEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/AddResourecEquipment` // 新增能源站点配置
 export const UpdateResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/UpdateResourecEquipment` // 修改资源站点配置
 export const UpdateEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/UpdateEnergyResourecEquipment` // 修改能源站点配置
 export const DelResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/DelResourecEquipment` // 删除站点配置

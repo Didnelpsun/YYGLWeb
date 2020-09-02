@@ -259,15 +259,17 @@
     </div>
 
     <div class="center">
-      <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import {DictionaryInfoList, AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
+import {DictionaryInfoList} from 'api/api'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
+import {GetTaskElectricMeterInfo, AddTaskElectricMeter, UpdateTaskElectricMeter} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 
@@ -291,9 +293,11 @@ export default {
       ImgList2: [],
       ImgList3: [],
       WriteData: {
+        task_id: '',
         resource_id: '',
         resourcename: '',
         resourcecode: '',
+        equipmenttype_id: '',
         equipmenttypename: '',
         longitude: null,
         latitude: null,
@@ -357,13 +361,13 @@ export default {
   created () {
     this.getDicList()
     if (this.WriteState) {
-      this.WriteLoading = true
-      this.$axios.get(GetChargingPileTaskEquipment, {
+      this.Loading = true
+      this.$axios.get(GetTaskElectricMeterInfo, {
         params: {
           id: this.DeviceID
         }
       }).then(res => {
-        this.WriteLoading = false
+        this.Loading = false
         this.WriteData = res.data
         this.setImgList(res.data.imglist)
       })
@@ -371,11 +375,13 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['移动上站供电方式', '设备状态']
+      let arr = ['电表供电方式', '设备状态', '电表设备厂家', '电表设备型号']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '移动上站供电方式' })
+          this.$set(this.DicList, 'powersupplymode', res.data.filter(i => { return i.type === '电表供电方式' }))
           this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
+          this.DicList.manufacturer = res.data.filter(i => { return i.type === '电表设备厂家' })
+          this.DicList.models = res.data.filter(i => { return i.type === '电表设备型号' })
         } else {
           this.$message.error(res.msg)
         }
@@ -404,11 +410,11 @@ export default {
         this.$emit('fatherOpenImgBox', '电表编号', 'electricmeterno', this.ImgList3)
       }
     },
-    SubWrite () {
-      if (this.WriteState === 0) this.SubAdd()
-      if (this.WriteState === 1) this.SubEdit()
+    SubWrite (state) {
+      if (this.WriteState === 0) this.SubAdd(state)
+      if (this.WriteState === 1) this.SubEdit(state)
     },
-    SubAdd () {
+    SubAdd (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
@@ -417,7 +423,11 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.post(AddTaskElectricMeter, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             this.$message.success('添加成功!')
@@ -430,14 +440,18 @@ export default {
         }
       })
     },
-    SubEdit () {
+    SubEdit (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.put(UpdateTaskElectricMeter, this.WriteData, {
+            params: {
+              censusstate: state
+            }
+          }).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             if (res.errorCode === '200') {

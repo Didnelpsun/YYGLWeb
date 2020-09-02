@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import {AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
+import {GetHiddenDangerInfo, AddHiddenDanger, UpdateHiddenDanger} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 
@@ -127,6 +127,7 @@ export default {
         hiddendangerlevel: '',
         hiddendangerdescribe: '',
         handlingsuggestions: '',
+        imglist: []
       },
       Rules: {
         hiddendangertype: [
@@ -141,13 +142,13 @@ export default {
   },
   created () {
     if (this.WriteState) {
-      this.WriteLoading = true
-      this.$axios.get(GetSwitchCabinetTaskEquipment, {
+      this.Loading = true
+      this.$axios.get(GetHiddenDangerInfo, {
         params: {
           id: this.DeviceID
         }
       }).then(res => {
-        this.WriteLoading = false
+        this.Loading = false
         this.WriteData = res.data
         this.setImgList(res.data.imglist)
       })
@@ -181,7 +182,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.post(AddHiddenDanger, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             this.$message.success('添加成功!')
@@ -200,7 +201,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditBatteryGenerator, this.WriteData).then(res => {
+          this.$axios.put(UpdateHiddenDanger, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
             if (res.errorCode === '200') {

@@ -149,7 +149,7 @@
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="isShow" title="选择站点" width="80%" :before-close="DetailhandleClose">
-      <ResourceList @selectResource="selectResource" />
+      <ResourceList v-if="isShow" @selectResource="selectResource" />
     </el-dialog>
   </div>
 </template>

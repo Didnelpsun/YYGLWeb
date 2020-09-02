@@ -5,11 +5,6 @@
         <!--选择器-->
         <el-col :span="18">
           <el-col :span="8">
-            <el-form-item label="区域：" label-width="80px">
-              <el-cascader v-model="query.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(query)" ref="csArea" clearable></el-cascader>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item label="类型名称：">
               <el-input v-model="query.typename" placeholder="请填写类型名称"  @keyup.enter.native="getTableData1More(1)"></el-input>
             </el-form-item>
@@ -62,18 +57,22 @@ export default {
     resourcetype: {
       type: Number,
       default: 1
+    },
+    provinceid: {// 省份
+      type: Number,
+      default: 0
+    },
+    cityid: {// 城市
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       // 查询相关属性
       query: {
-        AreaList: [],
         typename: '', // 类型名称
-        typeencoding: '', // 类型编码
-        provinceid: '', // 省份
-        cityid: '', // 城市
-        areaid: '' // 区域
+        typeencoding: ''// 类型编码
       },
       tableList: [],
       // 分页相关属性
@@ -98,7 +97,9 @@ export default {
       this.$axios.get(GetSpareTypList, {
         params: {
           PageIndex: 1,
-          PageSize: 10
+          PageSize: 10,
+          provinceid: this.provinceid,
+          cityid: this.cityid
         }}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -116,7 +117,9 @@ export default {
       this.Table1Loading = true
       this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize
+        PageSize: this.pagination.pageSize,
+        provinceid: this.provinceid,
+        cityid: this.cityid
       })}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)

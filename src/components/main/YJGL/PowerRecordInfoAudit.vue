@@ -36,11 +36,13 @@
         <!-- <el-table-column prop="provincename" label="省份" width="75"></el-table-column> -->
         <el-table-column prop="cityname" label="地市" width="75"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="75"></el-table-column>
-        <el-table-column prop="code" label="工单号" width=""></el-table-column>
-        <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="resourcename" label="站点名" width="120"></el-table-column>
-        <el-table-column prop="modelname" label="型号" width=""></el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        <el-table-column prop="code" label="工单号" width="200"></el-table-column>
+        <el-table-column prop="resourcescode" label="站点编码" width=""></el-table-column>
+        <el-table-column prop="resourcesname" label="站点名称" width="120"></el-table-column>
+        <el-table-column prop="begintime" label="开始发电时间" width=""></el-table-column>
+        <el-table-column prop="powertime" label="发电时长" width="90"></el-table-column>
+        <el-table-column prop="resourcename" label="审核状态" width="120"></el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>
           </template>

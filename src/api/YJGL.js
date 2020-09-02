@@ -72,7 +72,7 @@ export const GetSiteidAssistantInfo = `${reqURL}/YJGL/Assistant/GetSiteidAssista
 export const GetIdscope = `${reqURL}/YJGL/assistantstation/GetIdscope` // 根据协管员id获取管理范围
 
 // 协管员审核
-export const GetAssistantList = `${reqURL}/YJGL/assistantstation/Getassistantstation` // 协管员审核列表
+export const GetAssistantList = `${reqURL}/YJGL/Assistant/GetAssistant` // 后端协管员列表
 export const AuditApply = `${reqURL}/YJGL/assistantstation/AuditApply` // 协管员范围审核
 export const AuditApplyInfo = `${reqURL}/YJGL/assistantstation/AuditApplyInfo` // 审核详情
 

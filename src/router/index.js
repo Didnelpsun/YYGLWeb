@@ -80,6 +80,9 @@ import TaskAuitLog from 'components/main/SurveyManagement/TaskAuitLog' // 任务
 // 备件调度管理
 import Sparetype from 'components/main/SpareManagement/Sparetype' // 备件类型列表
 import SpareconModel from 'components/main/SpareManagement/SpareconModel' // 备件型号列表
+import SparepartsManufacturer from 'components/main/SpareManagement/SparepartsManufacturer' // 备件厂家列表
+import Warehouse from 'components/main/SpareManagement/SpareWarehouse' // 备件存放点
+import AfterSaleContract from 'components/main/SpareManagement/AfterSaleContract' // 售后合同
 Vue.use(Router)
 
 export default new Router({
@@ -201,6 +204,21 @@ export default new Router({
           path: 'SpareconModel',
           name: 'SpareconModel',
           component: SpareconModel
+        },
+        {// 备件类型列表
+          path: 'SparepartsManufacturer',
+          name: 'SparepartsManufacturer',
+          component: SparepartsManufacturer
+        },
+        {// 备件存放点
+          path: 'Warehouse',
+          name: 'Warehouse',
+          component: Warehouse
+        },
+        {// 售后合同
+          path: 'AfterSaleContract',
+          name: 'AfterSaleContract',
+          component: AfterSaleContract
         },
         {
           path: 'ZYResource',

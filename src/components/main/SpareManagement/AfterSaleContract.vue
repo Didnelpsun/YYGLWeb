@@ -2,16 +2,21 @@
   <div class="content">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query">
-        <el-row>
+        <el-row >
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparetypeid" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="厂家名称：">
+                <el-input v-model="Query.typename" placeholder="请填写厂家名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodel" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="厂家编码：">
+                <el-input v-model="Query.typename" placeholder="请填写厂家编码"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同编号：">
+                <el-input v-model="Query.typeencoding" placeholder="请填写合同编号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -38,10 +43,13 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-        <el-table-column prop="typename" label="备件类型"></el-table-column>
-        <el-table-column prop="manufacturersname" label="厂家编码"></el-table-column>
-        <el-table-column prop="remark" label="说明"></el-table-column>
+        <el-table-column prop="typename" label="厂家编号"></el-table-column>
+        <el-table-column prop="typeencoding" label="厂家编码 "></el-table-column>
+        <el-table-column prop="remark" label="合同编号"></el-table-column>
+        <el-table-column prop="typename" label="合同年度"></el-table-column>
+        <el-table-column prop="typeencoding" label="负责人 "></el-table-column>
+        <el-table-column prop="remark" label="开始时间"></el-table-column>
+        <el-table-column prop="remark" label="结束时间"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
         <el-table-column label="操作" width="140">
@@ -59,9 +67,9 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加备件型号' : WriteState === 1 ? '编辑备件型号' : '备件型号详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加售后合同' : WriteState === 1 ? '编辑售后合同' : '备件售后合同'"></layuiTitle>
 
-      <Details :WriteState="WriteState"
+      <Details :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
@@ -72,16 +80,18 @@
 <script>
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig} from 'api/BJGL'
-import Details from 'base/SpareManagement/SpareconModel'
+import { DictionaryInfoList} from 'api/api'
+import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import Details from 'base/SpareManagement/Sparetype'
 export default {
-  name: 'SpareconModel',
+  name: 'AfterSaleContract',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
-        sparetypeid: '',
-        sparemodel: ''
+        AreaList: [],
+        provinceid: 0,
+        cityid: 0
       },
       currentPage: 1,
       pageSize: 10,
@@ -91,20 +101,34 @@ export default {
       tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      WriteLoading: false
+      WriteLoading: false,
+      DicList: {Belongtype: []}
     }
   },
   activated () {
     this.getData1()
+    this.getDic()
   },
   methods: {
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
     },
+    getDic () {
+      let arr = ['备件类型']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.Belongtype = data.filter(i => { return i.type === '备件类型' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
-      this.Loading = true
-      this.$axios.get(GetSpareConfigList, {
+      /* this.Loading = true
+      this.$axios.get(null, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -113,20 +137,21 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      })
+      }) */
     },
     getMore (page) {
-      this.currentPage = page
+      /* this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(null, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
+        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      })
+      }) */
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -134,40 +159,39 @@ export default {
     },
     WriteClose () { this.showWrite = false },
     handleWrite (state, row) {
-      this.WriteState = state
-      this.showWrite = true
-      if (state) {
-        this.$refs.Details.Loading = true
-        this.$axios.get(GetSpareConfigIdList, {
-          params: {
-            Id: row.id
-          }
-        }).then(res => {
-          this.$refs.Details.Loading = false
-          this.$refs.Details.setWriteData(res.data)
-        }).catch(err => {
-          this.$refs.Details.Loading = false
-          console.log(err)
-        })
-      }
+      /*   this.WriteState = state
+       this.showWrite = true
+       if (state) {
+         this.$refs.Details.Loading = true
+         this.$axios.get(null, {
+           params: {
+             Id: row.id
+           }
+         }).then(res => {
+           this.$refs.Details.Loading = false
+           this.$refs.Details.setWriteData(res.data)
+         }).catch(err => {
+           this.$refs.Details.Loading = false
+           console.log(err)
+         })
+       } */
     },
     handle2 (row) {
-      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      /* this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareConfig, {
+        this.$axios.delete(null, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
-            this.getData1()
+            this.getMore(this.currentPage)
             this.$message.success('删除成功！')
           } else {
             this.$message.error(res.msg)
           }
         })
-      })
+      }) */
     }
-
   },
   components: {
     layuiTitle,

@@ -5,13 +5,20 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparetypeid" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="存放点类型：" label-width="100px">
+                <el-select v-model="Query.warehousetype">
+                  <el-option v-for="i in DicList.warehousetype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择存放点类型"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodel" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="存放点名称：">
+                <el-input v-model="Query.name" placeholder="请填写存放点名称"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="存放点编码：">
+                <el-input v-model="Query.code" placeholder="请填写存放点编码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -38,9 +45,10 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-        <el-table-column prop="typename" label="备件类型"></el-table-column>
-        <el-table-column prop="manufacturersname" label="厂家编码"></el-table-column>
+        <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
+        <el-table-column prop="name" label="存放点名称"></el-table-column>
+        <el-table-column prop="code" label="存放点编码"></el-table-column>
+        <el-table-column prop="administrators" label="负责人"></el-table-column>
         <el-table-column prop="remark" label="说明"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
@@ -59,9 +67,9 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加备件型号' : WriteState === 1 ? '编辑备件型号' : '备件型号详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加存放点' : WriteState === 1 ? '备件存放点' : '存放点详情'"></layuiTitle>
 
-      <Details :WriteState="WriteState"
+      <Details :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
@@ -72,16 +80,22 @@
 <script>
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig} from 'api/BJGL'
-import Details from 'base/SpareManagement/SpareconModel'
+import {DictionaryInfoList} from 'api/api'
+import {GetwarehouseList, GetwarehouseIdList, Deletewarehouse} from 'api/BJGL'
+import Details from 'base/SpareManagement/SpareWarehouse'
 export default {
-  name: 'SpareconModel',
+  name: 'SpareWarehouse',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
-        sparetypeid: '',
-        sparemodel: ''
+        AreaList: [],
+        provinceid: null,
+        cityid: null,
+        areaid: null,
+        code: null,
+        name: null,
+        warehousetype: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -91,20 +105,35 @@ export default {
       tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      WriteLoading: false
+      WriteLoading: false,
+      DicList: {warehousetype: [],
+        administratorid: [{id: 1, text: 'zhang'}, {id: 2, text: 'yang'}, {id: 3, text: 'li'}]}
     }
   },
   activated () {
     this.getData1()
+    this.getDic()
   },
   methods: {
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
     },
+    getDic () {
+      let arr = ['备件存放点类型']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetSpareConfigList, {
+      this.$axios.get(GetwarehouseList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -114,19 +143,24 @@ export default {
         this.tableData = res.data.list
         this.total = res.data.total
       })
+      this.tableData = [{name: 1}]
+      this.total = 1
     },
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetwarehouseList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
+        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
       })
+      /* this.tableData = [{name: 1}]
+      this.total = 1 */
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -138,7 +172,7 @@ export default {
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetSpareConfigIdList, {
+        this.$axios.get(GetwarehouseIdList, {
           params: {
             Id: row.id
           }
@@ -155,11 +189,11 @@ export default {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareConfig, {
+        this.$axios.delete(Deletewarehouse, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
-            this.getData1()
+            this.getMore(this.currentPage)
             this.$message.success('删除成功！')
           } else {
             this.$message.error(res.msg)

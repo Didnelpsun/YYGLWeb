@@ -7,7 +7,7 @@
           <colgroup>
             <col width="80"/>
             <col width="100"/>
-          <!--  <col width="50"/>-->
+            <!--  <col width="50"/>-->
             <col width="100"/>
           </colgroup>
           <thead>
@@ -27,65 +27,86 @@
             <colgroup>
               <col width="80"/>
               <col width="100"/>
-            <!--  <col width="50"/>-->
+              <!--  <col width="50"/>-->
               <col width="100"/>
             </colgroup>
             <tbody>
-           <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>城市</div></td>
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>存放点类型</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="warehousetype">
+                  <el-select v-model="WriteData.warehousetype">
+                    <el-option v-for="i in DicList.warehousetype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择存放点类型"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.warehousetypename}}</div></td>
+              <!-- <td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>区域</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>类型名称</div></td>
+              <td><div class="cell"><i class="must">*</i>仓库名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="typename">
-                  <el-input v-model="WriteData.typename"  placeholder="请填写类型名称" clearable></el-input>
+                  <el-input v-model="WriteData.name"  placeholder="请填写仓库名称" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typename}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.name}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>所属类型</div></td>
+              <td><div class="cell"><i class="must">*</i>仓库编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="belongtype">
-                  <el-select v-model="WriteData.belongtype">
-                    <el-option v-for="i in DicList.Belongtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择所属类型"></el-option>
-                  </el-select>
+                <el-form-item class="form-item" prop="code">
+                  <el-input v-model="WriteData.code"  placeholder="请填写仓库编码" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.belongtype}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.code}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>类型编码</div></td>
+              <td><div class="cell"><i class="must">*</i>仓库单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typeencoding">
-                  <el-input v-model="WriteData.typeencoding"  placeholder="请填写类型编码" clearable></el-input>
+                <el-form-item class="form-item" prop="orgid">
+                  <el-input v-model="WriteData.orgid"  placeholder="请填写仓库单位" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typeencoding}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.orgid}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">说明</div></td>
+              <td><div class="cell"><i class="must">*</i>仓库管理员</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.administratoridname}}</div>
+                <div v-if="WriteState !== 2" @click="manufactureridShow=true">
+                  <el-input v-model="administratoridname" readonly placeholder="请选择仓库管理员"></el-input>
+                </div></div>
+              </td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr  class="el-table__row">
+              <td><div class="cell">仓库管理员联系电话</div></td>
+              <div v-if="WriteState == 2">{{WriteData.phonenum}}</div>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写说明"></el-input>
+                <el-form-item class="form-item">
+                  <el-input  v-model="phonenum"  placeholder="请填写仓库管理员联系电话" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
-              <!-- <td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
+              <td><div class="cell"  v-if="WriteState == 2"></div>
+                <div class="cell" v-show="WriteState !== 2">按照顺序填写电话,多个电话使用逗号隔开</div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交时间</div></td>
@@ -109,15 +130,18 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <el-dialog top="1%" :visible.sync="manufactureridShow" title="选择仓库管理员" width="80%" :before-close="manufactureridClose">
+      <Details  @Chooseusr="Chooseusr"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
-import {AreaList} from 'api/api'
-import {EditSpareTyp, AddSpareTyp} from 'api/BJGL'
+import {Addwarehouse, Editwarehouse} from 'api/BJGL'
+import Details from 'base/SpareManagement/selSpareWarehouse'
 export default {
-  name: 'Sparetype',
+  name: 'SpareWarehouse',
   mixins: [GlobalRes],
   props: {
     WriteState: {
@@ -132,85 +156,92 @@ export default {
     }
   },
   data () {
-    var _this = this
     return {
-      cityareaProps: {
-        lazy: true,
-        label: 'name',
-        value: 'id',
-        lazyLoad (node, resolve) {
-          if (!node.level) {
-            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
-              if (res.error) {
-                _this.$message.error(res.errorMessage)
-              } else {
-                resolve(_this._normalizeCityAreaLevel(res.data))
-              }
-            })
-          } else {
-            if (!node.hasChildren) return resolve([])
-            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
-              if (res.error) {
-                _this.$message.error(res.errorMessage)
-              } else {
-                resolve(_this._normalizeCityAreaLevel(res.data))
-              }
-            })
-          }
-        }
-      },
+      administratoridname: '',
+      manufactureridShow: false,
       isShow: false,
       Loading: false,
+      phonenum: null,
+      administratorid: null,
+      phone: [],
       WriteData: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0,
+        provinceid: null,
+        cityid: null,
+        areaid: null,
         id: null,
         cityname: '',
-        typename: null,
-        belongtype: null,
-        typeencoding: '',
         remark: '',
         realityname: '',
-        createtime: null
+        createtime: null,
+        warehousetype: null,
+        warehousetypename: null,
+        name: ' ',
+        code: '',
+        orgid: null,
+        administrators: [
+
+        ]
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
-        typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
-        typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
+        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
+        warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'blur' }],
+        name: [{ required: true, message: '请填入仓库名称', trigger: 'change' }],
+        code: [{ required: true, message: '请填入仓库编码', trigger: 'change' }],
+        orgid: [{ required: true, message: '请填入仓库单位', trigger: 'change' }],
+        administratorname: [{ required: true, message: '请选择仓库管理员', trigger: 'blur' }]
       }
     }
   },
 
   methods: {
-    changecityArea (obj) {
-      // console.log(obj)
-      obj.provinceid = obj.AreaList[0]
-      obj.cityid = obj.AreaList[1]
+    Chooseusr (arr) {
+      this.manufactureridShow = false
+      var users = []
+      var administrators = []
+      arr.forEach(function (item, index) {
+        users[index] = item.realityname
+        administrators.push({administratorid: item.id})
+      })
+      this.administratoridname = users.join(',')
+      this.WriteData.administrators = administrators
+      users = null
+      administrators = null
+    /*  this.WriteData.manufacturerid = id
+      this.WriteData.manufacturersname = name */
     },
-    setArea (list, key = 'csArea') {
-      this.nodes = list
-      this.$refs[key].panel.activePath = []
-      this.$refs[key].panel.loadCount = 0
-      this.$refs[key].panel.lazyLoad()
-    },
+    manufactureridClose () { this.manufactureridShow = !this.manufactureridShow },
+    /* changenum (i, value) {
+      console.log(i)
+      console.log(value)
+    }, */
     _normalizeCityAreaLevel (list) {
       for (let i in list) {
-        if (list[i].leveltype >= 2) list[i].leaf = true
+        if (list[i].leveltype >= 3) list[i].leaf = true
       }
       return list
     },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
+      this.administratoridname = null
+      this.phone = null
     },
     setWriteData (data) {
       this.WriteData = data
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
+      this.WriteData.AreaList = [data.provinceid, data.cityid, data.areaid]
       this.setArea(this.WriteData.AreaList, 'csArea')
       if (parseInt(this.WriteState) === 2) {
-        this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'
+        switch (parseInt(this.WriteData.warehousetype)) {
+          case 1:this.WriteData.warehousetypename = '市公司备件库'
+            break
+          case 2:this.WriteData.warehousetypename = '市公司维修库库'
+            break
+          case 3:this.WriteData.warehousetypename = '市公司报废库'
+            break
+          case 4:this.WriteData.warehousetypename = '工作备件库'
+            break
+        }
       }
     },
     WriteClose () {
@@ -219,6 +250,13 @@ export default {
       this.$emit('fatherClose')
     },
     SubWrite () {
+      var reg = /,+/
+      this.phone = this.phonenum.split(reg)
+      for (var i in this.WriteData.administrators) {
+        if (this.phone[i]) {
+          this.WriteData.administrators[i].phonenum = this.phone[i]
+        }
+      }
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
     },
@@ -230,7 +268,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddSpareTyp, this.WriteData).then(res => {
+          this.$axios.post(Addwarehouse, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -248,7 +286,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditSpareTyp, this.WriteData).then(res => {
+          this.$axios.put(Editwarehouse, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -259,6 +297,9 @@ export default {
         }
       })
     }
+  },
+  components: {
+    Details
   }
 }
 </script>

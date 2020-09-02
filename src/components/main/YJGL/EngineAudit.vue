@@ -55,8 +55,8 @@
         <el-table-column prop="fueltypename" label="燃油类型" width=""></el-table-column>
         <el-table-column prop="enginestatename" label="油机状态" width=""></el-table-column>
         <el-table-column prop="applicanttype" label="申请类型" width="75" :formatter="applicanttypeFormat"></el-table-column>
-        <el-table-column prop="modulecode" label="标签" width=""></el-table-column>
-        <el-table-column prop="swver" label="采集器" width=""></el-table-column>
+        <el-table-column prop="modulecode" label="标签编码" width=""></el-table-column>
+        <el-table-column prop="swver" label="采集器ID" width=""></el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>

@@ -34,43 +34,32 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>城市</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                <el-form-item  class="form-item">
+                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea" clearable></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>厂家</div></td>
+              <td><div class="cell"><i class="must">*</i>厂家名称</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.manufacturersname}}</div>
-                <div v-if="WriteState !== 2" @click="manufactureridShow=true">
-                  <el-input v-model="WriteData.manufacturersname" readonly placeholder="请选择厂家"></el-input>
+                <div v-if="WriteState == 2">{{WriteData.name}}</div>
+                <div v-if="WriteState !== 2">
+                  <el-input v-model="WriteData.name"  placeholder="请填入厂家名称"></el-input>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>备件类型</div></td>
-              <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.typename}}</div>
-                <div v-if="WriteState !== 2" @click="sparetypeidShow=true">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择备件类型"></el-input>
-                </div></div>
-              </td>
-              <!-- <td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>备件型号</div></td>
+              <td><div class="cell"><i class="must">*</i>厂家编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="sparemodel">
-                  <el-input v-model="WriteData.sparemodel"  placeholder="请填写备件型号" clearable></el-input>
+                <el-form-item class="form-item" prop="code">
+                  <el-input v-model="WriteData.code" placeholder="请填入厂家编码"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.sparemodel}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.code}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
@@ -107,23 +96,16 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
-    <el-dialog top="1%" :visible.sync="sparetypeidShow" title="选择备件类型" width="80%" :before-close="sparetypeidClose">
-      <Selsparetypeid :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selsparetypeid="Selsparetypeid"/>
-    </el-dialog>
-    <el-dialog top="1%" :visible.sync="manufactureridShow" title="选择厂家" width="80%" :before-close="manufactureridClose">
-      <Selmanufacturerid :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selmanufacturerid="Selmanufacturerid"/>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
-import {EditSpareConfig, AddSpareConfig} from 'api/BJGL'
-import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
-import Selmanufacturerid from 'base/SpareManagement/Selmanufacturerid'
+import {Editsparepartsmanufacturer, Addsparepartsmanufacturer} from 'api/BJGL'
+
 export default {
-  name: 'SpareconModel',
+  name: 'SparepartsManufacturer',
   mixins: [GlobalRes],
   props: {
     WriteState: {
@@ -161,27 +143,23 @@ export default {
       },
       isShow: false,
       Loading: false,
-      manufactureridShow: false,
-      sparetypeidShow: false,
       WriteData: {
         AreaList: [],
         provinceid: 0,
         cityid: 0,
         id: null,
         cityname: '',
-        sparetypeid: '',
-        manufacturerid: '',
-        sparemodel: '',
+        code: '',
+        name: '',
         remark: '',
         realityname: '',
         createtime: null,
-        manufacturersname: '',
-        typename: ''
+        manufacturername: ''
       },
       Rules: {
         AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
-        manufacturerid: [{ required: true, message: '请选择厂家id', trigger: 'blur' }],
-        sparetypeid: [{ required: true, message: '请选择备件类型', trigger: 'blur' }],
+        name: [{ required: true, message: '请填入厂家名称', trigger: 'change' }],
+        sparetypeid: [{ required: true, message: '请填入厂家编码', trigger: 'change' }],
         sparemodel: [{ required: true, message: '请填入备件型号', trigger: 'change' }]
       }
     }
@@ -204,18 +182,6 @@ export default {
       }
       return list
     },
-    Selsparetypeid (name, id) {
-      this.sparetypeidShow = false
-      this.WriteData.sparetypeid = id
-      this.WriteData.typename = name
-    },
-    Selmanufacturerid (name, id) {
-      this.manufactureridShow = false
-      this.WriteData.manufacturerid = id
-      this.WriteData.manufacturersname = name
-    },
-    sparetypeidClose () { this.sparetypeidShow = !this.sparetypeidShow },
-    manufactureridClose () { this.manufactureridShow = !this.manufactureridShow },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
@@ -242,7 +208,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddSpareConfig, this.WriteData).then(res => {
+          this.$axios.post(Addsparepartsmanufacturer, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -261,7 +227,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditSpareConfig, this.WriteData).then(res => {
+          this.$axios.put(Editsparepartsmanufacturer, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -272,10 +238,6 @@ export default {
         }
       })
     }
-  },
-  components: {
-    Selsparetypeid,
-    Selmanufacturerid
   }
 }
 </script>

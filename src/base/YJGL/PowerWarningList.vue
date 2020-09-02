@@ -106,7 +106,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--协管员ID-->
-              <tr class="el-table__row">
+             <!-- <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>协管员名称</div></td>
                 <td>
                   <div class="cell">
@@ -117,9 +117,8 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
 
               <!--告警时间-->
               <tr class="el-table__row" v-if="WriteState == 2">
@@ -157,14 +156,14 @@
     <el-dialog top="1%" :visible.sync="courtShow" title="选择台区名称" width="80%" :before-close="CourthandleClose">
       <CourtsPicker @selectCourts="selectCourts" ref="court"/>
     </el-dialog>
-    <el-dialog top="1%" :visible.sync="assistantShow" title="选择协管员名称" width="80%" :before-close="AssistanthandleClose">
+    <!--<el-dialog top="1%" :visible.sync="assistantShow" title="选择协管员名称" width="80%" :before-close="AssistanthandleClose">
       <AssistantPicker @selectAssistant="selectAssistant" ref="assistant"/>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
-import { AddPowerwarning, EditPowerwarning } from 'api/YJGL'
+import { AddPowerwarning, EditPowerwarning, JobInfo } from 'api/YJGL'
 import CourtsPicker from 'base/YJGL/CourtsPicker'
 import AssistantPicker from 'base/YJGL/AssistantPicker'
 import {GlobalRes} from 'common/js/mixins'
@@ -230,12 +229,12 @@ export default{
         this.$refs.court.getMore(1)
       }
     },
-    assistantOpen () {
+    /* assistantOpen () {
       this.assistantShow = true
       if (this.$refs.assistant) {
         this.$refs.assistant.getMore(1)
       }
-    },
+    }, */
     selectCourts (id, name) {
       this.courtShow = false
       this.tableData.courtsid = id
