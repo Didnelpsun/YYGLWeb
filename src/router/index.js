@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from 'components/login' // 登录界面
 import Main from 'components/main' // 主界面模块
 import Mixin from 'components/mixin' // 测试控件页面
+import notFound from 'components/notFound' // 404页面
 
 // 首页
 import index from 'components/main/index/index' // 首页
@@ -41,7 +42,8 @@ import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduc
 
 
 // 维护管理
-import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患危险
+import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患台账
+import Maintain from 'components/main/Uphold/Maintain' // 上站维护台账
 
 // 油机调度
 import TaskList from 'components/main/YJGL/TaskList' // 任务列表
@@ -97,12 +99,6 @@ export default new Router({
       component: login
     },
     {
-      // 错误路由返回到之前状态
-      path: '*',
-      name: '404',
-      redirect: '/login'
-    },
-    {
       path: '/main',
       name: 'Main',
       component: Main,
@@ -110,6 +106,11 @@ export default new Router({
         keepAlive: true
       },
       children: [
+        {
+          name: '404',
+          path: 'notFound',
+          component: notFound
+        },
         { // 测试控件
           path: 'Mixin',
           name: 'mixin',
@@ -364,6 +365,11 @@ export default new Router({
           path: 'HiddenDanger',
           name: 'HiddenDanger',
           component: HiddenDanger
+        },
+        {
+          path: 'Maintain',
+          name: 'Maintain',
+          component: Maintain
         },
         {
           path: 'ImportTemplate',

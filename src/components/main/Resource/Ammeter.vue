@@ -67,7 +67,7 @@
         <el-table-column prop="statename" label="电表状态" width=""></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
         <el-table-column prop="electricmeterno" label="电表编号" width=""></el-table-column>
-        <el-table-column prop="powersupplymode" label="供电方式" width=""></el-table-column>
+        <el-table-column prop="powersupplymodename" label="供电方式" width=""></el-table-column>
         <el-table-column prop="powersupplytheowner" label="供电业主" width=""></el-table-column>
         <el-table-column prop="theownerphone" label="供电联系方式" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
@@ -89,7 +89,7 @@
 
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState === 0 ? '添加电表' : WriteState === 1 ? '修改电表' : '电表详情'"></layuiTitle>
-      <AmmeterDetail :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+      <AmmeterDetail v-loading="Loading" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
                      @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></AmmeterDetail>
     </div>
 
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {DictionaryInfoList, BatteryGeneratorList, DelEquipment, BatteryGeneratorInfo} from 'api/api'
+import {DictionaryInfoList, GetElectricMeterList, DelEquipment, GetElectricMeterInfo} from 'api/api'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
@@ -152,10 +152,10 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['移动上站供电方式', '设备状态']
+      let arr = ['电表供电方式', '设备状态']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '移动上站供电方式' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
           this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
         } else {
           this.$message.error(res.msg)
@@ -166,7 +166,7 @@ export default {
     },
     getTable1 () {
       this.Loading = true
-      this.$axios.get(BatteryGeneratorList, {
+      this.$axios.get(GetElectricMeterList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -186,7 +186,7 @@ export default {
     getMore1 (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(BatteryGeneratorList, {
+      this.$axios.get(GetElectricMeterList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -209,7 +209,7 @@ export default {
       this.showWrite = true
       if (state !== 0) {
         this.Loading = true
-        this.$axios.get(BatteryGeneratorInfo, {
+        this.$axios.get(GetElectricMeterInfo, {
           params: {id: row.id}
         }).then(res => {
           this.Loading = false

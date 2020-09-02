@@ -259,7 +259,6 @@ export default {
     },
     // 处理编辑函数
     handleWrite (state, row) {
-      this.$refs.Details.WriteLoading = true
       if (this.$data.tableData !== null || this.$data.tableData !== undefined) {
         // this.$data.tableData = {}
         Object.assign(this.$data.tableData, this.$options.data().tableData)
@@ -268,11 +267,14 @@ export default {
       this.WriteState = state
       if (state === 0) this.showWrite = true
       if (state) {
+        this.showWrite = true
+        this.$refs.Details.WriteLoading = true
         this.$axios.get(GetBatteryInfo, {
           params: {
             id: row.id
           }
         }).then(res => {
+          this.$refs.Details.WriteLoading = false
           if (res.error !== true) {
             this.showWrite = true
             try {
@@ -284,7 +286,6 @@ export default {
           } else { this.$message.error('查询详情失败') }
         })
       }
-      this.$refs.Details.WriteLoading = false
     },
     handleDelete (row) {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {

@@ -44,6 +44,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -1142,6 +1143,13 @@ export default {
         if (list[i].leveltype >= 3) list[i].leaf = true
       }
       return list
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+
+      })
     }
   },
   computed: {

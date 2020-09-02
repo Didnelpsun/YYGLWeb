@@ -58,6 +58,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">新增</el-button>-->
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -265,6 +266,7 @@ export default {
       // this.tableData = {}
       // console.log(this.tableData)
       if (state) {
+        this.showWrite = true
         this.$refs.Details.WriteLoading = true
         this.$axios.get(GetSwitchCabinetInfo, {
           params: {
@@ -273,7 +275,6 @@ export default {
         }).then(res => {
           this.$refs.Details.WriteLoading = false
           if (res.error !== true) {
-            this.showWrite = true
             try {
               this.tableData = res.data
               this.$refs.Details.setWriteData(this.tableData)
@@ -307,6 +308,13 @@ export default {
         })
       })
       // console.log(this.pagination)
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+
+      })
     }
   },
   components: {

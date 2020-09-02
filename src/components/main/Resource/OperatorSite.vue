@@ -265,11 +265,6 @@ export default {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
       }).then(() => {
-        this.$axios.get('http://192.168.0.131:5000/KCGL/Project/GetKCProjectExcel?id=1111').then(res => {
-          console.log(res)
-          let f = new FileReader(res)
-          console.log(f)
-        }).catch(e => { console.log(e) })
         // let myObj = {
         //   method: 'get',
         //   url: null,

@@ -79,9 +79,7 @@ export default {
         }
       }).then(res => {
         if (res.errorCode === '200') {
-          if (res.data.list[0]) {
-            this.TemplateLink = reqURL + '/' + res.data.list[0].url
-          }
+          this.TemplateLink = reqURL + '/' + res.data.list[0].url
         } else {
           this.$message.error(res.msg)
         }

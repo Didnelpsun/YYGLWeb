@@ -54,10 +54,10 @@
         <el-table-column prop="areaname" label="区域"></el-table-column>
         <el-table-column prop="resourcename" label="站点名称"></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码"></el-table-column>
-        <el-table-column prop="hiddendangertype" label="隐患类型"></el-table-column>
-        <el-table-column prop="hiddendangerlevel" label="隐患级别"></el-table-column>
-        <el-table-column prop="hiddendangerdescribe" label="隐患描述" width=""></el-table-column>
-        <el-table-column prop="handlingsuggestions" label="处理建议" width=""></el-table-column>
+        <el-table-column prop="hiddendangertypename" label="隐患类型"></el-table-column>
+        <el-table-column prop="maintainproject" label="维护项目"></el-table-column>
+        <el-table-column prop="describe" label="问题描述" width=""></el-table-column>
+        <el-table-column prop="treatment" label="处理情况" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column label="操作" width="50">
@@ -144,7 +144,7 @@
                 <tr class="el-table__row">
                   <td><div class="cell">隐患类型</div></td>
                   <td><div class="cell">
-                    <div v-show="WriteState == 2">{{WriteData.hiddendangertype}}</div>
+                    <div v-show="WriteState == 2">{{WriteData.hiddendangertypename}}</div>
                     <div v-show="WriteState !== 2">
                       <el-input v-model="WriteData.hiddendangertype"></el-input>
                     </div></div>
@@ -153,41 +153,41 @@
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--隐患级别-->
+                <!--维护项目-->
                 <tr class="el-table__row">
-                  <td><div class="cell">隐患级别</div></td>
+                  <td><div class="cell">维护项目</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="hiddendangerlevel">
-                      <el-input v-model="WriteData.hiddendangerlevel"></el-input>
+                    <el-form-item class="form-item" prop="maintainproject">
+                      <el-input v-model="WriteData.maintainproject"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerlevel}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.maintainproject}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--隐患描述-->
+                <!--问题描述-->
                 <tr class="el-table__row">
-                  <td><div class="cell">隐患描述</div></td>
+                  <td><div class="cell">问题描述</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="hiddendangerdescribe">
-                      <el-input v-model="WriteData.hiddendangerdescribe"></el-input>
+                    <el-form-item class="form-item" prop="describe">
+                      <el-input v-model="WriteData.describe"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerdescribe}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.describe}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--处理建议-->
+                <!--处理情况-->
                 <tr class="el-table__row">
-                  <td><div class="cell">处理建议</div></td>
+                  <td><div class="cell">处理情况</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="handlingsuggestions">
-                      <el-input v-model="WriteData.handlingsuggestions"></el-input>
+                    <el-form-item class="form-item" prop="treatment">
+                      <el-input v-model="WriteData.treatment"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.handlingsuggestions}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.treatment}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
@@ -225,12 +225,12 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetHiddenDangerList, GetHiddenDangerInfo} from 'api/SurveyManagement'
+import {GetMaintainList, GetMaintainInfo} from 'api/SurveyManagement'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 
 export default {
-  name: 'HiddenDanger',
+  name: 'Maintain',
   mixins: [GlobalRes],
   data () {
     return {
@@ -253,10 +253,10 @@ export default {
       WriteData: {
         resourcename: '',
         resourcecode: '',
-        hiddendangertype: '',
-        hiddendangerlevel: '',
-        hiddendangerdescribe: '',
-        handlingsuggestions: '',
+        hiddendangertypename: '',
+        maintainproject: '',
+        describe: '',
+        treatment: '',
         createtime: '',
         create: ''
       },
@@ -279,7 +279,7 @@ export default {
     },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetHiddenDangerList, {
+      this.$axios.get(GetMaintainList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -294,7 +294,7 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetHiddenDangerList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetMaintainList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -324,7 +324,7 @@ export default {
       this.showWrite = true
       if (state) {
         this.Loading = true
-        this.$axios.get(GetHiddenDangerInfo, {
+        this.$axios.get(GetMaintainInfo, {
           params: {
             Id: row.id
           }

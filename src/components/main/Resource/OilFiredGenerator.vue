@@ -255,6 +255,7 @@ export default {
       // this.tableData = {}
       // console.log(this.tableData)
       if (state) {
+        this.showWrite = true
         this.$refs.Details.WriteLoading = true
         this.$axios.get(GetOilFiredGeneratorInfo, {
           params: {
@@ -263,7 +264,6 @@ export default {
         }).then(res => {
           this.$refs.Details.WriteLoading = false
           if (res.error !== true) {
-            this.showWrite = true
             try {
               this.tableData = res.data
               this.$refs.Details.setWriteData(this.tableData)

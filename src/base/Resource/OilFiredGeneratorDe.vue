@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="WriteLoading">
+  <div>
       <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
         <!--表头-->
         <div class="el-table__header-wrapper">

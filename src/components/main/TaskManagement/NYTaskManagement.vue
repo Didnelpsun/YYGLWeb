@@ -53,6 +53,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <el-button @click="handleAdd" type="success" icon="el-icon-plus">添加</el-button>
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -797,19 +798,56 @@ export default {
           if (!this.deviceList.length) {
             this.deviceList.push(...res.data)
           } else {
-            this.deviceList.forEach((i) => {
-              res.data.forEach((k) => {
-                console.log(k.resource_id)
-                console.log(i.resource_id)
-                if (i.resource_id.indexOf(k.resource_id) !== -1) {
-                  console.log(333)
-                  i.equipment_id = i.equipment_id.concat(k.equipment_id)
+            // let arr = []
+            /* for (let i = 0; i < this.deviceList.length; i++) {
+              let obj = res.data.find(k => k.resource_id === this.deviceList[i].resource_id)
+              if (obj) {
+                console.log(obj)
+                this.deviceList[i].equipment_id = this.deviceList[i].equipment_id.concat(obj.equipment_id)
+                break
+              } else {
+                console.log(33)
+                // arr = arr.concat(res.data)
+                this.deviceList = this.deviceList.concat(res.data)
+                break
+              }
+            } */
+
+            for (let i = 0; i < this.deviceList.length; i++) {
+              let obj = res.data.find(k => {
+                let path = this.deviceList.find(j => k.resource_id === j.resource_id)
+                if (path) {
+                  console.log(path)
+                  return k.resource_id === path.resource_id
                 } else {
-                  console.log(123)
-                  this.deviceList.push(k)
+                  return undefined
                 }
               })
-            })
+              if (obj) {
+                console.log(obj)
+                this.deviceList[i].equipment_id = this.deviceList[i].equipment_id.concat(obj.equipment_id)
+                break
+              } else {
+                console.log(33)
+                // arr = arr.concat(res.data)
+                this.deviceList = this.deviceList.concat(res.data)
+                break
+              }
+            }
+
+            /* console.log(arr)
+            let hash = {}
+            const data2 = arr.reduce((preVal, curVal) => {
+              hash[curVal.resource_id] ? '' : hash[curVal.resource_id] = true && preVal.push(curVal)
+              return preVal
+            }, [])
+            console.log(data2)
+            this.deviceList = this.deviceList.concat(data2)
+            let temp = {}
+            this.deviceList = this.deviceList.reduce((preVal, curVal) => {
+              temp[curVal.resource_id] ? '' : temp[curVal.resource_id] = true && preVal.push(curVal)
+              return preVal
+            }, []) */
           }
         }
       })
@@ -1569,6 +1607,13 @@ export default {
       if (latitude) {
         this.WriteData.latitude = latitude
       } */
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+
+      })
     }
   },
   watch: {

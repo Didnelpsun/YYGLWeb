@@ -85,7 +85,7 @@
 
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState === 0 ? '添加电池发电装置' : WriteState === 1 ? '修改电池发电装置' : '电池发电装置详情'"></layuiTitle>
-      <BatteryDetail :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+      <BatteryDetail v-loading="Loading" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
                      @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></BatteryDetail>
     </div>
 

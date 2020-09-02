@@ -10,19 +10,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="站点名称：">
-                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="电缆厂家：">
-                <el-select class="searchSelect" v-model="Query.manufactor">
-                  <el-option label="请选择" :value="null"></el-option>
-                  <el-option v-for="i in DicList.manufactor" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="创建时间：">
                 <el-date-picker class="tableSelect" v-model="Query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
                 </el-date-picker>
@@ -32,6 +19,11 @@
               <el-form-item label="至：">
                 <el-date-picker class="tableSelect" v-model="Query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
                 </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -59,8 +51,7 @@
         </el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="externalpackingname" label="外电是否报装" width=""></el-table-column>
-        <el-table-column prop="manufactor" label="电缆厂家" width=""></el-table-column>
+        <el-table-column prop="externalpacking" label="外电是否报装" width="" :formatter="formatState"></el-table-column>
         <el-table-column prop="poleline" label="有无杆路" width=""></el-table-column>
         <el-table-column prop="polelinenumber" label="杆路数量" width=""></el-table-column>
         <el-table-column prop="polelineheight" label="杆路高度(米)" width=""></el-table-column>
@@ -84,7 +75,7 @@
 
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState === 0 ? '添加外电引入' : WriteState === 1 ? '修改外电引入' : '外电引入详情'"></layuiTitle>
-      <Detail :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+      <Detail v-loading="Loading" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
                      @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></Detail>
     </div>
 
@@ -93,8 +84,7 @@
 </template>
 
 <script>
-import {DictionaryInfoList, BatteryGeneratorList, DelEquipment, BatteryGeneratorInfo} from 'api/api'
-import {formatDate} from 'common/js/cache'
+import {GetElectricIntroducedInfo, DelEquipment, GetElectricIntroducedList} from 'api/api'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
@@ -111,7 +101,6 @@ export default {
         cityid: 0,
         areaid: 0,
         resourcename: '',
-        manufactor: null,
         starttime: '',
         endtime: ''
       },
@@ -144,7 +133,7 @@ export default {
     },
     getTable1 () {
       this.Loading = true
-      this.$axios.get(BatteryGeneratorList, {
+      this.$axios.get(GetElectricIntroducedList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -164,7 +153,7 @@ export default {
     getMore1 (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(BatteryGeneratorList, {
+      this.$axios.get(GetElectricIntroducedList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -181,13 +170,13 @@ export default {
         this.$message.error(err)
       })
     },
-    formatAccessDate (row) { return formatDate(row.accessdate) },
+    formatState (row) { return row.externalpacking ? '是' : '否' },
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
       if (state !== 0) {
         this.Loading = true
-        this.$axios.get(BatteryGeneratorInfo, {
+        this.$axios.get(GetElectricIntroducedInfo, {
           params: {id: row.id}
         }).then(res => {
           this.Loading = false

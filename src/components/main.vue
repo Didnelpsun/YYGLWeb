@@ -6,11 +6,11 @@
       <div class="main">
         <tabs :data="MenuList" :currentMenu="currentMenu" @changeCurrent="changeCurrent"></tabs>
         <div class="router-container">
-          <!-- <el-scrollbar class="scrollbar"> -->
+          <el-scrollbar class="scrollbar">
             <keep-alive>
               <router-view @RefreshNav="getUserNavBar" @handleChange="handleChange"></router-view>
             </keep-alive>
-          <!-- </el-scrollbar> -->
+          </el-scrollbar>
         </div>
       </div>
     </div>

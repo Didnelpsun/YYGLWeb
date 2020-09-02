@@ -1,6 +1,5 @@
-// export let reqURL = 'http://111.47.173.162:8051'// 线上接口
-// export let reqURL = 'http://192.168.0.131:5000'
-export const reqURL = 'http://192.168.0.50:8081' // 阮
+export let reqURL = 'http://111.47.173.162:8051'// 线上接口
+// export const reqURL = 'http://192.163.0.162:8051' // 阮
 // export const reqURL = 'http://192.163.0.162:8051' // 赵
 // export const reqURL = 'http://localhost:5000'// 本地接口
 
@@ -168,6 +167,14 @@ export const AddBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/AddBatteryGe
 export const EditBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/EditBatteryGenerator` // 修改电池发电装置
 export const BatteryGeneratorInfo = `${reqURL}/ZYGL/BatteryGenerator/GetBatteryGeneratorInfo` // 获取电池发电装置详情
 export const BatteryGeneratorList = `${reqURL}/ZYGL/BatteryGenerator/GetBatteryGeneratorList` // 获取电池发电装置列表
+
+// 外电引入
+export const GetElectricIntroducedInfo = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedInfo` // 获取外电引入详情
+export const GetElectricIntroducedList = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedList` // 获取外电引入列表
+
+// 电表
+export const GetElectricMeterInfo = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterInfo` // 获取电表详情
+export const GetElectricMeterList = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterList` // 获取电表列表
 
 // FuelGenerator 燃油发电机
 export const AddOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/AddOilFiredGenerator` // 新增电池发电装置

@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-```powershell
+``` bash
 # install dependencies
 npm install
 

@@ -60,8 +60,6 @@
           <div class="fr" style="margin-top: 0">
             <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
             <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
-            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
-            <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
           </div>
         </el-col>
       </el-row>
@@ -109,7 +107,6 @@
 <script>
 import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog, ImportBBUExcel} from 'api/YJGL'
 import {GetOperatorSiteInfo} from 'api/api'
-import Import from 'base/Import'
 import {GlobalRes} from 'common/js/mixins'
 import Details from 'base/YJGL/TaskList'
 import Import from 'base/Import'
@@ -152,11 +149,6 @@ export default {
   activated () {
     this.getMore(1)
     this.$refs.ImportBox.searchName = '油机调度任务工单导入'
-    this.$refs.ImportBox.GetTemplateInfo()
-  },
-  activated () {
-    this.getMore(1)
-    this.$refs.ImportBox.searchName = '油机任务模板'
     this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
@@ -325,11 +317,6 @@ export default {
     closeWrite () {
       this.getMore(1)
       this.showWrite = false
-    },
-    showImport () {
-      this.$refs.ImportBox.Open()
-      this.$refs.ImportBox.uploadURL = ImportBBUExcel
-      this.$refs.ImportBox.fileName = '油机任务数据'
     }
   },
   components: {

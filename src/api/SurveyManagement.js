@@ -50,9 +50,6 @@ export const UpdateMaintain = `${reqURL}/ZYGL/Maintain/UpdateMaintain` // 修改
 export const AddMaintain = `${reqURL}/ZYGL/Maintain/AddMaintain` // 添加上站维护
 export const GetTaskState = `${reqURL}/ZYGL/Task/GetTaskState` // 查看任务状态
 
-// export const AddReservepover = `${reqURL}`
-// export const AddChargingPileTaskEquipment = `${reqURL}`
-
 // 勘察项目管理
 export const GetProjectList = `${reqURL}/KCGL/Project/GetProjectList` // 获取项目列表
 export const AddProject = `${reqURL}/KCGL/Project/AddProject` // 新增项目

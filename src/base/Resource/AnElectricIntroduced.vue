@@ -71,7 +71,7 @@
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.externalpackingname}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.externalpacking ? '是' : '否'}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -87,7 +87,7 @@
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.poleline}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.poleline ? '有' : '无'}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
