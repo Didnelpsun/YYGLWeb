@@ -54,6 +54,7 @@
             <el-col :offset="2" :span="18" class="fr">
               <div class="fr">
                 <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">新增</el-button>-->
+                <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
               </div>
             </el-col>
           </el-row>
@@ -100,7 +101,8 @@
 
 <script>
 import layuiTitle from 'base/layui-title'
-import { GetBatteryList, GetBatteryInfo, DictionaryInfoList, DelEquipment } from 'api/api'
+import { GetBatteryList, GetBatteryInfo, DictionaryInfoList, DelEquipment, GetBatteryExcel } from 'api/api'
+import {exportMethod} from 'api/YDSZ'
 import { GlobalRes } from 'common/js/mixins'
 import ImgBox from '../../../base/ImgBox'
 import Details from 'base/Resource/BatteryDe'
@@ -305,6 +307,19 @@ export default {
         })
       })
       // console.log(this.pagination)
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'get',
+          url: GetBatteryExcel,
+          fileName: '换电电池',
+          data: this.Query
+        }
+        exportMethod(myObj)
+      })
     }
   },
   components: {

@@ -33,7 +33,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="任务状态：">
-                <el-select class="searchSelect" v-model="Query.state">
+                <el-select class="searchSelect" v-model="Query.states">
                   <el-option v-for="i in DicList.states" :key="i.value" :label="i.text" :value="i.value"></el-option>
                 </el-select>
               </el-form-item>
@@ -507,7 +507,6 @@ export default {
         name: '',
         code: '',
         classify: null,
-        state: null,
         starttime: '',
         endtime: ''
       },
@@ -794,63 +793,47 @@ export default {
         if (res.errorCode !== '200') {
           this.$message.error(res.msg)
         } else {
-          // this.deviceList.push(...res.data)
           if (!this.deviceList.length) {
             this.deviceList.push(...res.data)
           } else {
-            // let arr = []
-            /* for (let i = 0; i < this.deviceList.length; i++) {
-              let obj = res.data.find(k => k.resource_id === this.deviceList[i].resource_id)
-              if (obj) {
-                console.log(obj)
-                this.deviceList[i].equipment_id = this.deviceList[i].equipment_id.concat(obj.equipment_id)
-                break
-              } else {
-                console.log(33)
-                // arr = arr.concat(res.data)
-                this.deviceList = this.deviceList.concat(res.data)
-                break
-              }
-            } */
-
-            for (let i = 0; i < this.deviceList.length; i++) {
-              let obj = res.data.find(k => {
-                let path = this.deviceList.find(j => k.resource_id === j.resource_id)
-                if (path) {
-                  console.log(path)
-                  return k.resource_id === path.resource_id
-                } else {
-                  return undefined
-                }
-              })
-              if (obj) {
-                console.log(obj)
-                this.deviceList[i].equipment_id = this.deviceList[i].equipment_id.concat(obj.equipment_id)
-                break
-              } else {
-                console.log(33)
-                // arr = arr.concat(res.data)
-                this.deviceList = this.deviceList.concat(res.data)
-                break
-              }
-            }
-
-            /* console.log(arr)
-            let hash = {}
-            const data2 = arr.reduce((preVal, curVal) => {
-              hash[curVal.resource_id] ? '' : hash[curVal.resource_id] = true && preVal.push(curVal)
-              return preVal
-            }, [])
-            console.log(data2)
-            this.deviceList = this.deviceList.concat(data2)
-            let temp = {}
-            this.deviceList = this.deviceList.reduce((preVal, curVal) => {
-              temp[curVal.resource_id] ? '' : temp[curVal.resource_id] = true && preVal.push(curVal)
-              return preVal
-            }, []) */
+            const newList = this.concat(this.deviceList, res.data, {
+              equipment_id: (v1, v2) => v1 ? [...v1, ...v2] : [],
+              name: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
+              code: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
+              classifyname: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
+              cityname: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
+              areaname: (v1, v2) => v1 ? v1 : v2 ? v2 : ''
+            })
+            this.deviceList = newList
           }
         }
       })
+    },
+    concat (arr1, arr2, merger = {}) {
+      const uniq = arr => [...new Set(arr)]
+      const keys = [...arr1, ...arr2].map(it => it.resource_id)
+
+      return uniq(keys).reduce((pre, key) => {
+        const a1 = arr1.filter(it => it.resource_id === key)
+        const a2 = arr2.filter(it => it.resource_id === key)
+
+        const item = Object.keys(merger)
+          .reduce((pre, key) => ({
+            ...pre,
+            // 用外部传入的合并函数合并两个入参数组的累加值
+            [key]: merger[key](
+              // 第一个合并函数用于合并reduce传入的上次循环返回值与当次循环的值
+              // 第二个合并函数用于获取reduce的默认值
+              a1.reduce((p, i) => merger[key](p, i[key]), merger[key]()),
+              a2.reduce((p, i) => merger[key](p, i[key]), merger[key]())
+            )
+          }), {})
+
+        return [...pre, {
+          resource_id: key,
+          ...item
+        }]
+      }, [])
     },
     changeKey (row, rowList) {
       if (rowList.length) {

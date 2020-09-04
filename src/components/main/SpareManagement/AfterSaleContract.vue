@@ -67,22 +67,23 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加售后合同' : WriteState === 1 ? '编辑售后合同' : '备件售后合同'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加售后合同' : WriteState === 1 ? '编辑售后合同' : '售后合同详情'"></layuiTitle>
 
-      <Details :WriteState="WriteState" :DicList="DicList"
+      <Details :WriteState="WriteState" :DicList="DicList" @fatherOpenImgBox="OpenImgBox"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <ImgBox ref="ImgBox"></ImgBox>
   </div>
 </template>
 
 <script>
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import { DictionaryInfoList} from 'api/api'
+import {DictionaryInfoList} from 'api/api'
+import ImgBox from '../../../base/ImgBox'
 import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
-import Details from 'base/SpareManagement/Sparetype'
+import Details from 'base/SpareManagement/AfterSaleContract'
 export default {
   name: 'AfterSaleContract',
   mixins: [GlobalRes],
@@ -110,6 +111,11 @@ export default {
     this.getDic()
   },
   methods: {
+    OpenImgBox (title, name, list) {
+      this.$refs.ImgBox.SetData(title, name, list)
+      this.$refs.ImgBox.Open()
+      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
@@ -138,6 +144,8 @@ export default {
         this.tableData = res.data.list
         this.total = res.data.total
       }) */
+      this.tableData = [{cityname: '武汉'}]
+      this.total = 1
     },
     getMore (page) {
       /* this.currentPage = page
@@ -159,22 +167,26 @@ export default {
     },
     WriteClose () { this.showWrite = false },
     handleWrite (state, row) {
-      /*   this.WriteState = state
-       this.showWrite = true
-       if (state) {
-         this.$refs.Details.Loading = true
-         this.$axios.get(null, {
-           params: {
-             Id: row.id
-           }
-         }).then(res => {
-           this.$refs.Details.Loading = false
-           this.$refs.Details.setWriteData(res.data)
-         }).catch(err => {
-           this.$refs.Details.Loading = false
-           console.log(err)
-         })
-       } */
+      this.WriteState = state
+      this.showWrite = true
+      if (state) {
+        this.$refs.Details.Loading = false
+        this.$refs.Details.setWriteData({realityname: 'sjw'})
+      }
+      /*     if (state) {
+        this.$refs.Details.Loading = true
+        this.$axios.get(null, {
+          params: {
+            Id: row.id
+          }
+        }).then(res => {
+          this.$refs.Details.Loading = false
+          this.$refs.Details.setWriteData(res.data)
+        }).catch(err => {
+          this.$refs.Details.Loading = false
+          console.log(err)
+        })
+      } */
     },
     handle2 (row) {
       /* this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
@@ -195,7 +207,8 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    ImgBox
   }
 }
 </script>

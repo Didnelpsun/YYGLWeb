@@ -21,9 +21,11 @@
         <el-table-column prop="planpowertime" label="计划结束停电时间" width="150"></el-table-column>
         <el-table-column prop="alarmtime" label="告警时间" width=""></el-table-column>
         <el-table-column prop="sendsingletime" label="派单时间" width=""></el-table-column>
+        <el-table-column prop="name" label="协管员" width=""></el-table-column>
+        <el-table-column prop="" label="是否有固定油机" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机编号" width=""></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="120" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleDetails( scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>

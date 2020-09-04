@@ -85,6 +85,7 @@ import SpareconModel from 'components/main/SpareManagement/SpareconModel' // 备
 import SparepartsManufacturer from 'components/main/SpareManagement/SparepartsManufacturer' // 备件厂家列表
 import Warehouse from 'components/main/SpareManagement/SpareWarehouse' // 备件存放点
 import AfterSaleContract from 'components/main/SpareManagement/AfterSaleContract' // 售后合同
+import MaintenanceItems from 'components/main/SpareManagement/MaintenanceItems' // 维修厂家
 Vue.use(Router)
 
 export default new Router({
@@ -220,6 +221,11 @@ export default new Router({
           path: 'AfterSaleContract',
           name: 'AfterSaleContract',
           component: AfterSaleContract
+        },
+        {// 维修厂家
+          path: 'MaintenanceItems',
+          name: 'MaintenanceItems',
+          component: MaintenanceItems
         },
         {
           path: 'ZYResource',

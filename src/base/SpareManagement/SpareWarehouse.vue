@@ -91,7 +91,7 @@
               <td><div class="cell"><i class="must">*</i>仓库管理员</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.administratoridname}}</div>
-                <div v-if="WriteState !== 2" @click="manufactureridShow=true">
+                <div v-if="WriteState !== 2" @click="administratorShow=true">
                   <el-input v-model="administratoridname" readonly placeholder="请选择仓库管理员"></el-input>
                 </div></div>
               </td>
@@ -130,7 +130,7 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
-    <el-dialog top="1%" :visible.sync="manufactureridShow" title="选择仓库管理员" width="80%" :before-close="manufactureridClose">
+    <el-dialog top="1%" :visible.sync="administratorShow" title="选择仓库管理员" width="80%" :before-close="administratorClose">
       <Details  @Chooseusr="Chooseusr"/>
     </el-dialog>
   </div>
@@ -158,7 +158,7 @@ export default {
   data () {
     return {
       administratoridname: '',
-      manufactureridShow: false,
+      administratorShow: false,
       isShow: false,
       Loading: false,
       phonenum: null,
@@ -196,7 +196,7 @@ export default {
 
   methods: {
     Chooseusr (arr) {
-      this.manufactureridShow = false
+      this.administratorShow = false
       var users = []
       var administrators = []
       arr.forEach(function (item, index) {
@@ -210,7 +210,7 @@ export default {
     /*  this.WriteData.manufacturerid = id
       this.WriteData.manufacturersname = name */
     },
-    manufactureridClose () { this.manufactureridShow = !this.manufactureridShow },
+    administratorClose () { this.administratorShow = !this.administratorShow },
     /* changenum (i, value) {
       console.log(i)
       console.log(value)

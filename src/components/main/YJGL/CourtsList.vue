@@ -172,7 +172,6 @@ export default {
     },
     // 处理编辑函数
     handleWrite (state, row) {
-      this.id = row.id
       this.$refs.Details.WriteLoading = true
       if (this.tableData) {
         // this.$data.tableData = {}
@@ -180,8 +179,8 @@ export default {
       }
       // console.log(this.tableData)
       this.WriteState = state
-      if (state === 0) this.showWrite = true
-      else {
+      if (state === 0) { this.showWrite = true } else {
+        this.id = row.id
         this.$axios.get(GetIdCourtsInfo, {
           params: {
             id: row.id

@@ -327,54 +327,36 @@
               </tr>
               <!--经度-->
               <tr class="el-table__row">
-                <td>
-                  <div class="cell"><i class="must">*</i>经度</div>
-                </td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.longitude}}</div>
-                    <el-form-item
-                      label-width="0"
-                      prop="longitude"
-                      class="form-item"
-                      v-show="WriteState !== 2"
-                    >
-                      <el-input v-model="tableData.longitude" placeholder="请填入经度"></el-input>
-                    </el-form-item>
-                  </div>
+                <td><div class="cell"><i class="must">*</i>经度</div></td>
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                  <el-form-item label-width="0" class="form-item" prop="longitude">
+                    <el-input v-model="tableData.longitude" readonly style="width: 80%"></el-input>
+                    <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
+                  </el-form-item>
+                </div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)">
+                  <div class="cell location"><span>{{tableData.longitude}}</span><i class="el-icon-location icon_location"></i></div>
                 </td>
                 <td @click="OpenImgBox('longitude')">
                   <div class="cell">{{this.longitudeImgList.length}}</div>
                 </td>
-                <!-- <td>
-                  <div class="cell"></div>
-                </td> -->
-                <td class="eel-table_8_column_64">
-                  <div class="cell"></div>
-                </td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
               </tr>
               <!--纬度-->
               <tr class="el-table__row">
-                <td>
-                  <div class="cell"><i class="must">*</i>纬度</div>
+                <td><div class="cell"><i class="must">*</i>纬度</div></td>
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                  <el-form-item label-width="0" class="form-item" prop="latitude">
+                    <el-input v-model="tableData.latitude" readonly style="width: 80%"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)">
+                  <div class="cell">{{tableData.latitude}}</div>
                 </td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.latitude}}</div>
-                    <el-form-item label-width="0" prop="latitude" class="form-item" v-show="WriteState !== 2">
-                      <el-input v-model="tableData.latitude" placeholder="请填入纬度"></el-input>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td>
-                  <div class="cell"></div>
-                </td>
-                <!-- <td>
-                  <div class="cell"></div>
-                </td> -->
-                <td>
-                  <div class="cell"></div>
-                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
               </tr>
               <!--产权单位-->
               <tr class="el-table__row">
@@ -838,11 +820,13 @@
         <ResourceList @selectResource="selectResource" />
       </el-dialog>
     </div>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import ResourceList from 'base/Resource/ResourceList'
+import GoogleMap from 'base/GoogleMap'
 import { UpdateSwitchCabinet, AddSwitchCabinet } from 'api/api'
 import { isValidLongitude, isValidLatitude } from 'common/js/validata'
 import { GlobalRes } from 'common/js/mixins'
@@ -865,6 +849,7 @@ export default {
   data () {
     return {
       isShow: false,
+      showMap: false,
       // 图片列表
       longitudeImgList: [],
       manufacturerImgList: [],
@@ -947,11 +932,11 @@ export default {
           { required: true, message: '请选择是否有雨棚', trigger: 'change' }
         ],
         longitude: [
-          {required: true, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'change'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: true, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'change'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
         number: [
@@ -1124,6 +1109,24 @@ export default {
     },
     DetailhandleClose () {
       this.isShow = !this.isShow
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.tableData.longitude
+        this.$refs.GoogleMap.latitude = this.tableData.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.tableData.longitude = longitude
+      }
+      if (latitude) {
+        this.tableData.latitude = latitude
+      }
     }
   },
   computed: {
@@ -1137,7 +1140,8 @@ export default {
     }
   },
   components: {
-    ResourceList
+    ResourceList,
+    GoogleMap
   }
 }
 </script>

@@ -13,6 +13,7 @@ export const TaskEquipment = `${reqURL}/ZYGL/Task/TaskEquipment` // 添加任务
 export const GetEquipmentInfoList = `${reqURL}/ZYGL/Task/GetEquipmentInfoList` // 根据设备ID获取设备详情
 export const GetEnergyResourecEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetEnergyResourecEquipmentList` // 获取当前站点可添加的设备
 
+
 // 任务设备
 export const GetChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/GetChargingPileTaskEquipment` // 获取充电桩任务设备详情
 export const EditChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/EditChargingPileTaskEquipment` // 修改充电桩任务设备
@@ -44,10 +45,12 @@ export const GetHiddenDangerList = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerL
 export const GetHiddenDangerInfo = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerInfo` // 获取隐患详情
 export const UpdateHiddenDanger = `${reqURL}/ZYGL/HiddenDanger/UpdateHiddenDanger` // 修改隐患详情
 export const AddHiddenDanger = `${reqURL}/ZYGL/HiddenDanger/AddHiddenDanger` // 添加隐患
+export const GetHiddenDangerExcel = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerExcel` // 隐患台账导出
 export const GetMaintainList = `${reqURL}/ZYGL/Maintain/GetMaintainList` // 获取上站维护列表
 export const GetMaintainInfo = `${reqURL}/ZYGL/Maintain/GetMaintainInfo` // 获取上站维护详情
 export const UpdateMaintain = `${reqURL}/ZYGL/Maintain/UpdateMaintain` // 修改上站维护详情
 export const AddMaintain = `${reqURL}/ZYGL/Maintain/AddMaintain` // 添加上站维护
+export const GetMaintainExcel = `${reqURL}/ZYGL/Maintain/GetMaintainExcel` // 上站维护导出
 export const GetTaskState = `${reqURL}/ZYGL/Task/GetTaskState` // 查看任务状态
 
 // 勘察项目管理

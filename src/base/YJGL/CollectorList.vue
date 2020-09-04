@@ -95,27 +95,12 @@
               </tr>-->
               <!--设备软件版本号-->
               <tr class="el-table__row">
-              <td><div class="cell">采集器id</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.swver}}</div>
-                  <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
-                    <el-input v-model="tableData.swver" placeholder="请填入采集器id"></el-input>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-              </tr>
-              <!--生产厂家-->
-              <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>生产厂家</div></td>
+                <td><div class="cell">采集器ID</div></td>
                 <td>
                   <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.faccode}}</div>
-                    <el-form-item label-width="0" prop="faccode" class="form-item" v-show="WriteState !== 2">
-                      <el-input v-model="tableData.faccode" placeholder="请填入生产厂家"></el-input>
+                    <div v-show="WriteState == 2">{{tableData.swver}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-input v-model="tableData.swver" placeholder="请填入采集器ID"></el-input>
                     </el-form-item>
                   </div>
                 </td>
@@ -123,52 +108,215 @@
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
+              <!--通信状态-->
+              <tr class="el-table__row" v-show="WriteState !== 0">
+                <td><div class="cell">通信状态</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.type}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-input v-model="tableData.type" placeholder="请输入通信状态"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--手机卡号-->
+              <tr class="el-table__row">
+                <td><div class="cell">手机卡号</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.cardnumber}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-input v-model="tableData.cardnumber" placeholder="请输入手机卡号"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--IMSI-->
+              <tr class="el-table__row">
+                <td><div class="cell">IMSI</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.imsi}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-input v-model="tableData.imsi" placeholder="请输入IMSI"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--IMEI-->
+              <tr class="el-table__row">
+                <td><div class="cell">IMEI</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.imei}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-input v-model="tableData.imei" placeholder="请输入IMEI"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--手机卡号-->
+              <tr class="el-table__row">
+                <td><div class="cell">生产厂家</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.faccode}}</div>
+                    <el-form-item label-width="0" prop="manufactor" class="form-item" v-show="WriteState == 0">
+                      <el-input v-model="tableData.faccode" placeholder="请输入生产厂家"></el-input>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">保修时间</div></td>
+                <td>
+                  <div class="cell">
+                    <div v-show="WriteState == 2">{{tableData.warranty}}</div>
+                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                      <el-date-picker v-model="tableData.warranty" class="tableSelect" type="datetime" format="yyyy-MM-dd HH:mm:ss"   value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择保修时间"></el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--生产厂家-->
+              <!-- <tr class="el-table__row">
+               <td><div class="cell"><i class="must">*</i>生产厂家</div></td>
+                 <td>
+                   <div class="cell">
+                     <div v-show="WriteState == 2">{{tableData.faccode}}</div>
+                     <el-form-item label-width="0" prop="faccode" class="form-item" v-show="WriteState !== 2">
+                       <el-input v-model="tableData.faccode" placeholder="请填入生产厂家"></el-input>
+                     </el-form-item>
+                   </div>
+                 </td>
+                 <td><div class="cell"></div></td>
+                 <td><div class="cell"></div></td>
+               </tr>-->
+              <!--注册时间-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">注册时间</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.creatortime}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--注册人-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">注册人</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.creatorname}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--标签id-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">标签id</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.modulecode}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
               <!--油机编号-->
-              <tr class="el-table__row" v-if="WriteState === 2&&tableData.machinenumber">
+              <tr class="el-table__row" v-if="WriteState === 2">
                 <td><div class="cell">油机编号</div></td>
                 <td>
                   <div class="cell">
-                  <div>{{tableData.machinenumber}}</div>
+                    <div>{{tableData.machinenumber}}</div>
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
               <!--油机缸号-->
-              <tr class="el-table__row" v-if="WriteState === 2&&tableData.machinebatchno">
+              <tr class="el-table__row" v-if="WriteState === 2">
                 <td><div class="cell">油机缸号</div></td>
                 <td>
                   <div class="cell">
-                  <div>{{tableData.machinebatchno}}</div>
+                    <div>{{tableData.machinebatchno}}</div>
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
-              <!--燃油类型-->
-              <tr class="el-table__row" v-if="WriteState === 2&&tableData.fueltype">
-                <td><div class="cell">燃油类型</div></td>
+              <!--油机区域-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">油机区域</div></td>
                 <td>
                   <div class="cell">
-                  <div>{{tableData.fueltype}}</div>
+                    <div>{{tableData.areaname}}</div>
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
               <!--油机状态-->
-              <tr class="el-table__row" v-if="WriteState === 2&&tableData.enginestate">
-                <td><div class="cell">油机状态</div></td>
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">油机代维单位</div></td>
                 <td>
                   <div class="cell">
-                  <div>{{tableData.enginestate}}</div>
+                    <div>{{tableData.unit}}</div>
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--绑定时间-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">绑定时间</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.applytime}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--油机状态-->
+              <tr class="el-table__row" v-if="WriteState === 2">
+                <td><div class="cell">绑定人</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.applicantname}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
             </tbody>
@@ -180,17 +328,20 @@
       <el-button @click="handleData" type="primary" v-if="WriteState!==2" :disabled="WriteLoading" :icon="WriteLoading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
     </div>
-    <el-dialog top="1%" :visible.sync="isShow" title="选择设备ID" width="80%" :before-close="DetailhandleClose">
+   <!-- <el-dialog top="1%" :visible.sync="isShow" title="选择设备ID" width="80%" :before-close="DetailhandleClose">
       <RectifierModulePicker @selectEquipment="selectEquipment" ref="rectifier"/>
-    </el-dialog>
+    </el-dialog>-->
+    <!--<el-dialog top="1%" :visible.sync="isShow" title="选择采集器ID" width="80%" :before-close="DetailhandleClose">
+    <CollectorPicker @selectCollector="selectCollector" ref="rectifier"/>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
 import { Addcollector, Editcollector } from 'api/YJGL'
+import CollectorPicker from 'base/YJGL/CollectorPicker'
 import RectifierModulePicker from 'base/YJGL/RectifierModulePicker'
 import {GlobalRes} from 'common/js/mixins'
-
 export default{
   name: 'CollectorList',
   mixins: [GlobalRes],
@@ -198,7 +349,8 @@ export default{
     WriteState: {
       type: Number,
       default: 0 // 0为添加 1为编辑 2为查看
-    }
+    },
+    showIsbinding: ''
   },
   data () {
     return {
@@ -213,10 +365,16 @@ export default{
         provinceid: '', // 省份id
         cityid: '', // 城市id
         areaid: '',
+        type: '', // 通信状态
+        cardnumber: '', // 手机卡号
+        imsi: '',
+        imei: '',
+        warranty: null,
         equipmentid: '', // 设备id
         equipmentname: '',
-        swver: '', // 设备软件版本号
-        faccode: '', // 厂家编码
+        swver: '', // 采集器
+        collectorid: '',
+        faccode: '', // 厂家
         machinenumber: '', // 油机编号
         machinebatchno: '', // 油机缸号
         fueltype: '', // 燃油类型
@@ -232,15 +390,6 @@ export default{
       Rules: {
         areaid: [
           { required: true, message: '请选择区域', trigger: 'blur' }
-        ],
-        equipmentid: [
-          { required: true, message: '请选择设备id', trigger: 'blur' }
-        ],
-        swver: [
-          { required: true, message: '请选择设备软件版本号', trigger: 'blur' }
-        ],
-        faccode: [
-          { required: true, message: '请选择厂家编码', trigger: 'blur' }
         ]
       }
     }
@@ -332,17 +481,23 @@ export default{
       this.tableArea.AreaList.splice(0, this.tableArea.AreaList.length)
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
-    },
+    }/*,
     selectEquipment (id) {
       this.isShow = false
       this.tableData.equipmentid = id
     },
+    selectCollector (id, swver) {
+      this.isShow = false
+      this.tableData.collectorid = id
+      this.tableData.swver = swver
+    },
     DetailhandleClose () {
       this.isShow = !this.isShow
-    }
+    } */
   },
   components: {
-    RectifierModulePicker
+    RectifierModulePicker,
+    CollectorPicker
   }
 }
 </script>

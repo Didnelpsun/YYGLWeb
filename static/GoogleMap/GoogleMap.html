@@ -130,6 +130,7 @@
       function initialize() {
         if (map == undefined || map == null) {
           window.addEventListener('message',function(e){
+            console.log(e.data)
             if(e.data.longitude){
               map_longitude = e.data.longitude
             }else{

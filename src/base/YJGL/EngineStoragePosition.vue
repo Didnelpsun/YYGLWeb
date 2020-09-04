@@ -60,7 +60,7 @@
                     </div>
                   </div>
                 </td>
-                <td><div class="cell"></div></td>
+                <td  @click="OpenImgBox(1)"><div class="cell"> {{ImgList1.length}}</div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
@@ -133,7 +133,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--存放位置-->
-              <tr class="el-table__row">
+              <!--<tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>存放位置</div></td>
                 <td>
                   <div class="cell">
@@ -144,9 +144,8 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-                <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--提交人-->
               <tr class="el-table__row" v-if="WriteState === 2">
                 <td><div class="cell">提交人</div></td>
@@ -210,6 +209,7 @@ export default{
       siteShow: false,
       engineShow: false,
       WriteLoading: false,
+      ImgList1: [],
       // 新增表格相关属性
       tableData: {
         provinceid: '',
@@ -223,7 +223,8 @@ export default{
         machinenumber: '',
         storageplacetype: '',
         placeinfo: '',
-        issubmit: false
+        issubmit: false,
+        imglist: []
       },
       tableArea: {
         AreaList: []
@@ -248,9 +249,9 @@ export default{
         storageplacetype: [
           { required: true, message: '请选择存放位置类型', trigger: 'blur' }
         ],
-        placeinfo: [
+        /* placeinfo: [
           { required: true, message: '请填入存放位置', trigger: 'blur' }
-        ],
+        ], */
         longitude: [
           { required: true, message: '获取经度失败', trigger: 'blur' }
         ],
@@ -265,6 +266,7 @@ export default{
     setWriteData (data) {
       // this.tableData = Object.assign({}, this.tableData, data)
       this.tableData = data
+      this.setImgList(data.imglist)
       // for (let i = 0; i < this.tableData.resource.length; i++) {
       //   if (this.tableData.resource[i]['resourcescode']) {
       //     if (this.tableData.resource[i]['type'] === 1) {
@@ -276,6 +278,18 @@ export default{
       //     }
       //   }
       // }
+    },
+    setImgList (list) {
+      if (list === null) return
+      this.ImgList1 = list.filter(i => {
+        return i.field_name === 'stationname'
+      })
+    },
+    OpenImgBox (val) {
+      if (val === 1) this.$emit('fatherOpenImgBox', '站点名称', 'stationname', this.ImgList1)
+    },
+    validImgList () {
+      if (!this.ImgList1.length) return this.$message.warning('站点名称图片必须上传')
     },
     siteOpen () {
       this.siteShow = true
@@ -332,6 +346,7 @@ export default{
                 this.$message.success('提交审核成功！')
               } else { this.$message.success('添加成功！') }
               this.$emit('fatheretMore')
+              this.ResetWrite()
               this.closeWrite()
             } else { this.$message.warning(res.msg) }
           } catch (e) {
@@ -361,6 +376,7 @@ export default{
                 this.$message.success('提交审核成功！')
               } else { this.$message.success('修改成功！') }
               this.$emit('fatheretMore')
+              this.ResetWrite()
               this.closeWrite()
             } else { this.$message.warning(res.msg) }
           } catch (e) {
@@ -375,7 +391,13 @@ export default{
       Object.assign(this.$data.tableData, this.$options.data().tableData)
       // this.$nextTick(() => { this.$refs.tableForm.resetFields() })
       // this.showWrite = !this.showWrite
+      this.ResetWrite()
       this.$emit('fatherClose')
+    },
+    ResetWrite () {
+      // Object.assign(this.$data.WriteData, this.$options.data().WriteData)
+      this.ImgList1 = []
+      this.$refs.tableForm.resetFields()
     },
     SitehandleClose () {
       this.siteShow = !this.siteShow
@@ -402,6 +424,16 @@ export default{
   updated () {
     if (!this.WriteState) {
       this.getPostion()
+    }
+  },
+  computed: {
+    ImgList () {
+      return this.ImgList1
+    }
+  },
+  watch: {
+    ImgList (val) {
+      this.tableData.imglist = val
     }
   },
   components: {

@@ -41,10 +41,17 @@
         <el-table-column prop="resourcesname" label="站点名称" width="120"></el-table-column>
         <el-table-column prop="begintime" label="开始发电时间" width=""></el-table-column>
         <el-table-column prop="powertime" label="发电时长" width="90"></el-table-column>
+      <!--  <el-table-column prop="" label="是否自动监控" width="75"></el-table-column>
+        <el-table-column prop="" label="监控开始发电时长" width="200"></el-table-column>
+        <el-table-column prop="" label="监控发电时长" width=""></el-table-column>
+        <el-table-column prop="" label="代维公司" width="120"></el-table-column>
+        <el-table-column prop="" label="工作站" width=""></el-table-column>
+        <el-table-column prop="" label="网格" width="90"></el-table-column>
+        <el-table-column prop="" label="维护员" width="90"></el-table-column>-->
         <el-table-column prop="resourcename" label="审核状态" width="120"></el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="操作" width="50" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>
+            <el-button type="text" size="mini" @click="Audit(scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +86,7 @@ export default {
         ],
         code: '',
         resourcesname: ''
+
       },
       queryOption: [],
       // 加载

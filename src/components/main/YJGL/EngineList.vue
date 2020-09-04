@@ -74,6 +74,7 @@
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!ifarchivedState">编辑</el-button>
             <el-button type="text" size="mini" @click="handleUnbundling(scope.row)">解绑</el-button>
+            <el-button type="text" size="mini" @click="handleWrite(3,scope.row)">绑定</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!ifarchivedState">删除</el-button>
           </template>
         </el-table-column>
@@ -274,6 +275,14 @@ export default {
             this.showWrite = true
             try {
               this.tableData = res.data
+              if (state === 3) {
+                this.tableData.swver = null
+                this.tableData.modulecode = null
+                this.tableData.collectorid = null
+                this.tableData.collectorid = null
+                this.tableData.tagid = null
+                this.tableData.imglist = null
+              }
               this.$refs.Details.setWriteData(this.tableData)
             } catch (e) {
               console.log(e)
@@ -291,8 +300,7 @@ export default {
       }
       // console.log(this.tableData)
       this.WriteState = state
-      if (state === 0) this.showWrite = true
-      else {
+      if (state === 0) { this.showWrite = true } else {
         this.setData(state, row.id)
       }
       this.$refs.Details.WriteLoading = false

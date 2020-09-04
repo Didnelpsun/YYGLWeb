@@ -102,8 +102,9 @@
 
 <script>
 import layuiTitle from 'base/layui-title'
-import { GetSwitchCabinetList, GetSwitchCabinetInfo, DictionaryInfoList, DelEquipment } from 'api/api'
+import { GetSwitchCabinetList, GetSwitchCabinetInfo, DictionaryInfoList, DelEquipment, GetSwitchCabinetExcel } from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
+import {exportMethod} from 'api/YDSZ'
 import ImgBox from '../../../base/ImgBox'
 import Details from 'base/Resource/SwitchCabinetListDe'
 
@@ -313,7 +314,13 @@ export default {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
       }).then(() => {
-
+        let myObj = {
+          method: 'get',
+          url: GetSwitchCabinetExcel,
+          fileName: '换电柜',
+          data: this.Query
+        }
+        exportMethod(myObj)
       })
     }
   },

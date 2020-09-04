@@ -51,6 +51,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">新增</el-button>-->
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -95,7 +96,8 @@
 
 <script>
 import layuiTitle from 'base/layui-title'
-import { GetOilFiredGeneratorList, GetOilFiredGeneratorInfo, DictionaryInfoList, DelEquipment } from 'api/api'
+import { GetOilFiredGeneratorList, GetOilFiredGeneratorInfo, DictionaryInfoList, DelEquipment, GetOilFiredGeneratorExcel } from 'api/api'
+import {exportMethod} from 'api/YDSZ'
 import { GlobalRes } from 'common/js/mixins'
 import ImgBox from '../../../base/ImgBox'
 import Details from 'base/Resource/OilFiredGeneratorDe'
@@ -297,6 +299,19 @@ export default {
         })
       })
       // console.log(this.pagination)
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'get',
+          url: GetOilFiredGeneratorExcel,
+          fileName: '燃油发电机',
+          data: this.Query
+        }
+        exportMethod(myObj)
+      })
     }
   },
   components: {

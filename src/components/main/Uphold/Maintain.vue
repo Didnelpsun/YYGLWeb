@@ -76,7 +76,7 @@
     </div>
 
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加隐患' : WriteState === 1 ? '隐患电桩' : '隐患详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加上站维护' : WriteState === 1 ? '编辑上站维护' : '上站维护详情'"></layuiTitle>
 
       <!--<Details :WriteState="WriteState" :DicList="DicList" @fatherOpenImgBox="OpenImgBox"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>-->
@@ -225,7 +225,8 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetMaintainList, GetMaintainInfo} from 'api/SurveyManagement'
+import {GetMaintainList, GetMaintainInfo, GetMaintainExcel} from 'api/SurveyManagement'
+import {exportMethod} from 'api/YDSZ'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 
@@ -345,7 +346,13 @@ export default {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
       }).then(() => {
-
+        let myObj = {
+          method: 'get',
+          url: GetMaintainExcel,
+          fileName: '上站维护台账',
+          data: this.Query
+        }
+        exportMethod(myObj)
       })
     }
   },

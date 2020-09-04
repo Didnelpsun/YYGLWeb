@@ -54,6 +54,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -98,7 +99,8 @@
 </template>
 
 <script>
-import {DictionaryInfoList, GetElectricMeterList, DelEquipment, GetElectricMeterInfo} from 'api/api'
+import {DictionaryInfoList, GetElectricMeterList, DelEquipment, GetElectricMeterInfo, GetAmmeterExcel} from 'api/api'
+import {exportMethod} from 'api/YDSZ'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
@@ -251,6 +253,19 @@ export default {
     changeSize1 (page) {
       this.pageSize = page
       this.getMore1(this.currentPage)
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'get',
+          url: GetAmmeterExcel,
+          fileName: '电表',
+          data: this.Query
+        }
+        exportMethod(myObj)
+      })
     }
   },
   components: {AmmeterDetail, layuiTitle, ImgBox}

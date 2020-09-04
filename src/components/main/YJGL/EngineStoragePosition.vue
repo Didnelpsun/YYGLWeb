@@ -37,8 +37,9 @@
     </div>
 
     <div v-show="showWrite">
-      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+      <Details :WriteState="WriteState" @fatherClose="closeWrite"  @fatherOpenImgBox="OpenImgBox" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
+    <ImgBox ref="ImgBox"></ImgBox>
   </div>
 </template>
 
@@ -46,6 +47,7 @@
 import { EnginestoragepositionInfo, EnginestoragepositionList, DeteleEnginestorageposition, MachineUnbundling } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/EngineStoragePosition'
+import ImgBox from 'base/ImgBox'
 
 export default {
   name: 'EngineStoragePosition',
@@ -77,6 +79,11 @@ export default {
   created () {
   },
   methods: {
+    OpenImgBox (title, name, list) {
+      this.$refs.ImgBox.SetData(title, name, list)
+      this.$refs.ImgBox.Open()
+      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
+    },
     getMore (e) {
       this.Loading = true
       this.pagination.currentPage = e
@@ -187,7 +194,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    ImgBox
   }
 }
 </script>

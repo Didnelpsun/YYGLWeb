@@ -71,9 +71,9 @@
       </div>
     </div>
     <div v-show="showWrite">
-      <Details @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+      <Details @fatherClose="closeWrite" @fatherOpenImgBox="OpenImgBox" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
-
+    <ImgBox ref="ImgBox"></ImgBox>
   </div>
 </template>
 
@@ -81,6 +81,7 @@
 import { MachineauditList, MachineauditInfo } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/EngineAudit'
+import ImgBox from 'base/ImgBox'
 
 export default {
   name: 'Battery',
@@ -117,6 +118,11 @@ export default {
     this.getMore(1)
   },
   methods: {
+    OpenImgBox (title, name, list) {
+      this.$refs.ImgBox.SetData(title, name, list)
+      this.$refs.ImgBox.Open()
+      this.$refs.ImgBox.Flag = true
+    },
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
       this.Loading = true
@@ -207,7 +213,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    ImgBox
   }
 }
 </script>

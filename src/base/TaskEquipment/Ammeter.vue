@@ -216,12 +216,15 @@
             <!--经度-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>经度</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                 <el-form-item class="form-item" prop="longitude">
-                  <el-input v-model="WriteData.longitude" @mousewheel.native.prevent type="number"></el-input>
+                  <el-input v-model="WriteData.longitude" readonly style="width: 80%"></el-input>
+                  <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.longitude}}</div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell location"><span>{{WriteData.longitude}}</span><i class="el-icon-location icon_location"></i></div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -229,12 +232,14 @@
             <!--纬度-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>纬度</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                 <el-form-item class="form-item" prop="latitude">
-                  <el-input v-model="WriteData.latitude" @mousewheel.native.prevent type="number"></el-input>
+                  <el-input v-model="WriteData.latitude" readonly style="width: 80%"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.latitude}}</div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell">{{WriteData.latitude}}</div>
+              </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -263,11 +268,13 @@
       <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import {DictionaryInfoList} from 'api/api'
+import GoogleMap from 'base/GoogleMap'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {GetTaskElectricMeterInfo, AddTaskElectricMeter, UpdateTaskElectricMeter} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
@@ -288,6 +295,7 @@ export default {
   },
   data () {
     return {
+      showMap: false,
       Loading: false,
       ImgList1: [],
       ImgList2: [],
@@ -347,11 +355,11 @@ export default {
           { required: true, message: '请输入安装位置', trigger: 'blur' }
         ],
         longitude: [
-          {required: true, message: '请填写经度', trigger: 'blur'},
+          {required: true, message: '请填写经度', trigger: 'change'},
           {pattern: isValidLongitude, message: '请输入正确的经度', trigger: 'blur'}
         ],
         latitude: [
-          {required: true, message: '请填写纬度', trigger: 'blur'},
+          {required: true, message: '请填写纬度', trigger: 'change'},
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ]
       },
@@ -392,6 +400,8 @@ export default {
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
+      this.ImgList2 = []
+      this.ImgList3 = []
       this.$refs.WriteForm.clearValidate()
     },
     formatDate (str) { return formatDate(str) },
@@ -478,6 +488,24 @@ export default {
       this.ImgList1 = list.filter(i => { return i.field_name === 'manufacturer' })
       this.ImgList2 = list.filter(i => { return i.field_name === 'models' })
       this.ImgList3 = list.filter(i => { return i.field_name === 'electricmeterno' })
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.WriteData.longitude
+        this.$refs.GoogleMap.latitude = this.WriteData.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.WriteData.longitude = longitude
+      }
+      if (latitude) {
+        this.WriteData.latitude = latitude
+      }
     }
   },
   computed: {
@@ -489,7 +517,8 @@ export default {
     ImgList (val) {
       this.WriteData.imglist = val
     }
-  }
+  },
+  components: {GoogleMap}
 }
 </script>
 

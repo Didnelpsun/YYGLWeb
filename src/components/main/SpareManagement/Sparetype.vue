@@ -2,7 +2,7 @@
   <div class="content">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query">
-        <el-row>
+        <el-row >
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="区域：" label-width="80px">

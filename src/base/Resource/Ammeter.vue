@@ -34,79 +34,95 @@
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <tbody>
-            <!--站点名称-->
-            <tr class="el-table__row">
-              <td><div class="cell">站点名称</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcename}}</div>
-                <div v-show="WriteState !== 2" @click="isShow = true">
-                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--站点编码-->
             <tr class="el-table__row">
               <td><div class="cell">站点编码</div></td>
-              <td><div class="cell">
-                <div v-show="WriteState == 2">{{WriteData.resourcecode}}</div>
-                <div v-show="WriteState !== 2">
-                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell">{{WriteData.resourcecode}}</div></td>
               <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
+              <!--<td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-if="WriteState === 2">
-              <td><div class="cell">地市</div></td>
-              <td><div class="cell">{{WriteData.cityname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-if="WriteState === 2">
-              <td><div class="cell">区域</div></td>
-              <td><div class="cell">{{WriteData.areaname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--经度-->
+            <!--站点名称-->
             <tr class="el-table__row">
-              <td><div class="cell">经度</div></td>
+              <td><div class="cell">站点名称</div></td>
+              <td><div class="cell">{{WriteData.resourcename}}</div></td>
+              <td><div class="cell"></div></td>
+              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备类型-->
+            <tr class="el-table__row">
+              <td><div class="cell">设备类型</div></td>
+              <td><div class="cell">{{WriteData.equipmenttypename}}</div></td>
+              <td><div class="cell"></div></td>
+              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备厂家-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备厂家</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="longitude">
-                  <el-input v-model="WriteData.longitude" @mousewheel.native.prevent type="number"></el-input>
+                <el-form-item class="form-item" prop="manufacturer">
+                  <el-select v-model="WriteData.manufacturer">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.manufacturer" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.longitude}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.manufacturername}}</div></td>
+              <td @click="OpenImgBox(1)"><div class="cell">{{ImgList1.length}}</div></td>
+              <!-- <td><div class="cell">{{writeDic(DicList.manufacturer)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--设备型号-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>设备型号</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="models">
+                  <el-select v-model="WriteData.models">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.models" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.modelsname}}</div></td>
+              <td @click="OpenImgBox(2)"><div class="cell">{{ImgList2.length}}</div></td>
+              <!-- <td><div class="cell">{{writeDic(DicList.models)}}</div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--入网日期-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>入网日期</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="accessdate">
+                  <el-date-picker v-model="WriteData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.accessdate}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--纬度-->
+            <!--标识码-->
             <tr class="el-table__row">
-              <td><div class="cell">纬度</div></td>
+              <td><div class="cell">标识码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="latitude">
-                  <el-input v-model="WriteData.latitude" @mousewheel.native.prevent type="number"></el-input>
+                <el-form-item class="form-item" prop="identificationcode">
+                  <el-input v-model="WriteData.identificationcode"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.latitude}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.identificationcode}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--电表状态-->
             <tr class="el-table__row">
-              <td><div class="cell">电表状态</div></td>
+              <td><div class="cell"><i class="must">*</i>电表状态</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="models">
                   <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -116,39 +132,26 @@
               <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--入网日期-->
-            <tr class="el-table__row">
-              <td><div class="cell">入网日期</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="accessdate">
-                  <el-date-picker v-model="WriteData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择入网日期"></el-date-picker>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.accessdate}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--电表编号-->
             <tr class="el-table__row">
-              <td><div class="cell">电表编号</div></td>
+              <td><div class="cell"><i class="must">*</i>电表编号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="electricmeterno">
                   <el-input v-model="WriteData.electricmeterno"></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState === 2"><div class="cell">{{WriteData.electricmeterno}}</div></td>
-              <td @click="OpenImgBox(1)"><div class="cell">{{ImgList1.length}}</div></td>
+              <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--供电方式-->
             <tr class="el-table__row">
-              <td><div class="cell">供电方式</div></td>
+              <td><div class="cell"><i class="must">*</i>供电方式</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupplymode">
                   <el-select v-model="WriteData.powersupplymode">
-                    <el-option label="请选择" :value="0"></el-option>
+                    <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.powersupplymode" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -160,7 +163,7 @@
             </tr>
             <!--供电单价-->
             <tr class="el-table__row">
-              <td><div class="cell">供电单价</div></td>
+              <td><div class="cell"><i class="must">*</i>供电单价</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupplyprice">
                   <el-input v-model="WriteData.powersupplyprice"></el-input>
@@ -186,7 +189,7 @@
             </tr>
             <!--供电业主-->
             <tr class="el-table__row">
-              <td><div class="cell">供电业主</div></td>
+              <td><div class="cell"><i class="must">*</i>供电业主</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupplytheowner">
                   <el-input v-model="WriteData.powersupplytheowner"></el-input>
@@ -199,7 +202,7 @@
             </tr>
             <!--业主联系方式-->
             <tr class="el-table__row">
-              <td><div class="cell">业主联系方式</div></td>
+              <td><div class="cell"><i class="must">*</i>业主联系方式</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="theownerphone">
                   <el-input v-model="WriteData.theownerphone"></el-input>
@@ -210,46 +213,46 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--经度-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>经度</div></td>
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                <el-form-item class="form-item" prop="longitude">
+                  <el-input v-model="WriteData.longitude" readonly style="width: 80%"></el-input>
+                  <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell location"><span>{{WriteData.longitude}}</span><i class="el-icon-location icon_location"></i></div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--纬度-->
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>纬度</div></td>
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                <el-form-item class="form-item" prop="latitude">
+                  <el-input v-model="WriteData.latitude" readonly style="width: 80%"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell">{{WriteData.latitude}}</div>
+              </td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
             <!--安装位置-->
             <tr class="el-table__row">
-              <td><div class="cell">安装位置</div></td>
+              <td><div class="cell"><i class="must">*</i>安装位置</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="installationposition">
                   <el-input v-model="WriteData.installationposition"></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState === 2"><div class="cell">{{WriteData.installationposition}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--标识码-->
-            <tr class="el-table__row">
-              <td><div class="cell">标识码</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="identificationcode">
-                  <el-input v-model="WriteData.identificationcode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.identificationcode}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState === 2">
-              <td><div class="cell">创建人</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createusername}}</el-form-item>
-              </div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState === 2">
-              <td><div class="cell">创建时间</div></td>
-              <td><div class="cell">
-                <el-form-item class="form-item">{{WriteData.createtime}}</el-form-item>
-              </div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -268,12 +271,13 @@
     <el-dialog top="1%" :visible.sync="isShow" width="80%" :before-close="DetailhandleClose">
       <ResourceList @selectResource="selectResource"/>
     </el-dialog>
-
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import ResourceList from 'base/Resource/ResourceList'
+import GoogleMap from 'base/GoogleMap'
 import {AddBatteryGenerator, EditBatteryGenerator} from 'api/api'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
@@ -295,14 +299,18 @@ export default {
   },
   data () {
     return {
+      showMap: false,
       isShow: false,
       Loading: false,
       ImgList1: [],
+      ImgList2: [],
+      ImgList3: [],
       WriteData: {
         resource_id: '',
         resourcename: '',
         resourcecode: '',
         cityname: '',
+        equipmenttypename: '',
         areaname: '',
         longitude: null,
         latitude: null,
@@ -330,6 +338,8 @@ export default {
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
+      this.ImgList2 = []
+      this.ImgList3 = []
       this.$nextTick(() => {
         this.$refs.WriteForm.clearValidate()
       })
@@ -341,7 +351,13 @@ export default {
     },
     OpenImgBox (val) {
       if (val === 1) {
-        this.$emit('fatherOpenImgBox', '电表编号', 'electricmeterno', this.ImgList1)
+        this.$emit('fatherOpenImgBox', '设备厂家', 'manufacturer', this.ImgList1)
+      }
+      if (val === 2) {
+        this.$emit('fatherOpenImgBox', '设备型号', 'models', this.ImgList2)
+      }
+      if (val === 3) {
+        this.$emit('fatherOpenImgBox', '电表编号', 'electricmeterno', this.ImgList3)
       }
     },
     SubWrite () {
@@ -412,12 +428,32 @@ export default {
     },
     setImgList (list) {
       if (list === null) return
-      this.ImgList1 = list.filter(i => { return i.field_name === 'electricmeterno' })
+      this.ImgList1 = list.filter(i => { return i.field_name === 'manufacturer' })
+      this.ImgList2 = list.filter(i => { return i.field_name === 'models' })
+      this.ImgList3 = list.filter(i => { return i.field_name === 'electricmeterno' })
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.WriteData.longitude
+        this.$refs.GoogleMap.latitude = this.WriteData.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.WriteData.longitude = longitude
+      }
+      if (latitude) {
+        this.WriteData.latitude = latitude
+      }
     }
   },
   computed: {
     ImgList () {
-      return this.ImgList1
+      return this.ImgList1.concat(this.ImgList2, this.ImgList3)
     }
   },
   watch: {
@@ -425,7 +461,7 @@ export default {
       this.WriteData.imglist = val
     }
   },
-  components: { ResourceList }
+  components: { ResourceList, GoogleMap }
 }
 </script>
 

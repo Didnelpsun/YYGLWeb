@@ -37,6 +37,30 @@
               <tbody>
               <!--提交人-->
               <tr class="el-table__row">
+                <td><div class="cell">油机缸号</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.machinebatchno}}</div>
+                  </div>
+                </td>
+                <td  @click="OpenImgBox(1)"><div class="cell"> {{ImgList1.length}}</div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--提交人-->
+              <tr class="el-table__row">
+                <td><div class="cell">油机编号</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.machinenumber}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--提交人-->
+              <tr class="el-table__row">
                 <td><div class="cell">提交人</div></td>
                 <td>
                   <div class="cell">
@@ -67,8 +91,8 @@
                     <el-form-item label-width="0" prop="auditorstate" class="form-item">
                       <el-select class="tableSelect" v-model="tableData.auditorstate" placeholder="请选择审核状态">
                         <!-- <el-option label="请选择" value=""></el-option> -->
-                        <el-option key="4" label="审核通过" :value="4"></el-option>
-                        <el-option key="3" label="审核不通过" :value="3"></el-option>
+                        <el-option key="4" label="通过" :value="4"></el-option>
+                        <el-option key="3" label="不通过" :value="3"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
@@ -114,6 +138,7 @@ export default{
   data () {
     return {
       WriteLoading: false,
+      ImgList1: [],
       // 新增表格相关属性
       tableData: {
         id: '',
@@ -123,7 +148,8 @@ export default{
         applicantname: '',
         applytime: '',
         auditorstate: 4,
-        auditopinion: ''
+        auditopinion: '',
+        imglist: []
       },
       // 表单验证
       Rules: {
@@ -136,6 +162,21 @@ export default{
   methods: {
     setWriteData (data) {
       this.tableData = data
+      this.setImgList(data.imglist)
+    },
+    ResetWrite () {
+      // Object.assign(this.$data.WriteData, this.$options.data().WriteData)
+      this.ImgList1 = []
+      this.$refs.tableForm.resetFields()
+    },
+    setImgList (list) {
+      if (list === null) return
+      this.ImgList1 = list.filter(i => {
+        return i.field_name === 'machinebatchno'
+      })
+    },
+    OpenImgBox (val) {
+      if (val === 1) this.$emit('fatherOpenImgBox', '油机缸号', 'machinebatchno', this.ImgList1)
     },
     auditData () {
       if (this.tableData.auditorstate === 3 && this.tableData.auditopinion.trim() === '') {
@@ -156,6 +197,7 @@ export default{
             if (res.success === true) {
               this.$message.success('审核成功！')
               this.closeWrite()
+              this.ResetWrite()
             }
           }).catch(error => {
             console.log(error)

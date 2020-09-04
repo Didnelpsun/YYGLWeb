@@ -6,10 +6,15 @@
           <!--区域级联选择器-->
           <el-col :span="18">
             <el-col :span="8">
+              <el-form-item label="区域：">
+                <el-cascader v-model="query.AreaList" :props="areaProps" @change="changeArea(query)" ref="csArea" clearable></el-cascader>
+              </el-form-item>
+            </el-col>
+           <!-- <el-col :span="8">
               <el-form-item label="采集器id：" label-width="125px">
                 <el-input v-model="query.swver" placeholder="请输入采集器编码" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col>-->
             <el-col :span="8">
               <el-form-item label="是否绑定油机：" label-width="125px">
                 <el-select v-model="query.Isbinding" placeholder="请选择是否绑定油机">
@@ -18,6 +23,16 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="厂家：" label-width="125px">
+                <el-input v-model="query.faccode" placeholder="请输入厂家" @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--<el-col :span="8">
+              <el-form-item label="设备名称：" label-width="125px">
+                <el-input v-model="query.swver" placeholder="请输入设备名称" @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>-->
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top:0">
@@ -38,11 +53,18 @@
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <!-- <el-table-column prop="provincename" label="省份" width=""></el-table-column> -->
-        <el-table-column prop="cityname" label="地市" width=""></el-table-column>
+        <el-table-column prop="cityname" label="区域" width=""></el-table-column>
         <!-- <el-table-column prop="areaname" label="区域" width=""></el-table-column> -->
-        <el-table-column prop="swver" label="采集器id" width=""></el-table-column>
-        <el-table-column prop="faccode" label="厂家编码" width=""></el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column prop="swver" label="采集器ID" width=""></el-table-column>
+        <el-table-column prop="cardnumber" label="手机卡号" width=""></el-table-column>
+        <el-table-column prop="imsi" label="IMSI" width=""></el-table-column>
+        <el-table-column prop="imei" label="IMEI" width=""></el-table-column>
+        <el-table-column prop="creatortime" label="注册时间" width=""></el-table-column>
+        <el-table-column prop="type" label="通信状态" width=""></el-table-column>
+        <el-table-column prop="modulecode" label="标签编码" width=""></el-table-column>
+        <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
+        <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
+        <el-table-column label="操作" width="150" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!showIsbinding">编辑</el-button>
@@ -59,7 +81,7 @@
     </div>
 
     <div v-show="showWrite">
-      <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+      <Details :WriteState="WriteState" @fatherClose="closeWrite" :showIsbinding="showIsbinding" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
   </div>
 </template>
@@ -77,8 +99,13 @@ export default {
     return {
       // 查询相关属性
       query: {
-        swver: '', // 采集器id
-        Isbinding: false
+        /*   swver: null, // 采集器id */
+        faccode: null,
+        Isbinding: false,
+        AreaList: [],
+        provinceid: null,
+        cityid: null,
+        areaid: null
       },
       // 加载
       Loading: false,

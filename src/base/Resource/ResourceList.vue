@@ -102,6 +102,7 @@ export default {
   },
   methods: {
     async _getTableData1 () {
+      this.pagination.currentPage = 1
       this.Table1Loading = true
       let url = this.resourcetype === 1 ? GetEnergyListAsync : GetZYResourceListAsync
       const res = await this.$axios.post(url, this.resource_id, {params: Object.assign({}, this.query, {pageIndex: 1, pageSize: this.pagination.pageSize})})
@@ -169,6 +170,7 @@ export default {
       this.selectId = list
     },
     isSiteChoose () {
+      if (!this.selectId.length) return false
       this.$emit('chooseDevice', this.selectId)
     }
   }

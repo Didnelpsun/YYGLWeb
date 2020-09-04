@@ -8,7 +8,6 @@
               <col name="el-table_8_column_60" width="80"/>
               <col name="el-table_8_column_61" width="230"/>
               <col name="el-table_8_column_62" width="50"/>
-              <col name="el-table_8_column_63" width="400"/>
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <thead>
@@ -16,7 +15,6 @@
               <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
               <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
               <th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>
-              <th colspan="1" rowspan="1" class="el-table_8_column_63     table-headerStyle"><div class="cell">字典</div></th>
               <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
             </tr>
             </thead>
@@ -30,7 +28,6 @@
               <col name="el-table_8_column_60" width="80"/>
               <col name="el-table_8_column_61" width="230"/>
               <col name="el-table_8_column_62" width="50"/>
-              <col name="el-table_8_column_63" width="400"/>
               <col name="el-table_8_column_64" width="100"/>
             </colgroup>
             <tbody>
@@ -48,7 +45,6 @@
                 </div>
               </td>
               <td class="el-table_8_column_62"><div class="cell"></div></td>
-              <td class="el-table_8_column_63"><div class="cell"></div></td>
               <td class="el-table_8_column_64"><div class="cell"></div></td>
             </tr>
             <!--设备类型-->
@@ -58,7 +54,7 @@
               </td>
               <td class="el-table_8_column_61">
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.equipmenttype_id}}</div>
+                  <div v-show="WriteState == 2">{{tableData.equipmenttypename}}</div>
                   <div v-show="WriteState !== 2" prop="equipmenttype_id">
                     <el-select v-model="tableData.equipmenttype_id" filterable remote reserve-keyword :filter-method="querySearch" :loading="WriteLoading" size="small">
                       <el-option v-for="item in queryList" :key="item.id" :label="item.name" :value="item.id">
@@ -68,7 +64,6 @@
                 </div>
               </td>
               <td class="el-table_8_column_62"><div class="cell"></div></td>
-              <td class="el-table_8_column_63"><div class="cell"></div></td>
               <td class="el-table_8_column_64"><div class="cell"></div></td>
             </tr>
             <!--必须-->
@@ -78,7 +73,7 @@
               </td>
               <td class="el-table_8_column_61">
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.necessary}}</div>
+                  <div v-show="WriteState == 2">{{tableData.necessary ? '是' : '否'}}</div>
                   <el-form-item label-width="0" prop="necessary" class="form-item" v-show="WriteState !== 2">
                     <el-select v-model="tableData.necessary">
                       <el-option label="是" :value="true"></el-option>
@@ -88,7 +83,6 @@
                 </div>
               </td>
               <td class="el-table_8_column_62"><div class="cell"></div></td>
-              <td class="el-table_8_column_63"><div class="cell"></div></td>
               <td class="el-table_8_column_64"><div class="cell"></div></td>
             </tr>
             <!--是否单记录-->
@@ -98,7 +92,7 @@
               </td>
               <td class="el-table_8_column_61">
                 <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.manyrecords}}</div>
+                  <div v-show="WriteState == 2">{{tableData.manyrecords ? '是' : '否'}}</div>
                   <el-form-item label-width="0" prop="manyrecords" class="form-item" v-show="WriteState !== 2">
                     <el-select v-model="tableData.manyrecords">
                       <el-option label="是" :value="true"></el-option>
@@ -108,7 +102,6 @@
                 </div>
               </td>
               <td class="el-table_8_column_62"><div class="cell"></div></td>
-              <td class="el-table_8_column_63"><div class="cell"></div></td>
               <td class="el-table_8_column_64"><div class="cell"></div></td>
             </tr>
               <!--创建人-->
@@ -122,7 +115,6 @@
                   </div>
                 </td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
-                <td class="el-table_8_column_63"><div class="cell"></div></td>
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
               <!--创建时间-->
@@ -136,7 +128,6 @@
                   </div>
                 </td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
-                <td class="el-table_8_column_63"><div class="cell"></div></td>
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
             </tbody>
@@ -197,6 +188,11 @@ export default {
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData (data) {
       this.tableData = data
+      let obj = {
+        name: data.equipmenttypename,
+        id: data.equipmenttype_id
+      }
+      this.queryList.push(obj)
     },
     querySearch (query) {
       this.Loading = true
@@ -266,6 +262,7 @@ export default {
       this.$nextTick(() => { this.$refs.tableForm.resetFields() })
       // this.tableData = {}
       Object.assign(this.$data.tableData, this.$options.data().tableData)
+      this.queryList = []
       // this.getMore(1)
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')

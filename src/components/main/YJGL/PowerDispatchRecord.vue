@@ -5,13 +5,15 @@
         <el-row >
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="调度类型：">
-                <el-input v-model="Query.dispatchtype" placeholder="请填写调度类型"  @keyup.enter.native="getMore1(1)"></el-input>
+              <el-form-item  label="调度类型：">
+                <el-select v-model="Query.dispatchtypeid">
+                  <el-option v-for="i in DicList.dispatchtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择所属类型"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="故障单编码：">
-                <el-input v-model="Query.code" placeholder="请填写故障单编码"  @keyup.enter.native="getMore1(1)"></el-input>
+              <el-form-item label="工单号：">
+                <el-input v-model="Query.code" placeholder="请填写工单号"  @keyup.enter.native="getMore1(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -29,10 +31,21 @@
                 <el-input v-model="Query.stationcode" placeholder="请填写站点编码"  @keyup.enter.native="getMore1(1)"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="调度人：">
+                <el-input v-model="Query.realityname" placeholder="请填写调度人"  @keyup.enter.native="getMore1(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="调度时间：" >
+                <el-date-picker v-model="Query.dateinfo" type="date" value-format="yyyy-MM-dd" placeholder="选择调度时间"></el-date-picker>
+              </el-form-item>
+            </el-col>
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
               <el-button  @click="getMore1(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'">查询</el-button>
+              <el-button @click="ResetQuery" icon="el-icon-refresh">重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -51,10 +64,10 @@
         <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
         <el-table-column prop="positiondeviation" label="位置偏差" width=""></el-table-column>
         <el-table-column prop="power" label="功率" width="60"></el-table-column>
-        <el-table-column prop="frequency" label="频率" width=""></el-table-column>
-        <el-table-column prop="voltage" label="电压" width="60"></el-table-column>
+        <el-table-column prop="frequency" label="频率" width="50"></el-table-column>
+        <el-table-column prop="voltage" label="电压" width="50"></el-table-column>
         <el-table-column prop="seemingmain" label="疑似市电" width=""></el-table-column>
-        <el-table-column prop="code" label="故障单编码" width="180"></el-table-column>
+        <el-table-column prop="code" label="工单号" width="180"></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
         <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
@@ -76,7 +89,7 @@
 <script>
 import { PowerDispatchRecordList } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
-
+import {DictionaryInfoList} from 'api/api'
 export default {
   name: 'PowerDispatchRecord',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -85,11 +98,13 @@ export default {
     return {
       // 加载
       Query: {
-        dispatchtype: null,
+        dispatchtypeid: null,
         code: null,
         machinebatchno: null,
         stationname: null,
-        stationcode: null
+        stationcode: null,
+        realityname: null,
+        dateinfo: null
       },
       Loading: false,
       tableList: [
@@ -99,16 +114,34 @@ export default {
         total: 0,
         pageSize: 10,
         currentPage: 1
-      }
+      },
+      DicList: {dispatchtype: []}
     }
   },
   activated () {
     // this.check(AreaList)
     this.getMore(1)
+    this.getDic()
   },
   created () {
   },
   methods: {
+    ResetQuery () {
+      Object.assign(this.$data, this.$options.data.call(this))
+      this.getMore(1)
+      this.getDic()
+    },
+    getDic () {
+      let arr = ['调度类型']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.dispatchtype = data.filter(i => { return i.type === '调度类型' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     getMore1 (e) {
       this.Loading = true
       this.pagination.currentPage = e

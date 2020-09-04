@@ -132,12 +132,14 @@ export const AddChargingPile = `${reqURL}/ZYGL/ChargingPile/AddChargingPile` // 
 export const EditChargingPile = `${reqURL}/ZYGL/ChargingPile/EditChargingPile` // 编辑充电桩
 export const ChargingPileInfo = `${reqURL}/ZYGL/ChargingPile/GetChargingPileInfo` // 充电桩详情
 export const ChargingPileList = `${reqURL}/ZYGL/ChargingPile/GetChargingPileListInfo` // 充电桩列表
+export const GetChargingPileExcel = `${reqURL}/ZYGL/ChargingPile/GetChargingPileExcel` // 充电桩导出
 
 // SwitchCabinets 换电柜
 export const AddSwitchCabinet = `${reqURL}/ZYGL/SwitchCabinets/AddSwitchCabinet` // 换电柜新增
 export const GetSwitchCabinetList = `${reqURL}/ZYGL/SwitchCabinets/GetSwitchCabinetList` // 获取分页列表
 export const UpdateSwitchCabinet = `${reqURL}/ZYGL/SwitchCabinets/UpdateSwitchCabinet` // 换电柜修改
 export const GetSwitchCabinetInfo = `${reqURL}/ZYGL/SwitchCabinets/GetSwitchCabinetInfo` // 查询换电柜详情
+export const GetSwitchCabinetExcel = `${reqURL}/ZYGL/SwitchCabinets/GetSwitchCabinetExcel` // 换电柜导出
 
 // Reservepover 备电
 export const AddReservepover = `${reqURL}/ZYGL/Reservepover/AddReservepover` //
@@ -147,6 +149,7 @@ export const GetReservepoverList = `${reqURL}/ZYGL/Reservepover/GetReservepoverL
 export const AddTaskEquipmentReservepover = `${reqURL}/ZYGL/Reservepover/AddTaskEquipmentReservepover` // 新增备电任务设备信息
 export const EditTaskEquipmentReservepover = `${reqURL}/ZYGL/Reservepover/EditTaskEquipmentReservepover` // 修改备电任务设备信息
 export const GetTaskEquipmentReservepoverInfo = `${reqURL}/ZYGL/Reservepover/GetTaskEquipmentReservepoverInfo` // 获取备电任务设备详情
+export const GetReservepoverExcel = `${reqURL}/ZYGL/Reservepover/GetReservepoverExcel` // 备电导出
 
 // ZY 设备
 export const ListEquipmentTypeInfo = `${reqURL}/ZYGL/ZY/GetListEquipmentTypeInfo` // 查询设备类型列表
@@ -161,32 +164,37 @@ export const GetBatteryList = `${reqURL}/ZYGL/Battery/GetBatteryList` // 获取�
 export const AddTaskEquipmentBattery = `${reqURL}/ZYGL/Battery/AddTaskEquipmentBattery` // 新增电池任务设备信息
 export const EditTaskEquipmentBattery = `${reqURL}/ZYGL/Battery/EditTaskEquipmentBattery` // 修改电池任务设备信息
 export const GetTaskEquipmentBatteryInfo = `${reqURL}/ZYGL/Battery/GetTaskEquipmentBatteryInfo` // 获取电池任务设备详情
+export const GetBatteryExcel = `${reqURL}/ZYGL/Battery/GetBatteryExcel` // 电池导出
 
 // BatteryGenerator 电池发电
 export const AddBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/AddBatteryGenerator` // 新增电池发电装置
 export const EditBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator/EditBatteryGenerator` // 修改电池发电装置
 export const BatteryGeneratorInfo = `${reqURL}/ZYGL/BatteryGenerator/GetBatteryGeneratorInfo` // 获取电池发电装置详情
 export const BatteryGeneratorList = `${reqURL}/ZYGL/BatteryGenerator/GetBatteryGeneratorList` // 获取电池发电装置列表
+export const GetBatteryGeneratorExcel = `${reqURL}/ZYGL/BatteryGenerator/GetBatteryGeneratorExcel` // 电池发电装置导出
 
 // 外电引入
 export const GetElectricIntroducedInfo = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedInfo` // 获取外电引入详情
 export const GetElectricIntroducedList = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedList` // 获取外电引入列表
+export const GetElectricIntroducedExcel = `${reqURL}/ZYGL/AnElectricIntroduced/GetBatteryExcel` // 获取外电引入详情
 
 // 电表
 export const GetElectricMeterInfo = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterInfo` // 获取电表详情
 export const GetElectricMeterList = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterList` // 获取电表列表
+export const GetAmmeterExcel = `${reqURL}/ZYGL/ElectricMeter/GetBatteryExcel` // 获取电表详情
 
 // FuelGenerator 燃油发电机
-export const AddOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/AddOilFiredGenerator` // 新增电池发电装置
-export const EditOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/EditOilFiredGenerator` // 修改电池发电装置
-export const GetOilFiredGeneratorInfo = `${reqURL}/ZYGL/OilFiredGenerator/GetOilFiredGeneratorInfo` // 获取电池发电装置详情
-export const GetOilFiredGeneratorList = `${reqURL}/ZYGL/OilFiredGenerator/GetOilFiredGeneratorList` // 获取电池发电装置列表
+export const AddOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/AddOilFiredGenerator` // 新增燃油发电机
+export const EditOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/EditOilFiredGenerator` // 修改燃油发电机
+export const GetOilFiredGeneratorInfo = `${reqURL}/ZYGL/OilFiredGenerator/GetOilFiredGeneratorInfo` // 获取燃油发电机详情
+export const GetOilFiredGeneratorList = `${reqURL}/ZYGL/OilFiredGenerator/GetOilFiredGeneratorList` // 获取燃油发电机列表
+export const GetOilFiredGeneratorExcel = `${reqURL}/ZYGL/OilFiredGenerator/GetOilFiredGeneratorExcel` // 燃油发电机导出
 
 // ResourceEquipment 站点设备配置
 export const AddResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/AddResourecEquipment` // 新增资源站点配置
 export const AddEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/AddResourecEquipment` // 新增能源站点配置
 export const UpdateResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/UpdateResourecEquipment` // 修改资源站点配置
-export const UpdateEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/UpdateEnergyResourecEquipment` // 修改能源站点配置
+export const UpdateEnergyResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/UpdateResourecEquipment` // 修改能源站点配置
 export const DelResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/DelResourecEquipment` // 删除站点配置
 export const GetResourceEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetResourecEquipmentList` // 获取资源站点配置列表
 export const GetEnergyResourceEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetEnergyResourecEquipmentList` // 获取能源站点配置列表

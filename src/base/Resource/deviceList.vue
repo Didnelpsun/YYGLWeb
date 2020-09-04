@@ -1,16 +1,29 @@
 <template>
   <div class="content">
       <el-form :model="query">
-        <el-row :gutter="20">
-          <!--选择器-->
-          <el-col :sm="12" :md="8">
-            <el-form-item label-width="140px" label="设备类型名称：">
-              <el-input class="searchSelect" v-model="query.equipmenttypename" placeholder="请填写设备类型名称"></el-input>
-            </el-form-item>
+        <el-row>
+          <el-col :span="18">
+            <el-col :span="8">
+              <el-form-item label="区域：">
+                <el-cascader v-model="query.AreaList" :props="QareaProps" clearable @change="changeArea(query)"></el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label-width="140px" label="设备类型名称：">
+                <el-input class="searchSelect" v-model="query.equipmenttypename" placeholder="请填写设备类型名称"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input v-model="query.resourcename" placeholder="请输入站点名称"></el-input>
+              </el-form-item>
+            </el-col>
           </el-col>
-          <el-col :span="8">
-            <el-button type="primary" :disabled="Table1Loading" icon="el-icon-search" @click="handleSearch">查询</el-button>
-            <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
+          <el-col :span="6">
+            <div class="fr" style="margin-top: 0">
+              <el-button type="primary" :disabled="Table1Loading" icon="el-icon-search" @click="handleSearch">查询</el-button>
+              <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
+            </div>
           </el-col>
         </el-row>
       </el-form>
@@ -37,9 +50,11 @@
 </template>
 
 <script>
+import {GlobalRes} from 'common/js/mixins'
 import {GetEqipmentList} from 'api/SurveyManagement'
 
 export default {
+  mixins: [GlobalRes],
   name: 'deviceList',
   props: {
     resourcetype: {
@@ -57,7 +72,12 @@ export default {
     return {
       // 查询相关属性
       query: {
-        equipmenttypename: ''
+        equipmenttypename: '',
+        resourcename: '',
+        AreaList: [],
+        provinceid: null, // 省份
+        cityid: null, // 城市
+        areaid: null // 区域
       },
       tableList: [],
       // 分页相关属性
@@ -77,6 +97,7 @@ export default {
   },
   methods: {
     async _getTableData1 () {
+      this.pagination.currentPage = 1
       this.Table1Loading = true
       this.query.resourcetype = this.resourcetype
       const res = await this.$axios.post(GetEqipmentList, this.equipment_id, {params: Object.assign({}, this.query, {pageIndex: 1, pageSize: this.pagination.pageSize})})
@@ -94,7 +115,7 @@ export default {
       this.pagination.currentPage = page
       this.Table1Loading = true
       this.query.resourcetype = this.resourcetype
-      const res = await this.$axios.post(GetEqipmentList, this.equipment_id, {params: Object.assign({}, this.query, {pageIndex: 1, pageSize: this.pagination.pageSize})})
+      const res = await this.$axios.post(GetEqipmentList, this.equipment_id, {params: Object.assign({}, this.query, {pageIndex: page, pageSize: this.pagination.pageSize})})
       this.Table1Loading = false
       if (res.errorCode !== '200') return this.$message.error(res.msg)
       this.tableList = res.data.list
@@ -126,6 +147,7 @@ export default {
       this.chooseList = list
     },
     handleChoose () {
+      if (!this.chooseList.length) return false
       this.$emit('chooseDevice', this.chooseList)
     }
   }

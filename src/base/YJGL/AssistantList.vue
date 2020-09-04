@@ -124,7 +124,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--油机ID-->
-              <tr class="el-table__row">
+           <!--   <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>油机名称</div></td>
                 <td>
                   <div class="cell">
@@ -135,9 +135,9 @@
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
-                <!-- <td><div class="cell"></div></td> -->
+                &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <!--提交人-->
               <tr class="el-table__row" v-if="WriteState === 2">
                 <td><div class="cell">提交人</div></td>

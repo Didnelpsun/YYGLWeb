@@ -41,6 +41,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -84,7 +85,8 @@
 </template>
 
 <script>
-import {GetElectricIntroducedInfo, DelEquipment, GetElectricIntroducedList} from 'api/api'
+import {GetElectricIntroducedInfo, DelEquipment, GetElectricIntroducedList, GetElectricIntroducedExcel} from 'api/api'
+import {exportMethod} from 'api/YDSZ'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
@@ -218,6 +220,19 @@ export default {
     changeSize1 (page) {
       this.pageSize = page
       this.getMore1(this.currentPage)
+    },
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'get',
+          url: GetElectricIntroducedExcel,
+          fileName: '外电引入',
+          data: this.Query
+        }
+        exportMethod(myObj)
+      })
     }
   },
   components: {Detail, layuiTitle, ImgBox}

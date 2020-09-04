@@ -55,7 +55,7 @@
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>站点名称</div></td>
                 <td><div class="cell"><div>{{tableData.resourcesname}}</div></div></td>
-                <td><div class="cell"></div></td>
+                <td  @click="OpenImgBox(1)"><div class="cell"> {{ImgList1.length}}</div></td>
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
@@ -108,8 +108,8 @@
                     <el-form-item label-width="0" prop="auditstatus" class="form-item">
                       <el-select class="tableSelect" v-model="tableData.auditstatus" placeholder="请选择审核状态">
                         <!-- <el-option label="请选择" value=""></el-option> -->
-                        <el-option key="4" label="审核通过" :value="4"></el-option>
-                        <el-option key="3" label="审核不通过" :value="3"></el-option>
+                        <el-option key="4" label="通过" :value="4"></el-option>
+                        <el-option key="3" label="不通过" :value="3"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
@@ -155,6 +155,7 @@ export default{
   data () {
     return {
       WriteLoading: false,
+      ImgList1: [],
       // 新增表格相关属性
       tableData: {
         'longitude': '',
@@ -166,7 +167,8 @@ export default{
         'storageplacetype': '',
         'placeinfo': '',
         'auditstatus': '',
-        'auditopinion': ''
+        'auditopinion': '',
+        imglist: []
       },
       // 表单验证
       Rules: {
@@ -179,6 +181,21 @@ export default{
   methods: {
     setWriteData (data) {
       this.tableData = data
+      this.setImgList(data.imglist)
+    },
+    ResetWrite () {
+      // Object.assign(this.$data.WriteData, this.$options.data().WriteData)
+      this.ImgList1 = []
+      this.$refs.tableForm.resetFields()
+    },
+    setImgList (list) {
+      if (list === null) return
+      this.ImgList1 = list.filter(i => {
+        return i.field_name === 'stationname'
+      })
+    },
+    OpenImgBox (val) {
+      if (val === 1) this.$emit('fatherOpenImgBox', '站点名称', 'stationname', this.ImgList1)
     },
     auditData () {
       if (this.tableData.auditstatus === 3 && !this.tableData.auditopinion) {
@@ -198,6 +215,7 @@ export default{
             if (res.success === true) {
               this.$message.success('审核成功！')
               this.closeWrite()
+              this.ResetWrite()
             }
           }).catch(error => {
             console.log(error)
@@ -212,6 +230,7 @@ export default{
       this.$nextTick(() => { this.$refs.tableForm.resetFields() })
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
+      this.ResetWrite()
     }
   },
   components: {

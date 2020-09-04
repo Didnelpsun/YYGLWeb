@@ -75,7 +75,7 @@
                     <td><div class="cell">保障级别</div></td>
                     <td><div class="cell"></div></td>
                     <td><div class="cell">发电功率</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell">{{tableData1.power}} </div></td>
                     <td><div class="cell">协管员</div></td>
                     <td><div class="cell">{{tableData1.assistantname}}:{{tableData1.mobilnum}}</div></td>
                   </tr>
@@ -95,8 +95,8 @@
                     <td><div class="cell">网格</div></td>
                     <td><div class="cell"></div></td>
                     <td><div class="cell">发电员</div></td>
-                    <td><div class="cell">姓名电话</div></td>
                     <td><div class="cell"></div></td>
+                    <td><div class="cell">姓名电话</div></td>
                     <td><div class="cell"></div></td>
                   </tr>
                   <tr class="el-table__row">
@@ -155,7 +155,7 @@
                     <td><div class="cell"></div></td>
                     <td><div class="cell"></div></td>
                     <td><div class="cell">停电</div></td>
-                    <td><div class="cell">{{tableData1.stopdateinf}}</div></td>
+                    <td><div class="cell">{{tableData1.enddateinfo}}</div></td>
                     <td><div class="cell">{{tableData1.stopworkingstate}}</div></td>
                     <td @click="OpenImgBox('stopimglist')">
                       <div class="cell" v-if="tableData1.stopimglist">{{tableData1.stopimglist.length}}</div>
