@@ -73,6 +73,7 @@
         <el-table-column prop="name" label="站点名称" width=""></el-table-column>
         <el-table-column prop="code" label="站点编码" width=""></el-table-column>
         <el-table-column prop="classifyname" label="站点分类" width="70"></el-table-column>
+        <el-table-column prop="resourceeqipmentname" label="站点配置模型" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width="120"></el-table-column>
@@ -378,6 +379,22 @@
                   <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                   <td class="el-table_8_column_64"><div class="cell"></div></td>
                 </tr>
+                <!--创建人-->
+                <tr class="el-table__row">
+                  <td class="el-table_8_column_60"><div class="cell">创建人</div></td>
+                  <td class="el-table_8_column_61"><div class="cell">{{tableData.createusername}}</div></td>
+                  <td class="el-table_8_column_62"><div class="cell"></div></td>
+                  <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
+                  <td class="el-table_8_column_64"><div class="cell"></div></td>
+                </tr>
+                <!--创建时间-->
+                <tr class="el-table__row">
+                  <td class="el-table_8_column_60"><div class="cell">创建时间</div></td>
+                  <td class="el-table_8_column_61"><div class="cell">{{tableData.createtime}}</div></td>
+                  <td class="el-table_8_column_62"><div class="cell"></div></td>
+                  <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
+                  <td class="el-table_8_column_64"><div class="cell"></div></td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -618,6 +635,7 @@ export default {
       this.pageType = '新增'
       this.CodeImgList = []
       this.LongImgList = []
+      this.showList = false
       this.showEdit = !this.showEdit
     },
     // 详情按钮

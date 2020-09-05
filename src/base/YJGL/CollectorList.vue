@@ -35,12 +35,12 @@
             </colgroup>
             <tbody>
               <!--区域-->
-              <tr class="el-table__row" v-show="WriteState === 0">
+              <tr class="el-table__row" v-if="WriteState === 0">
                 <td><div class="cell"><i class="must">*</i>区域</div></td>
                 <td>
                   <div class="cell">
-                    <el-form-item label-width="0" class="form-item" v-model="tableData.areaid">
-                      <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" :options="areaOption" ref="csArea"></el-cascader>
+                    <el-form-item label-width="0" class="form-item" prop="AreaList">
+                      <el-cascader v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" :options="areaOption" ref="csArea"></el-cascader>
                     </el-form-item>
                   </div>
                 </td>
@@ -95,7 +95,7 @@
               </tr>-->
               <!--设备软件版本号-->
               <tr class="el-table__row">
-                <td><div class="cell">采集器ID</div></td>
+                <td><div class="cell"><i class="must">*</i>采集器ID</div></td>
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.swver}}</div>
@@ -114,7 +114,7 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.type}}</div>
-                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                    <el-form-item label-width="0" class="form-item" v-show="WriteState !== 2">
                       <el-input v-model="tableData.type" placeholder="请输入通信状态"></el-input>
                     </el-form-item>
                   </div>
@@ -129,7 +129,7 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.cardnumber}}</div>
-                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                    <el-form-item label-width="0"  class="form-item" v-show="WriteState !== 2">
                       <el-input v-model="tableData.cardnumber" placeholder="请输入手机卡号"></el-input>
                     </el-form-item>
                   </div>
@@ -144,7 +144,7 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.imsi}}</div>
-                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                    <el-form-item label-width="0"  class="form-item" v-show="WriteState !== 2">
                       <el-input v-model="tableData.imsi" placeholder="请输入IMSI"></el-input>
                     </el-form-item>
                   </div>
@@ -159,7 +159,7 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.imei}}</div>
-                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
+                    <el-form-item label-width="0"  class="form-item" v-show="WriteState !== 2">
                       <el-input v-model="tableData.imei" placeholder="请输入IMEI"></el-input>
                     </el-form-item>
                   </div>
@@ -174,7 +174,7 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.faccode}}</div>
-                    <el-form-item label-width="0" prop="manufactor" class="form-item" v-show="WriteState == 0">
+                    <el-form-item label-width="0"  class="form-item" v-show="WriteState !== 2">
                       <el-input v-model="tableData.faccode" placeholder="请输入生产厂家"></el-input>
                     </el-form-item>
                   </div>
@@ -188,8 +188,8 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState == 2">{{tableData.warranty}}</div>
-                    <el-form-item label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2">
-                      <el-date-picker v-model="tableData.warranty" class="tableSelect" type="datetime" format="yyyy-MM-dd HH:mm:ss"   value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择保修时间"></el-date-picker>
+                    <el-form-item label-width="0"  prop="warranty" class="form-item" v-show="WriteState !== 2">
+                      <el-date-picker v-model="tableData.warranty" class="tableSelect" type="date" format="yyyy-MM-dd"   value-format="yyyy-MM-dd" placeholder="选择保修时间"></el-date-picker>
                     </el-form-item>
                   </div>
                 </td>
@@ -355,13 +355,12 @@ export default{
   data () {
     return {
       isShow: false,
-      tableArea: {
-        AreaList: []
-      },
+
       areaOption: [],
       WriteLoading: false,
       // 新增表格相关属性
       tableData: {
+        AreaList: [],
         provinceid: '', // 省份id
         cityid: '', // 城市id
         areaid: '',
@@ -388,13 +387,15 @@ export default{
       },
       // 表单验证
       Rules: {
-        areaid: [
+        AreaList: [
           { required: true, message: '请选择区域', trigger: 'blur' }
-        ]
+        ],
+        swver: [{ required: true, message: '请选择采集器', trigger: 'change' }]
       }
     }
   },
   methods: {
+    warranty (val) { this.tableData.warranty = val },
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData (data) {
       this.tableData = data
@@ -412,30 +413,18 @@ export default{
     },
     // 添加提交
     async add () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        // console.log(this.tableData)
+      this.$refs.tableForm.validate((valid, msg) => {
         if (!valid) {
           this.$message.warning('请补全信息')
         } else {
-          try {
-            this.tableData.provinceid = this.tableArea.provinceid
-            this.tableData.cityid = this.tableArea.cityid
-            this.tableData.areaid = this.tableArea.areaid
-            this.WriteLoading = true
-            const res = await this.$axios.post(Addcollector, this.tableData)
+          this.WriteLoading = true
+          this.$axios.post(Addcollector, this.tableData).then(res => {
             this.WriteLoading = false
-            if (res.error === true) {
-              this.$message.warning('请补全信息')
-              console.log(res.errorMessage)
-            }
-            if (res.success === true) {
-              this.$message.success('添加成功！')
-              this.$emit('fatheretMore')
-              this.closeWrite()
-            } else { this.$message.warning(res.msg) }
-          } catch (e) {
-            console.log(e)
-          }
+            if (res.errorCode !== '200') return this.$message.error(res.msg)
+            this.$message.success('添加成功!')
+            this.$emit('fatheretMore')
+            this.closeWrite()
+          })
         }
       })
     },
@@ -446,28 +435,13 @@ export default{
         if (!valid) {
           this.$message.warning('请补全信息')
         } else {
-          try {
-            if (this.tableArea.areaid && this.tableArea.cityid && this.tableArea.provinceid) {
-              this.tableData.provinceid = this.tableArea.provinceid
-              this.tableData.cityid = this.tableArea.cityid
-              this.tableData.areaid = this.tableArea.areaid
-            }
-            this.WriteLoading = true
-            const res = await this.$axios.put(Editcollector, this.tableData)
-            this.WriteLoading = false
-            if (res.error === true) {
-              this.$message.warning('请补全信息')
-              // console.log(res.error)
-            }
-            // this.$message.error('输入参数为非法值，请重新输入')
-            if (res.success === true) {
-              this.$message.success('修改成功！')
-              this.$emit('fatheretMore')
-              this.closeWrite()
-            } else { this.$message.warning(res.msg) }
-          } catch (e) {
-            console.log(e)
-          }
+          this.WriteLoading = true
+          const res = await this.$axios.put(Editcollector, this.tableData)
+          this.WriteLoading = false
+          if (res.errorCode !== '200') return this.$message.error(res.msg)
+          this.$message.success('修改成功！')
+          this.$emit('fatheretMore')
+          this.closeWrite()
         }
       })
     },
@@ -475,10 +449,6 @@ export default{
     closeWrite () {
       this.$refs.tableForm.clearValidate() // 初始化表单校验
       Object.assign(this.$data.tableData, this.$options.data().tableData)
-      this.$nextTick(() => { this.$refs.tableForm.resetFields() })
-      this.setArea([])
-      this.areaOption = []
-      this.tableArea.AreaList.splice(0, this.tableArea.AreaList.length)
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
     }/*,

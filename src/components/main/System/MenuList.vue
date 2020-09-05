@@ -4,7 +4,7 @@
         <el-button class="fr" style="padding-top: 0" size="" @click="openWrite(0)" icon="el-icon-plus" type="text">添加子系统</el-button>
 
         <el-table :data="list" v-loading="table1Loading" :tree-props="{children: 'child'}"
-                  row-key="id" default-expand-all>
+                  row-key="id" >
           <el-table-column prop="name" label="菜单名称" width="200" :show-overflow-tooltip="true" sortable></el-table-column>
           <el-table-column prop="menutype" label="系统类型" width="110" sortable :formatter="formatMenuType"></el-table-column>
           <el-table-column prop="enabled" label="是否启用" width="70" :formatter="formatEna"></el-table-column>
@@ -216,6 +216,8 @@ export default {
               this.showWrite = false
               Object.assign(this.$data.AddForm, this.$options.data().AddForm)
             }
+          }).catch(() => {
+            this.table1Loading = false
           })
         }
       })

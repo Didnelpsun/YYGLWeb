@@ -163,7 +163,7 @@
             </tr>
             <!--供电单价-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>供电单价</div></td>
+              <td><div class="cell">供电单价</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupplyprice">
                   <el-input v-model="WriteData.powersupplyprice"></el-input>
@@ -189,7 +189,7 @@
             </tr>
             <!--供电业主-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>供电业主</div></td>
+              <td><div class="cell">供电业主</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powersupplytheowner">
                   <el-input v-model="WriteData.powersupplytheowner"></el-input>
@@ -202,7 +202,7 @@
             </tr>
             <!--业主联系方式-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>业主联系方式</div></td>
+              <td><div class="cell">业主联系方式</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="theownerphone">
                   <el-input v-model="WriteData.theownerphone"></el-input>
@@ -341,15 +341,6 @@ export default {
         ],
         powersupplymode: [
           { required: true, message: '请选择供电方式', trigger: 'change' }
-        ],
-        powersupplyprice: [
-          { required: true, message: '请输入供电单价', trigger: 'blur' }
-        ],
-        powersupplytheowner: [
-          { required: true, message: '请输入供电业主', trigger: 'blur' }
-        ],
-        theownerphone: [
-          { required: true, message: '请输入业主联系方式', trigger: 'blur' }
         ],
         installationposition: [
           { required: true, message: '请输入安装位置', trigger: 'blur' }

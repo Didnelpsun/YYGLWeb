@@ -481,7 +481,7 @@ import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
 import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetTaskElectricMeterList, GetMaintainList,
   UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetEnergyResourecEquipmentList, GetHiddenDangerList,
-  TaskAudit, TaskEquipment, GetEquipmentInfoList, GetTaskState} from 'api/SurveyManagement'
+  TaskAudit, TaskEquipment, GetEquipmentInfoList, GetTaskState, GetTaskResourceEquipment} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
 import ImgBox from 'base/ImgBox'
@@ -798,11 +798,11 @@ export default {
           } else {
             const newList = this.concat(this.deviceList, res.data, {
               equipment_id: (v1, v2) => v1 ? [...v1, ...v2] : [],
-              name: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
-              code: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
-              classifyname: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
-              cityname: (v1, v2) => v1 ? v1 : v2 ? v2 : '',
-              areaname: (v1, v2) => v1 ? v1 : v2 ? v2 : ''
+              name: (v1, v2) => v1 || (v2 || ''),
+              code: (v1, v2) => v1 || (v2 || ''),
+              classifyname: (v1, v2) => v1 || (v2 || ''),
+              cityname: (v1, v2) => v1 || (v2 || ''),
+              areaname: (v1, v2) => v1 || (v2 || '')
             })
             this.deviceList = newList
           }
@@ -1091,94 +1091,110 @@ export default {
       this.SelectDeviceType = ''
       this.showTaskDialog = false
     },
+    checkAddDevise (id) {
+      return this.$axios.get(GetTaskResourceEquipment, {
+        params: {
+          equipmenttype_id: id,
+          resource_id: this.editSiteId
+        }
+      }).then((res) => {
+        return Promise.resolve(res)
+      })
+    },
     handleSelectDeviceType () {
       if (!this.SelectDeviceType) this.$message.error('请选择设备类型！')
-      this.dialogTitle = '新增' + this.SelectDeviceType
-      this.showTaskDialog = false
-      this.showDialog = true
-      this.WriteState = 0
       const obj = this.DeviceTypeList.filter(i => {
         return i.equipmenttypename === this.SelectDeviceType
       })
-      switch (this.SelectDeviceType) {
-        case '充电桩':
-          this.showChargingPile = true
-          this.$nextTick(() => {
-            this.$refs.TaskChargingPile.WriteData.task_id = this.currentTaskId
-            this.$refs.TaskChargingPile.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskChargingPile.WriteData.resource_id = this.editSiteId
-            this.$refs.TaskChargingPile.WriteData.resourcecode = this.editResourcecode
-            this.$refs.TaskChargingPile.WriteData.resourcename = this.editResourcename
-            this.$refs.TaskChargingPile.WriteData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '换电柜':
-          this.showSwitchCabinet = true
-          this.$nextTick(() => {
-            this.$refs.TaskSwitchCabinet.tableData.task_id = this.currentTaskId
-            this.$refs.TaskSwitchCabinet.tableData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskSwitchCabinet.tableData.resource_id = this.editSiteId
-            this.$refs.TaskSwitchCabinet.tableData.resourcecode = this.editResourcecode
-            this.$refs.TaskSwitchCabinet.tableData.resourcename = this.editResourcename
-            this.$refs.TaskSwitchCabinet.tableData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '备电':
-          this.showReservepover = true
-          this.$nextTick(() => {
-            this.$refs.TaskReservepover.tableData.task_id = this.currentTaskId
-            this.$refs.TaskReservepover.tableData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskReservepover.tableData.resource_id = this.editSiteId
-            this.$refs.TaskReservepover.tableData.resourcecode = this.editResourcecode
-            this.$refs.TaskReservepover.tableData.resourcename = this.editResourcename
-            this.$refs.TaskReservepover.tableData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '换电电池':
-          this.showChangeBattery = true
-          this.$nextTick(() => {
-            this.$refs.TaskChangeBattery.tableData.task_id = this.currentTaskId
-            this.$refs.TaskChangeBattery.tableData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskChangeBattery.tableData.resource_id = this.editSiteId
-            this.$refs.TaskChangeBattery.tableData.resourcecode = this.editResourcecode
-            this.$refs.TaskChangeBattery.tableData.resourcename = this.editResourcename
-            this.$refs.TaskChangeBattery.tableData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '燃油发电机':
-          this.showOilFiredGenerator = true
-          this.$nextTick(() => {
-            this.$refs.TaskOilFiredGenerator.tableData.task_id = this.currentTaskId
-            this.$refs.TaskOilFiredGenerator.tableData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskOilFiredGenerator.tableData.resource_id = this.editSiteId
-            this.$refs.TaskOilFiredGenerator.tableData.resourcecode = this.editResourcecode
-            this.$refs.TaskOilFiredGenerator.tableData.resourcename = this.editResourcename
-            this.$refs.TaskOilFiredGenerator.tableData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '电池发电装置':
-          this.showBatteryGenerator = true
-          this.$nextTick(() => {
-            this.$refs.TaskBatteryGenerator.WriteData.task_id = this.currentTaskId
-            this.$refs.TaskBatteryGenerator.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.TaskBatteryGenerator.WriteData.resource_id = this.editSiteId
-            this.$refs.TaskBatteryGenerator.WriteData.resourcecode = this.editResourcecode
-            this.$refs.TaskBatteryGenerator.WriteData.resourcename = this.editResourcename
-            this.$refs.TaskBatteryGenerator.WriteData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-        case '外电引入':
-          this.showAnElectricIntroduced = true
-          this.$nextTick(() => {
-            this.$refs.AnElectricIntroduced.WriteData.task_id = this.currentTaskId
-            this.$refs.AnElectricIntroduced.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.AnElectricIntroduced.WriteData.resource_id = this.editSiteId
-            this.$refs.AnElectricIntroduced.WriteData.resourcecode = this.editResourcecode
-            this.$refs.AnElectricIntroduced.WriteData.resourcename = this.editResourcename
-            this.$refs.AnElectricIntroduced.WriteData.equipmenttypename = this.SelectDeviceType
-          })
-          break
-      }
+      this.checkAddDevise(obj[0].equipmenttype_id).then((res) => {
+        if (res.errorCode === '200') {
+          this.dialogTitle = '新增' + this.SelectDeviceType
+          this.showTaskDialog = false
+          this.showDialog = true
+          this.WriteState = 0
+          switch (this.SelectDeviceType) {
+            case '充电桩':
+              this.showChargingPile = true
+              this.$nextTick(() => {
+                this.$refs.TaskChargingPile.WriteData.task_id = this.currentTaskId
+                this.$refs.TaskChargingPile.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskChargingPile.WriteData.resource_id = this.editSiteId
+                this.$refs.TaskChargingPile.WriteData.resourcecode = this.editResourcecode
+                this.$refs.TaskChargingPile.WriteData.resourcename = this.editResourcename
+                this.$refs.TaskChargingPile.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '换电柜':
+              this.showSwitchCabinet = true
+              this.$nextTick(() => {
+                this.$refs.TaskSwitchCabinet.tableData.task_id = this.currentTaskId
+                this.$refs.TaskSwitchCabinet.tableData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskSwitchCabinet.tableData.resource_id = this.editSiteId
+                this.$refs.TaskSwitchCabinet.tableData.resourcecode = this.editResourcecode
+                this.$refs.TaskSwitchCabinet.tableData.resourcename = this.editResourcename
+                this.$refs.TaskSwitchCabinet.tableData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '备电':
+              this.showReservepover = true
+              this.$nextTick(() => {
+                this.$refs.TaskReservepover.tableData.task_id = this.currentTaskId
+                this.$refs.TaskReservepover.tableData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskReservepover.tableData.resource_id = this.editSiteId
+                this.$refs.TaskReservepover.tableData.resourcecode = this.editResourcecode
+                this.$refs.TaskReservepover.tableData.resourcename = this.editResourcename
+                this.$refs.TaskReservepover.tableData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '换电电池':
+              this.showChangeBattery = true
+              this.$nextTick(() => {
+                this.$refs.TaskChangeBattery.tableData.task_id = this.currentTaskId
+                this.$refs.TaskChangeBattery.tableData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskChangeBattery.tableData.resource_id = this.editSiteId
+                this.$refs.TaskChangeBattery.tableData.resourcecode = this.editResourcecode
+                this.$refs.TaskChangeBattery.tableData.resourcename = this.editResourcename
+                this.$refs.TaskChangeBattery.tableData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '燃油发电机':
+              this.showOilFiredGenerator = true
+              this.$nextTick(() => {
+                this.$refs.TaskOilFiredGenerator.tableData.task_id = this.currentTaskId
+                this.$refs.TaskOilFiredGenerator.tableData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskOilFiredGenerator.tableData.resource_id = this.editSiteId
+                this.$refs.TaskOilFiredGenerator.tableData.resourcecode = this.editResourcecode
+                this.$refs.TaskOilFiredGenerator.tableData.resourcename = this.editResourcename
+                this.$refs.TaskOilFiredGenerator.tableData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '电池发电装置':
+              this.showBatteryGenerator = true
+              this.$nextTick(() => {
+                this.$refs.TaskBatteryGenerator.WriteData.task_id = this.currentTaskId
+                this.$refs.TaskBatteryGenerator.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TaskBatteryGenerator.WriteData.resource_id = this.editSiteId
+                this.$refs.TaskBatteryGenerator.WriteData.resourcecode = this.editResourcecode
+                this.$refs.TaskBatteryGenerator.WriteData.resourcename = this.editResourcename
+                this.$refs.TaskBatteryGenerator.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '外电引入':
+              this.showAnElectricIntroduced = true
+              this.$nextTick(() => {
+                this.$refs.AnElectricIntroduced.WriteData.task_id = this.currentTaskId
+                this.$refs.AnElectricIntroduced.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.AnElectricIntroduced.WriteData.resource_id = this.editSiteId
+                this.$refs.AnElectricIntroduced.WriteData.resourcecode = this.editResourcecode
+                this.$refs.AnElectricIntroduced.WriteData.resourcename = this.editResourcename
+                this.$refs.AnElectricIntroduced.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     handleTabs () {
       switch (this.ViewTabIndex) {

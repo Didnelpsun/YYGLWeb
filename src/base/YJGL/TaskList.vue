@@ -75,7 +75,7 @@
                     <td><div class="cell">保障级别</div></td>
                     <td><div class="cell"></div></td>
                     <td><div class="cell">发电功率</div></td>
-                    <td><div class="cell">{{tableData1.power}} </div></td>
+                    <td><div class="cell"> </div></td>
                     <td><div class="cell">协管员</div></td>
                     <td><div class="cell">{{tableData1.assistantname}}:{{tableData1.mobilnum}}</div></td>
                   </tr>
@@ -87,7 +87,7 @@
                     <td><div class="cell">燃油类型</div></td>
                     <td><div class="cell">{{tableData1.fueltype}}</div></td>
                     <td><div class="cell">功率</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell">{{tableData1.power}}</div></td>
                   </tr>
                   <tr class="el-table__row">
                     <td><div class="cell">代维单位</div></td>
@@ -186,38 +186,28 @@
           <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
           <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
           <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
-          <el-table-column prop="" label="是否自动监控" width=""></el-table-column>
+          <el-table-column prop="ismonitoring" label="是否自动监控" :formatter="Ismonitoring" width=""></el-table-column>
           <el-table-column prop="km" label="油机位置偏差" width=""></el-table-column>
-          <el-table-column prop="" label="位置监控时间" width=""></el-table-column>
+          <el-table-column prop="monitoringtime" label="位置监控时间" width=""></el-table-column>
           <el-table-column prop="enginestate" label="油机状态" width=""></el-table-column>
-          <el-table-column prop="" label="状态监控时间" width=""></el-table-column>
+          <el-table-column prop="dispatchtypetime" label="状态监控时间" width=""></el-table-column>
           <el-table-column prop="realityname" label="操作人" width=""></el-table-column>
           <el-table-column prop="dateinfo" label="操作时间" width=""></el-table-column>
-          <el-table-column prop="" label="操作" width="50">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
-              </template>
-          </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="告警">
         <el-table :data="tableData3" v-loading="WriteLoading">
           <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
           <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-          <el-table-column prop="" label="模块编号" width=""></el-table-column>
+          <el-table-column prop="swver" label="采集器ID" width=""></el-table-column>
           <el-table-column prop="" label="IP" width=""></el-table-column>
-          <el-table-column prop="" label="手机卡号" width=""></el-table-column>
-          <el-table-column prop="" label="IMSI" width=""></el-table-column>
-          <el-table-column prop="" label="IMEI" width=""></el-table-column>
-          <el-table-column prop="" label="油机编号" width=""></el-table-column>
-          <el-table-column prop="" label="油机缸号" width=""></el-table-column>
-          <el-table-column prop="" label="告警类型" width=""></el-table-column>
-          <el-table-column prop="" label="告警时间" width=""></el-table-column>
-          <el-table-column prop="" label="操作" width="50">
-          <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
-          </template>
-        </el-table-column>
+          <el-table-column prop="mobilnum" label="手机卡号" width=""></el-table-column>
+          <el-table-column prop="imsi" label="IMSI" width=""></el-table-column>
+          <el-table-column prop="imei" label="IMEI" width=""></el-table-column>
+          <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
+          <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
+          <el-table-column prop="alarmtypes" label="告警类型" width=""></el-table-column>
+          <el-table-column prop="alarmtime" label="告警时间" width=""></el-table-column>
       </el-table>
       </el-tab-pane>
       <el-tab-pane label="运营商站点" >
@@ -994,6 +984,8 @@ export default{
       ViewTabIndex: '0',
       // 表单验证
       Rules: {
+        code: [{ required: true, message: '请填入工单号', trigger: 'change' }],
+        workorderstatus: [{ required: true, message: '请选择工单状态', trigger: 'change' }]
       }
     }
   },
@@ -1002,6 +994,9 @@ export default{
     // console.log(this.WriteState)
   },
   methods: {
+    Ismonitoring (row) {
+      return row.smonitoring ? '是' : '否'
+    },
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData1 (data1) {
       // console.log('setWriteData1->data1:')
@@ -1080,22 +1075,23 @@ export default{
       }
     },
     subData () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        try {
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (!valid) {
+          this.$message.warning('请补全信息')
+        } else {
           this.WriteLoading = true
-          const res = await this.$axios.patch(AddTask, {params: Object.assign({}, this.Query, this.tableData)})
-          this.WriteLoading = false
-          if (res.error === true) {
-            this.$message.warning('请补全信息')
-            console.log(res.errorMessage)
-          }
-          if (res.success === true) {
-            this.$message.success('添加成功！')
-            this.$emit('fatheretMore')
-            this.closeWrite()
-          } else { this.$message.warning(res.msg) }
-        } catch (e) {
-          console.log(e)
+          this.$axios.patch(AddTask, {params: Object.assign({}, this.Query, this.tableData)}).then(res => {
+            this.WriteLoading = false
+            if (res.error === true) {
+              this.$message.warning('请补全信息')
+              console.log(res.errorMessage)
+            }
+            if (res.success === true) {
+              this.$message.success('添加成功！')
+              this.$emit('fatheretMore')
+              this.closeWrite()
+            } else { this.$message.warning(res.msg) }
+          })
         }
       })
     },

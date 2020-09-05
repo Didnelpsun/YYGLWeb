@@ -105,8 +105,7 @@
 </template>
 
 <script>
-import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog, ImportBBUExcel} from 'api/YJGL'
-import {GetOperatorSiteInfo} from 'api/api'
+import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog, ImportBBUExcel, GetOperatorSiteList} from 'api/YJGL'
 import {GlobalRes} from 'common/js/mixins'
 import Details from 'base/YJGL/TaskList'
 import Import from 'base/Import'
@@ -254,7 +253,7 @@ export default {
         Object.assign(this.$data.tableData4, this.$options.data().tableData4)
       }
       if (params.id) {
-        this.$axios.get(GetOperatorSiteInfo, {
+        this.$axios.get(GetOperatorSiteList, {
           params
         }).then(res => {
           if (res.success) {

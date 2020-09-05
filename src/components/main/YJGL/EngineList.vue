@@ -72,7 +72,7 @@
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
-            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!ifarchivedState">编辑</el-button>
+           <!-- <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!ifarchivedState">编辑</el-button>-->
             <el-button type="text" size="mini" @click="handleUnbundling(scope.row)">解绑</el-button>
             <el-button type="text" size="mini" @click="handleWrite(3,scope.row)">绑定</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!ifarchivedState">删除</el-button>

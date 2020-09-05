@@ -52,8 +52,8 @@
         </el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="externalpacking" label="外电是否报装" width="" :formatter="formatState"></el-table-column>
-        <el-table-column prop="poleline" label="有无杆路" width=""></el-table-column>
+        <el-table-column prop="externalpacking" label="外电是否报装" width="" :formatter="formatState1"></el-table-column>
+        <el-table-column prop="poleline" label="有无杆路" width="" :formatter="formatState2"></el-table-column>
         <el-table-column prop="polelinenumber" label="杆路数量" width=""></el-table-column>
         <el-table-column prop="polelineheight" label="杆路高度(米)" width=""></el-table-column>
         <el-table-column prop="polelinelength" label="杆路长度(米)" width=""></el-table-column>
@@ -172,7 +172,8 @@ export default {
         this.$message.error(err)
       })
     },
-    formatState (row) { return row.externalpacking ? '是' : '否' },
+    formatState1 (row) { return row.externalpacking ? '是' : '否' },
+    formatState2 (row) { return row.poleline ? '是' : '否' },
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true

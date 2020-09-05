@@ -253,21 +253,6 @@
               <!-- <td><div class="cell">{{this.writeDic(dictionaryList.unitList)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--质保编号-->
-            <tr class="el-table__row">
-              <td><div class="cell">质保编号</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.qualitycode}}</div>
-                  <el-form-item label-width="0" prop="qualitycode" class="form-item" v-show="WriteState !== 2">
-                    <el-input v-model="tableData.qualitycode" placeholder="请填入质保编号"></el-input>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
@@ -282,24 +267,6 @@
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--维护单位-->
-            <tr class="el-table__row">
-              <td><div class="cell">维护单位</div></td>
-              <td>
-                <div class="cell">
-                  <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
-                  <el-form-item label-width="0" prop="maintenanceunit" class="form-item" v-show="WriteState !== 2">
-                    <el-select class="tableSelect" v-model="tableData.maintenanceunit" placeholder="请选择维护单位">
-                      <el-option label="请选择" :value="null"></el-option>
-                      <el-option v-for="item in dictionaryList.maintenanceunit" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.maintenanceList)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--线缆型号-->
@@ -414,10 +381,8 @@ export default {
         'propertyrightunit': null,
         'number': null,
         'unit': null,
-        'qualitycode': '',
         'identificationcode': '',
         'productiontime': '',
-        'maintenanceunit': null,
         'manufacturer': null,
         'models': null,
         'cableassembly': '',
@@ -484,10 +449,8 @@ export default {
       let arr = [
         '设备产权单位',
         '设备单位',
-        '设备维护单位',
         '电池设备厂家',
         '换电电池设备型号',
-        '设备状态',
         '设备存放点类型'
       ]
       this.$axios.post(DictionaryInfoList, arr).then(res => {
@@ -496,9 +459,7 @@ export default {
           this.$set(this.dictionaryList, 'unit', data.filter(i => { return i.type === '设备单位' }))
           this.dictionaryList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
           this.dictionaryList.manufacturer = data.filter(i => { return i.type === '电池设备厂家' })
-          this.dictionaryList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
           this.dictionaryList.models = data.filter(i => { return i.type === '换电电池设备型号' })
-          this.dictionaryList.state = data.filter(i => { return i.type === '设备状态' })
         } else {
           this.$message.error(res.msg)
         }

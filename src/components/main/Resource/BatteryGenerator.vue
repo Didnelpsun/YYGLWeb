@@ -10,19 +10,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="站点名称：">
-                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="设备状态：">
-                <el-select class="searchSelect" v-model="Query.dayfacetypes">
-                  <el-option label="请选择" :value="null"></el-option>
-                  <el-option v-for="i in DicList.state" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="创建时间：">
                 <el-date-picker class="tableSelect" v-model="Query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
                 </el-date-picker>
@@ -32,6 +19,11 @@
               <el-form-item label="至：">
                 <el-date-picker class="tableSelect" v-model="Query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
                 </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -66,7 +58,6 @@
         <el-table-column prop="cityname" label="地市" width="80"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="100"></el-table-column>
         <el-table-column prop="manufacturername" label="设备厂家" width=""></el-table-column>
-        <el-table-column prop="statename" label="设备状态" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
@@ -114,7 +105,6 @@ export default {
         cityid: 0,
         areaid: 0,
         resourcename: '',
-        dayfacetypes: null,
         starttime: '',
         endtime: ''
       },
@@ -124,9 +114,7 @@ export default {
       pageSize: 10,
       total: 0,
       DicList: {
-        state: [],
         propertyrightunit: [],
-        maintenanceunit: [],
         manufacturer: [],
         models: []
       },
@@ -149,13 +137,11 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['设备状态', '设备产权单位', '设备存放点类型', '设备单位', '设备维护单位', '电池发电装置设备厂家', '电池发电装置设备型号']
+      let arr = ['设备产权单位', '设备存放点类型', '设备单位', '电池发电装置设备厂家', '电池发电装置设备型号']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.DicList.unitList = res.data.filter(i => { return i.type === '设备单位' })
-          this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
           this.DicList.propertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
-          this.DicList.maintenanceunit = res.data.filter(i => { return i.type === '设备维护单位' })
           this.DicList.manufacturer = res.data.filter(i => { return i.type === '电池发电装置设备厂家' })
           this.DicList.models = res.data.filter(i => { return i.type === '电池发电装置设备型号' })
         } else {

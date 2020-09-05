@@ -191,19 +191,6 @@
               <!-- <td><div class="cell">{{writeDic(DicList.unit)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--质保编号-->
-            <tr class="el-table__row">
-              <td><div class="cell">质保编号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="qualitycode">
-                  <el-input v-model="WriteData.qualitycode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.qualitycode}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
@@ -215,38 +202,6 @@
               <td v-show="WriteState == 2"><div class="cell">{{WriteData.productiontime}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--维护单位-->
-            <tr class="el-table__row">
-              <td><div class="cell">维护单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="maintenanceunit">
-                  <el-select v-model="WriteData.maintenanceunit">
-                    <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.maintenanceunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.maintenanceunitname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.maintenanceunit)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--设备状态-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>设备状态</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="state">
-                  <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.statename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--安装地址-->
@@ -464,13 +419,11 @@ export default {
         equipmenttype: null,
         number: 0, // 数量
         unit: null, // 单位
-        qualitycode: '', // 质保编号
         identificationcode: '', // 标识码
         productiontime: null, // 生产日期
         manufacturer: null, // 设备厂家
-        maintenanceunit: null, // 维护单位
         models: null, // 设备型号
-        state: null, // 设备状态
+        state: 1, // 设备状态
         address: '', // 安装地址
         facilitytype: null, // 细分类型id
         portnumber: 0, // 端口数
@@ -508,7 +461,6 @@ export default {
           {required: false, message: '请填数量', trigger: 'blur'},
           { type: 'number', message: '必须为数字类型' }
         ],
-        state: [{ required: true, message: '请填写设备状态', trigger: 'blur' }],
         address: [{ required: true, message: '请填写安装地址', trigger: 'blur' }],
         facilitytype: [{ required: true, message: '请填写细分类型', trigger: 'change' }],
         portnumber: [
@@ -536,16 +488,14 @@ export default {
   },
   methods: {
     getDic () {
-      let arr = ['充电桩设备厂家', '设备状态', '设备产权单位', '设备单位', '充电桩设备型号', '设备维护单位', '设备存放点类型', '充电桩设备细分类型', '充电桩设备供电类型', '充电桩设备门禁厂家']
+      let arr = ['充电桩设备厂家', '设备产权单位', '设备单位', '充电桩设备型号', '设备存放点类型', '充电桩设备细分类型', '充电桩设备供电类型', '充电桩设备门禁厂家']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
           this.$set(this.DicList, 'unit', data.filter(i => { return i.type === '设备单位' }))
           this.DicList.manufacturer = data.filter(i => { return i.type === '充电桩设备厂家' })
-          this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
           this.DicList.models = data.filter(i => { return i.type === '充电桩设备型号' })
-          this.DicList.state = data.filter(i => { return i.type === '设备状态' })
           this.DicList.facilitytype = data.filter(i => { return i.type === '充电桩设备细分类型' })
           this.DicList.powersupply = data.filter(i => { return i.type === '充电桩设备供电类型' })
           this.DicList.accesscontrolmanufacturer = data.filter(i => { return i.type === '充电桩设备门禁厂家' })

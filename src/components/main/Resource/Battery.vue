@@ -13,19 +13,6 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="站点名称：">
-                    <el-input v-model="query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore(1)"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="设备状态：">
-                    <el-select class="searchSelect" v-model="query.dayfacetypes">
-                      <el-option label="请选择" :value="null"></el-option>
-                      <el-option v-for="i in dictionaryList.stateList" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
                   <el-form-item label="创建时间：">
                     <el-date-picker class="tableSelect" v-model="query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
                     </el-date-picker>
@@ -35,6 +22,11 @@
                   <el-form-item label="至：">
                     <el-date-picker class="tableSelect" v-model="query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
                     </el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="站点名称：">
+                    <el-input v-model="query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore(1)"></el-input>
                   </el-form-item>
                 </el-col>
               </el-col>
@@ -70,7 +62,6 @@
         <el-table-column prop="cityname" label="地市" width="75"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="75"></el-table-column>
         <el-table-column prop="manufacturername" label="设备厂家" width=""></el-table-column>
-        <el-table-column prop="statename" label="设备状态" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column label="操作" width="50" fixed="right">
@@ -118,7 +109,6 @@ export default {
         AreaList: [
         ],
         resourcename: '',
-        dayfacetypes: null,
         starttime: '',
         endtime: ''
       },
@@ -137,14 +127,10 @@ export default {
         propertyrightunitList: [],
         // unit
         unitList: [],
-        // maintenanceunit
-        maintenanceList: [],
         // manufacturer
         manufacturerList: [],
         // models
-        modelsList: [],
-        // state
-        stateList: []
+        modelsList: []
       },
       tableList: [
       ],
@@ -174,10 +160,8 @@ export default {
       let s = [
         '设备产权单位',
         '设备单位',
-        '设备维护单位',
         '电池设备厂家',
         '电池设备型号',
-        '设备状态',
         '设备存放点类型'
       ]
       this.Loading = true
@@ -193,14 +177,8 @@ export default {
           this.dictionaryList.manufacturerList = data.filter(i => {
             return i.type === '电池设备厂家'
           })
-          this.dictionaryList.maintenanceList = data.filter(i => {
-            return i.type === '设备维护单位'
-          })
           this.dictionaryList.modelsList = data.filter(i => {
             return i.type === '电池设备型号'
-          })
-          this.dictionaryList.stateList = data.filter(i => {
-            return i.type === '设备状态'
           })
         } else {
           this.$message.error(res.msg)
@@ -223,7 +201,6 @@ export default {
             pageIndex: e,
             pageSize: this.pagination.pageSize,
             resourcename: this.query.resourcename,
-            dayfacetypes: this.query.dayfacetypes,
             starttime: this.query.starttime,
             endtime: this.query.endtime
           })

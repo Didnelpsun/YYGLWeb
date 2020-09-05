@@ -180,6 +180,7 @@ export default {
             this.showWrite = true
             try {
               this.tableData = res.data
+              console.log(res.data)
               this.$refs.Details.setWriteData(this.tableData)
             } catch (e) {
               console.log(e)

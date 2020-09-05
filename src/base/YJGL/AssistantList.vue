@@ -49,6 +49,16 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
               </tr>
+              <tr class="el-table__row">
+                <td><div class="cell"><i class="must">*</i>区域</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item  label-width="0" class="form-item" prop="AreaList">
+                    <el-cascader v-model="tableData.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(tableData)" ref="csArea"></el-cascader>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState == 2"><div class="cell">{{tableData.cityname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
               <!--身份证号-->
               <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>身份证号</div></td>
@@ -115,7 +125,9 @@
                 <td>
                   <div class="cell">
                     <div label-width="0" prop="sitename" class="form-item" @click="siteOpen">
+                      <el-form-item label-width="0" prop="sitename" class="form-item">
                       <el-input v-model="tableData.sitename" placeholder="请填入站点名称" readonly></el-input>
+                      </el-form-item>
                     </div>
                   </div>
                 </td>
@@ -186,6 +198,7 @@ import { AddAssistant, EditAssistant } from 'api/YJGL'
 import SitePicker from 'base/YJGL/SitePicker'
 import EnginePicker from 'base/YJGL/EnginePicker'
 import {GlobalRes} from 'common/js/mixins'
+import {AreaList} from 'api/api'
 
 export default{
   name: 'AssistantList',
@@ -197,7 +210,33 @@ export default{
     }
   },
   data () {
+    var _this = this
     return {
+      areaProps: {
+        lazy: true,
+        label: 'name',
+        value: 'id',
+        lazyLoad (node, resolve) {
+          if (!node.level) {
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeAreaLevel(res.data))
+              }
+            })
+          } else {
+            if (!node.hasChildren) return resolve([])
+            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeAreaLevel(res.data))
+              }
+            })
+          }
+        }
+      },
       list: [2, 5, 7],
       siteShow: false,
       engineShow: false,
@@ -210,6 +249,10 @@ export default{
         'sparemobile': '',
         'address': '',
         'professional': '',
+        'AreaList': [],
+        'provinceid': null,
+        'cityid': null,
+        'areaid': null,
         'resource': [
           {
             type: 1,
@@ -237,22 +280,54 @@ export default{
       },
       // 表单验证
       Rules: {
-        equipmentid: [
-          { required: true, message: '请选择设备id', trigger: 'blur' }
+        AreaList: [
+          { required: true, message: '请选择区域', trigger: 'blur' }
         ],
-        swver: [
-          { required: true, message: '请选择设备软件版本号', trigger: 'blur' }
+        name: [
+          { required: true, message: '请填入姓名', trigger: 'change' }
         ],
-        faccode: [
-          { required: true, message: '请选择厂家编码', trigger: 'blur' }
+        cardnum: [
+          { required: true, message: '请填入身份证号', trigger: 'change' }
+        ],
+        mobilnum: [
+          { required: true, message: '请填入手机号', trigger: 'change' }
+        ],
+        sparemobile: [
+          { required: true, message: '请填入备用手机号', trigger: 'change' }
+        ],
+        address: [
+          { required: true, message: '请填入地址', trigger: 'change' }
+        ],
+        sitename: [
+          { required: true, message: '请选择站点名称', trigger: 'change' }
         ]
       }
     }
   },
   methods: {
+    changeArea (obj) {
+      // console.log(obj)
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
+      obj.areaid = obj.AreaList[2]
+    },
+    setArea (list, key = 'csArea') {
+      this.nodes = list
+      this.$refs[key].panel.activePath = []
+      this.$refs[key].panel.loadCount = 0
+      this.$refs[key].panel.lazyLoad()
+    },
+    _normalizeAreaLevel (list) {
+      for (let i in list) {
+        if (list[i].leveltype >= 3) list[i].leaf = true
+      }
+      return list
+    },
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData (data) {
       this.tableData = Object.assign({}, this.tableData, data)
+      this.tableData.AreaList = [ data.provinceid, data.cityid, data.areaid ]
+      this.setArea(this.tableData.AreaList, 'csArea')
       for (let i = 0; i < this.tableData.resource.length; i++) {
         if (this.tableData.resource[i]['resourcescode']) {
           if (this.tableData.resource[i]['type'] === 1) {
@@ -277,10 +352,17 @@ export default{
         this.$refs.engine.getMore(1)
       }
     },
-    selectSite (id, name) {
+    selectSite (row) {
       this.siteShow = false
-      this.tableData.siteid[0] = id
-      this.tableData.sitename = name
+      if (row.length > 0) {
+        this.tableData.siteid = row.map(item => item.id)
+        this.tableData.sitename = row.map(item => item.name)
+        this.tableData.sitename = this.tableData.sitename.join(',')
+      } else {
+        this.tableData.siteid = []
+        this.tableData.siteid[0] = row.id
+        this.tableData.sitename = row.name
+      }
     },
     selectEngine (id, name) {
       this.engineShow = false
@@ -300,7 +382,6 @@ export default{
     // 添加提交
     async add () {
       this.$refs.tableForm.validate(async (valid, msg) => {
-        // console.log(this.tableData)
         if (!valid) {
           this.$message.warning('请补全信息')
         } else {
@@ -328,7 +409,6 @@ export default{
     // 修改提交
     async edit () {
       this.$refs.tableForm.validate(async (valid, msg) => {
-        // console.log(this.tableData)
         if (!valid) {
           this.$message.warning('请补全信息')
         } else {
@@ -356,6 +436,7 @@ export default{
     },
     // 返回关闭编辑函数
     closeWrite () {
+      this.setArea([])
       // this.$refs.tableForm.clearValidate() // 初始化表单校验
       Object.assign(this.$data.tableData, this.$options.data().tableData)
       // this.$nextTick(() => { this.$refs.tableForm.resetFields() })

@@ -20,11 +20,16 @@
           <el-col :span="8">
             <el-button type="primary" :disabled="Loading" icon="el-icon-search" @click="getMore(1)">查询</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
+            <el-button type="primary"  @click="select">确认选择</el-button>
           </el-col>
         </el-row>
       </el-form>
       <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
-      <el-table :data="tableList" v-loading="Loading">
+      <el-table :data="tableList" v-loading="Loading" @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <!-- <el-table-column prop="provincename" label="省份" width=""></el-table-column> -->
         <el-table-column prop="cityname" label="城市" width=""></el-table-column>
@@ -69,6 +74,7 @@ export default {
       },
       id: [],
       tableList: [],
+      info: [],
       // 分页相关属性
       pagination: {
         total: 0,
@@ -87,6 +93,12 @@ export default {
     this.getList()
   },
   methods: {
+    select () {
+      this.$emit('selectSite', this.info)
+    },
+    handleSelectionChange (val) {
+      this.info = val
+    },
     async getMore (page) {
       this.pagination.currentPage = page
       this.Loading = true
@@ -120,7 +132,7 @@ export default {
       this.getMore(1)
     },
     handleChoose (row) {
-      this.$emit('selectSite', row.id, row.name)
+      this.$emit('selectSite', row)
     }
   }
 }

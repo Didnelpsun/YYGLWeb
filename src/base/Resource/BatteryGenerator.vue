@@ -223,19 +223,6 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--质保编号-->
-            <tr class="el-table__row">
-              <td><div class="cell">质保编号</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="qualitycode">
-                  <el-input v-model="WriteData.qualitycode"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.qualitycode}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--生产日期-->
             <tr class="el-table__row">
               <td><div class="cell">生产日期</div></td>
@@ -245,38 +232,6 @@
                 </el-form-item>
               </div></td>
               <td v-show="WriteState === 2"><div class="cell">{{WriteData.productiontime}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--维护单位-->
-            <tr class="el-table__row">
-              <td><div class="cell">维护单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="maintenanceunit">
-                  <el-select v-model="WriteData.maintenanceunit">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.maintenanceunit" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.maintenanceunitname}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <!--设备状态-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>设备状态</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="state">
-                  <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="0"></el-option>
-                    <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.statename}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -429,13 +384,11 @@ export default {
         equipmenttype: null,
         propertyrightunit: null,
         number: null,
-        qualitycode: '',
         identificationcode: '',
         productiontime: '',
-        maintenanceunit: null,
         manufacturer: null,
         models: null,
-        state: null,
+        state: 1,
         devicecode: '',
         cylinderno: '',
         capacity: 0,
@@ -462,7 +415,6 @@ export default {
           {pattern: isValidLatitude, message: '请输入正确的纬度', trigger: 'blur'}
         ],
         number: [{ type: 'number', message: '请输入数字', trigger: 'blur' }],
-        state: [{ required: true, message: '请填写设备状态', trigger: 'blur' }],
         capacity: [{ required: true, message: '请填写功率', trigger: 'blur' }],
         cylinderno: [{ required: true, message: '请填写缸号', trigger: 'blur' }],
         devicecode: [{ required: true, message: '请填写装置编码', trigger: 'blur' }],

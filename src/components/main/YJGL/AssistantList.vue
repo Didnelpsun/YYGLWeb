@@ -107,7 +107,6 @@ export default {
     }
   },
   activated () {
-    // this.check(AreaList)
     this.getMore(1)
   },
   created () {
@@ -218,8 +217,9 @@ export default {
       }
       // console.log(this.tableData)
       this.WriteState = state
-      if (state === 0) this.showWrite = true
-      else {
+      if (state === 0) {
+        this.showWrite = true
+      } else {
         this.setData(state, row.id)
       }
       this.$refs.Details.WriteLoading = false

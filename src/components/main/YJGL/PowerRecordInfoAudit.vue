@@ -62,10 +62,10 @@
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
     </div>
-    <div v-show="showWrite">
-      <Details @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
+    <div v-if="showWrite">
+      <Details @fatherClose="closeWrite" ref="Details" @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
-
+    <ImgBox ref="ImgBox"></ImgBox>
   </div>
 </template>
 
@@ -73,6 +73,7 @@
 import { ObtainAuditList, ObtainAuObtainAuditInfo } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/PowerRecordInfoAudit'
+import ImgBox from '../../../base/ImgBox'
 
 export default {
   name: 'PowerRecordInfoAudit',
@@ -108,6 +109,11 @@ export default {
     this.getMore(1)
   },
   methods: {
+    OpenImgBox (title, name, list) {
+      this.$refs.ImgBox.SetData(title, name, list)
+      this.$refs.ImgBox.Open()
+      this.$refs.ImgBox.Flag = true
+    },
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
       this.Loading = true
@@ -154,7 +160,10 @@ export default {
     },
     // 审核函数
     Audit (row) {
-      this.$refs.Details.WriteLoading = true
+      this.showWrite = true
+      this.$nextTick(() => {
+        this.$refs.Details.WriteLoading = true
+      })
       if (this.$data.tableData !== null || this.$data.tableData !== undefined) {
         // this.$data.tableData = {}
         Object.assign(this.$data.tableData, this.$options.data().tableData)
@@ -164,10 +173,9 @@ export default {
           }
         }).then(res => {
           if (res.error !== true) {
-            this.showWrite = true
             try {
               if (res.data) {
-                this.showWrite = true
+                this.$refs.Details.WriteLoading = false
                 this.tableData = res.data
                 this.tableData = Object.assign({}, this.tableData, {id: row.id})
                 this.$refs.Details.setWriteData(this.tableData)
@@ -175,16 +183,19 @@ export default {
             } catch (e) {
               console.log(e)
             }
-          } else { this.$message.error('查询详情失败') }
+          } else {
+            this.$refs.Details.WriteLoading = false
+            this.$message.error('查询详情失败')
+          }
         })
       } else {
         this.$message.error('查询详情失败')
       }
-      this.$refs.Details.WriteLoading = false
     }
   },
   components: {
-    Details
+    Details,
+    ImgBox
   }
 }
 </script>

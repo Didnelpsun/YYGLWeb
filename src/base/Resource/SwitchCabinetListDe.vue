@@ -449,34 +449,6 @@
                   <div class="cell"></div>
                 </td>
               </tr>
-              <!--质保编号-->
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">质保编号</div>
-                </td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.qualitycode}}</div>
-                    <el-form-item
-                      label-width="0"
-                      prop="qualitycode"
-                      class="form-item"
-                      v-show="WriteState !== 2"
-                    >
-                      <el-input v-model="tableData.qualitycode" placeholder="请填入质保编号"></el-input>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td>
-                  <div class="cell"></div>
-                </td>
-                <!-- <td>
-                  <div class="cell"></div>
-                </td> -->
-                <td>
-                  <div class="cell"></div>
-                </td>
-              </tr>
               <!--生产日期-->
               <tr class="el-table__row">
                 <td>
@@ -507,85 +479,6 @@
                 </td>
                 <!-- <td>
                   <div class="cell"></div>
-                </td> -->
-                <td>
-                  <div class="cell"></div>
-                </td>
-              </tr>
-              <!--维护单位-->
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">
-                    维护单位
-                  </div>
-                </td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.maintenanceunitname}}</div>
-                    <el-form-item
-                      label-width="0"
-                      prop="maintenanceunit"
-                      class="form-item"
-                      v-show="WriteState !== 2"
-                    >
-                      <el-select
-                        class="tableSelect"
-                        v-model="tableData.maintenanceunit"
-                        placeholder="请选择维护单位"
-                      >
-                        <el-option label="请选择" :value="null"></el-option>
-                        <el-option
-                          v-for="item in dictionaryList.maintenanceList"
-                          :key="item.id"
-                          :label="item.text"
-                          :value="item.value"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td>
-                  <div class="cell"></div>
-                </td>
-                <!-- <td>
-                  <div class="cell">{{this.writeDic(dictionaryList.maintenanceList)}}</div>
-                </td> -->
-                <td>
-                  <div class="cell"></div>
-                </td>
-              </tr>
-              <!--设备状态-->
-              <tr class="el-table__row">
-                <td>
-                  <div class="cell">
-                    <i class="must">*</i>设备状态
-                  </div>
-                </td>
-                <td>
-                  <div class="cell">
-                    <div v-show="WriteState == 2">{{tableData.statename}}</div>
-                    <el-form-item label-width="0" prop="state" class="form-item" v-show="WriteState !== 2">
-                      <el-select
-                        class="tableSelect"
-                        v-model="tableData.state"
-                        placeholder="请选择设备状态"
-                      >
-                        <el-option label="请选择" :value="null"></el-option>
-                        <el-option
-                          v-for="item in dictionaryList.stateList"
-                          :key="item.id"
-                          :label="item.text"
-                          :value="item.value"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td>
-                  <div class="cell"></div>
-                </td>
-                <!-- <td>
-                  <div class="cell">{{this.writeDic(dictionaryList.stateList)}}</div>
                 </td> -->
                 <td>
                   <div class="cell"></div>
@@ -881,13 +774,11 @@ export default {
         'propertyrightunit': null,
         'number': null,
         'unit': null,
-        'qualitycode': '',
         'identificationcode': '',
         'productiontime': '',
-        'maintenanceunit': null,
         'manufacturer': null,
         'models': null,
-        'state': null,
+        'state': 1,
         'address': '',
         'warehousenumber': null, // 仓库编码
         'commonsite': true, // 普通站点
@@ -915,9 +806,6 @@ export default {
         ],
         propertyrightunit: [
           { required: true, message: '请选择产权单位', trigger: 'change' }
-        ],
-        state: [
-          { required: true, message: '请选择设备状态', trigger: 'change' }
         ],
         bodycode: [
           { required: true, message: '请填写机身编码', trigger: 'blur' }

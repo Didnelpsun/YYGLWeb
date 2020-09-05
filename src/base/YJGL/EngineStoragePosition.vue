@@ -40,8 +40,10 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState === 2">{{tableData.machinenumber}}</div>
-                    <div label-width="0" prop="machinenumber" class="form-item" v-show="WriteState !== 2" @click="engineOpen">
+                    <div label-width="0"  class="form-item" v-show="WriteState !== 2" @click="engineOpen">
+                      <el-form-item label-width="0"  class="form-item"  prop="machinenumber">
                       <el-input v-model="tableData.machinenumber" placeholder="请填入油机名称" readonly></el-input>
+                      </el-form-item>
                     </div>
                   </div>
                 </td>
@@ -55,8 +57,10 @@
                 <td>
                   <div class="cell">
                     <div v-show="WriteState === 2">{{tableData.stationname}}</div>
-                    <div label-width="0" prop="stationname" class="form-item" v-show="WriteState !== 2" @click="siteOpen">
+                    <div label-width="0" class="form-item" v-show="WriteState !== 2" @click="siteOpen">
+                      <el-form-item label-width="0"  class="form-item"  prop="stationname">
                       <el-input v-model="tableData.stationname" placeholder="请填入站点名称" readonly></el-input>
+                      </el-form-item>
                     </div>
                   </div>
                 </td>
@@ -65,12 +69,12 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--区域-->
-              <tr class="el-table__row" v-show="WriteState === 0">
+              <tr class="el-table__row" v-if="WriteState === 0">
                 <td><div class="cell"><i class="must">*</i>区域</div></td>
                 <td>
                   <div class="cell">
-                    <el-form-item label-width="0" class="form-item" v-model="tableData.areaid">
-                    <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" ref="csArea"></el-cascader>
+                    <el-form-item label-width="0" class="form-item" prop="AreaList">
+                    <el-cascader v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" ref="csArea"></el-cascader>
                   </el-form-item>
                 </div>
               </td>
@@ -191,7 +195,7 @@
 
 <script>
 import { AddEnginestorageposition, EditEnginestorageposition } from 'api/YJGL'
-import SitePicker from 'base/YJGL/SitePicker'
+import SitePicker from 'base/YJGL/SitesPicker'
 import EnginePicker from 'base/YJGL/EnginePicker'
 import {GlobalRes} from 'common/js/mixins'
 
@@ -212,6 +216,7 @@ export default{
       ImgList1: [],
       // 新增表格相关属性
       tableData: {
+        AreaList: [],
         provinceid: '',
         cityid: '',
         areaid: '',
@@ -226,9 +231,6 @@ export default{
         issubmit: false,
         imglist: []
       },
-      tableArea: {
-        AreaList: []
-      },
       // 分页数据
       pagination: {
         total: 0,
@@ -237,27 +239,27 @@ export default{
       },
       // 表单验证
       Rules: {
-        areaid: [
-          { required: true, message: '请选择区域', trigger: 'blur' }
+        AreaList: [
+          { required: true, message: '请选择区域', trigger: 'change' }
         ],
         machinenumber: [
-          { required: true, message: '请选择油机', trigger: 'blur' }
+          { required: true, message: '请选择油机', trigger: 'change' }
         ],
         stationname: [
-          { required: true, message: '请选择站点', trigger: 'blur' }
-        ],
+          { required: true, message: '请选择站点', trigger: 'change' }
+        ]/*,
         storageplacetype: [
           { required: true, message: '请选择存放位置类型', trigger: 'blur' }
-        ],
+        ], */
         /* placeinfo: [
           { required: true, message: '请填入存放位置', trigger: 'blur' }
         ], */
-        longitude: [
+        /* longitude: [
           { required: true, message: '获取经度失败', trigger: 'blur' }
         ],
         latitude: [
           { required: true, message: '获取纬度失败', trigger: 'blur' }
-        ]
+        ] */
       }
     }
   },
@@ -318,24 +320,19 @@ export default{
       if (check) {
         this.tableData.issubmit = check
       }
-      if (this.tableArea.areaid && this.tableArea.cityid && this.tableArea.provinceid) {
-        this.tableData.provinceid = this.tableArea.provinceid
-        this.tableData.cityid = this.tableArea.cityid
-        this.tableData.areaid = this.tableArea.areaid
-      }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()
     },
     // 添加提交
     async add () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (this.ImgList1.length === 0) return this.$message.warning('站点名称图片必须上传')
         // console.log(this.tableData)
         if (!valid) {
           this.$message.warning('请补全信息')
         } else {
-          try {
-            this.WriteLoading = true
-            const res = await this.$axios.post(AddEnginestorageposition, this.tableData)
+          this.WriteLoading = true
+          this.$axios.post(AddEnginestorageposition, this.tableData).then(res => {
             this.WriteLoading = false
             if (res.error === true) {
               this.$message.warning('请补全信息')
@@ -349,15 +346,14 @@ export default{
               this.ResetWrite()
               this.closeWrite()
             } else { this.$message.warning(res.msg) }
-          } catch (e) {
-            console.log(e)
-          }
+          })
         }
       })
     },
     // 修改提交
     async edit () {
       this.$refs.tableForm.validate(async (valid, msg) => {
+        if (this.ImgList1.length === 0) return this.$message.warning('站点名称图片必须上传')
         // console.log(this.tableData)
         if (!valid) {
           this.$message.warning('请补全信息')

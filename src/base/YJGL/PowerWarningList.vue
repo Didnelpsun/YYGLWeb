@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import { AddPowerwarning, EditPowerwarning, JobInfo } from 'api/YJGL'
+import { AddPowerwarning, EditPowerwarning } from 'api/YJGL'
 import CourtsPicker from 'base/YJGL/CourtsPicker'
 import AssistantPicker from 'base/YJGL/AssistantPicker'
 import {GlobalRes} from 'common/js/mixins'
@@ -203,17 +203,11 @@ export default{
       },
       // 表单验证
       Rules: {
-        areaid: [
-          { required: true, message: '请选择区域', trigger: 'blur' }
+        planpowertime: [
+          { required: true, message: '请选择计划停电时间', trigger: 'blur' }
         ],
-        equipmentid: [
-          { required: true, message: '请选择设备id', trigger: 'blur' }
-        ],
-        swver: [
-          { required: true, message: '请选择设备软件版本号', trigger: 'blur' }
-        ],
-        faccode: [
-          { required: true, message: '请选择厂家编码', trigger: 'blur' }
+        plancalltime: [
+          { required: true, message: '请选择计划来电时间', trigger: 'blur' }
         ]
       }
     }
@@ -222,6 +216,7 @@ export default{
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData (data) {
       this.tableData = data
+      console.log(data)
     },
     courtOpen () {
       this.courtShow = true

@@ -127,48 +127,47 @@
 
         var IMSI = "";
         //地图初始化
+      window.addEventListener('message',function(e){
+        console.log(e.data)
+        if(e.data.longitude){
+          map_longitude = e.data.longitude
+        }else{
+          map_longitude = mapCfg_lngCenter
+        }
+        if(e.data.latitude){
+          map_latitude = e.data.latitude
+        }else{
+          map_latitude = mapCfg_latCenter
+        }
+        type = e.data.type
+        initialize()
+      },false)
       function initialize() {
         if (map == undefined || map == null) {
-          window.addEventListener('message',function(e){
-            console.log(e.data)
-            if(e.data.longitude){
-              map_longitude = e.data.longitude
-            }else{
-              map_longitude = mapCfg_lngCenter
-            }
-            if(e.data.latitude){
-              map_latitude = e.data.latitude
-            }else{
-              map_latitude = mapCfg_latCenter
-            }
-            type = e.data.type
-          },false)
-          setTimeout(()=>{
-            var myOptions = {
-              center: new google.maps.LatLng(map_latitude, map_longitude),
-              zoom: 15,
-              disableDoubleClickZoom: false,//屏蔽地图双击放大
-              mapTypeControl: false,
-              zoomControl: false,//缩放控件
-              scaleControl: true,//比例控件
-              streetViewControl: false,
-            };
-            //初始化对象
-            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-            map.mapTypes.set('google_online_map', google_online_map);
-            map.mapTypes.set('google_offline_map', google_offline_map);
-            map.setMapTypeId('google_offline_map');//默认显示在线地
-            if(type === 0){
-              new google.maps.Marker({
-                map: map,
-                position: new google.maps.LatLng(map_latitude,map_longitude),
-                title: '测试',
-                icon: 'google/mapfiles/api-3/images/Lollipop1.png'
-              })
-              document.getElementById("dizhi").style.display="none";
-              document.getElementById("btn").innerHTML= '返&nbsp;回'
-            }
-          },200)
+          var myOptions = {
+            center: new google.maps.LatLng(map_latitude, map_longitude),
+            zoom: 15,
+            disableDoubleClickZoom: false,//屏蔽地图双击放大
+            mapTypeControl: false,
+            zoomControl: false,//缩放控件
+            scaleControl: true,//比例控件
+            streetViewControl: false,
+          };
+          //初始化对象
+          map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+          map.mapTypes.set('google_online_map', google_online_map);
+          map.mapTypes.set('google_offline_map', google_offline_map);
+          map.setMapTypeId('google_offline_map');//默认显示在线地
+          if(type === 0){
+            new google.maps.Marker({
+              map: map,
+              position: new google.maps.LatLng(map_latitude,map_longitude),
+              title: '测试',
+              icon: 'google/mapfiles/api-3/images/Lollipop1.png'
+            })
+            document.getElementById("dizhi").style.display="none";
+            document.getElementById("btn").innerHTML= '返&nbsp;回'
+          }
         }
         }
         // 选择位置
@@ -191,7 +190,7 @@
         }
     </script>
 </head>
-<body onload="initialize()">
+<body>
     <div id="map_canvas"></div>
     <div id="dizhi"></div>
     <div id="btn-box" onclick="SelectThis()">

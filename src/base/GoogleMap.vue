@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     LoadMap () {
-      console.log('执行了')
       this.iframeWin = this.$refs.iframe.contentWindow
       this.$nextTick(() => {
         // 在外部 Vue 的 window 上添加 postMessage 的监听，并且绑定处理函数 handleMessage

@@ -32,12 +32,12 @@
             </colgroup>
             <tbody>
               <!--地市-->
-              <tr class="el-table__row" v-show="WriteState === 0">
+              <tr class="el-table__row" v-if="WriteState === 0">
                 <td><div class="cell"><i class="must">*</i>地市</div></td>
                 <td>
                   <div class="cell">
-                    <el-form-item label-width="0" class="form-item" v-model="tableData.areaid">
-                    <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" :options="areaOption" ref="csArea"></el-cascader>
+                    <el-form-item label-width="0" class="form-item"  prop="AreaList">
+                    <el-cascader v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" :options="areaOption" ref="csArea"></el-cascader>
                   </el-form-item>
                 </div>
               </td>
@@ -72,7 +72,7 @@
               </td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--产权单位-->
+          <!--  &lt;!&ndash;产权单位&ndash;&gt;
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>产权单位</div></td>
               <td>
@@ -86,9 +86,9 @@
                   </el-form-item>
                 </div>
               </td>
-              <!-- <td><div class="cell">{{this.writeDic(constructionmodeList)}}</div></td> -->
+              &lt;!&ndash; <td><div class="cell">{{this.writeDic(constructionmodeList)}}</div></td> &ndash;&gt;
               <td><div class="cell"></div></td>
-            </tr>
+            </tr>-->
             <!--编码-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>标签编码</div></td>
@@ -170,19 +170,14 @@ export default{
         name: '',
         title: '',
         modulecode: '',
-        propertyunit: ''
-      },
-      tableArea: {
+        propertyunit: '',
         AreaList: []
       },
       areaOption: [],
       // 表单验证
       Rules: {
-        areaid: [
+        AreaList: [
           { required: true, message: '请选择区域', trigger: 'blur' }
-        ],
-        propertyunit: [
-          { required: true, message: '请选择产权单位', trigger: 'blur' }
         ],
         modulecode: [
           { required: true, message: '请选择编码', trigger: 'blur' }
@@ -198,52 +193,39 @@ export default{
     },
     // 提交函数
     subData () {
-      if (this.tableArea.areaid) {
-        this.tableData.provinceid = this.tableArea.provinceid
-        this.tableData.cityid = this.tableArea.cityid
-        this.tableData.areaid = this.tableArea.areaid
-      }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()
     },
     // 添加提交
     async add () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        try {
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (!valid) {
+          return this.$message.warning('请补全信息')
+        } else {
           this.WriteLoading = true
-          const res = await this.$axios.post(AddTag, this.tableData)
-          this.WriteLoading = false
-          if (res.error === true) {
-            this.$message.warning('请补全信息')
-            console.log(res.errorMessage)
-          }
-          if (res.success === true) {
-            this.$message.success('添加成功！')
+          this.$axios.post(AddTag, this.tableData).then(res => {
+            this.WriteLoading = false
+            if (res.errorCode !== '200') return this.$message.error(res.msg)
+            this.$message.success('添加成功!')
             this.$emit('fatheretMore')
             this.closeWrite()
-          } else { this.$message.warning(res.msg) }
-        } catch (e) {
-          console.log(e)
+          })
         }
       })
     },
     // 修改提交
     async edit () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        try {
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (this.tableData.modulecode === undefined || this.tableData.modulecode === '') {
+          return this.$message.warning('请补全信息')
+        } else {
           this.WriteLoading = true
-          const res = await this.$axios.put(EditTag, this.tableData)
-          this.WriteLoading = false
-          if (res.error === true) {
-            this.$message.warning('请补全信息')
-          }
-          if (res.success === true) {
-            this.$message.success('修改成功！')
+          this.$axios.put(EditTag, this.tableData).then(res => {
+            if (res.errorCode !== '200') return this.$message.error(res.msg)
+            this.$message.success('添加成功!')
             this.$emit('fatheretMore')
             this.closeWrite()
-          } else { this.$message.warning(res.msg) }
-        } catch (e) {
-          console.log(e)
+          })
         }
       })
     },
@@ -251,7 +233,7 @@ export default{
     closeWrite () {
       this.$refs.tableForm.clearValidate() // 初始化表单校验
       Object.assign(this.$data.tableData, this.$options.data().tableData)
-      this.$nextTick(() => { this.$refs.tableForm.resetFields() })
+      this.$refs.tableForm.resetFields()
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
     }

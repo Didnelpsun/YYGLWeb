@@ -40,6 +40,10 @@ import SwitchingPowerSupply from '../components/main/Resource/SwitchingPowerSupp
 import Ammeter from '../components/main/Resource/Ammeter' // 电表
 import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduced' // 电表
 
+// 能源统计
+import NYEquipmentStatistics from '../components/main/TaskManagement/NYEquipmentStatistics' // 能源资源统计
+import NYTaskStatistics from '../components/main/TaskManagement/NYTaskStatistics' // 能源任务统计
+
 
 // 维护管理
 import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患台账
@@ -366,6 +370,16 @@ export default new Router({
           path: 'ElectricityMeter',
           name: 'ElectricityMeter',
           component: ElectricityMeter
+        },
+        {
+          path: 'NYTaskStatistics',
+          name: 'NYTaskStatistics',
+          component: NYTaskStatistics
+        },
+        {
+          path: 'NYEquipmentStatistics',
+          name: 'NYEquipmentStatistics',
+          component: NYEquipmentStatistics
         },
         {
           path: 'HiddenDanger',

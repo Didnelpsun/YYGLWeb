@@ -113,11 +113,11 @@
                 <td><div class="cell"><i class="must">*</i>审核状态</div></td>
                 <td>
                   <div class="cell">
-                    <el-form-item label-width="0" prop="auditorstate" class="form-item">
-                      <el-select class="tableSelect" v-model="tableData.auditorstate" placeholder="请选择审核状态">
+                    <el-form-item label-width="0" prop="assistantstate" class="form-item">
+                      <el-select class="tableSelect" v-model="tableData.assistantstate" placeholder="请选择审核状态">
                         <!-- <el-option label="请选择" value=""></el-option> -->
-                        <el-option key="4" label="审核通过" :value="4"></el-option>
-                        <el-option key="3" label="审核不通过" :value="3"></el-option>
+                        <el-option key="4" label="通过" :value="4"></el-option>
+                        <el-option key="3" label="不通过" :value="3"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
@@ -171,12 +171,12 @@ export default{
         applicanttype: 0,
         applicantname: '',
         applytime: '',
-        auditorstate: 4,
+        assistantstate: 4,
         auditopinion: ''
       },
       // 表单验证
       Rules: {
-        auditorstate: [
+        assistantstate: [
           { required: true, message: '请选择审核状态', trigger: 'blur' }
         ]
       }
@@ -187,29 +187,24 @@ export default{
       this.tableData = data
     },
     auditData () {
-      if (this.tableData.auditorstate === 3 && this.tableData.auditopinion.trim() === '') {
-        this.$message.warning('请填写审核意见')
+      if (!this.tableData.assistantstate) {
+        this.$message.warning('请选择审核状态')
       } else {
-        if (!this.tableData.auditorstate) {
-          console.log(this.tableData.auditorstate)
-          this.$message.warning('请选择审核状态')
-        } else {
-          this.$axios.put(AuditApply, {
-            id: this.tableData.id,
-            auditorstate: this.tableData.auditorstate,
-            auditopinion: this.tableData.auditopinion
-          }).then(res => {
-            if (res.success === false) {
-              this.$message.error(res.msg)
-            }
-            if (res.success === true) {
-              this.$message.success('审核成功！')
-              this.closeWrite()
-            }
-          }).catch(error => {
-            console.log(error)
-          })
-        }
+        this.$axios.put(AuditApply, {
+          id: this.tableData.id,
+          assistantstate: this.tableData.assistantstate,
+          auditopinion: this.tableData.auditopinion
+        }).then(res => {
+          if (res.success === false) {
+            this.$message.error(res.msg)
+          }
+          if (res.success === true) {
+            this.$message.success('审核成功！')
+            this.closeWrite()
+          }
+        }).catch(error => {
+          console.log(error)
+        })
       }
     },
     // 返回关闭编辑函数

@@ -83,6 +83,18 @@
                 <!-- <td><div class="cell"></div></td> -->
                 <td><div class="cell"></div></td>
               </tr>
+                <!--申请类型-->
+                <tr class="el-table__row">
+                  <td><div class="cell">申请类型</div></td>
+                  <td>
+                    <div class="cell">
+                      <div>{{tableData.applicanttype==1? '油机解绑':'油机绑定'}}</div>
+                    </div>
+                  </td>
+                  <td><div class="cell"></div></td>
+                  <!-- <td><div class="cell"></div></td> -->
+                  <td><div class="cell"></div></td>
+                </tr>
               <!--申请人-->
               <tr class="el-table__row">
                 <td><div class="cell">申请人</div></td>

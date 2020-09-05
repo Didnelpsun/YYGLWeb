@@ -12,7 +12,7 @@ export const TaskAudit = `${reqURL}/ZYGL/Task/TaskAudit` // 能源审核
 export const TaskEquipment = `${reqURL}/ZYGL/Task/TaskEquipment` // 添加任务-选择添加设备-返回设备所在站点
 export const GetEquipmentInfoList = `${reqURL}/ZYGL/Task/GetEquipmentInfoList` // 根据设备ID获取设备详情
 export const GetEnergyResourecEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetEnergyResourecEquipmentList` // 获取当前站点可添加的设备
-
+export const GetTaskResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/GetTaskResourceEquipment` // 添加任务设备选择设备类型判断
 
 // 任务设备
 export const GetChargingPileTaskEquipment = `${reqURL}/ZYGL/ChargingPile/GetChargingPileTaskEquipment` // 获取充电桩任务设备详情
@@ -52,6 +52,10 @@ export const UpdateMaintain = `${reqURL}/ZYGL/Maintain/UpdateMaintain` // 修改
 export const AddMaintain = `${reqURL}/ZYGL/Maintain/AddMaintain` // 添加上站维护
 export const GetMaintainExcel = `${reqURL}/ZYGL/Maintain/GetMaintainExcel` // 上站维护导出
 export const GetTaskState = `${reqURL}/ZYGL/Task/GetTaskState` // 查看任务状态
+
+// 能源统计
+export const GetEnergyStatisticalList = `${reqURL}/ZYGL/ZYStatistical/GetEnergyStatisticalList` // 获取能源设备统计
+export const GetEnergytaskstatisticsList = `${reqURL}/ZYGL/ZYStatistical/GetEnergytaskstatisticsList` // 获取能源任务统计
 
 // 勘察项目管理
 export const GetProjectList = `${reqURL}/KCGL/Project/GetProjectList` // 获取项目列表

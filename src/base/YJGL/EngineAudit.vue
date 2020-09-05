@@ -61,6 +61,42 @@
               </tr>
               <!--提交人-->
               <tr class="el-table__row">
+                <td><div class="cell">标签编码</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.modulecode}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--提交人-->
+              <tr class="el-table__row">
+                <td><div class="cell">采集器ID</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.swver}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--申请类型-->
+              <tr class="el-table__row">
+                <td><div class="cell">申请类型</div></td>
+                <td>
+                  <div class="cell">
+                    <div>{{tableData.applicanttype==1? '油机解绑':'油机绑定'}}</div>
+                  </div>
+                </td>
+                <td><div class="cell"></div></td>
+                <!-- <td><div class="cell"></div></td> -->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--提交人-->
+              <tr class="el-table__row">
                 <td><div class="cell">提交人</div></td>
                 <td>
                   <div class="cell">
@@ -151,6 +187,7 @@ export default{
         auditopinion: '',
         imglist: []
       },
+      issend: null,
       // 表单验证
       Rules: {
         auditorstate: [
@@ -179,30 +216,26 @@ export default{
       if (val === 1) this.$emit('fatherOpenImgBox', '油机缸号', 'machinebatchno', this.ImgList1)
     },
     auditData () {
-      if (this.tableData.auditorstate === 3 && this.tableData.auditopinion.trim() === '') {
-        this.$message.warning('请填写审核意见')
+      if (!this.tableData.auditorstate) {
+        console.log(this.tableData.auditorstate)
+        this.$message.warning('请选择审核状态')
       } else {
-        if (!this.tableData.auditorstate) {
-          console.log(this.tableData.auditorstate)
-          this.$message.warning('请选择审核状态')
-        } else {
-          this.$axios.put(Machineaudit, {
-            id: this.tableData.id,
-            auditorstate: this.tableData.auditorstate,
-            auditopinion: this.tableData.auditopinion
-          }).then(res => {
-            if (res.success === false) {
-              this.$message.error(res.msg)
-            }
-            if (res.success === true) {
-              this.$message.success('审核成功！')
-              this.closeWrite()
-              this.ResetWrite()
-            }
-          }).catch(error => {
-            console.log(error)
-          })
-        }
+        this.$axios.put(Machineaudit, {
+          id: this.tableData.id,
+          auditorstate: this.tableData.auditorstate,
+          auditopinion: this.tableData.auditopinion
+        }).then(res => {
+          if (res.success === false) {
+            this.$message.error(res.msg)
+          }
+          if (res.success === true) {
+            this.$message.success('审核成功！')
+            this.closeWrite()
+            this.ResetWrite()
+          }
+        }).catch(error => {
+          console.log(error)
+        })
       }
     },
     // 返回关闭编辑函数

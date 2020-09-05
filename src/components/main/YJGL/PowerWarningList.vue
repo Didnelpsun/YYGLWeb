@@ -25,10 +25,10 @@
         <el-table-column prop="" label="是否有固定油机" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机编号" width=""></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="150" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleDetails( scope.row)">详情</el-button>
-            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>
+           <!-- <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>-->
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="!scope.row.Isbinding">删除</el-button>
           </template>
         </el-table-column>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { GetIdPowerwarningInfo, JobInfo, GetPowerwarningList, DeletePowerwarning } from 'api/YJGL'
+import { GetIdPowerwarningInfo, GetPowerwarningList, DeletePowerwarning } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/PowerWarningList'
 import PowerWarningListDetails from 'base/YJGL/PowerWarningListDetails'
@@ -87,31 +87,34 @@ export default {
   },
   methods: {
     handleDetails (row) {
-      let params = { id: row.id }
+      console.log(row)
+      let params = { id: row.workorderid }
+
       this.$refs.WarningListDetails.WriteLoading = true
       this.isShow = true
       this.showWrite = true
-      this.$axios.get(JobInfo, {
-        params
-      }).then(res => {
-        if (res.success) {
-          try {
-            this.tableData1 = res.data
-            if (this.tableData1) {
-              this.$nextTick(this.$refs.Details.setWriteData1(this.tableData1))
-              return true
-            } else {
-              return false
+      if (row.workorderid) {
+        this.$axios.get(GetIdPowerwarningInfo, {
+          params
+        }).then(res => {
+          if (res.success) {
+            try {
+              this.tableData1 = res.data
+              if (this.tableData1) {
+                this.$nextTick(this.$refs.WarningListDetails.setWriteData1(this.tableData1))
+                return true
+              } else {
+                return false
+              }
+            } catch (e) {
+              console.log(e)
             }
-          } catch (e) {
-            console.log(e)
           }
-        }
-      }).catch(error => {
-        console.log(error)
-      })
+        }).catch(error => {
+          console.log(error)
+        })
+      }
       this.$refs.WarningListDetails.WriteLoading = false
-      console.log(this.isShow)
     },
     // writeDic: GlobalRes.methods.writeDic,
     getMore (e) {
@@ -152,6 +155,7 @@ export default {
             id: this.id
           }
         }).then(res => {
+          console.log(res.data)
           if (!res.error) {
             this.showWrite = true
             try {
@@ -173,8 +177,7 @@ export default {
       }
       // console.log(this.tableData)
       this.WriteState = state
-      if (state === 0) this.showWrite = true
-      else {
+      if (state === 0) { this.showWrite = true } else {
         this.setData(state, row.id)
       }
       this.$refs.Details.WriteLoading = false

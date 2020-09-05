@@ -35,7 +35,6 @@
             <el-button type="text" size="mini" @click="handleWrite(3,scope.row)">添加</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-            <el-button type="text" size="mini" @click="add(scope.row)">新增站点</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,7 +47,7 @@
     </div>
 
     <div v-show="showWrite">
-      <Details :WriteState="WriteState" :id="id" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" />
+      <Details :WriteState="WriteState" :id="id" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(1)" />
     </div>
     <el-dialog top="1%" :visible.sync="isShow" title="选择站点ID" width="80%" :before-close="DetailhandleClose">
       <SitePicker @selectSite="selectSite" ref="site"/>
@@ -164,14 +163,12 @@ export default {
       this.getMore(1)
       this.showWrite = !this.showWrite
     },
-    add (row) {
-      this.isShow = true
-    },
     DetailhandleClose () {
       this.isShow = !this.isShow
     },
     // 处理编辑函数
     handleWrite (state, row) {
+      this.expandKey = []
       this.$refs.Details.WriteLoading = true
       if (this.tableData) {
         // this.$data.tableData = {}

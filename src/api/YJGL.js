@@ -72,7 +72,7 @@ export const GetSiteidAssistantInfo = `${reqURL}/YJGL/Assistant/GetSiteidAssista
 export const GetIdscope = `${reqURL}/YJGL/assistantstation/GetIdscope` // 根据协管员id获取管理范围
 
 // 协管员审核
-export const GetAssistantList = `${reqURL}/YJGL/Assistant/GetAssistant` // 后端协管员列表
+export const GetAssistantList = `${reqURL}/YJGL/assistantstation/Getassistantstation` // 后端协管员列表
 export const AuditApply = `${reqURL}/YJGL/assistantstation/AuditApply` // 协管员范围审核
 export const AuditApplyInfo = `${reqURL}/YJGL/assistantstation/AuditApplyInfo` // 审核详情
 
@@ -82,6 +82,7 @@ export const EditPowerwarning = `${reqURL}/YJGL/powerwarning/EditPowerwarning` /
 export const DeletePowerwarning = `${reqURL}/YJGL/powerwarning/DeletePowerwarning` // 删除停电预警
 export const GetPowerwarningList = `${reqURL}/YJGL/powerwarning/GetPowerwarningList` // 后台停电监控列表
 export const GetIdPowerwarningInfo = `${reqURL}/YJGL/powerwarning/GetIdPowerwarningList` // pc获取停电计划详情
+
 
 // 油机调度记录
 export const PowerDispatchRecordList = `${reqURL}/YJGL/powerdispatch/RecordList` // 油机调度列表

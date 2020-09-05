@@ -37,12 +37,12 @@
               </colgroup>
               <tbody>
               <!--区域-->
-              <tr class="el-table__row" v-show="WriteState === 0">
+              <tr class="el-table__row" v-if="WriteState === 0">
                 <td><div class="cell"><i class="must">*</i>区域</div></td>
                 <td>
                   <div class="cell">
-                    <el-form-item label-width="0" class="form-item"  prop="AreaList" v-model="tableData.areaid">
-                    <el-cascader v-model="tableArea.AreaList" :props="areaProps" @change="changeArea(tableArea)" :options="areaOption" ref="csArea"></el-cascader>
+                    <el-form-item label-width="0" class="form-item"  prop="AreaList">
+                    <el-cascader v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" ref="csArea"></el-cascader>
                   </el-form-item>
                 </div>
               </td>
@@ -118,7 +118,7 @@
                   <div v-show="WriteState == 2">{{tableData.manufactorname}}</div>
                   <el-form-item label-width="0" prop="manufactor" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.manufactor" placeholder="请选择厂家">
-                      <el-option label="请选择" value=""></el-option>
+                      <el-option label="请选择" value="null"></el-option>
                       <el-option v-for="item in dictionaryList.manufactorList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
@@ -134,8 +134,8 @@
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.modelname}}</div>
-                  <el-form-item label-width="0" prop="models" class="form-item" v-show="WriteState !== 2">
-                    <el-select class="tableSelect" v-model="tableData.modelname" placeholder="请选择型号">
+                  <el-form-item label-width="0" prop="model" class="form-item" v-show="WriteState !== 2">
+                    <el-select class="tableSelect" v-model="tableData.model" placeholder="请选择型号">
                       <el-option label="请选择" value=""></el-option>
                       <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
                     </el-select>
@@ -152,7 +152,7 @@
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.unitname}}</div>
-                  <el-form-item label-width="0" prop="unitname" class="form-item" v-show="WriteState !== 2">
+                  <el-form-item label-width="0" prop="unit" class="form-item" v-show="WriteState !== 2">
                     <el-select class="tableSelect" v-model="tableData.unit" placeholder="请选择归属单位">
                       <el-option label="请选择" value=""></el-option>
                       <el-option v-for="item in dictionaryList.unitList" :key="item.id" :label="item.text" :value="item.value"></el-option>
@@ -222,7 +222,9 @@
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.modulecode}}</div>
                   <div label-width="0"  class="form-item" v-show="WriteState !== 2" @click="tagOpen">
+                    <el-form-item label-width="0" prop="modulecode" class="form-item">
                     <el-input v-model="tableData.modulecode" prop="modulecode" placeholder="请填入标签" readonly></el-input>
+                    </el-form-item>
                   </div>
                 </div>
               </td>
@@ -237,7 +239,9 @@
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.swver}}</div>
                   <div label-width="0" prop="swver" class="form-item" v-show="WriteState !== 2" @click="collectorOpen">
+                    <el-form-item label-width="0" prop="swver" class="form-item">
                     <el-input v-model="tableData.swver" placeholder="请填入采集器ID" readonly></el-input>
+                    </el-form-item>
                   </div>
                 </div>
               </td>
@@ -321,12 +325,6 @@ export default{
       tagShow: false,
       // 填写区域属性
       ViewTabIndex: '0',
-      tableArea: {
-        AreaList: [],
-        provinceid: 0,
-        cityid: 0,
-        areaid: 0
-      },
       areaOption: [],
       WriteLoading: false,
       // 图片列表
@@ -335,9 +333,10 @@ export default{
       machinebatchnoImgList: [],
       // 新增表格相关属性
       tableData: {
-        'provinceid': 0,
-        'cityid': 0,
-        'areaid': 0,
+        'AreaList': [],
+        'provinceid': null,
+        'cityid': null,
+        'areaid': null,
         'machinenumber': '',
         'machinebatchno': '',
         'enginestate': '',
@@ -346,6 +345,7 @@ export default{
         'manufactor': '',
         'manufactorname': '',
         'modelname': '',
+        'model': null,
         'fueltype': '',
         'power': '',
         'tagid': '',
@@ -383,7 +383,17 @@ export default{
         power: [
           { required: true, message: '请输入功率', trigger: 'blur' },
           { type: 'number', message: '必须为数字类型' }
+        ],
+        unit: [
+          { required: true, message: '请选择归属单位', trigger: 'blur' }
+        ],
+        modulecode: [
+          { required: true, message: '请选择标签编码', trigger: 'change' }
+        ],
+        swver: [
+          { required: true, message: '请选择采集器ID', trigger: 'change' }
         ]
+
         /*,
         enginestate: [
           { required: true, message: '请选择油机状态', trigger: 'blur' }
@@ -397,6 +407,7 @@ export default{
       this.tableData = data
       this.setImgList(data.imglist)
       this.tableData2 = data2
+      this.setArea([])
     },
     OpenImgBox (s) {
       switch (s) {
@@ -413,9 +424,11 @@ export default{
     },
     // 提交函数
     handleData (issubmit) {
-      this.tableData.id = null
       this.tableData.issubmit = issubmit
-      if (this.WriteState === 0) this.add()
+      if (this.WriteState === 0) {
+        this.tableData.id = null
+        this.add()
+      }
       if (this.WriteState === 1) this.edit()
     },
     handleData3 (issubmit) {
@@ -423,68 +436,57 @@ export default{
       this.add()
     },
     validImgList () {
-      /* if (!this.tagidImgList.length) {
-        return this.$message.warning('标签二维码必须上传')
-      } */
+      if (this.machinebatchnoImgList.length === 0) {
+        return this.$message.warning('油机缸号照片必须上传')
+      }
     },
     // 添加提交
     async add () {
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        if (!valid) {
-          this.$message.warning('请补全信息')
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (this.machinebatchnoImgList.length === 0) {
+          return this.$message.warning('油机缸号照片必须上传')
+        }
+
+        if (!valid || this.tableData.AreaList.length === 0) {
+          if (this.tableData.AreaList.length === 0) return this.$message.warning('请选择区域')
+          return this.$message.warning('请补全信息')
         } else {
-          try {
-            this.tableData.applicanttype = 2
-            this.WriteLoading = true
-            const res = await this.$axios.post(AddEngine, this.tableData)
-            this.WriteLoading = false
-            if (res.error === true) {
-              this.$message.warning('请补全信息')
+          this.tableData.applicanttype = 2
+          this.WriteLoading = true
+          this.$axios.post(AddEngine, Object.assign({}, this.tableData, this.tableArea)).then(
+            res => {
+              this.WriteLoading = false
+              if (res.error === true) {
+                this.$message.warning('请补全信息')
+              }
+              if (res.success === true) {
+                this.$message.success('添加成功！')
+                this.$emit('fatheretMore')
+                this.dictionaryList.areaList = []
+                this.closeWrite()
+              } else { this.$message.warning(res.msg) }
             }
-            if (res.success === true) {
-              this.$message.success('添加成功！')
-              this.$emit('fatheretMore')
-              this.dictionaryList.areaList = []
-              this.closeWrite()
-            } else { this.$message.warning(res.msg) }
-          } catch (e) {
-            console.log(e)
-          }
+          )
         }
       })
     },
     // 修改提交
     async edit () {
       if (this.validImgList()) return
-      this.$refs.tableForm.validate(async (valid, msg) => {
-        // console.log(this.tableData)
-        if (!valid) {
+      this.$refs.tableForm.validate((valid, msg) => {
+        if (!valid || this.machinebatchnoImgList.length === 0) {
+          if (this.machinebatchnoImgList.length === 0) return this.$message.warning('油机缸号照片必须上传')
           this.$message.warning('请补全信息')
         } else {
-          try {
-            if (this.tableArea.areaid !== null && this.tableArea.areaid !== '' && this.tableArea.areaid !== undefined) {
-              this.tableData.provinceid = this.tableArea.provinceid
-              this.tableData.cityid = this.tableArea.cityid
-              this.tableData.areaid = this.tableArea.areaid
-            }
-            this.tableData.applicanttype = 2
-            this.WriteLoading = true
-            const res = await this.$axios.put(EditEngine, this.tableData)
+          this.tableData.applicanttype = 2
+          this.WriteLoading = true
+          this.$axios.put(EditEngine, this.tableData).then(res => {
             this.WriteLoading = false
-            if (res.error === true) {
-              this.$message.warning('请补全信息')
-              // console.log(res.error)
-            }
-            // this.$message.error('输入参数为非法值，请重新输入')
-            if (res.success === true) {
-              this.$message.success('修改成功！')
-              this.$emit('fatheretMore')
-              this.dictionaryList.areaList = []
-              this.closeWrite()
-            } else { this.$message.warning(res.msg) }
-          } catch (e) {
-            console.log(e)
-          }
+            if (res.errorCode !== '200') return this.$message.error(res.msg)
+            this.$message.success('添加成功!')
+            this.$emit('fatheretMore')
+            this.closeWrite()
+          })
         }
       })
     },
@@ -499,15 +501,15 @@ export default{
     },
     // 返回关闭编辑函数
     closeWrite () {
+      this.tagidImgList = []
+      this.collectoridImgList = []
+      this.machinebatchnoImgList = []
       this.$refs.tableForm.clearValidate() // 初始化表单校验
       Object.assign(this.$data.tableData, this.$options.data().tableData)
-      this.$nextTick(() => { this.$refs.tableForm.resetFields() })
-      this.setArea([])
+      this.$refs.tableForm.resetFields()
       this.ViewTabIndex = '0'
       this.areaOption = []
-      this.tableArea.AreaList.splice(0, this.tableArea.AreaList.length)
       // this.getMore(1)
-      this.tagidImgList = []
       this.showWrite = !this.showWrite
       this.$emit('fatherClose')
     },
@@ -571,7 +573,7 @@ export default{
   },
   computed: {
     ImgList () {
-      return this.tagidImgList
+      return this.machinebatchnoImgList
     }
   },
   watch: {
