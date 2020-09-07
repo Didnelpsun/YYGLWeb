@@ -147,7 +147,7 @@
               <tr class="el-table__row" v-if="WriteState !== 2">
                 <td><div class="cell"><i class="must">*</i>区域</div></td>
                 <td v-if="WriteState <= 1"><div class="cell">
-                  <el-form-item class="form-item" prop="AreaList">
+                  <el-form-item class="form-item">
                     <el-cascader v-model="WriteData.AreaList" :props="areaProps" @change="changeArea(WriteData)" ref="csArea"></el-cascader>
                   </el-form-item>
                 </div></td>
@@ -362,7 +362,7 @@ import SelectUser from 'base/TaskEquipment/SelectUser'
 import {exportMethod} from 'api/YDSZ'
 import {GetKCProjectExcel, AddProject, GetProjectList, GetProjectInfo, UpdateProject, DelProject, GetResourceList, GetDistributeProject, GetProjectExcel} from 'api/SurveyManagement'
 export default {
-  name: 'EquipmentManagement',
+  name: 'ProjectManagement',
   mixins: [GlobalRes],
   data () {
     var _this = this
@@ -428,7 +428,6 @@ export default {
         id: ''
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         demandside: [
           { required: true, message: '请输入需求方', trigger: 'blur' }
         ],
@@ -622,6 +621,9 @@ export default {
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
+          if (!this.WriteData.AreaList.length) {
+            return this.$message.error('请选择区域！')
+          }
           this.Loading = true
           if (this.WriteData.rawoperator.length) {
             this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')
@@ -651,6 +653,9 @@ export default {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
+          if (!this.WriteData.AreaList.length) {
+            return this.$message.error('请选择区域！')
+          }
           this.Loading = true
           if (this.WriteData.rawoperator.length) {
             this.WriteData.rawoperator = this.WriteData.rawoperator.join(',')

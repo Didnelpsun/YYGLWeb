@@ -34,8 +34,6 @@ import Reservepover from 'components/main/Resource/Reservepover' // 备电
 import BatteryGenerator from 'components/main/Resource/BatteryGenerator' // 电池发电
 import Battery from 'components/main/Resource/Battery' // 换电电池
 import OilFiredGenerator from 'components/main/Resource/OilFiredGenerator' // 燃油发电机
-import ResourceEquipment from 'components/main/Resource/ResourceEquipment' // 资源站点设备管理
-import EnergyResourceEquipment from 'components/main/Resource/EnergyResourceEquipment' // 能源站点设备管理
 import SwitchingPowerSupply from '../components/main/Resource/SwitchingPowerSupply' // 开关电源
 import Ammeter from '../components/main/Resource/Ammeter' // 电表
 import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduced' // 电表
@@ -405,16 +403,6 @@ export default new Router({
           path: 'OilFiredGenerator',
           name: 'OilFiredGenerator',
           component: OilFiredGenerator
-        },
-        {
-          path: 'ResourceEquipment',
-          name: 'ResourceEquipment',
-          component: ResourceEquipment
-        },
-        {
-          path: 'EnergyResourceEquipment',
-          name: 'EnergyResourceEquipment',
-          component: EnergyResourceEquipment
         },
         {
           path: 'ProjectManagement',

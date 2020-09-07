@@ -1,18 +1,44 @@
 <template>
   <div class="content">
-    <div v-show="!showEdit && !showDetail">
+    <div v-show="showList">
       <el-form :model="query" ref="NodeQueryForm">
         <el-row :gutter="20">
           <!--选择器-->
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="站点名称：">
-                <el-input class="searchSelect" v-model="query.name" placeholder="请输入站点名称" @keyup.enter.native="_getTableMore1(pagination.currentPage)""></el-input>
+              <el-form-item label="区域：">
+                <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="AreaSelect" clearable></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="区域：">
-                <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="AreaSelect" clearable></el-cascader>
+              <el-form-item label="站点编码：">
+                <el-input class="searchSelect" v-model="query.code" placeholder="请输入站点编码" @keyup.enter.native="_getTableMore1(pagination.currentPage)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input class="searchSelect" v-model="query.name" placeholder="请输入站点名称" @keyup.enter.native="_getTableMore1(pagination.currentPage)"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--站点分类-->
+            <el-col :span="8">
+              <el-form-item label="站点分类：">
+                <el-select class="searchSelect" v-model="query.classify">
+                  <el-option label="请选择" value=""></el-option>
+                  <el-option v-for="i in DicList.classify" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="创建时间：">
+                <el-date-picker class="tableSelect" v-model="query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="至：">
+                <el-date-picker class="tableSelect" v-model="query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
+                </el-date-picker>
               </el-form-item>
             </el-col>
           </el-col>
@@ -30,6 +56,7 @@
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
             <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
+            <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -38,16 +65,20 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="cityname" label="城市" width="80"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="80"></el-table-column>
-        <el-table-column prop="code" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="name" label="站点名称" width=""></el-table-column>
-        <!--<el-table-column prop="classifyname" label="站点分类" width=""></el-table-column>-->
+        <el-table-column prop="name" label="站点名称" width="" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="code" label="站点编码" width="" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="classifyname" label="站点分类" width=""></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
-        <!--<el-table-column prop="provincename" label="省份" width="80"></el-table-column>-->
-        <el-table-column prop="" label="操作" width="140">
+        <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
+        <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
+        <el-table-column prop="" label="操作" width="380">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handelDetail(scope.$index, scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handelEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button type="text" size="mini" @click="OperationSite(scope.$index, scope.row)">运维站点</el-button>
+            <el-button type="text" size="mini" @click="OperatorSite(scope.$index, scope.row)">运营商站点</el-button>
+            <el-button type="text" size="mini" @click="deviceConfig(scope.$index, scope.row)">站点设备配置</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +114,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" :rules="Rules" v-loading="" ref="tableForm" :show-message="false" label-width="0">
+        <el-form :model="tableData" :rules="Rules" v-loading="Loading" ref="tableForm" :show-message="false" label-width="0">
           <div class="el-table__body-wrapper is-scrolling-none">
             <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
               <colgroup>
@@ -99,7 +130,7 @@
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>区域</div></td>
                 <td class="el-table_8_column_61">
                   <div class="cell">
-                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="AreaList">
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
                       <el-cascader ref="csArea" width="100%" v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" placeholder="请选择"></el-cascader>
                     </el-form-item>
                   </div>
@@ -136,6 +167,23 @@
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
+              <!--站点分类-->
+              <tr class="el-table__row">
+                <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点分类</div></td>
+                <td class="el-table_8_column_61">
+                  <div class="cell">
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="classify">
+                      <el-select class="searchSelect" v-model="tableData.classify" placeholder="请选择站点分类">
+                        <el-option label="请选择" :value="null"></el-option>
+                        <el-option v-for="i in DicList.classify" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td class="el-table_8_column_62"><div class="cell"></div></td>
+                <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> -->
+                <td class="el-table_8_column_64"><div class="cell"></div></td>
+              </tr>
               <!--入网日期-->
               <tr class="el-table__row">
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>入网日期</div></td>
@@ -150,47 +198,31 @@
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
-              <!--站点分类-->
-              <!--<tr class="el-table__row">
-                <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点分类</div></td>
+              <!--设备类型-->
+              <!--<tr class="el-table__row" v-if="pageType === '新增'">
+                <td class="el-table_8_column_60"><div class="cell">设备类型</div></td>
                 <td class="el-table_8_column_61">
                   <div class="cell">
-                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="classify">
-                      <el-select class="searchSelect" v-model="tableData.classify" placeholder="请选择站点分类">
-                        <el-option label="请选择" value=""></el-option>
-                        <el-option v-for="i in DicList.classify" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="equipmenttype_id">
+                      <el-select v-model="tableData.equipmenttype_id" multiple @change="selectDisposeCode" placeholder="请选择" size="small">
+                        &lt;!&ndash;<el-option label="请选择" :value="0"></el-option>&ndash;&gt;
+                        <el-option v-for="(i,index) in EquipmentTypeList" :key="index" :label="i.name" :value="i.id"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
                 </td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
-                &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> &ndash;&gt;
+                &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell"></div></td> &ndash;&gt;
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>-->
-              <!--机房类型-->
-              <tr class="el-table__row">
-                <td class="el-table_8_column_60"><div class="cell">机房类型</div></td>
-                <td class="el-table_8_column_61">
-                  <div class="cell">
-                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="roomtype">
-                      <el-select class="searchSelect" v-model="tableData.roomtype">
-                        <el-option label="请选择" :value="0"></el-option>
-                        <el-option v-for="i in DicList.roomtype" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </div>
-                </td>
-                <td class="el-table_8_column_62"><div class="cell"></div></td>
-                <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.roomtype)}}</div></td> -->
-                <td class="el-table_8_column_64"><div class="cell"></div></td>
-              </tr>
               <!--经度-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-if="tableData.classify === 1">
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>经度</div></td>
-                <td class="el-table_8_column_61">
+                <td class="el-table_8_column_61" @click="OpenMap(1)">
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="longitude">
-                      <el-input v-model="tableData.longitude"></el-input>
+                      <el-input v-model="tableData.longitude" readonly style="width: 80%"></el-input>
+                      <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
                     </el-form-item>
                   </div>
                 </td>
@@ -199,12 +231,12 @@
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
               <!--纬度-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-if="tableData.classify === 1">
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>纬度</div></td>
-                <td class="el-table_8_column_61">
+                <td class="el-table_8_column_61" @click="OpenMap(1)">
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="latitude">
-                      <el-input v-model="tableData.latitude"></el-input>
+                      <el-input v-model="tableData.latitude" readonly style="width: 80%"></el-input>
                     </el-form-item>
                   </div>
                 </td>
@@ -236,7 +268,7 @@
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
-              <!--设备产权单位-->
+              <!--原产权单位-->
               <tr class="el-table__row">
                 <td class="el-table_8_column_60"><div class="cell">原产权单位</div></td>
                 <td class="el-table_8_column_61"><div class="cell">
@@ -250,6 +282,23 @@
                 </div></td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
                 <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.propertyrightunit)}}</div></td> -->
+                <td class="el-table_8_column_64"><div class="cell"></div></td>
+              </tr>
+              <!--机房类型-->
+              <tr class="el-table__row">
+                <td class="el-table_8_column_60"><div class="cell">机房类型</div></td>
+                <td class="el-table_8_column_61">
+                  <div class="cell">
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="roomtype">
+                      <el-select class="searchSelect" v-model="tableData.roomtype">
+                        <el-option label="请选择" :value="0"></el-option>
+                        <el-option v-for="i in DicList.roomtype" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td class="el-table_8_column_62"><div class="cell"></div></td>
+                <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.roomtype)}}</div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
               <!--建站模式-->
@@ -284,7 +333,6 @@
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="outstanding">
                       <el-select class="tableSelect" v-model="tableData.outstanding" size="small">
-                        <el-option label="请选择" value=""></el-option>
                         <el-option label="是" :value="true"></el-option>
                         <el-option label="否" :value="false"></el-option>
                       </el-select>
@@ -350,7 +398,6 @@
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="shared">
                       <el-select class="tableSelect" v-model="tableData.shared" size="small">
-                        <el-option label="请选择" value=""></el-option>
                         <el-option label="是" :value="true"></el-option>
                         <el-option label="否" :value="false"></el-option>
                       </el-select>
@@ -386,7 +433,7 @@
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
               <!--地址-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-if="tableData.classify === 1">
                 <td class="el-table_8_column_60"><div class="cell">地址</div></td>
                 <td class="el-table_8_column_61"><div class="cell">
                   <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
@@ -434,9 +481,7 @@
     <!--详情-->
     <div v-show="showDetail">
       <layuiTitle :title="'站点' + pageType"></layuiTitle>
-      <el-tabs class="content-card" v-model="ViewTabIndex" @tab-click="handleTabs">
-        <el-tab-pane label="详情">
-          <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--mini">
+        <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--mini">
             <!--表头-->
             <div class="el-table__header-wrapper">
               <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
@@ -459,7 +504,7 @@
               </table>
             </div>
             <!--表体-->
-            <el-form :model="tableData" :rules="Rules" v-loading="Loading3" :show-message="false" label-width="0">
+            <el-form :model="tableData" :rules="Rules" v-loading="Loading" :show-message="false" label-width="0">
               <div class="el-table__body-wrapper is-scrolling-none">
                 <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
                   <colgroup>
@@ -511,13 +556,13 @@
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
                   </tr>
                   <!--站点分类-->
-                  <!--<tr class="el-table__row">
+                  <tr class="el-table__row">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点分类</div></td>
                     <td class="el-table_8_column_61"><div class="cell">{{tableData.classifyname}}</div></td>
                     <td class="el-table_8_column_62"><div class="cell"></div></td>
-                    &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> &ndash;&gt;
+                    <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> -->
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
-                  </tr>-->
+                  </tr>
                   <!--站点类型-->
                   <tr class="el-table__row">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点类型</div></td>
@@ -535,17 +580,17 @@
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
                   </tr>
                   <!--经度-->
-                  <tr class="el-table__row">
+                  <tr class="el-table__row" v-if="tableData.classify === 1">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>经度</div></td>
-                    <td class="el-table_8_column_61"><div class="cell">{{tableData.longitude}}</div></td>
+                    <td class="el-table_8_column_61" @click="OpenMap(0)"><div class="cell location"><span>{{tableData.longitude}}</span><i class="el-icon-location icon_location"></i></div></td>
                     <td class="el-table_8_column_62"><div class="cell" @click="OpenImgBox('经度', 'Detali')">{{LongImgList.length}}</div></td>
                     <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
                   </tr>
                   <!--纬度-->
-                  <tr class="el-table__row">
+                  <tr class="el-table__row" v-if="tableData.classify === 1">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>纬度</div></td>
-                    <td class="el-table_8_column_61"><div class="cell">{{tableData.latitude}}</div></td>
+                    <td class="el-table_8_column_61" @click="OpenMap(0)"><div class="cell">{{tableData.latitude}}</div></td>
                     <td class="el-table_8_column_62"><div class="cell"></div></td>
                     <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
@@ -577,7 +622,7 @@
                   <!--建站模式-->
                   <tr class="el-table__row">
                     <td class="el-table_8_column_60"><div class="cell">建站模式</div></td>
-                    <td class="el-table_8_column_61"><div class="cell">{{tableData.websitebuildingmode}}</div></td>
+                    <td class="el-table_8_column_61"><div class="cell">{{tableData.websitebuildingmodename}}</div></td>
                     <td class="el-table_8_column_62"><div class="cell"></div></td>
                     <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
@@ -655,7 +700,7 @@
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
                   </tr>
                   <!--地址-->
-                  <tr class="el-table__row">
+                  <tr class="el-table__row" v-if="tableData.classify === 1">
                     <td class="el-table_8_column_60"><div class="cell">地址</div></td>
                     <td class="el-table_8_column_61"><div class="cell">{{tableData.address}}</div></td>
                     <td class="el-table_8_column_62"><div class="cell"></div></td>
@@ -683,79 +728,43 @@
               </div>
             </el-form>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="运维站点">
-          <el-table :data="OperatorsMap.Monitor" v-loading="Loading2" ref="">
-            <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
-            </el-table-column>
-            <el-table-column prop="monitoringname" label="运维站点名称"></el-table-column>
-            <el-table-column prop="monitoringcode" label="运维ID"></el-table-column>
-            <el-table-column prop="resourcename" label="所属站点"></el-table-column>
-            <!-- <el-table-column prop="provincename" label="省份"></el-table-column> -->
-            <el-table-column prop="cityname" label="城市"></el-table-column>
-            <el-table-column prop="areaname" label="区域"></el-table-column>
-            <el-table-column label="操作" width="60">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="OperatorsMaphandleDetail('运维', scope.row)">详情</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
-        <el-tab-pane label="运营商站点">
-          <el-table :data="OperatorsMap.Operators" v-loading="Loading2" ref="">
-            <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
-            </el-table-column>
-            <el-table-column prop="systemcode" label="系统编码" width=""></el-table-column>
-            <el-table-column prop="systemname" label="系统名称" width=""></el-table-column>
-            <el-table-column prop="resourcename" label="所属站点" width=""></el-table-column>
-            <el-table-column prop="cityname" label="城市" width=""></el-table-column>
-            <el-table-column prop="areaname" label="区域" width=""></el-table-column>
-            <el-table-column label="操作" width="60">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="OperatorsMaphandleDetail('运营商', scope.row)">详情</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
-      </el-tabs>
-      <div class="center" v-show="ViewTabIndex !== '0'">
-        <!--<el-pagination @current-change="getTableData1More" @size-change="handelSizeChange" :current-page="currentPage2[PaginationIndex]"
-                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize2[PaginationIndex]" :total="total2[PaginationIndex]"
-                       background layout="total, prev, pager, next, sizes"></el-pagination>-->
-        <el-pagination @current-change="currentChange2" @size-change="SizeChange2" :current-page="currentPage2"
-                       :page-sizes="[10, 20, 50, 100]" :page-size="pageSize2" :total="total2"
-                       background layout="total, prev, pager, next, sizes"></el-pagination>
-      </div>
       <div class="center">
         <el-button @click="closeShowDetail" type="primary" icon="el-icon-arrow-left">返回</el-button>
       </div>
-      <el-dialog top="1%" :visible.sync="DetailDialogVisible" title="详情" width="80%" :before-close="DetailhandleClose">
-        <OperatorSite v-if="detailsType === '运营商'" v-loading="Loading3" :WriteData="OperatorsMap.Detail" :WriteState="2" :ImgList1="ImgList1" :DicList="DicList" @fatherClose="WriteClose"
-                      @fatherOpenImgBox="OpenImgBox"
-        ></OperatorSite>
-        <Details v-if="detailsType === '运维'" v-loading="Loading3" :WriteData="OperatorsMap.Detail" :WriteState="2" :ImgList1="ImgList1" :ImgList2="ImgList2" :DicList="DicList" @fatherClose="WriteClose"
-                 @fatherOpenImgBox="OpenImgBox" ref="Details"></Details>
-      </el-dialog>
     </div>
+
+    <div v-if="showOperationSite">
+      <OperationSite ref="OperationSite" :resourcetype="2" @fatherClose="fatherClose"></OperationSite>
+    </div>
+
+    <div v-if="showDeviceConfig">
+      <ZYResourceEquipment ref="ZYResourceEquipment" @fatherClose="fatherClose"></ZYResourceEquipment>
+    </div>
+
+    <div v-if="showOperatorSite">
+      <OperatorSite ref="OperatorSite" @fatherClose="fatherClose"></OperatorSite>
+    </div>
+
     <!--dialog弹窗-->
     <ImgBox ref="ImgBox"></ImgBox>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
+import GoogleMap from 'base/GoogleMap'
+import OperationSite from 'base/Resource/OperationSite'
+import ZYResourceEquipment from 'base/Resource/ZYResourceEquipment'
+import OperatorSite from 'base/Resource/OperatorSite'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
-import OperatorSite from 'base/Resource/OperatorSite'
-import Details from 'base/Resource/MonitoringSite'
 import ImgBox from 'base/ImgBox'
-import {DictionaryInfoList, GetZYResourceListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync, GetOperatorSiteList,
-  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo} from 'api/api'
+import {DictionaryInfoList, GetZYResourceListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync,
+  GetEquipmentTypeList} from 'api/api'
 
 export default {
-  name: 'Resource',
+  name: 'ZYResource',
   mixins: [GlobalRes],
   data () {
     return {
@@ -763,9 +772,14 @@ export default {
       query: {
         AreaList: [],
         name: '', // 站点名称
+        resourcetype: 1, // 站点类型
+        classify: '', // 站点分类
         provinceid: '', // 省份
         cityid: '', // 城市
-        areaid: '' // 区域
+        areaid: '', // 区域
+        starttime: '',
+        endtime: '',
+        code: ''
       },
       // 查询区域下拉框
       AreaList: {
@@ -773,16 +787,18 @@ export default {
         city: '',
         area: ''
       },
+      showMap: false,
+      showList: true,
+      showOperationSite: false,
+      showDeviceConfig: false,
+      showOperatorSite: false,
       tableList: [],
       // 显示编辑 && 新增
       showEdit: false,
       // 显示详情
       showDetail: false,
-      detailsType: '',
       // Loading
       Table1Loading: false,
-      // 新增 & 详请 & 编辑显示的table数据
-      detailInfo: [],
       tableData: {
         provinceid: '', // 省份
         cityid: '', // 地市
@@ -790,6 +806,7 @@ export default {
         AreaList: [],
         code: '', // 站点编码
         name: '', // 站点名称
+        equipmenttype_id: [],
         accessdate: '', // 入网日期****
         classify: null, // 站点分类
         roomtype: 0,
@@ -801,12 +818,12 @@ export default {
         rawpropertyrightunit: null, // 设备产权单位
         websitebuildingmode: null, // 建站模式
         computerroomposition: '', // 机房位置
-        outstanding: '', // 是否拉远站
+        outstanding: true, // 是否拉远站
         siteterrain: '', // 站址地形
         coversthescenario: '', // 覆盖场景
         contractsigning: '', // 合同签订主体
         handoverbatch: '', // 移交批次
-        shared: '', // 是否共享
+        shared: true, // 是否共享
         sharedunit: '', // 共享单位
         identificationcode: '', // 资产识别码
         address: '', // 地址
@@ -825,9 +842,6 @@ export default {
           { required: true, message: '请选择地市', trigger: 'change' }
         ],
         areaid: [
-          { required: true, message: '请选择区域', trigger: 'change' }
-        ],
-        AreaList: [
           { required: true, message: '请选择区域', trigger: 'change' }
         ],
         code: [
@@ -860,29 +874,7 @@ export default {
           { required: true, message: '是否共享', trigger: 'change' }
         ]
       },
-      // 详情 运营商站点table list
-      OperatorsMap: {
-        Monitor: [],
-        Operators: [],
-        Detail: {},
-        // 分页相关属性
-        pagination: {
-          total: 0,
-          pageSize: 10,
-          currentPage: 1,
-          PageIndex: 1
-        }
-      },
-      currentPage2: 1,
-      currentPageList: [1, 1],
-      pageSize2: 10,
-      pageSizeList: [10, 10],
-      total2: 0,
-      totalList: [0, 0],
-      Loading2: false,
-      Loading3: false,
-      // Dialog
-      DetailDialogVisible: false,
+      Loading: false,
       // 点击按钮时存放变量
       pageType: '',
       isValid: true,
@@ -893,27 +885,65 @@ export default {
         currentPage: 1,
         PageIndex: 1
       },
-      // 选项卡菜单
-      ViewTabIndex: '0',
       // 详情tabs id 转存
       tabsRowId: '',
       // imgbox实参
       CodeImgList: [],
       LongImgList: [],
-      ImgList1: [],
-      ImgList2: [],
-      required: false,
       // 字典集合
       DicList: {
       },
-      siteID: []
+      siteID: [],
+      EquipmentTypeList: [] // 设备类型集合
     }
   },
   created () {
     this._getTableData1()
     this.initDictionariesArray()
+    this.GetEquipmentTypeList()
   },
   methods: {
+    selectDisposeCode () {
+      this.$forceUpdate()
+    },
+    OperationSite (index, row) {
+      this.showList = false
+      this.showOperationSite = true
+      this.$nextTick(() => {
+        this.$refs.OperationSite.resource_id = row.id
+        this.$refs.OperationSite.getData1()
+      })
+    },
+    OperatorSite (index, row) {
+      this.showList = false
+      this.showOperatorSite = true
+      this.$nextTick(() => {
+        this.$refs.OperatorSite.resource_id = row.id
+        this.$refs.OperatorSite.getData1()
+      })
+    },
+    deviceConfig (index, row) {
+      this.showList = false
+      this.showDeviceConfig = true
+      this.$nextTick(() => {
+        this.$refs.ZYResourceEquipment.resource_id = row.id
+        this.$refs.ZYResourceEquipment.getData1()
+      })
+    },
+    async GetEquipmentTypeList () {
+      const res = await this.$axios.get(GetEquipmentTypeList, {
+        params: {
+          classify: 1,
+          PageIndex: 1,
+          PageSize: 200
+        }
+      })
+      if (res.errorCode !== '200') {
+        return this.$message.error(res.msg)
+      } else {
+        this.EquipmentTypeList = res.data.list
+      }
+    },
     // 入网日期
     accessdate (val) { this.tableData.accessdate = val },
     async _getTableData1 () {
@@ -968,6 +998,7 @@ export default {
       this.pageType = '新增'
       this.CodeImgList = []
       this.LongImgList = []
+      this.showList = !this.showList
       this.showEdit = !this.showEdit
     },
     // 详情按钮
@@ -977,11 +1008,11 @@ export default {
       this.LongImgList = []
       this.showDetail = !this.showDetail
       this.showEdit = false
-      this.ViewTabIndex = '0'
+      this.showList = false
       this.tabsRowId = row.id
-      this.Loading3 = true
+      this.Loading = true
       const res = await this.$axios.get(GetZYResourceIdListAsync, {params: {id: row.id}})
-      this.Loading3 = false
+      this.Loading = false
       if (res.errorCode !== '200') return this.$message.error(res.msg)
       if (res.data) {
         this.tableData = res.data
@@ -1026,15 +1057,15 @@ export default {
         })
       }
     },
-
     async handelEdit (index, row) {
       this.showEdit = !this.showEdit
+      this.showList = false
       this.pageType = '编辑'
       this.CodeImgList = []
       this.LongImgList = []
-      this.Loading2 = true
+      this.Loading = true
       const res = await this.$axios.get(GetZYResourceIdListAsync, {params: {id: row.id}})
-      this.Loading2 = false
+      this.Loading = false
       if (res.errorCode !== '200') return this.$message.error(res.msg)
       if (!res.data) return
       this.tableData = Object.assign(res.data, {id: row.id})
@@ -1064,12 +1095,14 @@ export default {
       Object.assign(this.$data.tableData, this.$options.data().tableData)
       this._getTableMore1(1)
       this.showEdit = !this.showEdit
+      this.showList = true
     },
     // 详情 返回事件
     closeShowDetail () {
       Object.assign(this.$data.tableData, this.$options.data().tableData)
       this._getTableMore1(1)
       this.showDetail = !this.showDetail
+      this.showList = true
     },
     // 新增 && 修改页面的提交按钮
     handleAddData () {
@@ -1081,114 +1114,32 @@ export default {
         } else {
           if (this.tableData.classify === 1 && this.LongImgList.length === 0) return this.$message.warning('请上传经度照片')
           if (this.pageType === '新增') {
+            if (!this.tableData.AreaList.length) {
+              return this.$message.error('请选择区域！')
+            }
             const res = await this.$axios.post(AddZYResourceAsync, Object.assign({}, this.tableData, {imglist: this.imageList}))
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功！')
             this.showEdit = !this.showEdit
+            this.showList = true
             this._getTableData1()
           } else if (this.pageType === '编辑') {
+            if (!this.tableData.AreaList.length) {
+              return this.$message.error('请选择区域！')
+            }
             const res = await this.$axios.put(EditZYResourceAsync, Object.assign({}, this.tableData, {imglist: this.imageList}))
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('修改成功！')
-            this._getTableData1()
             this.showEdit = !this.showEdit
+            this.showList = true
+            this._getTableData1()
           }
         }
       })
     },
-    // 选项卡 change 事件
-    currentChange2 (page) {
-      this.currentPage2 = page
-      this.currentPageList[this.PaginationIndex] = page
-      this.getTabsMore(this.PaginationIndex)
-    },
-    SizeChange2 (size) {
-      this.pageSize2 = size
-      this.pageSizeList[this.PaginationIndex] = size
-      this.getTabsMore(this.PaginationIndex)
-    },
-    getTabsMore (index) {
-      let data = {
-        PageIndex: this.currentPageList[index],
-        PageSize: this.pageSizeList[index],
-        resourceid: this.tabsRowId
-      }
-      if (index === 0) return this.tabs1(data)
-      if (index === 1) return this.tabs2(data)
-    },
-    handleTabs () {
-      if (this.ViewTabIndex === '1') { this.tabs1() }
-      if (this.ViewTabIndex === '2') { this.tabs2() }
-    },
-    async tabs1 (data) {
-      let index = this.PaginationIndex
-      this.Loading2 = true
-      if (!data) { data = {PageIndex: this.currentPageList[index], PageSize: this.pageSizeList[index], resourceid: this.tabsRowId} }
-      const res = await this.$axios.get(GetMonitoringSite, {params: data})
-      this.Loading2 = false
-      if (res.errorCode !== '200') return this.$message.error(res.msg)
-      this.OperatorsMap.Monitor = res.data.list
-      this.total2 = res.data.total
-      // this.OperatorsMap.pagination.total = res.data.total
-      this.totalList[index] = res.data.total
-    },
-    async tabs2 (data) {
-      let index = this.PaginationIndex
-      this.Loading2 = true
-      if (!data) { data = {PageIndex: this.currentPageList[index], PageSize: this.pageSizeList[index], resourceid: this.tabsRowId} }
-      const res = await this.$axios.get(GetOperatorSiteList, {params: data})
-      this.Loading2 = false
-      if (res.errorCode !== '200') return this.$message.error(res.msg)
-      this.OperatorsMap.Operators = res.data.list
-      this.total2 = res.data.total
-      this.totalList[this.PaginationIndex] = res.data.total
-    },
-    // 选项卡中详情按钮
-    async OperatorsMaphandleDetail (flag, row) {
-      this.DetailDialogVisible = !this.DetailDialogVisible
-      this.Loading3 = true
-      if (flag === '运维') {
-        this.detailsType = '运维'
-        const res = await this.$axios.get(MonitoringSiteIdInfo, {params: {id: row.id}})
-        if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.OperatorsMap.Detail = res.data
-        if (res.data.imglist) {
-          // console.log(res.data.imglist)
-          this.setImgList(res.data.imglist)
-        }
-        this.Loading3 = false
-      } else if (flag === '运营商') {
-        this.detailsType = '运营商'
-        const res = await this.$axios.get(GetOperatorSiteInfo, {params: {id: row.id}})
-        if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.OperatorsMap.Detail = res.data
-        if (res.data.imglist) {
-          // console.log(res.data.imglist)
-          this.setImgList(res.data.imglist)
-        }
-        this.Loading3 = false
-        // this.DetailDialogVisible = !this.DetailDialogVisible
-      } else { this.Loading3 = false }
-    },
     setImgList (list) {
-      // console.log(list)
       this.CodeImgList = list.filter(i => i.field_name === 'code')
-      this.ImgList1 = list.filter(i => i.field_name === 'monitoringcode')
-      if (this.detailsType === '运维') {
-        this.ImgList2 = list.filter(i => i.field_name === 'longitude')
-      } else {
-        this.LongImgList = list.filter(i => i.field_name === 'longitude')
-      }
-      // console.log(this.CodeImgList, this.LongImgList)
-    },
-    DetailhandleClose () {
-      this.WriteClose()
-    },
-    WriteClose () {
-      this.OperatorsMap.Detail = {}
-      this.ImgList1 = []
-      this.ImgList2 = []
-      this.DetailDialogVisible = !this.DetailDialogVisible
+      this.LongImgList = list.filter(i => i.field_name === 'longitude')
     },
     // 添加图片方法
     OpenImgBox (val, flag) {
@@ -1199,43 +1150,49 @@ export default {
         case '经度':
           this.$refs.ImgBox.SetData('经度', 'longitude', this.LongImgList)
           break
-        case 1:
-          this.$refs.ImgBox.SetData('运营商站点编码', 'monitoringcode', this.ImgList1)
-          break
-        case 2:
-          this.$refs.ImgBox.SetData('经度', 'longitude', this.ImgList2)
-          break
       }
       this.$refs.ImgBox.Open()
       this.pageType === '详情' ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
-    _normalizeAreaLevel (list) {
-      for (let i in list) {
-        if (list[i].leveltype >= 3) list[i].leaf = true
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+
+      })
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.tableData.longitude
+        this.$refs.GoogleMap.latitude = this.tableData.latitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.tableData.longitude = longitude
       }
-      return list
+      if (latitude) {
+        this.tableData.latitude = latitude
+      }
+    },
+    fatherClose () {
+      this.showOperationSite = false
+      this.showDeviceConfig = false
+      this.showOperatorSite = false
+      this.showList = true
+      this._getTableData1()
     }
   },
   computed: {
     imageList () {
       return this.CodeImgList.concat(this.LongImgList)
-    },
-    PaginationIndex () {
-      return this.ViewTabIndex <= 0 ? 0 : this.ViewTabIndex - 1
     }
   },
   watch: {
-    /* 'tableData.classify': function (val) {
-      if (val === 2 || val === '') {
-        this.Rules.longitude[0].required = false
-        this.Rules.latitude[0].required = false
-        this.required = false
-      } else {
-        this.required = true
-        this.Rules.longitude[0].required = true
-        this.Rules.latitude[0].required = true
-      }
-    }, */
     'tableData.longitude': function (val) {
       if (val === 0) {
         this.tableData.longitude = null
@@ -1245,19 +1202,15 @@ export default {
       if (val === 0) {
         this.tableData.latitude = null
       }
-    },
-    PaginationIndex (val) {
-      console.log('watch PaginationIndex', val)
-      this.currentPage2 = this.currentPageList[val]
-      this.pageSize2 = this.pageSizeList[val]
-      this.total2 = this.totalList[val]
     }
   },
   components: {
     layuiTitle,
     ImgBox,
-    OperatorSite,
-    Details
+    GoogleMap,
+    OperationSite,
+    ZYResourceEquipment,
+    OperatorSite
   }
 }
 </script>

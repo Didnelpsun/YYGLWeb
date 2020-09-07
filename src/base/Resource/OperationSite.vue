@@ -75,7 +75,7 @@
               <tbody>
               <!--运维ID-->
               <tr class="el-table__row">
-                <td><div class="cell">运维ID</div></td>
+                <td><div class="cell"><i class="must">*</i>运维ID</div></td>
                 <td><div class="cell">
                   <div v-show="WriteState == 2">{{WriteData.monitoringcode}}</div>
                   <div v-show="WriteState !== 2">
@@ -94,7 +94,7 @@
                 <td><div class="cell">
                   <div v-show="WriteState == 2">{{WriteData.monitoringname}}</div>
                   <div v-show="WriteState !== 2">
-                    <el-input v-model="WriteData.monitoringname" placeholder="请选择"></el-input>
+                    <el-input v-model="WriteData.monitoringname"></el-input>
                   </div></div>
                 </td>
                 <td><div class="cell"></div></td>
@@ -102,7 +102,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--经度-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-if="resourcetype === 1">
                 <td><div class="cell"><i class="must">*</i>经度</div></td>
                 <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="longitude">
@@ -118,7 +118,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <!--纬度-->
-              <tr class="el-table__row">
+              <tr class="el-table__row" v-if="resourcetype === 1">
                 <td><div class="cell"><i class="must">*</i>纬度</div></td>
                 <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="latitude">
@@ -156,8 +156,14 @@ import ImgBox from 'base/ImgBox'
 import layuiTitle from 'base/layui-title'
 
 export default {
-  name: 'NYOperationSite',
+  name: 'OperationSite',
   mixins: [GlobalRes],
+  props: {
+    resourcetype: {
+      type: Number,
+      default: 1
+    }
+  },
   data () {
     return {
       showMap: false,

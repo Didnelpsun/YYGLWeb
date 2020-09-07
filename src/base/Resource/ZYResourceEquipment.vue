@@ -190,7 +190,7 @@
 </template>
 
 <script>
-import {AddEnergyResourceEquipment, GetEnergyResourceEquipmentList, GetResourceEquipmentInfo,
+import {AddEnergyResourceEquipment, GetResourceEquipmentList, GetResourceEquipmentInfo,
   DelResourceEquipment, UpdateEnergyResourceEquipment, GetEquipmentTypeList} from 'api/api'
 import GoogleMap from 'base/GoogleMap'
 import {GlobalRes} from 'common/js/mixins'
@@ -198,7 +198,7 @@ import ImgBox from 'base/ImgBox'
 import layuiTitle from 'base/layui-title'
 
 export default {
-  name: 'NYResourceEquipment',
+  name: 'ZYResourceEquipment',
   mixins: [GlobalRes],
   data () {
     return {
@@ -241,6 +241,7 @@ export default {
     async GetEquipmentTypeList () {
       const res = await this.$axios.get(GetEquipmentTypeList, {
         params: {
+          resourcetype: 2,
           PageIndex: 1,
           PageSize: 200
         }
@@ -257,7 +258,7 @@ export default {
     },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetEnergyResourceEquipmentList, {
+      this.$axios.get(GetResourceEquipmentList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize,
@@ -273,7 +274,7 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetEnergyResourceEquipmentList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetResourceEquipmentList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize,
         resource_id: this.resource_id

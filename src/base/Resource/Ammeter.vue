@@ -116,22 +116,6 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--电表状态-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>电表状态</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="models">
-                  <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.statename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--电表编号-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>电表编号</div></td>
@@ -257,6 +241,20 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <tr class="el-table__row" v-if="WriteState === 2">
+              <td><div class="cell">创建人</div></td>
+              <td><div class="cell">{{WriteData.createusername}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row" v-if="WriteState === 2">
+              <td><div class="cell">创建时间</div></td>
+              <td><div class="cell">{{WriteData.createtime}}</div></td>
+              <td><div class="cell"></div></td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -314,8 +312,7 @@ export default {
         areaname: '',
         longitude: null,
         latitude: null,
-        statename: '',
-        state: null,
+        state: 1,
         accessdate: '',
         electricmeterno: '',
         powersupplymodename: '',

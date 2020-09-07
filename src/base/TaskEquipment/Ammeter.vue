@@ -116,22 +116,6 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--电表状态-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>电表状态</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="models">
-                  <el-select v-model="WriteData.state">
-                    <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.state" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.statename}}</div></td>
-              <td><div class="cell"></div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.state)}}</div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
             <!--电表编号-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>电表编号</div></td>
@@ -313,7 +297,7 @@ export default {
         models: null,
         accessdate: '',
         identificationcode: '',
-        state: null,
+        state: 1,
         electricmeterno: '',
         powersupplymode: null,
         powersupplyprice: '',
@@ -332,9 +316,6 @@ export default {
         ],
         accessdate: [
           { required: true, message: '请选择入网日期', trigger: 'change' }
-        ],
-        state: [
-          { required: true, message: '请选择电表状态', trigger: 'change' }
         ],
         electricmeterno: [
           { required: true, message: '请输入电表编号', trigger: 'blur' }
@@ -374,11 +355,10 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['电表供电方式', '设备状态', '电表设备厂家', '电表设备型号']
+      let arr = ['电表供电方式', '电表设备厂家', '电表设备型号']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.$set(this.DicList, 'powersupplymode', res.data.filter(i => { return i.type === '电表供电方式' }))
-          this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
           this.DicList.manufacturer = res.data.filter(i => { return i.type === '电表设备厂家' })
           this.DicList.models = res.data.filter(i => { return i.type === '电表设备型号' })
         } else {

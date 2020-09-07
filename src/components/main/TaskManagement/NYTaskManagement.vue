@@ -318,31 +318,6 @@
             <el-button @click="closeShowEdit" type="primary" icon="el-icon-arrow-left">返回</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="电表">
-          <el-table :data="AmmeterInfo" v-loading="table1Loading" ref="">
-            <el-table-column label="序号" width="50">
-              <template slot-scope="scope">{{scope.$index+(currentPage[2] - 1) * pageSize[2] + 1}}</template>
-            </el-table-column>
-            <el-table-column prop="statename" label="电表状态" width="60"></el-table-column>
-            <el-table-column prop="accessdate" label="入网日期"></el-table-column>
-            <el-table-column prop="electricmeterno" label="电表编号"></el-table-column>
-            <el-table-column prop="powersupplymodename" label="供电方式"></el-table-column>
-            <el-table-column prop="powersupplytheowner" label="供电业主"></el-table-column>
-            <el-table-column prop="theownerphone" label="供电联系方式"></el-table-column>
-            <el-table-column prop="censusstatename" label="普查状态"></el-table-column>
-            <el-table-column prop="createtime" label="创建日期"></el-table-column>
-            <el-table-column prop="createusername" label="创建人"></el-table-column>
-            <el-table-column label="操作" width="200">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 2)">详情</el-button>
-                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="showAmmeterDetail(scope.$index, scope.row, 1)">修改</el-button>
-                <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1, 1)">提交审核</el-button>
-                <el-button v-if="showType == 4 && scope.row.censusstatename === '待审核'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 2, 1)">审核</el-button>
-                <el-button v-if="showType !== 1" type="text" size="mini" @click="AmmeterDelete(scope.$index, scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
         <el-tab-pane label="隐患">
           <el-table :data="HiddenDangerList" v-loading="table1Loading" ref="">
             <el-table-column label="序号" width="50">
@@ -385,17 +360,17 @@
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[1]" :total="total[1]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
-      <div class="center" v-if="ViewTabIndex === '2'">
+      <!--<div class="center" v-if="ViewTabIndex === '2'">
         <el-pagination @current-change="currentChange3" @size-change="SizeChange3" :current-page="currentPage[2]"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[2]" :total="total[2]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
-      </div>
-      <div class="center" v-if="ViewTabIndex === '3'">
+      </div>-->
+      <div class="center" v-if="ViewTabIndex === '2'">
         <el-pagination @current-change="currentChange4" @size-change="SizeChange4" :current-page="currentPage[3]"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[3]" :total="total[3]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
-      <div class="center" v-if="ViewTabIndex === '4'">
+      <div class="center" v-if="ViewTabIndex === '3'">
         <el-pagination @current-change="currentChange5" @size-change="SizeChange5" :current-page="currentPage[4]"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize[4]" :total="total[4]"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
@@ -522,7 +497,6 @@ export default {
       tableList: [], // 任务列表
       deviceList: [], // 任务设备列表
       deviceInfo: [], // 任务信息
-      AmmeterInfo: [], // 任务电表
       MaintainList: [], // 上站维护列表
       HiddenDangerList: [], // 隐患列表
       siteInfo: {}, // 任务站点信息
@@ -700,25 +674,6 @@ export default {
         if (res.errorCode === '200') {
           this.deviceInfo = res.data.list
           this.$set(this.total, 1, res.data.total)
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
-    GetTaskAmmeterList (id) {
-      this.table1Loading = true
-      // this.$set(this.currentPage, 2, 1)
-      this.$axios.get(GetTaskElectricMeterList, {
-        params: {
-          task_id: id,
-          PageIndex: this.currentPage[2],
-          PageSize: this.pageSize[2]
-        }
-      }).then(res => {
-        this.table1Loading = false
-        if (res.errorCode === '200') {
-          this.AmmeterInfo = res.data.list
-          this.$set(this.total, 2, res.data.total)
         } else {
           this.$message.error(res.msg)
         }
@@ -932,14 +887,6 @@ export default {
                         }
                       })
                       break
-                    case '2':
-                      // this.$set(this.currentPage, 2, 1)
-                      if (this.result === '待执行') {
-                        this.GetTaskAmmeterList(this.currentTaskId)
-                      } else {
-                        this.closeShowEdit()
-                      }
-                      break
                   }
                 } else {
                   this.$message.error(res.msg)
@@ -1020,10 +967,6 @@ export default {
                 }
               })
               break
-            case '2':
-              this.$set(this.currentPage, 2, 1)
-              this.GetTaskAmmeterList(this.currentTaskId)
-              break
           }
         } else {
           this.$message.error(res.msg)
@@ -1055,20 +998,6 @@ export default {
           break
         case '2':
           this.showDialog = true
-          this.showAmmeter = true
-          this.dialogTitle = '新增电表'
-          this.WriteState = 0
-          this.$nextTick(() => {
-            this.$refs.Ammeter.WriteData.task_id = this.currentTaskId
-            // this.$refs.Ammeter.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-            this.$refs.Ammeter.WriteData.resource_id = this.editSiteId
-            this.$refs.Ammeter.WriteData.resourcecode = this.editResourcecode
-            this.$refs.Ammeter.WriteData.resourcename = this.editResourcename
-            this.$refs.Ammeter.WriteData.equipmenttypename = '电表'
-          })
-          break
-        case '3':
-          this.showDialog = true
           this.showHiddenDanger = true
           this.dialogTitle = '新增隐患'
           this.WriteState = 0
@@ -1076,7 +1005,7 @@ export default {
             this.$refs.HiddenDanger.WriteData.resource_id = this.editSiteId
           })
           break
-        case '4':
+        case '3':
           this.showDialog = true
           this.showMaintain = true
           this.dialogTitle = '新增上站维护'
@@ -1190,6 +1119,17 @@ export default {
                 this.$refs.AnElectricIntroduced.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
+            case '电表':
+              this.showAmmeter = true
+              this.$nextTick(() => {
+                this.$refs.Ammeter.WriteData.task_id = this.currentTaskId
+                this.$refs.Ammeter.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.Ammeter.WriteData.resource_id = this.editSiteId
+                this.$refs.Ammeter.WriteData.resourcecode = this.editResourcecode
+                this.$refs.Ammeter.WriteData.resourcename = this.editResourcename
+                this.$refs.Ammeter.WriteData.equipmenttypename = '电表'
+              })
+              break
           }
         } else {
           this.$message.error(res.msg)
@@ -1218,12 +1158,9 @@ export default {
           })
           break
         case '2':
-          this.GetTaskAmmeterList(this.currentTaskId)
-          break
-        case '3':
           this.GetHiddenDangerList()
           break
-        case '4':
+        case '3':
           this.GetMaintainList()
           break
       }
@@ -1301,13 +1238,6 @@ export default {
         this.dialogTitle = '新增' + name
       }
     },
-    showAmmeterDetail (index, row, type) {
-      this.WriteState = type
-      this.DeviceID = row.id
-      this.showDialog = true
-      this.setTitle('电表')
-      this.showAmmeter = true
-    },
     EditHiddenDanger (index, row, type) {
       this.WriteState = type
       this.DeviceID = row.id
@@ -1349,6 +1279,9 @@ export default {
         case '外电引入':
           this.showAnElectricIntroduced = true
           break
+        case '电表':
+          this.showAmmeter = true
+          break
       }
     },
     DeleteDevice (index, row) {
@@ -1372,25 +1305,6 @@ export default {
         }
       })
       this.deviceList = arr
-    },
-    AmmeterDelete (index, row) {
-      this.$confirm('您确认要删除当前电表吗？', '提示', {
-        type: 'warning'
-      }).then(() => {
-        this.$axios.delete(DelTaskEquipment, {
-          params: {
-            id: row.id
-          }
-        }).then((res) => {
-          if (res.errorCode !== '200') {
-            this.$message.error(res.msg)
-          } else {
-            this.$message.success('删除成功！')
-            this.$set(this.currentPage, 2, 1)
-            this.GetTaskAmmeterList(this.currentTaskId)
-          }
-        })
-      })
     },
     DeviceDelete (index, row) {
       this.$confirm('您确认要删除当前任务设备吗？', '提示', {
@@ -1435,12 +1349,9 @@ export default {
           })
           break
         case '2':
-          this.GetTaskAmmeterList(this.currentTaskId)
-          break
-        case '3':
           this.GetHiddenDangerList()
           break
-        case '4':
+        case '3':
           this.GetMaintainList()
           break
       }
@@ -1450,7 +1361,6 @@ export default {
       this.ViewTabIndex = '0'
       this.siteInfo = {}
       this.deviceInfo = []
-      this.AmmeterInfo = []
       this.HiddenDangerList = []
       this.MaintainList = []
       this.$set(this.total, 1, 0)
@@ -1497,25 +1407,6 @@ export default {
         }
       })
     },
-    currentChange3 (e) {
-      this.table1Loading = true
-      this.$set(this.currentPage, 2, e)
-      this.$axios.get(GetTaskElectricMeterList, {
-        params: {
-          task_id: this.currentTaskId,
-          PageIndex: e,
-          PageSize: this.pageSize[2]
-        }
-      }).then(res => {
-        this.table1Loading = false
-        if (res.errorCode === '200') {
-          this.AmmeterInfo = res.data.list
-          this.$set(this.total, 2, res.data.total)
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
     currentChange4 (e) {
       this.table1Loading = true
       this.$set(this.currentPage, 3, e)
@@ -1557,10 +1448,6 @@ export default {
     SizeChange2 (page) {
       this.$set(this.pageSize, 1, page)
       this.currentChange2(1)
-    },
-    SizeChange3 (page) {
-      this.$set(this.pageSize, 2, page)
-      this.currentChange3(1)
     },
     SizeChange4 (page) {
       this.$set(this.pageSize, 3, page)

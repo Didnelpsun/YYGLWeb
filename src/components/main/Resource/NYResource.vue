@@ -135,7 +135,7 @@
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>区域</div></td>
                 <td class="el-table_8_column_61">
                   <div class="cell">
-                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="AreaList">
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
                       <el-cascader ref="csArea" width="100%" v-model="tableData.AreaList" :props="areaProps" @change="changeArea(tableData)" placeholder="请选择"></el-cascader>
                     </el-form-item>
                   </div>
@@ -212,6 +212,23 @@
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="accessdate">
                       <el-date-picker v-model="tableData.accessdate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                    </el-form-item>
+                  </div>
+                </td>
+                <td class="el-table_8_column_62"><div class="cell"></div></td>
+                <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
+                <td class="el-table_8_column_64"><div class="cell"></div></td>
+              </tr>
+              <!--设备类型-->
+              <tr class="el-table__row" v-if="pageType === '新增'">
+                <td class="el-table_8_column_60"><div class="cell">设备类型</div></td>
+                <td class="el-table_8_column_61">
+                  <div class="cell">
+                    <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="equipmenttype_id">
+                      <el-select v-model="tableData.equipmenttype_id" multiple @change="selectDisposeCode" placeholder="请选择" size="small">
+                        <!--<el-option label="请选择" :value="0"></el-option>-->
+                        <el-option v-for="(i,index) in EquipmentTypeList" :key="index" :label="i.name" :value="i.id"></el-option>
+                      </el-select>
                     </el-form-item>
                   </div>
                 </td>
@@ -414,7 +431,7 @@
     </div>
 
     <div v-if="showOperationSite">
-      <NYOperationSite ref="NYOperationSite" @fatherClose="fatherClose"></NYOperationSite>
+      <OperationSite ref="OperationSite" @fatherClose="fatherClose"></OperationSite>
     </div>
 
     <div v-if="showDeviceConfig">
@@ -428,14 +445,14 @@
 
 <script>
 import GoogleMap from 'base/GoogleMap'
-import NYOperationSite from 'base/Resource/NYOperationSite'
+import OperationSite from 'base/Resource/OperationSite'
 import NYResourceEquipment from 'base/Resource/NYResourceEquipment'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import ImgBox from 'base/ImgBox'
 import {DictionaryInfoList, GetEnergyListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync, GetOperatorSiteList,
-  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo} from 'api/api'
+  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo, GetEquipmentTypeList} from 'api/api'
 
 export default {
   name: 'Resource',
@@ -463,6 +480,7 @@ export default {
         area: ''
       },
       tableList: [],
+      EquipmentTypeList: [], // 设备类型集合
       showList: true,
       showOperationSite: false,
       showDeviceConfig: false,
@@ -494,10 +512,11 @@ export default {
         cityname: '',
         areaname: '',
         provincename: '',
-        id: ''
+        equipmenttype_id: [],
+        id: '',
+        imglist: []
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         code: [
           { required: true, message: '请输入站点编码', trigger: 'blur' }
         ],
@@ -580,8 +599,12 @@ export default {
   created () {
     this._getTableData1()
     this.initDictionariesArray()
+    this.GetEquipmentTypeList()
   },
   methods: {
+    selectDisposeCode () {
+      this.$forceUpdate()
+    },
     // 入网日期
     accessdate (val) { this.tableData.accessdate = val },
     async _getTableData1 () {
@@ -692,7 +715,20 @@ export default {
         })
       }
     },
-
+    async GetEquipmentTypeList () {
+      const res = await this.$axios.get(GetEquipmentTypeList, {
+        params: {
+          classify: 1,
+          PageIndex: 1,
+          PageSize: 200
+        }
+      })
+      if (res.errorCode !== '200') {
+        return this.$message.error(res.msg)
+      } else {
+        this.EquipmentTypeList = res.data.list
+      }
+    },
     async handelEdit (index, row) {
       this.showEdit = !this.showEdit
       this.pageType = '编辑'
@@ -729,6 +765,7 @@ export default {
     // 新增 && 修改 返回事件
     closeShowEdit () {
       Object.assign(this.$data.tableData, this.$options.data().tableData)
+      this.$refs.tableForm.clearValidate()
       this.showEdit = !this.showEdit
       this.showList = true
     },
@@ -748,17 +785,23 @@ export default {
         } else {
           if (this.tableData.classify === 1 && this.LongImgList.length === 0) return this.$message.warning('请上传经度照片')
           if (this.pageType === '新增') {
+            if (!this.tableData.AreaList.length) {
+              return this.$message.error('请选择区域！')
+            }
             const res = await this.$axios.post(AddZYResourceAsync, Object.assign({}, this.tableData, {imglist: this.imageList}))
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功！')
-            this.showEdit = !this.showEdit
+            this.closeShowEdit()
             this._getTableData1()
           } else if (this.pageType === '编辑') {
+            if (!this.tableData.AreaList.length) {
+              return this.$message.error('请选择区域！')
+            }
             const res = await this.$axios.put(EditZYResourceAsync, Object.assign({}, this.tableData, {imglist: this.imageList}))
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('修改成功！')
+            this.closeShowEdit()
             this._getTableData1()
-            this.showEdit = !this.showEdit
           }
         }
       })
@@ -902,8 +945,8 @@ export default {
       this.showList = false
       this.showOperationSite = true
       this.$nextTick(() => {
-        this.$refs.NYOperationSite.resource_id = row.id
-        this.$refs.NYOperationSite.getData1()
+        this.$refs.OperationSite.resource_id = row.id
+        this.$refs.OperationSite.getData1()
       })
     },
     deviceConfig (index, row) {
@@ -962,7 +1005,7 @@ export default {
     layuiTitle,
     ImgBox,
     GoogleMap,
-    NYOperationSite,
+    OperationSite,
     NYResourceEquipment
   }
 }

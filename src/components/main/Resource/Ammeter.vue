@@ -129,7 +129,6 @@ export default {
       pageSize: 10,
       total: 0,
       DicList: {
-        state: [],
         propertyrightunit: [],
         maintenanceunit: [],
         manufacturer: [],
@@ -154,11 +153,10 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['电表供电方式', '设备状态']
+      let arr = ['电表供电方式']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
-          this.DicList.state = res.data.filter(i => { return i.type === '设备状态' })
         } else {
           this.$message.error(res.msg)
         }
