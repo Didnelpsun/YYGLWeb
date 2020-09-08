@@ -6,17 +6,17 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="厂家名称：">
-                <el-input v-model="Query.typename" placeholder="请填写厂家名称"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.name" placeholder="请填写厂家名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="厂家编码：">
-                <el-input v-model="Query.typename" placeholder="请填写厂家编码"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.code" placeholder="请填写厂家编码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同编号：">
-                <el-input v-model="Query.typeencoding" placeholder="请填写合同编号"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.contractno" placeholder="请填写合同编号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -43,13 +43,13 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="typename" label="厂家编号"></el-table-column>
-        <el-table-column prop="typeencoding" label="厂家编码 "></el-table-column>
-        <el-table-column prop="remark" label="合同编号"></el-table-column>
-        <el-table-column prop="typename" label="合同年度"></el-table-column>
-        <el-table-column prop="typeencoding" label="负责人 "></el-table-column>
-        <el-table-column prop="remark" label="开始时间"></el-table-column>
-        <el-table-column prop="remark" label="结束时间"></el-table-column>
+        <el-table-column prop="code" label="厂家编码"></el-table-column>
+        <el-table-column prop="name" label="厂家名称 "></el-table-column>
+        <el-table-column prop="contractno" label="合同编号"></el-table-column>
+        <el-table-column prop="year" label="合同年度"></el-table-column>
+        <el-table-column prop="administrator" label="负责人 "></el-table-column>
+        <el-table-column prop="starttime" label="开始时间"></el-table-column>
+        <el-table-column prop="endtime" label="结束时间"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
         <el-table-column label="操作" width="140">
@@ -82,7 +82,7 @@ import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from '../../../base/ImgBox'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {Getmanufacturerinfo, GetIdSpareTypList, Deletemanufacturerinfo} from 'api/BJGL'
 import Details from 'base/SpareManagement/AfterSaleContract'
 export default {
   name: 'AfterSaleContract',
@@ -91,8 +91,11 @@ export default {
     return {
       Query: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0
+        provinceid: null,
+        cityid: null,
+        contractno: null,
+        code: null,
+        name: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -133,8 +136,8 @@ export default {
     },
     formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
-      /* this.Loading = true
-      this.$axios.get(null, {
+      this.Loading = true
+      this.$axios.get(Getmanufacturerinfo, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -143,14 +146,12 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
-      this.tableData = [{cityname: '武汉'}]
-      this.total = 1
+      })
     },
     getMore (page) {
-      /* this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(null, {params: Object.assign({}, this.Query, {
+      this.$axios.get(Getmanufacturerinfo, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -159,7 +160,7 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -189,10 +190,10 @@ export default {
       } */
     },
     handle2 (row) {
-      /* this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(null, {
+        this.$axios.delete(Deletemanufacturerinfo, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
@@ -202,7 +203,7 @@ export default {
             this.$message.error(res.msg)
           }
         })
-      }) */
+      })
     }
   },
   components: {

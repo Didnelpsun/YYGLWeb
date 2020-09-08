@@ -44,57 +44,66 @@
             <tr class="el-table__row">
               <td><div class="cell">厂家编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typename">
-                  <el-input v-model="WriteData.typename"  placeholder="请填写厂家编码" clearable></el-input>
+                <el-form-item class="form-item" prop="code">
+                  <el-input v-model="WriteData.code"  placeholder="请填写厂家编码" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typename}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.code}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>厂家名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="belongtype">
-                  <el-select v-model="WriteData.belongtype">
-                    <el-option v-for="i in DicList.Belongtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择厂家名称"></el-option>
-                  </el-select>
+                <el-form-item class="form-item" prop="name">
+                  <el-input v-model="WriteData.name"  placeholder="请填写厂家名称" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.belongtype}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.name}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>合同编号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typeencoding">
-                  <el-input v-model="WriteData.typeencoding"  placeholder="请填写合同编号" clearable></el-input>
+                <el-form-item class="form-item" prop="contractno">
+                  <el-input v-model="WriteData.contractno"  placeholder="请填写合同编号" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.typeencoding}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.contractno}}</div></td>
+              <!-- <td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">合同年度</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="year">
+                  <el-input v-model="WriteData.year" type="number" placeholder="请填写合同起时间"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.year}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">合同起时间</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写合同起时间"></el-input>
+                <el-form-item label-width="0" class="form-item" prop="starttime">
+                  <el-date-picker v-model="WriteData.starttime" type="datetime" format="yyyy-MM-dd HH:mm"   value-format="yyyy-MM-dd HH:mm" placeholder="选择合同起时间"></el-date-picker>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.starttime}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">合同止时间</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写合同止时间"></el-input>
+                <el-form-item label-width="0" class="form-item" prop="endtime">
+                  <el-date-picker v-model="WriteData.endtime" type="datetime" format="yyyy-MM-dd HH:mm"   value-format="yyyy-MM-dd HH:mm" placeholder="选择合同止时间"></el-date-picker>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.endtime}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
@@ -105,10 +114,21 @@
               <td><div class="cell">点击数据上传合同图片</div></td>
             </tr>
             <tr class="el-table__row">
+              <td><div class="cell">管理员姓名</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="administrator">
+                  <el-input v-model="WriteData.administrator" placeholder="请填写管理员联系电话"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.administrator}}</div></td>
+              <!-- <td><div class="cell"></div></td>-->
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
               <td><div class="cell">管理员联系电话</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写管理员联系电话"></el-input>
+                <el-form-item class="form-item" prop="phonenum">
+                  <el-input v-model="WriteData.phonenum" placeholder="请填写管理员联系电话"></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
@@ -143,7 +163,7 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
-import {EditSpareTyp, AddSpareTyp} from 'api/BJGL'
+import {Addmanufacturerinfo, Editmanufacturerinfo} from 'api/BJGL'
 export default {
   name: 'AfterSaleContract',
   mixins: [GlobalRes],
@@ -197,12 +217,10 @@ export default {
         id: null,
         cityname: '',
         imglist: [],
-        typename: null,
-        belongtype: null,
-        typeencoding: '',
         remark: '',
         realityname: '',
         createtime: null
+
       },
       Rules: {
         /* AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
@@ -248,11 +266,11 @@ export default {
     setImgList (list) {
       if (list === null) return
       this.ImgList1 = list.filter(i => {
-        return i.field_name === ''
+        return i.field_name === 'files'
       })
     },
     OpenImgBox (val) {
-      if (val === 1) this.$emit('fatherOpenImgBox', '合同文件', '', this.ImgList1)
+      if (val === 1) this.$emit('fatherOpenImgBox', '合同文件', 'files', this.ImgList1)
     },
     WriteClose () {
       this.setArea([])
@@ -270,7 +288,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(null, this.WriteData).then(res => {
+          this.$axios.post(Addmanufacturerinfo, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -286,7 +304,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(null, this.WriteData).then(res => {
+          this.$axios.put(Editmanufacturerinfo, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')

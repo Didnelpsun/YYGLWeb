@@ -34,8 +34,8 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>城市</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item  class="form-item">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea" clearable></el-cascader>
+                <el-form-item  class="form-item" prop="AreaList">
+                  <el-cascader v-model="WriteData.AreaList"  placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -100,13 +100,11 @@
 </template>
 
 <script>
-import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
 import {Editsparepartsmanufacturer, Addsparepartsmanufacturer} from 'api/BJGL'
 
 export default {
   name: 'SparepartsManufacturer',
-  mixins: [GlobalRes],
   props: {
     WriteState: {
       type: Number,
@@ -122,13 +120,14 @@ export default {
         value: 'id',
         lazyLoad (node, resolve) {
           if (!node.level) {
-            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+            resolve(JSON.parse(localStorage.getItem('ProvinceList')))
+          /*  _this.$axios.post(AreaList, {parentid: null}).then((res) => {
               if (res.error) {
                 _this.$message.error(res.errorMessage)
               } else {
                 resolve(_this._normalizeCityAreaLevel(res.data))
               }
-            })
+            }) */
           } else {
             if (!node.hasChildren) return resolve([])
             _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
@@ -145,8 +144,8 @@ export default {
       Loading: false,
       WriteData: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0,
+        provinceid: null,
+        cityid: null,
         id: null,
         cityname: '',
         code: '',
@@ -188,7 +187,7 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
+      this.WriteData.AreaList = [ this.WriteData.provinceid, this.WriteData.cityid ]
       this.setArea(this.WriteData.AreaList, 'csArea')
     },
     WriteClose () {

@@ -34,9 +34,17 @@ import Reservepover from 'components/main/Resource/Reservepover' // 备电
 import BatteryGenerator from 'components/main/Resource/BatteryGenerator' // 电池发电
 import Battery from 'components/main/Resource/Battery' // 换电电池
 import OilFiredGenerator from 'components/main/Resource/OilFiredGenerator' // 燃油发电机
-import SwitchingPowerSupply from '../components/main/Resource/SwitchingPowerSupply' // 开关电源
 import Ammeter from '../components/main/Resource/Ammeter' // 电表
 import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduced' // 电表
+
+// 网络资源
+import SwitchingPowerSupply from '../components/main/ZYResource/SwitchingPowerSupply' // 开关电源
+import OperatorEquipment from '../components/main/ZYResource/OperatorEquipment' // 网络设备
+import TheTower from '../components/main/ZYResource/TheTower' // 铁塔
+import ComputerRoom from '../components/main/ZYResource/ComputerRoom' // 机房
+import AcDistriButionBox from '../components/main/ZYResource/AcDistriButionBox' // 交流配电箱
+import ComputerRoomAirConditioning from '../components/main/ZYResource/ComputerRoomAirConditioning' // 机房空调
+import RectifierModule from '../components/main/ZYResource/RectifierModule' // 整流模块
 
 // 能源统计
 import NYEquipmentStatistics from '../components/main/TaskManagement/NYEquipmentStatistics' // 能源资源统计
@@ -88,6 +96,8 @@ import SparepartsManufacturer from 'components/main/SpareManagement/SparepartsMa
 import Warehouse from 'components/main/SpareManagement/SpareWarehouse' // 备件存放点
 import AfterSaleContract from 'components/main/SpareManagement/AfterSaleContract' // 售后合同
 import MaintenanceItems from 'components/main/SpareManagement/MaintenanceItems' // 维修厂家
+import StoragePointOperation from 'components/main/SpareManagement/StoragePointOperation' //  存放点操作配置列表
+import Spareparts from 'components/main/SpareManagement/Spareparts' //  备件列表
 Vue.use(Router)
 
 export default new Router({
@@ -199,6 +209,36 @@ export default new Router({
           name: 'AnElectricIntroduced',
           component: AnElectricIntroduced
         },
+        {// 网络设备
+          path: 'OperatorEquipment',
+          name: 'OperatorEquipment',
+          component: OperatorEquipment
+        },
+        {// 铁塔
+          path: 'TheTower',
+          name: 'TheTower',
+          component: TheTower
+        },
+		{// 机房
+          path: 'ComputerRoom',
+          name: 'ComputerRoom',
+          component: ComputerRoom
+		},
+		{// 交流配电箱
+          path: 'AcDistriButionBox',
+          name: 'AcDistriButionBox',
+          component: AcDistriButionBox
+		},
+		{// 机房空调
+          path: 'ComputerRoomAirConditioning',
+          name: 'ComputerRoomAirConditioning',
+          component: ComputerRoomAirConditioning
+		},
+		{// 整流模块
+          path: 'RectifierModule',
+          name: 'RectifierModule',
+          component: RectifierModule
+		},
         {// 备件类型列表
           path: 'Sparetype',
           name: 'Sparetype',
@@ -228,6 +268,16 @@ export default new Router({
           path: 'MaintenanceItems',
           name: 'MaintenanceItems',
           component: MaintenanceItems
+        },
+        {// 存放点操作配置列表
+          path: 'StoragePointOperation',
+          name: 'StoragePointOperation',
+          component: StoragePointOperation
+        },
+        {// 存放点操作配置列表
+          path: 'Spareparts',
+          name: 'Spareparts',
+          component: Spareparts
         },
         {
           path: 'ZYResource',

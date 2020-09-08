@@ -5,14 +5,20 @@
         <!--选择器-->
         <el-col :span="18">
           <el-col :span="8">
-            <el-form-item label="厂家编码：">
-              <el-input class="searchSelect" v-model="query.code" placeholder="请输入厂家编码" @keyup.enter.native="getTableData1More(1)"></el-input>
+            <el-form-item label="存放点类型：" label-width="100px">
+              <el-select v-model="query.warehousetype">
+                <el-option v-for="i in DicList.warehousetype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择存放点类型"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
-        <!--站点分类-->
           <el-col :span="8">
-            <el-form-item label="厂家名称：">
-              <el-input class="searchSelect" v-model="query.name" placeholder="请输入厂家名称" @keyup.enter.native="getTableData1More(1)"></el-input>
+            <el-form-item label="存放点名称：">
+              <el-input v-model="query.name" placeholder="请填写存放点名称"  @keyup.enter.native="getTableData1More(1)"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="存放点编码：">
+              <el-input v-model="query.code" placeholder="请填写存放点编码"  @keyup.enter.native="getTableData1More(1)"></el-input>
             </el-form-item>
           </el-col>
         </el-col>
@@ -26,15 +32,17 @@
     </el-form>
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
     <el-table :data="tableList" v-loading="Table1Loading">
-      <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-      <el-table-column prop="cityname" label="城市" width=""></el-table-column>
-      <el-table-column prop="code" label="厂家编码" width=""></el-table-column>
-      <el-table-column prop="name" label="厂家名称" width=""></el-table-column>
-      <el-table-column prop="remark" label="说明" width=""></el-table-column>
-      <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
-      <!--<el-table-column prop="provincename" label="省份" width=""></el-table-column>-->
-      <el-table-column prop="createtime" label="提交时间" width=""></el-table-column>
-
+      <el-table-column label="序号" width="50">
+        <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
+      </el-table-column>
+      <el-table-column prop="cityname" label="地市"></el-table-column>
+      <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
+      <el-table-column prop="name" label="存放点名称"></el-table-column>
+      <el-table-column prop="code" label="存放点编码"></el-table-column>
+      <el-table-column prop="administrators" label="负责人"></el-table-column>
+      <el-table-column prop="remark" label="说明"></el-table-column>
+      <el-table-column prop="realityname" label="提交人"></el-table-column>
+      <el-table-column prop="createtime" label="提交时间"></el-table-column>
       <el-table-column prop="" label="操作" width="50">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="handleChoose(scope.$index, scope.row)">选择</el-button>
@@ -50,11 +58,12 @@
 </template>
 
 <script>
-import {GetsparepartsmanufacturerList} from 'api/BJGL'
+import {GetwarehouseList} from 'api/BJGL'
+import {DictionaryInfoList} from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
 
 export default {
-  name: 'SpareconModel',
+  name: 'SpareWarehousePicker',
   mixins: [GlobalRes],
   props: {
     resourcetype: {
@@ -69,13 +78,15 @@ export default {
       type: Number,
       default: null
     }
+
   },
   data () {
     return {
       // 查询相关属性
       query: {
-        name: '', // 厂家名称
-        code: '' // 厂家编码
+        warehousetype: '',
+        code: '',
+        name: ''
       },
       tableList: [],
       // 分页相关属性
@@ -87,19 +98,34 @@ export default {
       },
       DetailDialogVisible: false,
       Table1Loading: false,
-      selectId: []
+      selectId: [],
+      DicList: [{warehousetype: null}]
     }
   },
   created () {
     this._getTableData1()
+    this.getDic()
   },
   methods: {
+    getDic () {
+      let arr = ['备件存放点类型']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     _getTableData1 () {
       this.Table1Loading = true
-      this.$axios.get(GetsparepartsmanufacturerList, {
+      this.$axios.get(GetwarehouseList, {
         params: {
           PageIndex: 1,
-          PageSize: 10
+          PageSize: 10,
+          provinceid: this.provinceid,
+          cityid: this.cityid
         }}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -113,11 +139,13 @@ export default {
       this.getTableData1More(this.pagination.currentPage)
     },
     getTableData1More  (page) {
-      this.currentPage = page
+      this.pagination.currentPage = page
       this.Table1Loading = true
-      this.$axios.get(GetsparepartsmanufacturerList, {params: Object.assign({}, this.query, {
+      this.$axios.get(GetwarehouseList, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize
+        PageSize: this.pagination.pageSize,
+        provinceid: this.provinceid,
+        cityid: this.cityid
       })}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -132,7 +160,7 @@ export default {
       this._getTableData1()
     },
     handleChoose (index, row) {
-      this.$emit('Selmanufacturerid', row.name, row.id)
+      this.$emit('SpareWarehousePicker', row.name, row.code, row.id)
     }
   }
 }

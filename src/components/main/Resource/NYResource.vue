@@ -451,8 +451,9 @@ import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import ImgBox from 'base/ImgBox'
+import {exportMethod} from 'api/YDSZ'
 import {DictionaryInfoList, GetEnergyListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync, GetOperatorSiteList,
-  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo, GetEquipmentTypeList} from 'api/api'
+  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo, GetEquipmentTypeList, GetResourceExcel} from 'api/api'
 
 export default {
   name: 'Resource',
@@ -920,7 +921,13 @@ export default {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
       }).then(() => {
-
+        let myObj = {
+          method: 'get',
+          url: GetResourceExcel,
+          fileName: '站点管理',
+          data: Object.assign({}, this.Query, {resourcetype: 1})
+        }
+        exportMethod(myObj)
       })
     },
     OpenMap (val) { // 0: 查看 1: 编辑/新增

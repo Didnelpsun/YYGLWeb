@@ -760,8 +760,9 @@ import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import ImgBox from 'base/ImgBox'
+import {exportMethod} from 'api/YDSZ'
 import {DictionaryInfoList, GetZYResourceListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync,
-  GetEquipmentTypeList} from 'api/api'
+  GetEquipmentTypeList, GetResourceExcel} from 'api/api'
 
 export default {
   name: 'ZYResource',
@@ -1158,7 +1159,13 @@ export default {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
       }).then(() => {
-
+        let myObj = {
+          method: 'get',
+          url: GetResourceExcel,
+          fileName: '站点管理',
+          data: Object.assign({}, this.Query, {resourcetype: 2})
+        }
+        exportMethod(myObj)
       })
     },
     OpenMap (val) { // 0: 查看 1: 编辑/新增

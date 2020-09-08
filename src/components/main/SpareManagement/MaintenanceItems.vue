@@ -6,14 +6,12 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="备件类型：">
-                <el-select v-model="Query.belongtype">
-                  <el-option v-for="i in DicList.Belongtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择所属类型"></el-option>
-                </el-select>
+                  <el-input v-model="Query.sparetypeid" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodelname" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.sparemodelid" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -39,10 +37,10 @@
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
-        <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="belongtype" label="备件类型"></el-table-column>
-        <el-table-column prop="sparemodelname" label="备件型号"></el-table-column>
-        <el-table-column prop="Sparemanufacturername" label="备件厂家"></el-table-column>
+        <el-table-column prop="areaname" label="地市"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
+        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
+        <el-table-column prop="name" label="备件厂家"></el-table-column>
         <el-table-column prop="maintenancettime" label="维修时间"></el-table-column>
         <el-table-column prop="price" label="维修单价"></el-table-column>
         <el-table-column prop="warrantyperiod" label="保修期"></el-table-column>
@@ -51,8 +49,8 @@
         <el-table-column label="操作" width="140">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
+          <!--  <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
+            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +75,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {maintenanceconfig, GetIdSpareTypList, Deletemaintenanceconfig} from 'api/BJGL'
 import Details from 'base/SpareManagement/MaintenanceItems'
 export default {
   name: 'MaintenanceItems',
@@ -85,8 +83,8 @@ export default {
   data () {
     return {
       Query: {
-        sparemodelname: null,
-        belongtype: null
+        sparetypeid: null,
+        sparemodelid: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -122,8 +120,8 @@ export default {
     },
     formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
-      /* this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+      this.Loading = true
+      this.$axios.get(maintenanceconfig, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -132,14 +130,12 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
-      this.tableData = [{cityname: 'wuhan'}]
-      this.total = 1
+      })
     },
     getMore (page) {
-    /*  this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(maintenanceconfig, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -148,7 +144,7 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -176,10 +172,10 @@ export default {
       } */
     },
     handle2 (row) {
-      /* this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareTyp, {
+        this.$axios.delete(Deletemaintenanceconfig, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
@@ -189,7 +185,7 @@ export default {
             this.$message.error(res.msg)
           }
         })
-      }) */
+      })
     }
 
   },

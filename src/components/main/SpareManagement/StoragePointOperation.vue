@@ -1,17 +1,22 @@
 <template>
   <div class="content">
     <div class="main" v-show="!showWrite">
-      <el-form :model="Query">
-        <el-row>
+      <!--<el-form :model="Query">
+        <el-row >
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="站点名称：">
-               <el-input v-model="Query.resourcename" placeholder="请添加站点名称"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="区域：" label-width="80px">
+                <el-cascader v-model="Query.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(Query)" ref="csArea" clearable></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="区域：">
-                <el-cascader v-model="Query.AreaList" :props="QareaProps" @change="changeArea(Query)" ref="csArea" clearable></el-cascader>
+              <el-form-item label="类型名称：">
+                <el-input v-model="Query.typename" placeholder="请填写类型名称"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="类型编码：">
+                <el-input v-model="Query.typeencoding" placeholder="请填写类型编码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -28,28 +33,34 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
-              <el-button @click="downloadQuery" type="success" icon="el-icon-download">导出</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
         </el-row>
-      </el-form>
-      <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
+      </el-form>-->
+      <el-row>
+        <el-col :span="18">
+          <p class="SearchResult">查询结果</p>
+        </el-col>
+        <el-col :span="6">
+          <div class="fr" style="margin-top: 0">
+            <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;" >
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
-        <el-table-column prop="code" label="设备编码"></el-table-column>
-        <el-table-column prop="resourcename" label="站点名称"></el-table-column>
-        <!-- <el-table-column prop="provincename" label="省份"></el-table-column> -->
-        <el-table-column prop="resourcecode" label="站点编码"></el-table-column>
-        <el-table-column prop="accessdate" label="入网日期"></el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="manufacturername" label="设备厂家"></el-table-column>
-        <el-table-column prop="statename" label="设备状态"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column prop="" label="区域" ></el-table-column>
+        <el-table-column prop="name" label="存放点名称"></el-table-column>
+        <el-table-column prop="code" label="存放点编码"></el-table-column>
+        <el-table-column prop="operation" label="操作"></el-table-column>
+        <el-table-column prop="realityname" label="提交人"></el-table-column>
+        <el-table-column prop="createtime" label="提交时间"></el-table-column>
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
           </template>
@@ -62,37 +73,31 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加开关电源' : WriteState === 1 ? '编辑开关电源' : '开关电源详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加存放点操作配置' : WriteState === 1 ? '编辑存放点操作配置' : '添加存放点操作配置'"></layuiTitle>
 
-      <Details :WriteState="WriteState" :DicList="DicList" @fatherOpenImgBox="OpenImgBox"
+      <Details :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
 
-    <ImgBox ref="ImgBox"></ImgBox>
   </div>
 </template>
 
 <script>
-// eslint-disable-next-line no-redeclare,no-unused-vars
-import {GetSwitchingPowerSupplyList, GetSwitchingPowerSupplyInfo} from 'api/SurveyManagement'
-import {DelEquipment, DictionaryInfoList} from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
-import ImgBox from '../../../base/ImgBox'
 import layuiTitle from 'base/layui-title'
-import Details from 'base/Resource/SwitchingPowerSupply'
-
+import {AreaList, DictionaryInfoList} from 'api/api'
+import {GetconfigurationsList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import Details from 'base/SpareManagement/StoragePointOperation'
 export default {
-  name: 'SwitchingPowerSupply',
+  name: 'StoragePointOperation',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
         AreaList: [],
-        provinceid: null,
-        cityid: null,
-        areaid: null,
-        resourcename: null
+        provinceid: 0,
+        cityid: 0
       },
       currentPage: 1,
       pageSize: 10,
@@ -100,21 +105,10 @@ export default {
       Loading: false,
       tableData: [],
       tableLoading: false,
-      DicList: {
-        propertyrightunit: [],
-        unit: [],
-        manufacturer: [],
-        maintenanceunit: [],
-        models: [],
-        state: [],
-        facilitytype: [],
-        powersupply: [],
-        accesscontrolmanufacturer: []
-      },
-
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      WriteLoading: false
+      WriteLoading: false,
+      DicList: {operation: []}
     }
   },
   activated () {
@@ -122,13 +116,46 @@ export default {
     this.getDic()
   },
   methods: {
+    changecityArea (obj) {
+      // console.log(obj)
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
+    },
+    setArea (list, key = 'csArea') {
+      this.nodes = list
+      this.$refs[key].panel.activePath = []
+      this.$refs[key].panel.loadCount = 0
+      this.$refs[key].panel.lazyLoad()
+    },
+    _normalizeCityAreaLevel (list) {
+      for (let i in list) {
+        if (list[i].leveltype >= 2) list[i].leaf = true
+      }
+      return list
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
     },
+    getDic () {
+      let arr = ['存放点操作用途']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.operation = data.filter(i => {
+            return i.type === '存放点操作用途'
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    formatState (row) {
+      return this.DicList.state[row.state]
+    },
     getData1 () {
-      this.Loading = true
-      this.$axios.get(GetSwitchingPowerSupplyList, {
+      /* this.Loading = true
+      this.$axios.get(GetconfigurationsList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -137,57 +164,39 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      })
+      }) */
+      this.tableData = [{cityname: '武汉'}]
+      this.total = 1
     },
     getMore (page) {
-      this.currentPage = page
+      /*   this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSwitchingPowerSupplyList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
+        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      })
-    },
-    getDic () {
-      let arr = ['开关电源设备型号', '开关电源供电类型', '开关电源设备厂家', '设备状态', '设备单位', '设备维护单位', '设备产权单位']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          let data = res.data
-          this.DicList.models = data.filter(i => { return i.type === '开关电源设备型号' })
-          this.DicList.powersupplytype = data.filter(i => { return i.type === '开关电源供电类型' })
-          this.DicList.manufacturer = data.filter(i => { return i.type === '开关电源设备厂家' })
-          this.DicList.state = data.filter(i => { return i.type === '设备状态' })
-          this.DicList.unit = data.filter(i => { return i.type === '设备单位' })
-          this.DicList.maintenanceunit = data.filter(i => { return i.type === '设备维护单位' })
-          this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      }) */
     },
     changeSize1 (page) {
       this.pageSize = page
       this.getMore(this.currentPage)
     },
-    downloadQuery () {
-
-    },
-    WriteClose () { this.showWrite = false },
-    OpenImgBox (title, name, list) {
-      this.$refs.ImgBox.SetData(title, name, list)
-      this.$refs.ImgBox.Open()
-      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
+    WriteClose () {
+      this.showWrite = false
     },
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
+      /*    this.WriteState = state
+      this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetSwitchingPowerSupplyInfo, {
+        this.$axios.get(GetIdSpareTypList, {
           params: {
             Id: row.id
           }
@@ -198,13 +207,13 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      }
+      } */
     },
     handle2 (row) {
-      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      /*     this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DelEquipment, {
+        this.$axios.delete(DeleteSpareTyp, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
@@ -215,12 +224,12 @@ export default {
           }
         })
       })
-    }
+    } */
 
+    }
   },
   components: {
     layuiTitle,
-    ImgBox,
     Details
   }
 }

@@ -454,7 +454,7 @@ import AnElectricIntroduced from 'base/TaskEquipment/AnElectricIntroduced'
 import Ammeter from 'base/TaskEquipment/Ammeter'
 import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
-import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetTaskElectricMeterList, GetMaintainList,
+import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetMaintainList,
   UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetEnergyResourecEquipmentList, GetHiddenDangerList,
   TaskAudit, TaskEquipment, GetEquipmentInfoList, GetTaskState, GetTaskResourceEquipment} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'

@@ -25,6 +25,9 @@
     </el-form>
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
     <el-table :data="tableList" v-loading="Table1Loading">
+      <el-table-column label="序号" width="50">
+        <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
+      </el-table-column>
       <el-table-column prop="cityname" label="地市"></el-table-column>
       <el-table-column prop="typename" label="类型名称"></el-table-column>
       <el-table-column prop="typeencoding" label="类型编码"></el-table-column>
@@ -60,11 +63,11 @@ export default {
     },
     provinceid: {// 省份
       type: Number,
-      default: 0
+      default: null
     },
     cityid: {// 城市
       type: Number,
-      default: 0
+      default: null
     }
   },
   data () {

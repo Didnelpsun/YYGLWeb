@@ -90,5 +90,47 @@ export const DelInvestigateImgConfiguration = `${reqURL}/KCGL/ImgConfiguration/D
 // 开关电源
 export const GetSwitchingPowerSupplyList = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyList` // 获取开关电源列表
 export const GetSwitchingPowerSupplyInfo = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyInfo` // 获取开关电源详情
-export const AddSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/AddSwitchingPowerSupply` // 新增设备开关电源
-export const UpdateSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/UpdateSwitchingPowerSupply` // 修改设备开关电源
+export const AddSwitchingPowerSupplyTaskEquipment = `${reqURL}/ZYGL/SwitchingPowerSupply/AddSwitchingPowerSupplyTaskEquipment` // 新增开关电源任务设备
+export const EditSwitchingPowerSupplyTaskEquipment = `${reqURL}/ZYGL/SwitchingPowerSupply/EditSwitchingPowerSupplyTaskEquipment` // 修改开关电源任务设备
+export const GetSwitchingPowerSupplyTaskEquipmentInfo = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyTaskEquipmentInfo` // 获取开关电源设备任务详情
+export const GetSwitchingPowerSupplyExcel = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyExcel` // 开关电源导出
+
+// 网络设备
+export const GetOperatorEquipmentInfo = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentInfo` // 获取网络设备详情
+export const GetOperatorEquipmentList = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentList` // 获取网络设备列表
+export const AddOperatorEquipmentTaskEquipment = `${reqURL}/ZYGL/OperatorEquipment/AddOperatorEquipmentTaskEquipment` // 创建网络设备任务
+export const EditOperatorEquipmentTaskEquipment = `${reqURL}/ZYGL/OperatorEquipment/EditOperatorEquipmentTaskEquipment` // 修改网络设备任务信息
+export const GetOperatorEquipmentTaskEquipmentInfo = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentTaskEquipmentInfo` // 获取网络设备任务详情
+export const GetOperatorEquipmentExcel = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentExcel` // 网络设备导出
+
+// 铁塔
+export const GetTheTowerInfo = `${reqURL}/ZYGL/TheTower/GetTheTowerInfo` // 获取铁塔详情
+export const GetTheTowerList = `${reqURL}/ZYGL/TheTower/GetTheTowerList` // 获取铁塔列表
+export const AddTheTowerTaskEquipment = `${reqURL}/ZYGL/TheTower/AddTheTowerTaskEquipment` // 创建铁塔设备任务
+export const EditTheTowerTaskEquipment = `${reqURL}/ZYGL/TheTower/EditTheTowerTaskEquipment` // 修改铁塔任务信息
+export const GetTheTowerTaskEquipmentInfo = `${reqURL}/ZYGL/TheTower/GetTheTowerTaskEquipmentInfo` // 获取铁塔任务详情
+export const GetTheTowerExcel = `${reqURL}/ZYGL/TheTower/GetTheTowerExcel` // 铁塔导出
+
+// 机房
+export const GetComputerRoomInfo = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomInfo` // 获取机房详情
+export const GetComputerRoomList = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomList` // 获取机房列表
+export const AddComputerRoomTaskEquipment = `${reqURL}/ZYGL/ComputerRoom/AddComputerRoomTaskEquipment` // 创建机房设备任务
+export const EditComputerRoomTaskEquipment = `${reqURL}/ZYGL/ComputerRoom/EditComputerRoomTaskEquipment` // 修改机房任务信息
+export const GetComputerRoomTaskEquipmentInfo = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomTaskEquipmentInfo` // 获取机房任务详情
+export const GetComputerRoomExcel = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomExcel` // 机房导出
+
+// 交流配电箱
+export const GetAcDistriButionBoxInfo = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxInfo` // 获取交流配电箱详情
+export const GetAcDistriButionBoxList = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxList` // 获取交流配电箱列表
+export const AddTaskEquipmentAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/AddTaskEquipmentAcDistriButionBox` // 创建交流配电箱设备任务
+export const EditTaskEquipmentAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/EditTaskEquipmentAcDistriButionBox` // 修改交流配电箱任务信息
+export const GetTaskEquipmentAcDistriButionBoxInfo = `${reqURL}/ZYGL/AcDistriButionBox/GetTaskEquipmentAcDistriButionBoxInfo` // 获取交流配电箱任务详情
+export const GetAcDistriButionBoxExcel = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxExcel` // 交流配电箱导出
+
+// 整流模块
+export const GetRectifierModuleInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleInfo` // 获取整流模块详情
+export const GetRectifierModuleList = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleList` // 获取整流模块列表
+export const AddRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/AddRectifierModuleTaskEquipment` // 创建整流模块设备任务
+export const EditRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/EditRectifierModuleTaskEquipment` // 修改整流模块任务信息
+export const GetRectifierModuleTaskEquipmentInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleTaskEquipmentInfo` // 获取整流模块任务详情
+export const GetRectifierModuleExcel = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleExcel` // 整流模块导出

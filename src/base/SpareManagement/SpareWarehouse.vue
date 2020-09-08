@@ -55,10 +55,10 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>仓库名称</div></td>
+              <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="typename">
-                  <el-input v-model="WriteData.name"  placeholder="请填写仓库名称" clearable></el-input>
+                  <el-input v-model="WriteData.name"  placeholder="请填写存放点名称" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.name}}</div></td>
@@ -66,10 +66,10 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>仓库编码</div></td>
+              <td><div class="cell"><i class="must">*</i>存放点编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="code">
-                  <el-input v-model="WriteData.code"  placeholder="请填写仓库编码" clearable></el-input>
+                  <el-input v-model="WriteData.code"  placeholder="请填写存放点编码" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.code}}</div></td>
@@ -77,10 +77,10 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>仓库单位</div></td>
+              <td><div class="cell"><i class="must">*</i>存放点单位</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="orgid">
-                  <el-input v-model="WriteData.orgid"  placeholder="请填写仓库单位" clearable></el-input>
+                  <el-input v-model="WriteData.orgid"  placeholder="请填写存放点单位" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.orgid}}</div></td>
@@ -88,21 +88,21 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>仓库管理员</div></td>
+              <td><div class="cell"><i class="must">*</i>存放点管理员</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.administratoridname}}</div>
                 <div v-if="WriteState !== 2" @click="administratorShow=true">
-                  <el-input v-model="administratoridname" readonly placeholder="请选择仓库管理员"></el-input>
+                  <el-input v-model="administratoridname" readonly placeholder="请选择存放点管理员"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr  class="el-table__row">
-              <td><div class="cell">仓库管理员联系电话</div></td>
+              <td><div class="cell">存放点管理员联系电话</div></td>
               <div v-if="WriteState == 2">{{WriteData.phonenum}}</div>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item">
-                  <el-input  v-model="phonenum"  placeholder="请填写仓库管理员联系电话" clearable></el-input>
+                  <el-input  v-model="phonenum"  placeholder="请填写存放点管理员联系电话" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td><div class="cell"  v-if="WriteState == 2"></div>
@@ -186,10 +186,10 @@ export default {
       Rules: {
         AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'blur' }],
-        name: [{ required: true, message: '请填入仓库名称', trigger: 'change' }],
-        code: [{ required: true, message: '请填入仓库编码', trigger: 'change' }],
-        orgid: [{ required: true, message: '请填入仓库单位', trigger: 'change' }],
-        administratorname: [{ required: true, message: '请选择仓库管理员', trigger: 'blur' }]
+        name: [{ required: true, message: '请填入存放点名称', trigger: 'change' }],
+        code: [{ required: true, message: '请填入存放点编码', trigger: 'change' }],
+        orgid: [{ required: true, message: '请填入存放点单位', trigger: 'change' }],
+        administratorname: [{ required: true, message: '请选择存放点管理员', trigger: 'blur' }]
       }
     }
   },

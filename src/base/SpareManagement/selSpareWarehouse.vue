@@ -71,11 +71,11 @@ export default {
     },
     provinceid: {// 省份
       type: Number,
-      default: 0
+      default: null
     },
     cityid: {// 城市
       type: Number,
-      default: 0
+      default: null
     }
   },
   data () {

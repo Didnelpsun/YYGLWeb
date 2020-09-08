@@ -5,14 +5,13 @@
         <!--选择器-->
         <el-col :span="18">
           <el-col :span="8">
-            <el-form-item label="厂家编码：">
-              <el-input class="searchSelect" v-model="query.code" placeholder="请输入厂家编码" @keyup.enter.native="getTableData1More(1)"></el-input>
+            <el-form-item label="备件类型：">
+              <el-input v-model="query.typename" placeholder="请填写备件类型"  @keyup.enter.native="getTableData1More(1)"></el-input>
             </el-form-item>
           </el-col>
-        <!--站点分类-->
           <el-col :span="8">
-            <el-form-item label="厂家名称：">
-              <el-input class="searchSelect" v-model="query.name" placeholder="请输入厂家名称" @keyup.enter.native="getTableData1More(1)"></el-input>
+            <el-form-item label="备件型号：">
+              <el-input v-model="query.sparemodel" placeholder="请填写备件型号"  @keyup.enter.native="getTableData1More(1)"></el-input>
             </el-form-item>
           </el-col>
         </el-col>
@@ -26,14 +25,16 @@
     </el-form>
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
     <el-table :data="tableList" v-loading="Table1Loading">
-      <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-      <el-table-column prop="cityname" label="城市" width=""></el-table-column>
-      <el-table-column prop="code" label="厂家编码" width=""></el-table-column>
-      <el-table-column prop="name" label="厂家名称" width=""></el-table-column>
-      <el-table-column prop="remark" label="说明" width=""></el-table-column>
-      <el-table-column prop="realityname" label="提交人" width=""></el-table-column>
-      <!--<el-table-column prop="provincename" label="省份" width=""></el-table-column>-->
-      <el-table-column prop="createtime" label="提交时间" width=""></el-table-column>
+      <el-table-column label="序号" width="50">
+        <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
+      </el-table-column>
+      <el-table-column prop="cityname" label="地市"></el-table-column>
+      <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
+      <el-table-column prop="typename" label="备件类型"></el-table-column>
+      <el-table-column prop="manufacturersname" label="厂家编码"></el-table-column>
+      <el-table-column prop="remark" label="说明"></el-table-column>
+      <el-table-column prop="realityname" label="提交人"></el-table-column>
+      <el-table-column prop="createtime" label="提交时间"></el-table-column>
 
       <el-table-column prop="" label="操作" width="50">
         <template slot-scope="scope">
@@ -50,11 +51,11 @@
 </template>
 
 <script>
-import {GetsparepartsmanufacturerList} from 'api/BJGL'
+import {GetSpareConfigList} from 'api/BJGL'
 import { GlobalRes } from 'common/js/mixins'
 
 export default {
-  name: 'SpareconModel',
+  name: 'SelSpareconModelid',
   mixins: [GlobalRes],
   props: {
     resourcetype: {
@@ -68,14 +69,16 @@ export default {
     cityid: {// 城市
       type: Number,
       default: null
-    }
+    },
+    sparetypeid: null,
+    sparemanufacturerid: null
   },
   data () {
     return {
       // 查询相关属性
       query: {
-        name: '', // 厂家名称
-        code: '' // 厂家编码
+        typename: '', // 类型名称
+        sparemodel: ''// 类型编码
       },
       tableList: [],
       // 分页相关属性
@@ -85,9 +88,8 @@ export default {
         currentPage: 1,
         PageIndex: 1
       },
-      DetailDialogVisible: false,
       Table1Loading: false,
-      selectId: []
+      DicList: {}
     }
   },
   created () {
@@ -96,10 +98,14 @@ export default {
   methods: {
     _getTableData1 () {
       this.Table1Loading = true
-      this.$axios.get(GetsparepartsmanufacturerList, {
+      this.$axios.get(GetSpareConfigList, {
         params: {
           PageIndex: 1,
-          PageSize: 10
+          PageSize: 10,
+          provinceid: this.provinceid,
+          cityid: this.cityid,
+          sparetypeid: this.sparetypeid,
+          sparemanufacturerid: this.sparemanufacturerid
         }}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -113,11 +119,15 @@ export default {
       this.getTableData1More(this.pagination.currentPage)
     },
     getTableData1More  (page) {
-      this.currentPage = page
+      this.pagination.currentPage = page
       this.Table1Loading = true
-      this.$axios.get(GetsparepartsmanufacturerList, {params: Object.assign({}, this.query, {
+      this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize
+        PageSize: this.pagination.pageSize,
+        provinceid: this.provinceid,
+        cityid: this.cityid,
+        sparetypeid: this.sparetypeid,
+        sparemanufacturerid: this.sparemanufacturerid
       })}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -132,7 +142,7 @@ export default {
       this._getTableData1()
     },
     handleChoose (index, row) {
-      this.$emit('Selmanufacturerid', row.name, row.id)
+      this.$emit('SelSpareconModelid', row.sparemodel, row.id)
     }
   }
 }

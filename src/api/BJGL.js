@@ -27,3 +27,19 @@ export const Editwarehouse = `${reqURL}/BJGL/warehouseSevcie/Editwarehouse` // �
 export const Deletewarehouse = `${reqURL}/BJGL/warehouseSevcie/Deletewarehouse` // 删除存放点
 export const GetwarehouseList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseList` //  获取存放点列表
 export const GetwarehouseIdList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseIdList` //  根据id获取存放点
+
+// 备件管理维修厂家(售后合同)
+export const Addmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Addmanufacturerinfo` // 添加备件管理维修厂家
+export const Editmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Editmanufacturerinfo` // 编辑备件管理维修厂家
+export const Deletemanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Deletemanufacturerinfo` // 删除编辑备件管理维修厂家
+export const Getmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Getmanufacturerinfo` // 获取备件管理维修厂家
+// 维修项目 (备件管理维修厂家配置)
+export const Addmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Addmaintenanceconfig` // 添加备件管理维修厂家配置
+export const Editmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Editmaintenanceconfig` // 编辑备件管理维修厂家配置
+export const Deletemaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Deletemaintenanceconfig` // 删除备件管理维修厂家配置
+export const maintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/maintenanceconfig` // 获取备件管理维修厂家配置
+// 存放点操作配置列表(备件管理仓库配置)
+export const Addconfiguration = `${reqURL}/BJGL/configurationSevcie/Addconfiguration` // 添加存放点操作配置列表(添加仓库配置)
+export const Editconfiguration = `${reqURL}/BJGL/configurationSevcie/Editconfiguration` // 编辑存放点操作配置列表(修改仓库配置)
+export const GetUserOperation = `${reqURL}/BJGL/configurationSevcie/GetUserOperation` // 查看当前用户操作
+export const GetconfigurationsList = `${reqURL}/BJGL/configurationSevcie/GetconfigurationsList` // 获取存放点操作配置列表(查看仓库配置)

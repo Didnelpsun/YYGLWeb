@@ -7,7 +7,7 @@ export let reqURL = 'http://111.47.173.162:8051'// 线上接口
 // 赵
 // process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://192.168.0.131:5000'
 // 阮
-// process.env.NODE_ENV === 'production' ? reqURL = 'http://192.168.0.50:8081' : reqURL = 'http://192.168.0.50:8067'
+// process.env.NODE_ENV === 'production' ? reqURL = 'http://192.168.0.50:8081' : reqURL = 'http://192.168.0.50:8081'
 
 export const test = `${reqURL}`
 
@@ -116,6 +116,7 @@ export const GetZYResourceIdListAsync = `${reqURL}/ZYGL/ZYResource/GetZYResource
 export const GetZYResourceListAsync = `${reqURL}/ZYGL/ZYResource/GetZYResourceListAsync` // 查询资源站点列表
 export const GetEnergyListAsync = `${reqURL}/ZYGL/ZYResource/GetEnergyListAsync` // 查询能源站点列表
 export const Resourcelist = `${reqURL}/ZYGL/GetZYResourcelist` // 根据条件查询站点列表
+export const GetResourceExcel = `${reqURL}/ZYGL/ZYResource/GetResourceExcel` // 站点导出
 
 // MonitoringSite  监控站点
 export const AddMonitoringSite = `${reqURL}/ZYGL/MonitoringSite/AddMonitoringSiteAsync` // 添加监控站点
