@@ -116,32 +116,16 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--模块类型-->
+            <!--无线模块厂家名称-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>模块类型</div></td>
+              <td><div class="cell">无线模块厂家名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="moduletype">
-                  <el-select v-model="WriteData.moduletype">
-                    <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.moduletype" :key="i.id" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
+                <el-form-item class="form-item" prop="wirelessmodule">
+                  <el-input v-model="WriteData.wirelessmodule"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.moduletypename}}</div></td>
-              <td @click="OpenImgBox(3)"><div class="cell">{{ImgList3.length}}</div></td>
-              <!-- <td><div class="cell">{{writeDic(DicList.moduletype)}}</div></td> -->
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.wirelessmodule}}</div></td>
               <td><div class="cell"></div></td>
-            </tr>
-            <!--整流模块数量-->
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>整流模块数量</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="number">
-                  <el-input v-model="WriteData.number"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.number}}</div></td>
-              <td @click="OpenImgBox(4)"><div class="cell">{{ImgList4.length}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
@@ -161,12 +145,12 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetRectifierModuleInfo, GetRectifierModuleTaskEquipmentInfo, AddRectifierModuleTaskEquipment, EditRectifierModuleTaskEquipment} from 'api/SurveyManagement'
+import {GetPowerAndEnvironmentInfo, GetTaskEquipmentPowerAndEnvironmentInfo, AddTaskEquipmentPowerAndEnvironment, EditTaskEquipmentPowerAndEnvironment} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 
 export default {
-  name: 'RectifierModuleDetail',
+  name: 'PowerAndEnvironmentDetail',
   mixins: [GlobalRes],
   props: {
     DeviceID: {
@@ -188,8 +172,6 @@ export default {
       Loading: false,
       ImgList1: [],
       ImgList2: [],
-      ImgList3: [],
-      ImgList4: [],
       WriteData: {
         task_id: '',
         resource_id: '',
@@ -202,8 +184,7 @@ export default {
         accessdate: '',
         identificationcode: '',
         state: 1,
-        number: '',
-        moduletype: '',
+        wirelessmodule: '',
         imglist: []
       },
       Rules: {
@@ -215,12 +196,6 @@ export default {
         ],
         accessdate: [
           { required: true, message: '请选择入网日期', trigger: 'change' }
-        ],
-        moduletype: [
-          { required: true, message: '请选择模块类型', trigger: 'change' }
-        ],
-        number: [
-          { required: true, message: '请输入整流模块数量', trigger: 'blur' }
         ]
       },
       DicList: {}
@@ -230,7 +205,7 @@ export default {
     this.getDicList()
     if (this.WriteState) {
       this.Loading = true
-      this.$axios.get(this.isTask ? GetRectifierModuleTaskEquipmentInfo : GetRectifierModuleInfo, {
+      this.$axios.get(this.isTask ? GetTaskEquipmentPowerAndEnvironmentInfo : GetPowerAndEnvironmentInfo, {
         params: {
           id: this.DeviceID
         }
@@ -243,12 +218,11 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['整流模块设备类型', '整流模块设备厂家', '整流模块设备型号']
+      let arr = ['动力及环境监测单元设备厂家', '动力及环境监测单元设备型号']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.$set(this.DicList, 'moduletype', res.data.filter(i => { return i.type === '整流模块设备类型' }))
-          this.DicList.manufacturer = res.data.filter(i => { return i.type === '整流模块设备厂家' })
-          this.DicList.models = res.data.filter(i => { return i.type === '整流模块设备型号' })
+          this.$set(this.DicList, 'manufacturer', res.data.filter(i => { return i.type === '动力及环境监测单元设备厂家' }))
+          this.DicList.models = res.data.filter(i => { return i.type === '动力及环境监测单元设备型号' })
         } else {
           this.$message.error(res.msg)
         }
@@ -260,8 +234,6 @@ export default {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.ImgList1 = []
       this.ImgList2 = []
-      this.ImgList3 = []
-      this.ImgList4 = []
       this.$refs.WriteForm.clearValidate()
     },
     formatDate (str) { return formatDate(str) },
@@ -276,12 +248,6 @@ export default {
       if (val === 2) {
         this.$emit('fatherOpenImgBox', '资源型号', 'models', this.ImgList2)
       }
-      if (val === 3) {
-        this.$emit('fatherOpenImgBox', '模块类型', 'models', this.ImgList3)
-      }
-      if (val === 4) {
-        this.$emit('fatherOpenImgBox', ' 整流模块数量', 'models', this.ImgList4)
-      }
     },
     SubWrite (state) {
       if (this.WriteState === 0) this.SubAdd(state)
@@ -294,7 +260,7 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddRectifierModuleTaskEquipment, this.WriteData, {
+          this.$axios.post(AddTaskEquipmentPowerAndEnvironment, this.WriteData, {
             params: {
               censusstate: state
             }
@@ -318,7 +284,7 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditRectifierModuleTaskEquipment, this.WriteData, {
+          this.$axios.put(EditTaskEquipmentPowerAndEnvironment, this.WriteData, {
             params: {
               censusstate: state
             }
@@ -348,13 +314,11 @@ export default {
       if (list === null) return
       this.ImgList1 = list.filter(i => { return i.field_name === 'manufacturer' })
       this.ImgList2 = list.filter(i => { return i.field_name === 'models' })
-      this.ImgList3 = list.filter(i => { return i.field_name === 'moduletype' })
-      this.ImgList4 = list.filter(i => { return i.field_name === 'number' })
     }
   },
   computed: {
     ImgList () {
-      return this.ImgList1.concat(this.ImgList2, this.ImgList3, this.ImgList4)
+      return this.ImgList1.concat(this.ImgList2)
     }
   },
   watch: {

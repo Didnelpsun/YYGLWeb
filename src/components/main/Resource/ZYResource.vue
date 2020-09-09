@@ -55,8 +55,9 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
+            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
           </div>
         </el-col>
       </el-row>
@@ -747,12 +748,14 @@
 
     <!--dialog弹窗-->
     <ImgBox ref="ImgBox"></ImgBox>
+    <Import ref="ImportBox" @fatherGetData="_getTableData1"></Import>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import GoogleMap from 'base/GoogleMap'
+import Import from 'base/Import'
 import OperationSite from 'base/Resource/OperationSite'
 import ZYResourceEquipment from 'base/Resource/ZYResourceEquipment'
 import OperatorSite from 'base/Resource/OperatorSite'
@@ -762,7 +765,7 @@ import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import ImgBox from 'base/ImgBox'
 import {exportMethod} from 'api/YDSZ'
 import {DictionaryInfoList, GetZYResourceListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync,
-  GetEquipmentTypeList, GetResourceExcel} from 'api/api'
+  GetEquipmentTypeList, GetResourceExcel, ImportResourceExcel} from 'api/api'
 
 export default {
   name: 'ZYResource',
@@ -898,10 +901,12 @@ export default {
       EquipmentTypeList: [] // 设备类型集合
     }
   },
-  created () {
+  activated () {
     this._getTableData1()
     this.initDictionariesArray()
     this.GetEquipmentTypeList()
+    this.$refs.ImportBox.searchName = '站点管理模板'
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
     selectDisposeCode () {
@@ -1155,6 +1160,11 @@ export default {
       this.$refs.ImgBox.Open()
       this.pageType === '详情' ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = ImportResourceExcel
+      this.$refs.ImportBox.fileName = '错误站点数据'
+    },
     handleExport () {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
@@ -1217,7 +1227,8 @@ export default {
     GoogleMap,
     OperationSite,
     ZYResourceEquipment,
-    OperatorSite
+    OperatorSite,
+    Import
   }
 }
 </script>

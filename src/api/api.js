@@ -117,6 +117,7 @@ export const GetZYResourceListAsync = `${reqURL}/ZYGL/ZYResource/GetZYResourceLi
 export const GetEnergyListAsync = `${reqURL}/ZYGL/ZYResource/GetEnergyListAsync` // 查询能源站点列表
 export const Resourcelist = `${reqURL}/ZYGL/GetZYResourcelist` // 根据条件查询站点列表
 export const GetResourceExcel = `${reqURL}/ZYGL/ZYResource/GetResourceExcel` // 站点导出
+export const ImportResourceExcel = `${reqURL}/ZYGL/ZYResource/ImportResourceExcel` // 站点导入
 
 // MonitoringSite  监控站点
 export const AddMonitoringSite = `${reqURL}/ZYGL/MonitoringSite/AddMonitoringSiteAsync` // 添加监控站点

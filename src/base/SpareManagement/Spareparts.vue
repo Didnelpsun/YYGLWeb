@@ -15,7 +15,7 @@
             <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
             <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
             <!--<th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>-->
-            <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
+            <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">操作</div></th>
           </tr>
           </thead>
         </table>
@@ -85,39 +85,18 @@
               </td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" >
+            <!--<tr class="el-table__row" >
               <td colspan="3" style="background-color: rgb(230, 189, 189)"><div class="cell">扫码</div></td>
-            </tr>
+            </tr>-->
             <tr class="el-table__row">
-              <td><div class="cell">备件编码</div></td>
+              <td><div class="cell">扫码</div></td>
               <td><div class="cell">
                 <div v-if="WriteState !== 2">
-                  <el-input v-model="WriteData.code" clearable placeholder="请扫备件编码"></el-input>
+                  <el-input v-model="code" @change="changeAdd" label-width="0"  clearable placeholder="请扫备件编码"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">资产编码</div></td>
-              <td><div class="cell">
-                <el-form-item  class="form-item" prop="assetsencoding" v-if="WriteState !== 2">
-                  <el-input v-model="WriteData.assetsencoding" clearable placeholder="请扫资产编码"></el-input>
-                </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">质保编码</div></td>
-              <td><div class="cell">
-                  <el-form-item  class="form-item" prop="warrantycode" v-if="WriteState !== 2">
-                     <el-input v-model="WriteData.warrantycode"  clearable placeholder="请扫质保编码"></el-input>
-                  </el-form-item>
-                </div>
-              </td>
-              <td><div class="cell"></div></td>
-            </tr>
-
         <!--    <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交时间</div></td>
               <td><div class="cell">{{WriteData.createtime}}</div></td>
@@ -128,6 +107,49 @@
               <td><div class="cell">{{WriteData.realityname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>-->
+            </tbody>
+          </table>
+        </div>
+      </el-form>
+      <el-form   v-loading="Loading" ref="WriteForm1" label-width="0" :show-message="false">
+        <div class="el-table__body-wrapper is-scrolling-none"  v-for="(item,key) in WriteData1" :key="key">
+          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
+            <colgroup>
+              <col width="80"/>
+              <col width="100"/>
+              <!--  <col width="50"/>-->
+              <col width="100"/>
+            </colgroup>
+            <tbody>
+            <tr class="el-table__row">
+              <td><div class="cell">备件编码</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState !== 2">
+                  <el-input v-model="item.code" label-width="0"  clearable placeholder="请扫备件编码"></el-input>
+                </div></div>
+              </td>
+              <td><div class="cell"><el-button type="text" @click="handledelete(key)">删除</el-button></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">资产编码</div></td>
+              <td><div class="cell">
+                <el-form-item  class="form-item" label-width="0"  prop="assetsencoding" v-if="WriteState !== 2">
+                  <el-input v-model="item.assetsencoding" clearable placeholder="请扫资产编码"></el-input>
+                </el-form-item>
+              </div>
+              </td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">质保编码</div></td>
+              <td><div class="cell">
+                <el-form-item  class="form-item" label-width="0" prop="warrantycode" v-if="WriteState !== 2">
+                  <el-input v-model="item.warrantycode"  clearable placeholder="请扫质保编码"></el-input>
+                </el-form-item>
+              </div>
+              </td>
+              <td><div class="cell"></div></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -179,6 +201,7 @@ export default {
   },
   data () {
     return {
+      code: '',
       Show: false,
       unitsShow: false,
       manufactureridShow: false,
@@ -188,6 +211,7 @@ export default {
       SpareWarehouseShow: false,
       isShow: false,
       Loading: false,
+      WriteData1: [{code: '', assetsencoding: '', warrantycode: ''}],
       WriteData: {
         id: null,
         cityname: '',
@@ -212,6 +236,14 @@ export default {
   },
 
   methods: {
+    changeAdd (value) {
+      console.log(value)
+      this.WriteData1.push({code: '', assetsencoding: '', warrantycode: ''})
+      this.code = ''
+    },
+    handledelete (val) {
+      this.WriteData1.splice(val, 1)
+    },
     SpareWarehouseShowchange () {
       this.SpareWarehouseShow = true
       this.Show = true
@@ -315,6 +347,14 @@ export default {
     Selectmanufacturer,
     SelectSpareconMode,
     SpareWarehousePicker
+  },
+  watch: {
+    code () {
+      if (this.code.length) {
+        this.WriteData1.push({code: '', assetsencoding: '', warrantycode: ''})
+      }
+      this.code = ''
+    }
   }
 }
 </script>

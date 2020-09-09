@@ -144,10 +144,10 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['电表供电方式']
+      let arr = ['网络设备类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '网络设备类型' })
         } else {
           this.$message.error(res.msg)
         }
@@ -197,7 +197,7 @@ export default {
     formatAccessDate (row) { return formatDate(row.accessdate) },
     handleWrite (state, row) {
       this.WriteState = state
-      this.DeviceID = row.id
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
     },
     WriteClose () {

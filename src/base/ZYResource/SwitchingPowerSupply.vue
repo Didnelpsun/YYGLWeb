@@ -383,7 +383,7 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['开关电源设备型号', '开关电源供电类型', '开关电源设备厂家', '设备单位', '设备维护单位', '设备产权单位']
+      let arr = ['开关电源设备型号', '开关电源供电类型', '开关电源设备厂家', '设备单位', '设备产权单位']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data

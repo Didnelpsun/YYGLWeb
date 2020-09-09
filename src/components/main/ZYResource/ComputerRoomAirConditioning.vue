@@ -48,7 +48,7 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
+            <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
@@ -94,7 +94,7 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetOperatorEquipmentList, GetOperatorEquipmentExcel} from 'api/SurveyManagement'
+import {GetComputerRoomAirConditioningList, GetComputerRoomAirConditioningExcel} from 'api/SurveyManagement'
 import {exportMethod} from 'api/YDSZ'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
@@ -144,10 +144,10 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['电表供电方式']
+      let arr = ['机房空调设备类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '机房空调设备类型' })
         } else {
           this.$message.error(res.msg)
         }
@@ -157,7 +157,7 @@ export default {
     },
     getTable1 () {
       this.Loading = true
-      this.$axios.get(GetOperatorEquipmentList, {
+      this.$axios.get(GetComputerRoomAirConditioningList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -177,7 +177,7 @@ export default {
     getMore1 (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetOperatorEquipmentList, {
+      this.$axios.get(GetComputerRoomAirConditioningList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -197,7 +197,7 @@ export default {
     formatAccessDate (row) { return formatDate(row.accessdate) },
     handleWrite (state, row) {
       this.WriteState = state
-      this.DeviceID = row.id
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
     },
     WriteClose () {
@@ -219,7 +219,7 @@ export default {
       }).then(() => {
         let myObj = {
           method: 'get',
-          url: GetOperatorEquipmentExcel,
+          url: GetComputerRoomAirConditioningExcel,
           fileName: '机房空调',
           data: this.Query
         }

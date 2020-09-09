@@ -45,6 +45,9 @@ import ComputerRoom from '../components/main/ZYResource/ComputerRoom' // 机房
 import AcDistriButionBox from '../components/main/ZYResource/AcDistriButionBox' // 交流配电箱
 import ComputerRoomAirConditioning from '../components/main/ZYResource/ComputerRoomAirConditioning' // 机房空调
 import RectifierModule from '../components/main/ZYResource/RectifierModule' // 整流模块
+import StorageBattery from '../components/main/ZYResource/StorageBattery' // 蓄电池
+import PowerAndEnvironment from '../components/main/ZYResource/PowerAndEnvironment' // 动力及环境监测单元
+import CommunicationAndLocation from '../components/main/ZYResource/CommunicationAndLocation' // 通讯与位置终端
 
 // 能源统计
 import NYEquipmentStatistics from '../components/main/TaskManagement/NYEquipmentStatistics' // 能源资源统计
@@ -98,6 +101,13 @@ import AfterSaleContract from 'components/main/SpareManagement/AfterSaleContract
 import MaintenanceItems from 'components/main/SpareManagement/MaintenanceItems' // 维修厂家
 import StoragePointOperation from 'components/main/SpareManagement/StoragePointOperation' //  存放点操作配置列表
 import Spareparts from 'components/main/SpareManagement/Spareparts' //  备件列表
+import SchedulingAudit from 'components/main/SpareManagement/SchedulingAudit' //  备件列表
+import Scheduling from 'components/main/SpareManagement/Scheduling' //  备件列表
+import Inventory from 'components/main/SpareManagement/Inventory' //  盘存任务
+import schedulingRecord from 'components/main/SpareManagement/schedulingRecord' //  调度日志
+import MaintenanceRecord from 'components/main/SpareManagement/MaintenanceRecord' //  调度日志
+import Alsorecord from 'components/main/SpareManagement/Alsorecord' //  调度日志
+
 Vue.use(Router)
 
 export default new Router({
@@ -239,6 +249,21 @@ export default new Router({
           name: 'RectifierModule',
           component: RectifierModule
 		},
+		{// 蓄电池
+          path: 'StorageBattery',
+          name: 'StorageBattery',
+          component: StorageBattery
+		},
+		{// 动力及环境监测单元
+          path: 'PowerAndEnvironment',
+          name: 'PowerAndEnvironment',
+          component: PowerAndEnvironment
+		},
+		{// 通讯与位置终端
+          path: 'CommunicationAndLocation',
+          name: 'CommunicationAndLocation',
+          component: CommunicationAndLocation
+		},
         {// 备件类型列表
           path: 'Sparetype',
           name: 'Sparetype',
@@ -278,6 +303,36 @@ export default new Router({
           path: 'Spareparts',
           name: 'Spareparts',
           component: Spareparts
+        },
+        {// 调度任务
+          path: 'Scheduling',
+          name: 'Scheduling',
+          component: Scheduling
+        },
+        {// 调度审核
+          path: 'SchedulingAudit',
+          name: 'SchedulingAudit',
+          component: SchedulingAudit
+        },
+        {// 盘存任务
+          path: 'Inventory',
+          name: 'Inventory',
+          component: Inventory
+        },
+        {// 调度日志
+          path: 'schedulingRecord',
+          name: 'schedulingRecord',
+          component: schedulingRecord
+        },
+        {// 维修记录
+          path: 'MaintenanceRecord',
+          name: 'MaintenanceRecord',
+          component: MaintenanceRecord
+        },
+        {// 还件记录
+          path: 'Alsorecord',
+          name: 'Alsorecord',
+          component: Alsorecord
         },
         {
           path: 'ZYResource',

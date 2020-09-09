@@ -98,6 +98,8 @@ export const GetSwitchingPowerSupplyExcel = `${reqURL}/ZYGL/SwitchingPowerSupply
 // 网络设备
 export const GetOperatorEquipmentInfo = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentInfo` // 获取网络设备详情
 export const GetOperatorEquipmentList = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentList` // 获取网络设备列表
+export const AddOperatorEquipment = `${reqURL}/ZYGL/OperatorEquipment/AddOperatorEquipment` // 新增网络设备
+export const UpdateOperatorEquipment = `${reqURL}/ZYGL/OperatorEquipment/UpdateOperatorEquipment` // 修改网络设备
 export const AddOperatorEquipmentTaskEquipment = `${reqURL}/ZYGL/OperatorEquipment/AddOperatorEquipmentTaskEquipment` // 创建网络设备任务
 export const EditOperatorEquipmentTaskEquipment = `${reqURL}/ZYGL/OperatorEquipment/EditOperatorEquipmentTaskEquipment` // 修改网络设备任务信息
 export const GetOperatorEquipmentTaskEquipmentInfo = `${reqURL}/ZYGL/OperatorEquipment/GetOperatorEquipmentTaskEquipmentInfo` // 获取网络设备任务详情
@@ -106,6 +108,8 @@ export const GetOperatorEquipmentExcel = `${reqURL}/ZYGL/OperatorEquipment/GetOp
 // 铁塔
 export const GetTheTowerInfo = `${reqURL}/ZYGL/TheTower/GetTheTowerInfo` // 获取铁塔详情
 export const GetTheTowerList = `${reqURL}/ZYGL/TheTower/GetTheTowerList` // 获取铁塔列表
+export const AddTheTower = `${reqURL}/ZYGL/TheTower/AddTheTower` // 新增铁塔
+export const UpdateTheTower = `${reqURL}/ZYGL/TheTower/UpdateTheTower` // 修改铁塔
 export const AddTheTowerTaskEquipment = `${reqURL}/ZYGL/TheTower/AddTheTowerTaskEquipment` // 创建铁塔设备任务
 export const EditTheTowerTaskEquipment = `${reqURL}/ZYGL/TheTower/EditTheTowerTaskEquipment` // 修改铁塔任务信息
 export const GetTheTowerTaskEquipmentInfo = `${reqURL}/ZYGL/TheTower/GetTheTowerTaskEquipmentInfo` // 获取铁塔任务详情
@@ -114,6 +118,8 @@ export const GetTheTowerExcel = `${reqURL}/ZYGL/TheTower/GetTheTowerExcel` // �
 // 机房
 export const GetComputerRoomInfo = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomInfo` // 获取机房详情
 export const GetComputerRoomList = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomList` // 获取机房列表
+export const AddComputerRoom = `${reqURL}/ZYGL/ComputerRoom/AddComputerRoom` // 新增机房
+export const UpdateComputerRoom = `${reqURL}/ZYGL/ComputerRoom/UpdateComputerRoom` // 修改机房
 export const AddComputerRoomTaskEquipment = `${reqURL}/ZYGL/ComputerRoom/AddComputerRoomTaskEquipment` // 创建机房设备任务
 export const EditComputerRoomTaskEquipment = `${reqURL}/ZYGL/ComputerRoom/EditComputerRoomTaskEquipment` // 修改机房任务信息
 export const GetComputerRoomTaskEquipmentInfo = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoomTaskEquipmentInfo` // 获取机房任务详情
@@ -122,10 +128,22 @@ export const GetComputerRoomExcel = `${reqURL}/ZYGL/ComputerRoom/GetComputerRoom
 // 交流配电箱
 export const GetAcDistriButionBoxInfo = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxInfo` // 获取交流配电箱详情
 export const GetAcDistriButionBoxList = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxList` // 获取交流配电箱列表
+export const AddAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/AddAcDistriButionBox` // 新增交流配电箱
+export const EditAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/EditAcDistriButionBox` // 修改交流配电箱
 export const AddTaskEquipmentAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/AddTaskEquipmentAcDistriButionBox` // 创建交流配电箱设备任务
 export const EditTaskEquipmentAcDistriButionBox = `${reqURL}/ZYGL/AcDistriButionBox/EditTaskEquipmentAcDistriButionBox` // 修改交流配电箱任务信息
 export const GetTaskEquipmentAcDistriButionBoxInfo = `${reqURL}/ZYGL/AcDistriButionBox/GetTaskEquipmentAcDistriButionBoxInfo` // 获取交流配电箱任务详情
 export const GetAcDistriButionBoxExcel = `${reqURL}/ZYGL/AcDistriButionBox/GetAcDistriButionBoxExcel` // 交流配电箱导出
+
+// 机房空调
+export const GetComputerRoomAirConditioningInfo = `${reqURL}/ZYGL/ComputerRoomAirConditioning/GetComputerRoomAirConditioningInfo` // 获取机房空调详情
+export const GetComputerRoomAirConditioningList = `${reqURL}/ZYGL/ComputerRoomAirConditioning/GetComputerRoomAirConditioningList` // 获取机房空调列表
+export const AddComputerRoomAirConditioning = `${reqURL}/ZYGL/ComputerRoomAirConditioning/AddComputerRoomAirConditioning` // 新增机房空调
+export const UpdateComputerRoomAirConditioning = `${reqURL}/ZYGL/ComputerRoomAirConditioning/UpdateComputerRoomAirConditioning` // 修改机房空调
+export const AddComputerRoomAirConditioningTaskEquipment = `${reqURL}/ZYGL/ComputerRoomAirConditioning/AddComputerRoomAirConditioningTaskEquipment` // 创建机房空调设备任务
+export const EditComputerRoomAirConditioningTaskEquipment = `${reqURL}/ZYGL/ComputerRoomAirConditioning/EditComputerRoomAirConditioningTaskEquipment` // 修改机房空调任务信息
+export const GetComputerRoomAirConditioningTaskEquipmentInfo = `${reqURL}/ZYGL/ComputerRoomAirConditioning/GetComputerRoomAirConditioningTaskEquipmentInfo` // 获取机房空调任务详情
+export const GetComputerRoomAirConditioningExcel = `${reqURL}/ZYGL/ComputerRoomAirConditioning/GetComputerRoomAirConditioningExcel` // 机房空调导出
 
 // 整流模块
 export const GetRectifierModuleInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleInfo` // 获取整流模块详情
@@ -134,3 +152,27 @@ export const AddRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/A
 export const EditRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/EditRectifierModuleTaskEquipment` // 修改整流模块任务信息
 export const GetRectifierModuleTaskEquipmentInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleTaskEquipmentInfo` // 获取整流模块任务详情
 export const GetRectifierModuleExcel = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleExcel` // 整流模块导出
+
+// 蓄电池
+export const GetStorageBatteryInfo = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryInfo` // 获取蓄电池详情
+export const GetStorageBatteryList = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryList` // 获取蓄电池列表
+export const AddStorageBatteryTaskEquipment = `${reqURL}/ZYGL/StorageBattery/AddStorageBatteryTaskEquipment` // 创建蓄电池设备任务
+export const EditStorageBatteryTaskEquipment = `${reqURL}/ZYGL/StorageBattery/EditStorageBatteryTaskEquipment` // 修改蓄电池任务信息
+export const GetStorageBatteryTaskEquipmentInfo = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryTaskEquipmentInfo` // 获取蓄电池任务详情
+export const GetStorageBatteryExcel = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryExcel` // 蓄电池导出
+
+// 动力及环境监测单元
+export const GetPowerAndEnvironmentInfo = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentInfo` // 获取动力及环境监测单元详情
+export const GetPowerAndEnvironmentList = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentList` // 获取动力及环境监测单元列表
+export const AddTaskEquipmentPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/AddTaskEquipmentPowerAndEnvironment` // 创建动力及环境监测单元设备任务
+export const EditTaskEquipmentPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/EditTaskEquipmentPowerAndEnvironment` // 修改动力及环境监测单元任务信息
+export const GetTaskEquipmentPowerAndEnvironmentInfo = `${reqURL}/ZYGL/PowerAndEnvironment/GetTaskEquipmentPowerAndEnvironmentInfo` // 获取动力及环境监测单元任务详情
+export const GetPowerAndEnvironmentExcel = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentExcel` // 动力及环境监测单元导出
+
+// 通讯与位置终端
+export const GetCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationInfo` // 获取动力及环境监测单元详情
+export const GetCommunicationAndLocationList = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationList` // 获取动力及环境监测单元列表
+export const AddTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/AddTaskEquipmentCommunicationAndLocation` // 创建动力及环境监测单元设备任务
+export const EditTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/EditTaskEquipmentCommunicationAndLocation` // 修改动力及环境监测单元任务信息
+export const GetTaskEquipmentCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetTaskEquipmentCommunicationAndLocationInfo` // 获取动力及环境监测单元任务详情
+export const GetCommunicationAndLocationExcel = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationExcel` // 动力及环境监测单元导出

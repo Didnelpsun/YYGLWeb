@@ -164,7 +164,7 @@ export default {
       this._getTableData1()
     },
     handleChoose (index, row) {
-      this.$emit('selectResource', row.name, row.id)
+      this.$emit('selectResource', row.name, row.id, row.code)
     },
     handleSelect1 (list) {
       this.selectId = list

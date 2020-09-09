@@ -5,6 +5,13 @@
         <el-row >
           <el-col :span="18">
             <el-col :span="8">
+                <div  @click="Show=true">
+                  <el-form-item label="存放点：">
+                    <el-input v-model="Query.typename" readonly placeholder="请选择存放点"></el-input>
+                  </el-form-item>
+                  </div>
+            </el-col>
+            <el-col :span="8">
               <div @click="sparetypeShow=true">
               <el-form-item label="备件类型：">
                 <el-input v-model="Query.sparepartstype" clearable placeholder="请选择备件类型"  @keyup.enter.native="getMore(1)"></el-input>
@@ -37,22 +44,22 @@
           <el-col :span="12">
             <p class="SearchResult">查询结果</p>
           </el-col>
-          <el-col :span="12">
+        <!--  <el-col :span="12">
             <div class="fr" style="margin-top: 0">
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
-          </el-col>
+          </el-col>-->
         </el-row>
       </el-form>
       <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
         <el-table-column label="序号" width="50">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
-        <el-table-column prop="cityname" label="备件编码" ></el-table-column>
-        <el-table-column prop="areaname" label="备件类型" ></el-table-column>
-        <el-table-column prop="code" label="厂家"></el-table-column>
-        <el-table-column prop="sparepartstype" label="备件型号"></el-table-column>
-        <el-table-column prop="manufacturer" label="权属单位"></el-table-column>
+        <el-table-column prop="code" label="备件编码" ></el-table-column>
+        <el-table-column prop="sparepartstypeid" label="备件类型" ></el-table-column>
+        <el-table-column prop="manufacturerid" label="厂家"></el-table-column>
+        <el-table-column prop="sparemodelid" label="备件型号"></el-table-column>
+        <el-table-column prop="units" label="权属单位"></el-table-column>
           <el-table-column label="操作" width="140">
             <template slot-scope="scope">
               <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
@@ -63,10 +70,10 @@
         <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
+        <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加备件列表' : WriteState === 1 ? '编辑备件列表' : '备件列表详情'"></layuiTitle>
       <Details :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
     </div>
@@ -82,7 +89,9 @@
         <SelectSpareconMode   :sparetypeid="sparepartstypeid" :sparemanufacturerid="manufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
-
+    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
+      <SpareWarehousePicker  @SpareWarehousePicker="SpareWarehousePicker"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -91,10 +100,11 @@ import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
 import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
-import Details from 'base/SpareManagement/Spareparts'
+import Details from 'base/SpareManagement/SpareReplaceDetail'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
+import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 export default {
   name: 'SpareReplace',
   mixins: [GlobalRes],
@@ -118,6 +128,7 @@ export default {
       sparetypeShow: false,
       SparemanufacturerShow: false,
       sparemodelShow: false,
+      Show: false,
       sparepartstypeid: null,
       manufacturerid: null,
       sparemodelid: null
@@ -132,6 +143,11 @@ export default {
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    SpareWarehousClose () { this.Show = false },
+    SpareWarehousePicker (name, code, id) {
+      this.WriteData.typename = name
+      this.WriteData.warehouseid = id
+    },
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
       this.sparepartstypeid = id
@@ -179,6 +195,8 @@ export default {
             this.tableData = res.data.list
             this.total = res.data.total
           }) */
+      this.tableData = [{code: '123'}]
+      this.total = 1
     },
     getMore (page) {
       /*  this.currentPage = page
@@ -199,7 +217,10 @@ export default {
       this.getMore(this.currentPage)
     },
     WriteClose () {
+      Object.assign(this.$data.Query, this.$options.data().Query)
+      Object.assign(this.$data.tableData, this.$options.data().tableData)
       this.showWrite = false
+      this.$emit('fatherClose')
     },
     handleWrite (state, row) {
       this.WriteState = state
@@ -242,11 +263,12 @@ export default {
     Details,
     Selectsparetype,
     Selectmanufacturer,
-    SelectSpareconMode
+    SelectSpareconMode,
+    SpareWarehousePicker
   }
 }
 </script>
 
 <style scoped>
-
+  @import url('../../common/css/mixin.css');
 </style>

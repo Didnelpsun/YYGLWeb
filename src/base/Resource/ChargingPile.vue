@@ -589,9 +589,10 @@ export default {
       this.WriteData.areaid = data[2]
     }, */
     DetailhandleClose () { this.isShow = !this.isShow },
-    selectResource (name, id) {
+    selectResource (name, id, code) {
       this.isShow = false
       this.WriteData.resource_id = id
+      this.WriteData.resourcecode = code
       this.WriteData.resourcename = name
     },
     WriteClose () {

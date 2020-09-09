@@ -37,25 +37,46 @@
             <!--站点编码-->
             <tr class="el-table__row">
               <td><div class="cell">站点编码</div></td>
-              <td><div class="cell">{{WriteData.resourcecode}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState !== 2 && isTask === 0" @click="isShow = true">
+                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
+                </div>
+                <div v-else>
+                  {{WriteData.resourcecode}}
+                </div>
+              </div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--站点名称-->
             <tr class="el-table__row">
               <td><div class="cell">站点名称</div></td>
-              <td><div class="cell">{{WriteData.resourcename}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState !== 2 && isTask === 0" @click="isShow = true">
+                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
+                </div>
+                <div v-else>
+                  {{WriteData.resourcename}}
+                </div>
+              </div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--设备类型-->
+            <!--资源类型-->
             <tr class="el-table__row">
               <td><div class="cell">资源类型</div></td>
-              <td><div class="cell">{{WriteData.equipmenttypename}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 0 && isTask === 0">机房</div>
+                <div v-else>
+                  <el-input v-model="WriteData.equipmenttypename"></el-input>
+                </div></div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--经度-->
@@ -396,11 +417,14 @@
     </div>
 
     <div class="center">
-      <el-button v-show="WriteState !==2" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button v-show="WriteState !==2 && isTask === 1" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
       <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
+    <el-dialog top="1%" :visible.sync="isShow" title="选择站点" width="80%" :before-close="DetailhandleClose">
+      <ResourceList :resourcetype="2" @selectResource="selectResource"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -408,9 +432,11 @@
 import GoogleMap from 'base/GoogleMap'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {DictionaryInfoList} from 'api/api'
-import {GetComputerRoomInfo, GetComputerRoomTaskEquipmentInfo, AddComputerRoomTaskEquipment, EditComputerRoomTaskEquipment} from 'api/SurveyManagement'
+import {GetComputerRoomInfo, GetComputerRoomTaskEquipmentInfo, AddComputerRoom, UpdateComputerRoom,
+  AddComputerRoomTaskEquipment, EditComputerRoomTaskEquipment} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
+import ResourceList from 'base/Resource/ResourceList'
 
 export default {
   name: 'ComputerRoomDetail',
@@ -433,6 +459,7 @@ export default {
     return {
       showMap: false,
       Loading: false,
+      isShow: false,
       ImgList1: [],
       ImgList2: [],
       ImgList3: [],
@@ -511,12 +538,16 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['电表供电方式', '电表设备厂家', '电表设备型号']
+      let arr = ['设备单位', '机房设备厂家', '机房设备型号', '设备产权单位', '机房设备类型', '机房设备共享单位', '机房设备原产权单位']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.$set(this.DicList, 'powersupplymode', res.data.filter(i => { return i.type === '电表供电方式' }))
-          this.DicList.manufacturer = res.data.filter(i => { return i.type === '电表设备厂家' })
-          this.DicList.models = res.data.filter(i => { return i.type === '电表设备型号' })
+          this.$set(this.DicList, 'propertyrightunit', res.data.filter(i => { return i.type === '设备产权单位' }))
+          this.DicList.manufacturer = res.data.filter(i => { return i.type === '机房设备厂家' })
+          this.DicList.models = res.data.filter(i => { return i.type === '机房设备型号' })
+          this.DicList.unit = res.data.filter(i => { return i.type === '设备单位' })
+          this.DicList.computerroomtype = res.data.filter(i => { return i.type === '机房设备类型' })
+          this.DicList.sharedunit = res.data.filter(i => { return i.type === '机房设备共享单位' })
+          this.DicList.rawpropertyrightunit = res.data.filter(i => { return i.type === '机房设备原产权单位' })
         } else {
           this.$message.error(res.msg)
         }
@@ -548,10 +579,58 @@ export default {
       }
     },
     SubWrite (state) {
-      if (this.WriteState === 0) this.SubAdd(state)
-      if (this.WriteState === 1) this.SubEdit(state)
+      if (this.isTask) {
+        if (this.WriteState === 0) this.SubTaskAdd(state)
+        if (this.WriteState === 1) this.SubTaskEdit(state)
+      } else {
+        if (this.WriteState === 0) this.SubAdd()
+        if (this.WriteState === 1) this.SubEdit()
+      }
     },
-    SubAdd (state) {
+    SubAdd () {
+      if (this.validImgList()) return
+      this.$refs.WriteForm.validate((vali, msg) => {
+        if (!vali) {
+          return this.$message.error('请补全信息！')
+        } else {
+          this.Loading = true
+          this.$axios.post(AddComputerRoom, this.WriteData).then(res => {
+            this.Loading = false
+            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            this.$message.success('添加成功!')
+            this.$emit('fatheretMore')
+            this.WriteClose()
+          }).catch(err => {
+            this.Loading = false
+            console.log(err)
+          })
+        }
+      })
+    },
+    SubEdit () {
+      if (this.validImgList()) return
+      this.$refs.WriteForm.validate(vali => {
+        if (!vali) {
+          this.$message.error('请补全信息！')
+        } else {
+          this.Loading = true
+          this.$axios.put(UpdateComputerRoom, this.WriteData).then(res => {
+            this.Loading = false
+            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode === '200') {
+              this.$message.success('编辑成功!')
+              this.$emit('fatheretMore')
+              this.WriteClose()
+            } else {
+              this.$message.error(res.errorMessage)
+            }
+          }).catch(() => {
+            this.Loading = false
+          })
+        }
+      })
+    },
+    SubTaskAdd (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
@@ -575,7 +654,7 @@ export default {
         }
       })
     },
-    SubEdit (state) {
+    SubTaskEdit (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
@@ -631,6 +710,13 @@ export default {
       if (latitude) {
         this.WriteData.latitude = latitude
       }
+    },
+    DetailhandleClose () { this.isShow = !this.isShow },
+    selectResource (name, id, code) {
+      this.isShow = false
+      this.WriteData.resource_id = id
+      this.WriteData.resourcecode = code
+      this.WriteData.resourcename = name
     }
   },
   computed: {
@@ -643,7 +729,7 @@ export default {
       this.WriteData.imglist = val
     }
   },
-  components: {GoogleMap}
+  components: {GoogleMap, ResourceList}
 }
 </script>
 

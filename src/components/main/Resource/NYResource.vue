@@ -60,18 +60,19 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
+            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <el-button type="success" icon="el-icon-plus" @click="addQueryForm">新增</el-button>
           </div>
         </el-col>
       </el-row>
 
       <el-table :data="tableList" v-loading="Table1Loading" style="margin-top: 15px;">
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-        <el-table-column prop="cityname" label="地市" width="70"></el-table-column>
+        <el-table-column prop="cityname" label="地市" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="70"></el-table-column>
-        <el-table-column prop="name" label="站点名称" width=""></el-table-column>
-        <el-table-column prop="code" label="站点编码" width=""></el-table-column>
+        <el-table-column prop="name" label="站点名称" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="code" label="站点编码" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="classifyname" label="站点分类" width="70"></el-table-column>
         <el-table-column prop="resourceeqipmentname" label="站点配置模型" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
@@ -439,12 +440,14 @@
     </div>
     <!--dialog弹窗-->
     <ImgBox ref="ImgBox"></ImgBox>
+    <Import ref="ImportBox" @fatherGetData="_getTableData1"></Import>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import GoogleMap from 'base/GoogleMap'
+import Import from 'base/Import'
 import OperationSite from 'base/Resource/OperationSite'
 import NYResourceEquipment from 'base/Resource/NYResourceEquipment'
 import {GlobalRes} from 'common/js/mixins'
@@ -453,7 +456,7 @@ import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import ImgBox from 'base/ImgBox'
 import {exportMethod} from 'api/YDSZ'
 import {DictionaryInfoList, GetEnergyListAsync, AddZYResourceAsync, DeleteZYResourceAsync, EditZYResourceAsync, GetZYResourceIdListAsync, GetOperatorSiteList,
-  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo, GetEquipmentTypeList, GetResourceExcel} from 'api/api'
+  GetMonitoringSite, MonitoringSiteIdInfo, GetOperatorSiteInfo, GetEquipmentTypeList, GetResourceExcel, ImportResourceExcel} from 'api/api'
 
 export default {
   name: 'Resource',
@@ -917,6 +920,11 @@ export default {
       }
       return list
     },
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = ImportResourceExcel
+      this.$refs.ImportBox.fileName = '错误站点数据'
+    },
     handleExport () {
       this.$confirm(`您确定要导出吗？`, '提示', {
         type: 'info'
@@ -1013,7 +1021,8 @@ export default {
     ImgBox,
     GoogleMap,
     OperationSite,
-    NYResourceEquipment
+    NYResourceEquipment,
+    Import
   }
 }
 </script>

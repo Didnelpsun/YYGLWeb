@@ -15,7 +15,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label-width="125px" label="模块类型：">
+              <el-form-item label-width="125px" label="设备厂家：">
                 <el-select class="searchSelect" v-model="Query.powersupplymode">
                   <el-option label="请选择" :value="null"></el-option>
                   <el-option v-for="i in DicList.powersupplymode" :key="i.value" :label="i.text" :value="i.value"></el-option>
@@ -64,7 +64,7 @@
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
-        <el-table-column prop="moduletypename" label="模块类型" width=""></el-table-column>
+        <el-table-column prop="manufacturername" label="设备厂家" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
@@ -83,7 +83,7 @@
     </div>
 
     <div class="write" v-if="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加整流模块' : WriteState === 1 ? '修改整流模块' : '整流模块详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加动力及环境监测单元' : WriteState === 1 ? '修改动力及环境监测单元' : '动力及环境监测单元详情'"></layuiTitle>
       <Details v-loading="Loading" :DeviceID="DeviceID" :WriteState="WriteState" @fatherClose="WriteClose" ref="Details"
                      @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></Details>
     </div>
@@ -94,7 +94,7 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetRectifierModuleList, GetRectifierModuleExcel} from 'api/SurveyManagement'
+import {GetPowerAndEnvironmentList, GetPowerAndEnvironmentExcel} from 'api/SurveyManagement'
 import {exportMethod} from 'api/YDSZ'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
@@ -103,7 +103,7 @@ import ImgBox from 'base/ImgBox'
 import Details from 'base/ZYResource/RectifierModule'
 
 export default {
-  name: 'RectifierModule',
+  name: 'PowerAndEnvironment',
   mixins: [GlobalRes],
   data () {
     return {
@@ -144,10 +144,10 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['整流模块设备类型']
+      let arr = ['动力及环境监测单元设备厂家']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '整流模块设备类型' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '动力及环境监测单元设备厂家' })
         } else {
           this.$message.error(res.msg)
         }
@@ -157,7 +157,7 @@ export default {
     },
     getTable1 () {
       this.Loading = true
-      this.$axios.get(GetRectifierModuleList, {
+      this.$axios.get(GetPowerAndEnvironmentList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -177,7 +177,7 @@ export default {
     getMore1 (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetRectifierModuleList, {
+      this.$axios.get(GetPowerAndEnvironmentList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -219,8 +219,8 @@ export default {
       }).then(() => {
         let myObj = {
           method: 'get',
-          url: GetRectifierModuleExcel,
-          fileName: '整流模块',
+          url: GetPowerAndEnvironmentExcel,
+          fileName: '动力及环境监测单元',
           data: this.Query
         }
         exportMethod(myObj)

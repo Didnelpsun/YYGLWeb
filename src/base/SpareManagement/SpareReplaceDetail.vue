@@ -15,7 +15,7 @@
             <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
             <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
             <!--<th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>-->
-            <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">操作</div></th>
+            <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
           </tr>
           </thead>
         </table>
@@ -31,15 +31,6 @@
               <col width="100"/>
             </colgroup>
             <tbody>
-            <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
-              <td><div class="cell">
-                <div @click="Show=true">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择存放点名"></el-input>
-                </div></div>
-              </td>
-              <td><div class="cell"></div></td>
-            </tr>
             <tr class="el-table__row" >
               <td colspan="3" style="background-color: rgb(230, 189, 189)"><div class="cell">扫码:单条扫码单条提交</div></td>
             </tr>
@@ -54,20 +45,12 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件类型</div></td>
-              <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.sparepartstypeid" clearable placeholder="请扫备件类型"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell">{{WriteData.sparepartstypeid}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">厂家</div></td>
-              <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.manufacturerid" clearable placeholder="请扫厂家"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell">{{WriteData.manufacturerid}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -77,16 +60,17 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件型号</div></td>
-              <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.sparemodelid" clearable placeholder="请扫备件型号"></el-input>
-                </div></div>
-              </td>
+              <td><div class="cell">{{WriteData.sparemodelid}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">城市</div></td>
               <td><div class="cell">{{WriteData.cityname}}</div></td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">状态</div></td>
+              <td><div class="cell">{{WriteData.areaname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -101,12 +85,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">存放点类型</div></td>
-              <td><div class="cell">
-                <el-form-item  class="form-item" prop="depotstype">
-                  <el-input v-model="WriteData.depotstype" clearable placeholder="请扫存放点类型"></el-input>
-                </el-form-item>
-              </div>
-              </td>
+              <td><div class="cell">{{WriteData.depotstype}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -141,23 +120,18 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备注</div></td>
-              <td><div class="cell">
-                <el-form-item  class="form-item" prop="reamrk">
-                  <el-input v-model="WriteData.reamrk"  clearable placeholder="请扫备注"></el-input>
-                </el-form-item>
-              </div>
-              </td>
+              <td><div class="cell">{{WriteData.reamrk}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
-             <tr class="el-table__row">
-                  <td><div class="cell">提交时间</div></td>
-                  <td><div class="cell">{{WriteData.createtime}}</div></td>
-                  <td><div class="cell"></div></td>
-             </tr>
             <tr class="el-table__row">
-                  <td><div class="cell">提交人</div></td>
-                  <td><div class="cell">{{WriteData.realityname}}</div></td>
-                  <td><div class="cell"></div></td>
+              <td><div class="cell">提交时间</div></td>
+              <td><div class="cell">{{WriteData.createtime}}</div></td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
+              <td><div class="cell">提交人</div></td>
+              <td><div class="cell">{{WriteData.realityname}}</div></td>
+              <td><div class="cell"></div></td>
             </tr>
             </tbody>
           </table>
@@ -168,19 +142,16 @@
       <el-button  @click="SubAdd()" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
-    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
-    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
-import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 
 import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
 export default {
-  name: 'SpareCheck',
+  name: 'SpareReplaceDetail',
   mixins: [GlobalRes],
   props: {
 
@@ -228,56 +199,50 @@ export default {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
-    SpareWarehousePicker (name, code, id) {
-      this.WriteData.typename = name
-      this.WriteData.warehouseid = id
-    },
-    SpareWarehousClose () {
-      this.Show = false
-    },
+
     handleSubmit (val) {
 
     },
     SubAdd () {
       /*   this.$refs.WriteForm.validate((vali, msg) => {
-          if (!vali) {
-            if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-            if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
-            return this.$message.error('请补全信息！')
-          } else {
-            this.Loading = true
-            this.$axios.post(Addmaintenanceconfig, this.WriteData).then(res => {
-              this.Loading = false
-              if (res.errorCode !== '200') return this.$message.error(res.msg)
-              this.$message.success('添加成功!')
-              this.$emit('fatheretMore')
-              this.WriteClose()
-            })
-          }
-        }) */
+            if (!vali) {
+              if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
+              if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+              return this.$message.error('请补全信息！')
+            } else {
+              this.Loading = true
+              this.$axios.post(Addmaintenanceconfig, this.WriteData).then(res => {
+                this.Loading = false
+                if (res.errorCode !== '200') return this.$message.error(res.msg)
+                this.$message.success('添加成功!')
+                this.$emit('fatheretMore')
+                this.WriteClose()
+              })
+            }
+          }) */
     },
     SubEdit () {
       /*    this.$refs.WriteForm.validate((vali, msg) => {
-          if (!vali) {
-            if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-            if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
-            this.$message.error('请补全信息！')
-          } else {
-            this.Loading = true
-            this.$axios.put(Editmaintenanceconfig, this.WriteData).then(res => {
-              this.Loading = false
-              if (res.errorCode !== '200') return this.$message.error(res.msg)
-              this.$message.success('编辑成功!')
-              this.$emit('fatheretMore')
-              this.ResetWrite()
-              this.WriteClose()
-            })
-          }
-        }) */
+            if (!vali) {
+              if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
+              if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+              this.$message.error('请补全信息！')
+            } else {
+              this.Loading = true
+              this.$axios.put(Editmaintenanceconfig, this.WriteData).then(res => {
+                this.Loading = false
+                if (res.errorCode !== '200') return this.$message.error(res.msg)
+                this.$message.success('编辑成功!')
+                this.$emit('fatheretMore')
+                this.ResetWrite()
+                this.WriteClose()
+              })
+            }
+          }) */
     }
   },
   components: {
-    SpareWarehousePicker
+
   }
 }
 </script>
