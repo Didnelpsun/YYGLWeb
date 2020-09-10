@@ -41,9 +41,9 @@
               </td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
+           <!-- <tr class="el-table__row">
               <td colspan="3"  style="background-color:rgb(156, 186, 95)"><div class="cell">设置备件属性</div></td>
-            </tr>
+            </tr>-->
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>备件类型</div></td>
               <td><div class="cell">
@@ -66,7 +66,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>权属</div></td>
+              <td><div class="cell">权属</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.unitsname}}</div>
                 <div v-if="WriteState !== 2" @click="unitsShowchange">
@@ -92,7 +92,7 @@
               <td><div class="cell">扫码</div></td>
               <td><div class="cell">
                 <div v-if="WriteState !== 2">
-                  <el-input v-model="code" @change="changeAdd" label-width="0"  clearable placeholder="请扫备件编码"></el-input>
+                  <el-input v-model="code"  label-width="0"  clearable placeholder="请扫备件编码"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -170,8 +170,8 @@
         <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
-    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
+      <SelectUserOperation :check="check"  @SelectUserOperation="SelectUserOperation"/>
     </el-dialog>
   </div>
 </template>
@@ -181,7 +181,7 @@ import {GlobalRes} from 'common/js/mixins'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
-import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
+import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
 
 import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
 export default {
@@ -204,14 +204,14 @@ export default {
       code: '',
       Show: false,
       unitsShow: false,
-      manufactureridShow: false,
       sparetypeShow: false,
       sparemodelShow: false,
       SparemanufacturerShow: false,
       SpareWarehouseShow: false,
       isShow: false,
+      check: 1,
       Loading: false,
-      WriteData1: [{code: '', assetsencoding: '', warrantycode: ''}],
+      WriteData1: [],
       WriteData: {
         id: null,
         cityname: '',
@@ -236,11 +236,6 @@ export default {
   },
 
   methods: {
-    changeAdd (value) {
-      console.log(value)
-      this.WriteData1.push({code: '', assetsencoding: '', warrantycode: ''})
-      this.code = ''
-    },
     handledelete (val) {
       this.WriteData1.splice(val, 1)
     },
@@ -286,7 +281,7 @@ export default {
       this.WriteData.sparemodelid = id
       this.WriteData.sparemodel = name
     },
-    SpareWarehousePicker (name, code, id) {
+    SelectUserOperation (name, code, id) {
       if (this.SpareWarehouseShow) {
         this.WriteData.typename = name
         this.WriteData.warehouseid = id
@@ -296,7 +291,7 @@ export default {
         this.WriteData.units = id
       }
     },
-    SpareWarehousClose () {
+    SelectUserOperationClose () {
       this.SpareWarehouseShow = false
       this.unitsShow = false
       this.Show = false
@@ -346,12 +341,12 @@ export default {
     Selectsparetype,
     Selectmanufacturer,
     SelectSpareconMode,
-    SpareWarehousePicker
+    SelectUserOperation
   },
   watch: {
     code () {
       if (this.code.length) {
-        this.WriteData1.push({code: '', assetsencoding: '', warrantycode: ''})
+        this.WriteData1.push({code: this.code, assetsencoding: '', warrantycode: ''})
       }
       this.code = ''
     }

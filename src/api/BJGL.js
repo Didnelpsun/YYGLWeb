@@ -43,3 +43,13 @@ export const Addconfiguration = `${reqURL}/BJGL/configurationSevcie/Addconfigura
 export const Editconfiguration = `${reqURL}/BJGL/configurationSevcie/Editconfiguration` // 编辑存放点操作配置列表(修改仓库配置)
 export const GetUserOperation = `${reqURL}/BJGL/configurationSevcie/GetUserOperation` // 查看当前用户操作
 export const GetconfigurationsList = `${reqURL}/BJGL/configurationSevcie/GetconfigurationsList` // 获取存放点操作配置列表(查看仓库配置)
+// 备件管理备件
+export const GetsparepartsList = `${reqURL}/BJGL/spareparts/GetsparepartsList` // 获取备件列表
+export const Addspareparts = `${reqURL}/BJGL/spareparts/Addspareparts` // 添加备件
+export const Editspareparts = `${reqURL}/BJGL/spareparts/Editspareparts` // 备件点验，替换，上站
+export const Dispatchoutbound = `${reqURL}/BJGL/spareparts/Dispatchoutbound` // 调度接口
+export const Deletespareparts = `${reqURL}/BJGL/spareparts/Deletespareparts` // 删除备件
+export const GetsparepartsidList = `${reqURL}/BJGL/spareparts/GetsparepartsidList` // 获取备件详情
+export const Sparecode = `${reqURL}/BJGL/spareparts/Sparecode` // 扫码查找备件
+export const Outwarehouse = `${reqURL}/BJGL/spareparts/Outwarehouse` // 出入库方法
+export const Addborrow = `${reqURL}/BJGL/spareparts/Addborrow` // 生成借件还件记录

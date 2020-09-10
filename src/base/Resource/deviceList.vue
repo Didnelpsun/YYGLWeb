@@ -31,7 +31,7 @@
       <el-table :data="tableList" v-loading="Table1Loading" @selection-change="handleSelect1">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-        <el-table-column prop="provincename" label="省份" width=""></el-table-column>
+        <!--<el-table-column prop="provincename" label="省份" width=""></el-table-column>-->
         <el-table-column prop="cityname" label="城市" width=""></el-table-column>
         <el-table-column prop="areaname" label="区域" width=""></el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>

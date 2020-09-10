@@ -35,7 +35,7 @@
               <td><div class="cell"><i class="must">*</i>城市</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList"  placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader v-model="WriteData.AreaList" :key="i"  placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -120,14 +120,14 @@ export default {
         value: 'id',
         lazyLoad (node, resolve) {
           if (!node.level) {
-            resolve(JSON.parse(localStorage.getItem('ProvinceList')))
-          /*  _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+            /*     resolve(JSON.parse(localStorage.getItem('ProvinceList'))) */
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
               if (res.error) {
                 _this.$message.error(res.errorMessage)
               } else {
                 resolve(_this._normalizeCityAreaLevel(res.data))
               }
-            }) */
+            })
           } else {
             if (!node.hasChildren) return resolve([])
             _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
@@ -142,6 +142,7 @@ export default {
       },
       isShow: false,
       Loading: false,
+      i: 1,
       WriteData: {
         AreaList: [],
         provinceid: null,
@@ -186,11 +187,13 @@ export default {
       this.$refs.WriteForm.resetFields()
     },
     setWriteData (data) {
+      this.i++
       this.WriteData = data
       this.WriteData.AreaList = [ this.WriteData.provinceid, this.WriteData.cityid ]
-      this.setArea(this.WriteData.AreaList, 'csArea')
+      /*     this.setArea(this.WriteData.AreaList, 'csArea') */
     },
     WriteClose () {
+      this.i = 1
       this.setArea([])
       this.ResetWrite()
       this.$emit('fatherClose')

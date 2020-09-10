@@ -115,23 +115,23 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">管理员姓名</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="administrator">
-                  <el-input v-model="WriteData.administrator" placeholder="请填写管理员联系电话"></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.administrator}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.administrator}}</div>
+                <div v-if="WriteState !== 2" @click="administratorShow=true">
+                  <el-input v-model="WriteData.administrator" readonly placeholder="请选择管理员联系电话"></el-input>
+                </div></div>
+              </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
+            <tr class="el-table__row" v-if="WriteData.phonenum">
               <td><div class="cell">管理员联系电话</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="phonenum">
                   <el-input v-model="WriteData.phonenum" placeholder="请填写管理员联系电话"></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.phonenum}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
@@ -157,6 +157,11 @@
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <div v-if="administratorShow">
+      <el-dialog top="1%" :visible.sync="administratorShow" title="选择管理员" width="80%" :before-close="administratorClose">
+        <Details  @selectUser="Chooseusr"/>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -164,6 +169,7 @@
 import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
 import {Addmanufacturerinfo, Editmanufacturerinfo} from 'api/BJGL'
+import Details from 'base/SpareManagement/SelectUser'
 export default {
   name: 'AfterSaleContract',
   mixins: [GlobalRes],
@@ -207,20 +213,17 @@ export default {
           }
         }
       },
+      administratorShow: false,
       isShow: false,
       Loading: false,
       ImgList1: [],
       WriteData: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0,
-        id: null,
-        cityname: '',
+        provinceid: null,
+        cityid: null,
         imglist: [],
-        remark: '',
-        realityname: '',
-        createtime: null
-
+        administrator: null,
+        phonenum: null
       },
       Rules: {
         /* AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
@@ -232,6 +235,12 @@ export default {
   },
 
   methods: {
+    Chooseusr (id, name, phone) {
+      this.administratorShow = false
+      this.WriteData.administrator = name
+      this.WriteData.phonenum = phone
+    },
+    administratorClose () { this.administratorShow = !this.administratorShow },
     changecityArea (obj) {
       // console.log(obj)
       obj.provinceid = obj.AreaList[0]
@@ -278,6 +287,7 @@ export default {
       this.$emit('fatherClose')
     },
     SubWrite () {
+      this.WriteData.year = parseInt(this.WriteData.year)
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
     },
@@ -325,6 +335,9 @@ export default {
     ImgList (val) {
       this.WriteData.imglist = val
     }
+  },
+  components: {
+    Details
   }
 }
 </script>

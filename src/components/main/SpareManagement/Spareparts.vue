@@ -81,9 +81,9 @@
     </div>
     <div class="write" v-show="handleShow">
       <layuiTitle :title="Sparepartstate === 0 ? '上站' : Sparepartstate === 1 ? '替换' : '点验'"></layuiTitle>
-      <SpareCheck v-show="Sparepartstate === 2" :WriteState="WriteState" :DicList="DicList"
+      <SpareCheck   v-show="Sparepartstate === 2" :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareCheck"></SpareCheck>
-      <SpareReplace v-show="Sparepartstate === 1" :WriteState="WriteState" :DicList="DicList"
+      <SpareReplace  v-show="Sparepartstate === 1" :WriteState="WriteState" :DicList="DicList"
                   @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareReplace"></SpareReplace>
     </div>
 

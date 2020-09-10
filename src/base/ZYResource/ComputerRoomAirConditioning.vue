@@ -71,9 +71,7 @@
               <td><div class="cell">资源类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 0 && isTask === 0">机房空调</div>
-                <div v-else>
-                  <el-input v-model="WriteData.equipmenttypename"></el-input>
-                </div></div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
@@ -347,8 +345,8 @@ export default {
       if (val === 2) {
         this.$emit('fatherOpenImgBox', '资源型号', 'models', this.ImgList2)
       }
-      if (val === 2) {
-        this.$emit('fatherOpenImgBox', '空调类型', 'models', this.ImgList3)
+      if (val === 3) {
+        this.$emit('fatherOpenImgBox', '空调类型', 'airconditionertype', this.ImgList3)
       }
     },
     SubWrite (state) {

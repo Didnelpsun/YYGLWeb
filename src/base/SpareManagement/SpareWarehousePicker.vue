@@ -39,7 +39,7 @@
       <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
       <el-table-column prop="name" label="存放点名称"></el-table-column>
       <el-table-column prop="code" label="存放点编码"></el-table-column>
-      <el-table-column prop="administrators" label="负责人"></el-table-column>
+      <el-table-column prop="administrators" :formatter="changeadministrator" label="负责人"></el-table-column>
       <el-table-column prop="remark" label="说明"></el-table-column>
       <el-table-column prop="realityname" label="提交人"></el-table-column>
       <el-table-column prop="createtime" label="提交时间"></el-table-column>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {GetwarehouseList} from 'api/BJGL'
+import {GetwarehouseList, GetUserOperation} from 'api/BJGL'
 import {DictionaryInfoList} from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
 
@@ -77,7 +77,8 @@ export default {
     cityid: {// 城市
       type: Number,
       default: null
-    }
+    },
+    check: null
 
   },
   data () {
@@ -107,6 +108,9 @@ export default {
     this.getDic()
   },
   methods: {
+    changeadministrator (val) {
+      return val.administrators.map(item => item.administrator).toString()
+    },
     getDic () {
       let arr = ['备件存放点类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
@@ -119,8 +123,13 @@ export default {
       })
     },
     _getTableData1 () {
+      console.log(this.check)
+      var url = GetwarehouseList
+      if (this.check) {
+        url = GetUserOperation
+      }
       this.Table1Loading = true
-      this.$axios.get(GetwarehouseList, {
+      this.$axios.get(url, {
         params: {
           PageIndex: 1,
           PageSize: 10,
@@ -139,9 +148,13 @@ export default {
       this.getTableData1More(this.pagination.currentPage)
     },
     getTableData1More  (page) {
+      var url = GetwarehouseList
+      if (this.check) {
+        url = GetUserOperation
+      }
       this.pagination.currentPage = page
       this.Table1Loading = true
-      this.$axios.get(GetwarehouseList, {params: Object.assign({}, this.query, {
+      this.$axios.get(url, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
         PageSize: this.pagination.pageSize,
         provinceid: this.provinceid,

@@ -53,7 +53,7 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="" label="区域" ></el-table-column>
+        <el-table-column prop="areaname" label="区域" ></el-table-column>
         <el-table-column prop="name" label="存放点名称"></el-table-column>
         <el-table-column prop="code" label="存放点编码"></el-table-column>
         <el-table-column prop="operation" label="操作"></el-table-column>
@@ -86,8 +86,8 @@
 <script>
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {AreaList, DictionaryInfoList} from 'api/api'
-import {GetconfigurationsList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {DictionaryInfoList} from 'api/api'
+import {GetconfigurationsList, GetwarehouseIdList, DeleteSpareTyp} from 'api/BJGL'
 import Details from 'base/SpareManagement/StoragePointOperation'
 export default {
   name: 'StoragePointOperation',
@@ -154,7 +154,7 @@ export default {
       return this.DicList.state[row.state]
     },
     getData1 () {
-      /* this.Loading = true
+      this.Loading = true
       this.$axios.get(GetconfigurationsList, {
         params: {
           PageIndex: 1,
@@ -164,14 +164,12 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
-      this.tableData = [{cityname: '武汉'}]
-      this.total = 1
+      })
     },
     getMore (page) {
-      /*   this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetconfigurationsList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -180,7 +178,7 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -192,11 +190,11 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-      /*    this.WriteState = state
+    /*  this.WriteState = state
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
+        this.$axios.get(null, {
           params: {
             Id: row.id
           }

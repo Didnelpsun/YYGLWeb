@@ -71,9 +71,7 @@
               <td><div class="cell">资源类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 0 && isTask === 0">铁塔</div>
-                <div v-else>
-                  <el-input v-model="WriteData.equipmenttypename"></el-input>
-                </div></div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
@@ -629,7 +627,7 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['设备单位', '设备产权单位', '铁塔设备厂家', '铁塔设备型号', '铁塔设备类型', '铁塔设备原产权单位', '铁塔设备共享单位', '铁塔设备平台使用单位']
+      let arr = ['设备单位', '设备产权单位', '铁塔设备厂家', '铁塔设备型号', '铁塔设备类型', '设备共享单位', '设备使用单位']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.$set(this.DicList, 'unit', res.data.filter(i => { return i.type === '设备单位' }))
@@ -637,9 +635,9 @@ export default {
           this.DicList.models = res.data.filter(i => { return i.type === '铁塔设备型号' })
           this.DicList.propertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
           this.DicList.thetowertype = res.data.filter(i => { return i.type === '铁塔设备类型' })
-          this.DicList.rawpropertyrightunit = res.data.filter(i => { return i.type === '铁塔设备原产权单位' })
-          this.DicList.sharedunit = res.data.filter(i => { return i.type === '铁塔设备共享单位' })
-          this.DicList.platformusingunit = res.data.filter(i => { return i.type === '铁塔设备平台使用单位' })
+          this.DicList.rawpropertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
+          this.DicList.sharedunit = res.data.filter(i => { return i.type === '设备共享单位' })
+          this.DicList.platformusingunit = res.data.filter(i => { return i.type === '设备使用单位' })
         } else {
           this.$message.error(res.msg)
         }

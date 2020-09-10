@@ -115,8 +115,8 @@
                 <div class="cell">
                   <el-form-item label-width="0" prop="inauditstatus" class="form-item">
                     <el-select class="tableSelect" v-model="WriteData.inauditstatus" placeholder="请选择审核状态">
-                      <el-option key="4" label="通过" :value="4"></el-option>
-                      <el-option key="3" label="不通过" :value="3"></el-option>
+                      <el-option  label="通过" :value="4"></el-option>
+                      <el-option  label="不通过" :value="3"></el-option>
                     </el-select>
                   </el-form-item>
                 </div>
@@ -167,7 +167,9 @@ export default {
       isShow: false,
       Loading: false,
       WriteData: {
-
+        inauditstatus: null,
+        inauditopinion: null,
+        assistantstate: null
       },
       Rules: {
         typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]

@@ -48,8 +48,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
           </div>
         </el-col>
       </el-row>
@@ -71,7 +71,7 @@
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
+            <el-button type="text" size="mini" @click="handleDelete(scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -93,14 +93,14 @@
 </template>
 
 <script>
-import {DictionaryInfoList} from 'api/api'
+import {DictionaryInfoList, DelEquipment} from 'api/api'
 import {GetStorageBatteryList, GetStorageBatteryExcel} from 'api/SurveyManagement'
 import {exportMethod} from 'api/YDSZ'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
-import Details from 'base/ZYResource/RectifierModule'
+import Details from 'base/ZYResource/StorageBattery'
 
 export default {
   name: 'StorageBattery',
@@ -197,8 +197,27 @@ export default {
     formatAccessDate (row) { return formatDate(row.accessdate) },
     handleWrite (state, row) {
       this.WriteState = state
-      this.DeviceID = row.id
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
+    },
+    handleDelete (row) {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.$axios.delete(DelEquipment, {
+          params: {
+            id: row.id
+          }
+        }).then(res => {
+          if (res.errorCode === '200') {
+            this.getMore(this.currentPage)
+            this.$message.success('删除成功！')
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      })
+      // console.log(this.pagination)
     },
     WriteClose () {
       this.showWrite = false

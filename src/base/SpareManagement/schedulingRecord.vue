@@ -150,7 +150,8 @@ export default {
         cityname: '',
         realityname: '',
         createtime: null
-      }
+      },
+      Rules: {}
     }
   },
 

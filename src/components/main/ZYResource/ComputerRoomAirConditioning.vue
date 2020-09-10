@@ -48,7 +48,7 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
+            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>

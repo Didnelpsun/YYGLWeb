@@ -97,16 +97,15 @@
               </td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr  class="el-table__row">
-              <td><div class="cell">存放点管理员联系电话</div></td>
-              <div v-if="WriteState == 2">{{WriteData.phonenum}}</div>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item">
-                  <el-input  v-model="phonenum"  placeholder="请填写存放点管理员联系电话" clearable></el-input>
-                </el-form-item>
-              </div></td>
-              <td><div class="cell"  v-if="WriteState == 2"></div>
-                <div class="cell" v-show="WriteState !== 2">按照顺序填写电话,多个电话使用逗号隔开</div></td>
+            <tr class="el-table__row">
+              <td><div class="cell"><i class="must">*</i>说明</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.remark}}</div>
+                <div v-if="WriteState !== 2" >
+                  <el-input v-model="WriteData.remark"  placeholder="请填写说明"></el-input>
+                </div></div>
+              </td>
+              <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交时间</div></td>
@@ -125,14 +124,39 @@
           </table>
         </div>
       </el-form>
+      <el-form  v-loading="Loading"  ref="WriteForms" label-width="0" :show-message="false">
+        <div class="el-table__body-wrapper is-scrolling-none" v-for="(item,key) of WriteData.administrators" :key="key">
+          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
+            <colgroup>
+              <col width="80"/>
+              <col width="100"/>
+              <!--  <col width="50"/>-->
+              <col width="100"/>
+            </colgroup>
+            <tbody>
+            <tr  class="el-table__row">
+              <td><div class="cell"><i class="must">{{item.administrator}}</i>管理员联系电话</div></td>
+              <td  v-if="WriteState == 2"><div class="cell">{{item.phonenum}}</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item">
+                  <el-input  v-model="item.phonenum"  placeholder="请填写存放点管理员联系电话" clearable></el-input>
+                </el-form-item>
+              </div></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-form>
     </div>
     <div class="center">
       <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <div v-if="administratorShow">
     <el-dialog top="1%" :visible.sync="administratorShow" title="选择仓库管理员" width="80%" :before-close="administratorClose">
       <Details  @Chooseusr="Chooseusr"/>
     </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -163,33 +187,27 @@ export default {
       Loading: false,
       phonenum: null,
       administratorid: null,
-      phone: [],
       WriteData: {
         AreaList: [],
         provinceid: null,
         cityid: null,
         areaid: null,
-        id: null,
-        cityname: '',
-        remark: '',
-        realityname: '',
-        createtime: null,
-        warehousetype: null,
+        warehousetype: '',
         warehousetypename: null,
         name: ' ',
         code: '',
-        orgid: null,
+        orgid: '',
         administrators: [
 
         ]
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
+        /*       AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'blur' }],
         name: [{ required: true, message: '请填入存放点名称', trigger: 'change' }],
         code: [{ required: true, message: '请填入存放点编码', trigger: 'change' }],
         orgid: [{ required: true, message: '请填入存放点单位', trigger: 'change' }],
-        administratorname: [{ required: true, message: '请选择存放点管理员', trigger: 'blur' }]
+        administratorname: [{ required: true, message: '请选择存放点管理员', trigger: 'blur' }] */
       }
     }
   },
@@ -197,18 +215,18 @@ export default {
   methods: {
     Chooseusr (arr) {
       this.administratorShow = false
-      var users = []
-      var administrators = []
-      arr.forEach(function (item, index) {
-        users[index] = item.realityname
-        administrators.push({administratorid: item.id})
-      })
+      if (arr) {
+        var users = []
+        var administrators = []
+        for (var i in arr) {
+          users[i] = arr[i].realityname
+          administrators.push({administratorid: arr[i].id, administratoridname: arr[i].realityname, phonenum: arr[i].mobile_no})
+        }
+      }
       this.administratoridname = users.join(',')
       this.WriteData.administrators = administrators
       users = null
       administrators = null
-    /*  this.WriteData.manufacturerid = id
-      this.WriteData.manufacturersname = name */
     },
     administratorClose () { this.administratorShow = !this.administratorShow },
     /* changenum (i, value) {
@@ -225,21 +243,25 @@ export default {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
       this.administratoridname = null
-      this.phone = null
     },
     setWriteData (data) {
-      this.WriteData = data
+      this.WriteData = data[0]
+      this.WriteData.administratoridname = this.WriteData.administrators.map(item => item.administrator).join(',')
       this.WriteData.AreaList = [data.provinceid, data.cityid, data.areaid]
       this.setArea(this.WriteData.AreaList, 'csArea')
-      if (parseInt(this.WriteState) === 2) {
-        switch (parseInt(this.WriteData.warehousetype)) {
-          case 1:this.WriteData.warehousetypename = '市公司备件库'
+      if (this.WriteState === 2) {
+        switch (this.WriteData.warehousetype) {
+          case 1:
+            this.WriteData.warehousetypename = '市公司备件库'
             break
-          case 2:this.WriteData.warehousetypename = '市公司维修库库'
+          case 2:
+            this.WriteData.warehousetypename = '市公司维修库'
             break
-          case 3:this.WriteData.warehousetypename = '市公司报废库'
+          case 3:
+            this.WriteData.warehousetypename = '市公司报废库'
             break
-          case 4:this.WriteData.warehousetypename = '工作备件库'
+          case 4:
+            this.WriteData.warehousetypename = '工作备件库'
             break
         }
       }
@@ -250,12 +272,16 @@ export default {
       this.$emit('fatherClose')
     },
     SubWrite () {
-      var reg = /,+/
-      this.phone = this.phonenum.split(reg)
-      for (var i in this.WriteData.administrators) {
-        if (this.phone[i]) {
-          this.WriteData.administrators[i].phonenum = this.phone[i]
-        }
+    /*  this.WriteData.warehousetype = this.WriteData.warehousetype.toString() */
+      switch (this.WriteData.warehousetype) {
+        case 1:this.WriteData.warehousetypename = '市公司备件库'
+          break
+        case 2:this.WriteData.warehousetypename = '市公司维修库库'
+          break
+        case 3:this.WriteData.warehousetypename = '市公司报废库'
+          break
+        case 4:this.WriteData.warehousetypename = '工作备件库'
+          break
       }
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
@@ -263,10 +289,9 @@ export default {
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
+          console.log(1)
           this.Loading = true
           this.$axios.post(Addwarehouse, this.WriteData).then(res => {
             this.Loading = false

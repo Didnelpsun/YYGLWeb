@@ -37,25 +37,44 @@
             <!--站点编码-->
             <tr class="el-table__row">
               <td><div class="cell">站点编码</div></td>
-              <td><div class="cell">{{WriteData.resourcecode}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState !== 2 && isTask === 0" @click="isShow = true">
+                  <el-input v-model="WriteData.resourcecode" readonly placeholder="请选择"></el-input>
+                </div>
+                <div v-else>
+                  {{WriteData.resourcecode}}
+                </div>
+              </div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--站点名称-->
             <tr class="el-table__row">
               <td><div class="cell">站点名称</div></td>
-              <td><div class="cell">{{WriteData.resourcename}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState !== 2 && isTask === 0" @click="isShow = true">
+                  <el-input v-model="WriteData.resourcename" readonly placeholder="请选择"></el-input>
+                </div>
+                <div v-else>
+                  {{WriteData.resourcename}}
+                </div>
+              </div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--设备类型-->
+            <!--资源类型-->
             <tr class="el-table__row">
               <td><div class="cell">资源类型</div></td>
-              <td><div class="cell">{{WriteData.equipmenttypename}}</div></td>
+              <td><div class="cell">
+                <div v-if="WriteState == 0 && isTask === 0">开关电源</div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
+              </td>
               <td><div class="cell"></div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--资源厂家-->
@@ -134,7 +153,7 @@
             </tr>
             <!--数量-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>数量</div></td>
+              <td><div class="cell">数量</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="number">
                   <el-input v-model="WriteData.number"></el-input>
@@ -291,18 +310,23 @@
     </div>
 
     <div class="center">
-      <el-button v-show="WriteState !==2" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
+      <el-button v-show="WriteState !==2 && isTask === 1" @click="SubWrite(1)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交审核</el-button>
       <el-button v-show="WriteState !==2" @click="SubWrite(0)" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
     </div>
+    <el-dialog top="1%" :visible.sync="isShow" title="选择站点" width="80%" :before-close="DetailhandleClose">
+      <ResourceList :resourcetype="2" @selectResource="selectResource"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetSwitchingPowerSupplyInfo, GetSwitchingPowerSupplyTaskEquipmentInfo, AddSwitchingPowerSupplyTaskEquipment, EditSwitchingPowerSupplyTaskEquipment} from 'api/SurveyManagement'
+import {GetSwitchingPowerSupplyInfo, GetSwitchingPowerSupplyTaskEquipmentInfo, AddSwitchingPowerSupply, UpdateSwitchingPowerSupply,
+  AddSwitchingPowerSupplyTaskEquipment, EditSwitchingPowerSupplyTaskEquipment} from 'api/SurveyManagement'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
+import ResourceList from 'base/Resource/ResourceList'
 
 export default {
   name: 'SwitchingPowerSupplyDetail',
@@ -324,6 +348,7 @@ export default {
   data () {
     return {
       Loading: false,
+      isShow: false,
       ImgList1: [],
       ImgList2: [],
       WriteData: {
@@ -392,6 +417,7 @@ export default {
           this.DicList.powersupplytype = data.filter(i => { return i.type === '开关电源供电类型' })
           this.DicList.unit = data.filter(i => { return i.type === '设备单位' })
           this.DicList.propertyrightunit = data.filter(i => { return i.type === '设备产权单位' })
+        } else {
           this.$message.error(res.msg)
         }
       }).catch(err => {
@@ -418,10 +444,58 @@ export default {
       }
     },
     SubWrite (state) {
-      if (this.WriteState === 0) this.SubAdd(state)
-      if (this.WriteState === 1) this.SubEdit(state)
+      if (this.isTask) {
+        if (this.WriteState === 0) this.SubTaskAdd(state)
+        if (this.WriteState === 1) this.SubTaskEdit(state)
+      } else {
+        if (this.WriteState === 0) this.SubAdd()
+        if (this.WriteState === 1) this.SubEdit()
+      }
     },
-    SubAdd (state) {
+    SubAdd () {
+      if (this.validImgList()) return
+      this.$refs.WriteForm.validate((vali, msg) => {
+        if (!vali) {
+          return this.$message.error('请补全信息！')
+        } else {
+          this.Loading = true
+          this.$axios.post(AddSwitchingPowerSupply, this.WriteData).then(res => {
+            this.Loading = false
+            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            this.$message.success('添加成功!')
+            this.$emit('fatheretMore')
+            this.WriteClose()
+          }).catch(err => {
+            this.Loading = false
+            console.log(err)
+          })
+        }
+      })
+    },
+    SubEdit () {
+      if (this.validImgList()) return
+      this.$refs.WriteForm.validate(vali => {
+        if (!vali) {
+          this.$message.error('请补全信息！')
+        } else {
+          this.Loading = true
+          this.$axios.put(UpdateSwitchingPowerSupply, this.WriteData).then(res => {
+            this.Loading = false
+            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode === '200') {
+              this.$message.success('编辑成功!')
+              this.$emit('fatheretMore')
+              this.WriteClose()
+            } else {
+              this.$message.error(res.errorMessage)
+            }
+          }).catch(() => {
+            this.Loading = false
+          })
+        }
+      })
+    },
+    SubTaskAdd (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
@@ -445,7 +519,7 @@ export default {
         }
       })
     },
-    SubEdit (state) {
+    SubTaskEdit (state) {
       if (this.validImgList()) return
       this.$refs.WriteForm.validate(vali => {
         if (!vali) {
@@ -482,6 +556,13 @@ export default {
       if (list === null) return
       this.ImgList1 = list.filter(i => { return i.field_name === 'manufacturer' })
       this.ImgList2 = list.filter(i => { return i.field_name === 'models' })
+    },
+    DetailhandleClose () { this.isShow = !this.isShow },
+    selectResource (name, id, code) {
+      this.isShow = false
+      this.WriteData.resource_id = id
+      this.WriteData.resourcecode = code
+      this.WriteData.resourcename = name
     }
   },
   computed: {
@@ -493,7 +574,8 @@ export default {
     ImgList (val) {
       this.WriteData.imglist = val
     }
-  }
+  },
+  components: {ResourceList}
 }
 </script>
 

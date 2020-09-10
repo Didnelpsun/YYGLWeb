@@ -49,7 +49,7 @@
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
               <el-button @click="downloadQuery" type="success" icon="el-icon-download">导出</el-button>
-              <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
+              <!--<el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>-->
             </div>
           </el-col>
         </el-row>
@@ -210,7 +210,7 @@ export default {
     },
     handleWrite (state, row) {
       this.WriteState = state
-      this.DeviceID = row.id
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
     }
 

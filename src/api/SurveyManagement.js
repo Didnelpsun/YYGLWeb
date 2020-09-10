@@ -3,6 +3,7 @@ import {reqURL} from './api'
 
 export const GetEqipmentList = `${reqURL}/ZYGL/Equipment/GetEqipmentList` // 根据站点id获取设备列表
 export const GetEnergyTaskList = `${reqURL}/ZYGL/Task/GetEnergyTaskList` // 获取能源任务列表
+export const GetResourcesTaskList = `${reqURL}/ZYGL/Task/GetResourcesTaskList` // 获取资源任务列表
 export const AddTask = `${reqURL}/ZYGL/Task/AddTask` // 能源任务新增
 export const GetTaskEquipmentList = `${reqURL}/ZYGL/TaskEquipment/GetTaskEquipmentList` // 查看任务设备列表
 export const GetTaskResourceList = `${reqURL}/ZYGL/TaskResource/GetTaskResourceList` // 获取能源任务列表
@@ -11,7 +12,8 @@ export const GetsubmitEquipmentaudit = `${reqURL}/ZYGL/ZY/GetsubmitEquipmentaudi
 export const TaskAudit = `${reqURL}/ZYGL/Task/TaskAudit` // 能源审核
 export const TaskEquipment = `${reqURL}/ZYGL/Task/TaskEquipment` // 添加任务-选择添加设备-返回设备所在站点
 export const GetEquipmentInfoList = `${reqURL}/ZYGL/Task/GetEquipmentInfoList` // 根据设备ID获取设备详情
-export const GetEnergyResourecEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetEnergyResourecEquipmentList` // 获取当前站点可添加的设备
+export const GetEnergyResourecEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetEnergyResourecEquipmentList` // 获取当前站点可添加的设备(能源)
+export const GetResourecEquipmentList = `${reqURL}/ZYGL/ResoureEquipment/GetResourecEquipmentList` // 获取当前站点可添加的设备(资源)
 export const GetTaskResourceEquipment = `${reqURL}/ZYGL/ResoureEquipment/GetTaskResourceEquipment` // 添加任务设备选择设备类型判断
 
 // 任务设备
@@ -90,6 +92,8 @@ export const DelInvestigateImgConfiguration = `${reqURL}/KCGL/ImgConfiguration/D
 // 开关电源
 export const GetSwitchingPowerSupplyList = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyList` // 获取开关电源列表
 export const GetSwitchingPowerSupplyInfo = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyInfo` // 获取开关电源详情
+export const AddSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/AddSwitchingPowerSupply` // 新增开关电源
+export const UpdateSwitchingPowerSupply = `${reqURL}/ZYGL/SwitchingPowerSupply/UpdateSwitchingPowerSupply` // 修改开关电源
 export const AddSwitchingPowerSupplyTaskEquipment = `${reqURL}/ZYGL/SwitchingPowerSupply/AddSwitchingPowerSupplyTaskEquipment` // 新增开关电源任务设备
 export const EditSwitchingPowerSupplyTaskEquipment = `${reqURL}/ZYGL/SwitchingPowerSupply/EditSwitchingPowerSupplyTaskEquipment` // 修改开关电源任务设备
 export const GetSwitchingPowerSupplyTaskEquipmentInfo = `${reqURL}/ZYGL/SwitchingPowerSupply/GetSwitchingPowerSupplyTaskEquipmentInfo` // 获取开关电源设备任务详情
@@ -148,6 +152,8 @@ export const GetComputerRoomAirConditioningExcel = `${reqURL}/ZYGL/ComputerRoomA
 // 整流模块
 export const GetRectifierModuleInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleInfo` // 获取整流模块详情
 export const GetRectifierModuleList = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleList` // 获取整流模块列表
+export const AddRectifierModule = `${reqURL}/ZYGL/RectifierModule/AddRectifierModule` // 新增整流模块
+export const UpdateRectifierModule = `${reqURL}/ZYGL/RectifierModule/UpdateRectifierModule` // 修改整流模块
 export const AddRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/AddRectifierModuleTaskEquipment` // 创建整流模块设备任务
 export const EditRectifierModuleTaskEquipment = `${reqURL}/ZYGL/RectifierModule/EditRectifierModuleTaskEquipment` // 修改整流模块任务信息
 export const GetRectifierModuleTaskEquipmentInfo = `${reqURL}/ZYGL/RectifierModule/GetRectifierModuleTaskEquipmentInfo` // 获取整流模块任务详情
@@ -156,6 +162,8 @@ export const GetRectifierModuleExcel = `${reqURL}/ZYGL/RectifierModule/GetRectif
 // 蓄电池
 export const GetStorageBatteryInfo = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryInfo` // 获取蓄电池详情
 export const GetStorageBatteryList = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryList` // 获取蓄电池列表
+export const AddStorageBattery = `${reqURL}/ZYGL/StorageBattery/AddStorageBattery` // 新增蓄电池
+export const UpdateStorageBattery = `${reqURL}/ZYGL/StorageBattery/UpdateStorageBattery` // 修改蓄电池
 export const AddStorageBatteryTaskEquipment = `${reqURL}/ZYGL/StorageBattery/AddStorageBatteryTaskEquipment` // 创建蓄电池设备任务
 export const EditStorageBatteryTaskEquipment = `${reqURL}/ZYGL/StorageBattery/EditStorageBatteryTaskEquipment` // 修改蓄电池任务信息
 export const GetStorageBatteryTaskEquipmentInfo = `${reqURL}/ZYGL/StorageBattery/GetStorageBatteryTaskEquipmentInfo` // 获取蓄电池任务详情
@@ -164,15 +172,19 @@ export const GetStorageBatteryExcel = `${reqURL}/ZYGL/StorageBattery/GetStorageB
 // 动力及环境监测单元
 export const GetPowerAndEnvironmentInfo = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentInfo` // 获取动力及环境监测单元详情
 export const GetPowerAndEnvironmentList = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentList` // 获取动力及环境监测单元列表
+export const AddPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/AddPowerAndEnvironment` // 新增动力及环境监测单元
+export const EditPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/EditPowerAndEnvironment` // 修改动力及环境监测单元
 export const AddTaskEquipmentPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/AddTaskEquipmentPowerAndEnvironment` // 创建动力及环境监测单元设备任务
 export const EditTaskEquipmentPowerAndEnvironment = `${reqURL}/ZYGL/PowerAndEnvironment/EditTaskEquipmentPowerAndEnvironment` // 修改动力及环境监测单元任务信息
 export const GetTaskEquipmentPowerAndEnvironmentInfo = `${reqURL}/ZYGL/PowerAndEnvironment/GetTaskEquipmentPowerAndEnvironmentInfo` // 获取动力及环境监测单元任务详情
 export const GetPowerAndEnvironmentExcel = `${reqURL}/ZYGL/PowerAndEnvironment/GetPowerAndEnvironmentExcel` // 动力及环境监测单元导出
 
 // 通讯与位置终端
-export const GetCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationInfo` // 获取动力及环境监测单元详情
-export const GetCommunicationAndLocationList = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationList` // 获取动力及环境监测单元列表
-export const AddTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/AddTaskEquipmentCommunicationAndLocation` // 创建动力及环境监测单元设备任务
-export const EditTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/EditTaskEquipmentCommunicationAndLocation` // 修改动力及环境监测单元任务信息
-export const GetTaskEquipmentCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetTaskEquipmentCommunicationAndLocationInfo` // 获取动力及环境监测单元任务详情
-export const GetCommunicationAndLocationExcel = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationExcel` // 动力及环境监测单元导出
+export const GetCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationInfo` // 获取通讯与位置终端详情
+export const GetCommunicationAndLocationList = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationList` // 获取通讯与位置终端列表
+export const AddCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/AddCommunicationAndLocation` // 新增通讯与位置终端
+export const EditCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/EditCommunicationAndLocation` // 修改通讯与位置终端
+export const AddTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/AddTaskEquipmentCommunicationAndLocation` // 创建通讯与位置终端设备任务
+export const EditTaskEquipmentCommunicationAndLocation = `${reqURL}/ZYGL/CommunicationAndLocation/EditTaskEquipmentCommunicationAndLocation` // 修改通讯与位置终端任务信息
+export const GetTaskEquipmentCommunicationAndLocationInfo = `${reqURL}/ZYGL/CommunicationAndLocation/GetTaskEquipmentCommunicationAndLocationInfo` // 获取通讯与位置终端任务详情
+export const GetCommunicationAndLocationExcel = `${reqURL}/ZYGL/CommunicationAndLocation/GetCommunicationAndLocationExcel` // 通讯与位置终端导出

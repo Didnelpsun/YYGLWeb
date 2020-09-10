@@ -54,10 +54,10 @@
         <el-table-column prop="areaname" label="区域"></el-table-column>
         <el-table-column prop="resourcename" label="站点名称"></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码"></el-table-column>
-        <el-table-column prop="hiddendangertypename" label="隐患类型"></el-table-column>
-        <el-table-column prop="maintainproject" label="维护项目"></el-table-column>
-        <el-table-column prop="describe" label="问题描述" width=""></el-table-column>
-        <el-table-column prop="treatment" label="处理情况" width=""></el-table-column>
+        <el-table-column prop="hiddendangertype" label="隐患类型"></el-table-column>
+        <el-table-column prop="hiddendangerlevel" label="隐患级别"></el-table-column>
+        <el-table-column prop="hiddendangerdescribe" label="隐患描述" width=""></el-table-column>
+        <el-table-column prop="handlingsuggestions" label="处理建议" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column label="操作" width="50">
@@ -76,7 +76,7 @@
     </div>
 
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加上站维护' : WriteState === 1 ? '编辑上站维护' : '上站维护详情'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加隐患' : WriteState === 1 ? '编辑隐患' : '隐患详情'"></layuiTitle>
 
       <!--<Details :WriteState="WriteState" :DicList="DicList" @fatherOpenImgBox="OpenImgBox"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>-->
@@ -144,7 +144,7 @@
                 <tr class="el-table__row">
                   <td><div class="cell">隐患类型</div></td>
                   <td><div class="cell">
-                    <div v-show="WriteState == 2">{{WriteData.hiddendangertypename}}</div>
+                    <div v-show="WriteState == 2">{{WriteData.hiddendangertype}}</div>
                     <div v-show="WriteState !== 2">
                       <el-input v-model="WriteData.hiddendangertype"></el-input>
                     </div></div>
@@ -153,41 +153,41 @@
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--维护项目-->
+                <!--隐患级别-->
                 <tr class="el-table__row">
-                  <td><div class="cell">维护项目</div></td>
+                  <td><div class="cell">隐患级别</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="maintainproject">
-                      <el-input v-model="WriteData.maintainproject"></el-input>
+                    <el-form-item class="form-item" prop="hiddendangerlevel">
+                      <el-input v-model="WriteData.hiddendangerlevel"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.maintainproject}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerlevel}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--问题描述-->
+                <!--隐患描述-->
                 <tr class="el-table__row">
-                  <td><div class="cell">问题描述</div></td>
+                  <td><div class="cell">隐患描述</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="describe">
-                      <el-input v-model="WriteData.describe"></el-input>
+                    <el-form-item class="form-item" prop="hiddendangerdescribe">
+                      <el-input v-model="WriteData.hiddendangerdescribe"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.describe}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.hiddendangerdescribe}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
                 </tr>
-                <!--处理情况-->
+                <!--处理建议-->
                 <tr class="el-table__row">
-                  <td><div class="cell">处理情况</div></td>
+                  <td><div class="cell">处理建议</div></td>
                   <td v-show="WriteState !== 2"><div class="cell">
-                    <el-form-item class="form-item" prop="treatment">
-                      <el-input v-model="WriteData.treatment"></el-input>
+                    <el-form-item class="form-item" prop="handlingsuggestions">
+                      <el-input v-model="WriteData.handlingsuggestions"></el-input>
                     </el-form-item>
                   </div></td>
-                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.treatment}}</div></td>
+                  <td v-if="WriteState == 2"><div class="cell">{{WriteData.handlingsuggestions}}</div></td>
                   <td><div class="cell"></div></td>
                   <!-- <td><div class="cell"></div></td> -->
                   <td><div class="cell"></div></td>
@@ -225,13 +225,13 @@
 
 <script>
 import {DictionaryInfoList} from 'api/api'
-import {GetMaintainList, GetMaintainInfo, GetMaintainExcel} from 'api/SurveyManagement'
+import {GetHiddenDangerList, GetHiddenDangerInfo, GetHiddenDangerExcel} from 'api/SurveyManagement'
 import {exportMethod} from 'api/YDSZ'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 
 export default {
-  name: 'Maintain',
+  name: 'HiddenDanger',
   mixins: [GlobalRes],
   data () {
     return {
@@ -254,10 +254,10 @@ export default {
       WriteData: {
         resourcename: '',
         resourcecode: '',
-        hiddendangertypename: '',
-        maintainproject: '',
-        describe: '',
-        treatment: '',
+        hiddendangertype: '',
+        hiddendangerlevel: '',
+        hiddendangerdescribe: '',
+        handlingsuggestions: '',
         createtime: '',
         create: ''
       },
@@ -280,10 +280,11 @@ export default {
     },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetMaintainList, {
+      this.$axios.get(GetHiddenDangerList, {
         params: {
           PageIndex: 1,
-          PageSize: this.pageSize
+          PageSize: this.pageSize,
+          resourcetype: 2
         }
       }).then(res => {
         this.Loading = false
@@ -295,9 +296,10 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetMaintainList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetHiddenDangerList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
-        PageSize: this.pageSize
+        PageSize: this.pageSize,
+        resourcetype: 2
       })}).then(res => {
         this.Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -325,7 +327,7 @@ export default {
       this.showWrite = true
       if (state) {
         this.Loading = true
-        this.$axios.get(GetMaintainInfo, {
+        this.$axios.get(GetHiddenDangerInfo, {
           params: {
             Id: row.id
           }
@@ -348,8 +350,8 @@ export default {
       }).then(() => {
         let myObj = {
           method: 'get',
-          url: GetMaintainExcel,
-          fileName: '上站维护台账',
+          url: GetHiddenDangerExcel,
+          fileName: '隐患台账',
           data: this.Query
         }
         exportMethod(myObj)

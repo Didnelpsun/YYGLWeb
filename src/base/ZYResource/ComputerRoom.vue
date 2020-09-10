@@ -71,9 +71,7 @@
               <td><div class="cell">资源类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 0 && isTask === 0">机房</div>
-                <div v-else>
-                  <el-input v-model="WriteData.equipmenttypename"></el-input>
-                </div></div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
@@ -538,7 +536,7 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['设备单位', '机房设备厂家', '机房设备型号', '设备产权单位', '机房设备类型', '机房设备共享单位', '机房设备原产权单位']
+      let arr = ['设备单位', '机房设备厂家', '机房设备型号', '设备产权单位', '机房设备类型', '设备共享单位']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.$set(this.DicList, 'propertyrightunit', res.data.filter(i => { return i.type === '设备产权单位' }))
@@ -546,8 +544,8 @@ export default {
           this.DicList.models = res.data.filter(i => { return i.type === '机房设备型号' })
           this.DicList.unit = res.data.filter(i => { return i.type === '设备单位' })
           this.DicList.computerroomtype = res.data.filter(i => { return i.type === '机房设备类型' })
-          this.DicList.sharedunit = res.data.filter(i => { return i.type === '机房设备共享单位' })
-          this.DicList.rawpropertyrightunit = res.data.filter(i => { return i.type === '机房设备原产权单位' })
+          this.DicList.sharedunit = res.data.filter(i => { return i.type === '设备共享单位' })
+          this.DicList.rawpropertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
         } else {
           this.$message.error(res.msg)
         }
@@ -575,7 +573,7 @@ export default {
         this.$emit('fatherOpenImgBox', '资源型号', 'models', this.ImgList2)
       }
       if (val === 3) {
-        this.$emit('fatherOpenImgBox', '经度', 'models', this.ImgList3)
+        this.$emit('fatherOpenImgBox', '经度', 'longitude', this.ImgList3)
       }
     },
     SubWrite (state) {

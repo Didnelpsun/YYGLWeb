@@ -48,8 +48,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
           </div>
         </el-col>
       </el-row>
@@ -197,7 +197,7 @@ export default {
     formatAccessDate (row) { return formatDate(row.accessdate) },
     handleWrite (state, row) {
       this.WriteState = state
-      this.DeviceID = row.id
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
     },
     WriteClose () {

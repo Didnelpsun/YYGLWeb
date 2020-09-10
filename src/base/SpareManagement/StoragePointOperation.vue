@@ -50,7 +50,7 @@
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.belongtype}}</div></td>
+              <td v-if="WriteState == 2"><div class="cell">{{WriteData.operation}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
@@ -97,10 +97,7 @@ export default {
       WriteData: {
         id: null,
         operation: null,
-        remark: '',
-        realityname: '',
         operationid: null,
-        createtime: null,
         typename: null, // 存放点名称
         code: null, // 存放点编码
         warehouseid: null// 存放点id
@@ -118,9 +115,10 @@ export default {
       this.SpareWarehouseShow = false
     },
     SpareWarehousePicker (name, code, id) {
+      this.SpareWarehouseShow = false
       this.WriteData.typename = name
       this.WriteData.code = code
-      this.WriteData.id = id
+      this.WriteData.warehouseid = id
     },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
@@ -130,9 +128,6 @@ export default {
       this.WriteData = data
       this.WriteData.AreaList = [ data.provinceid, data.cityid ]
       this.setArea(this.WriteData.AreaList, 'csArea')
-      if (parseInt(this.WriteState) === 2) {
-        this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'
-      }
     },
     WriteClose () {
       this.ResetWrite()
@@ -167,7 +162,7 @@ export default {
       if (this.WriteState === 1) this.SubEdit()
     },
     SubAdd () {
-      /* this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
           if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
@@ -182,10 +177,10 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     },
     SubEdit () {
-      /*     this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
           if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
@@ -201,7 +196,7 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     }
   },
   components: {

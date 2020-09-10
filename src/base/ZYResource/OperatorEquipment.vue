@@ -71,9 +71,7 @@
               <td><div class="cell">资源类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 0 && isTask === 0">网络设备</div>
-                <div v-else>
-                  <el-input v-model="WriteData.equipmenttypename"></el-input>
-                </div></div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
@@ -216,7 +214,7 @@
               <td><div class="cell">网络类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="networktype">
-                  <el-select v-model="WriteData.networktype">
+                  <el-select v-model="WriteData.networktype" multiple>
                     <el-option label="请选择" :value="null"></el-option>
                     <el-option v-for="i in DicList.networktype" :key="i.id" :label="i.text" :value="i.value"></el-option>
                   </el-select>
@@ -355,7 +353,7 @@ export default {
   },
   methods: {
     getDicList () {
-      let arr = ['网络设备类型', '网络设备厂家', '网络设备型号', '设备产权单位', '设备单位']
+      let arr = ['网络设备类型', '网络设备厂家', '网络设备型号', '设备产权单位', '设备单位', '网络类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.$set(this.DicList, 'networkequipmenttype', res.data.filter(i => { return i.type === '网络设备类型' }))
@@ -363,6 +361,7 @@ export default {
           this.DicList.models = res.data.filter(i => { return i.type === '网络设备型号' })
           this.DicList.propertyrightunit = res.data.filter(i => { return i.type === '设备产权单位' })
           this.DicList.unit = res.data.filter(i => { return i.type === '设备单位' })
+          this.DicList.networktype = res.data.filter(i => { return i.type === '网络类型' })
         } else {
           this.$message.error(res.msg)
         }

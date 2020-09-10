@@ -24,6 +24,7 @@ import ImportTemplate from 'components/main/System/ImportTemplate' // 导入模�
 import PageSpecification from 'components/main/System/PageSpecification'
 
 // 站点资源
+import NYTaskManagement from 'components/main/TaskManagement/NYTaskManagement' // 能源任务管理
 import MonitoringSite from 'components/main/Resource/MonitoringSite' // 监控站点
 import SwitchCabinetList from 'components/main/Resource/SwitchCabinetList' // 换电柜
 import ZYResource from 'components/main/Resource/ZYResource' // 资源站点列表
@@ -38,6 +39,7 @@ import Ammeter from '../components/main/Resource/Ammeter' // 电表
 import AnElectricIntroduced from '../components/main/Resource/AnElectricIntroduced' // 电表
 
 // 网络资源
+import ZYTaskManagement from 'components/main/TaskManagement/ZYTaskManagement' // 资源任务管理
 import SwitchingPowerSupply from '../components/main/ZYResource/SwitchingPowerSupply' // 开关电源
 import OperatorEquipment from '../components/main/ZYResource/OperatorEquipment' // 网络设备
 import TheTower from '../components/main/ZYResource/TheTower' // 铁塔
@@ -53,10 +55,11 @@ import CommunicationAndLocation from '../components/main/ZYResource/Communicatio
 import NYEquipmentStatistics from '../components/main/TaskManagement/NYEquipmentStatistics' // 能源资源统计
 import NYTaskStatistics from '../components/main/TaskManagement/NYTaskStatistics' // 能源任务统计
 
-
 // 维护管理
-import HiddenDanger from 'components/main/Uphold/HiddenDanger' // 隐患台账
-import Maintain from 'components/main/Uphold/Maintain' // 上站维护台账
+import NYHiddenDanger from 'components/main/Uphold/NYHiddenDanger' // 能源隐患台账
+import NYMaintain from 'components/main/Uphold/NYMaintain' // 能源上站维护台账
+import ZYHiddenDanger from 'components/main/Uphold/ZYHiddenDanger' // 资源隐患台账
+import ZYMaintain from 'components/main/Uphold/ZYMaintain' // 资源上站维护台账
 
 // 油机调度
 import TaskList from 'components/main/YJGL/TaskList' // 任务列表
@@ -83,7 +86,6 @@ import EquipmentManagement from 'components/main/YDSZ/EquipmentManagement' // �
 import ElectricityMeter from 'components/main/YDSZ/ElectricityMeter' // 电表管理
 
 // 勘察管理
-import NYTaskManagement from 'components/main/TaskManagement/NYTaskManagement' // 任务管理
 import ProjectManagement from 'components/main/SurveyManagement/ProjectManagement' // 项目管理
 import StockStation from 'components/main/SurveyManagement/StockStation' // 存量站
 
@@ -107,7 +109,7 @@ import Inventory from 'components/main/SpareManagement/Inventory' //  盘存任�
 import schedulingRecord from 'components/main/SpareManagement/schedulingRecord' //  调度日志
 import MaintenanceRecord from 'components/main/SpareManagement/MaintenanceRecord' //  调度日志
 import Alsorecord from 'components/main/SpareManagement/Alsorecord' //  调度日志
-
+import ScrapRecord from 'components/main/SpareManagement/ScrapRecord' //  报废记录
 Vue.use(Router)
 
 export default new Router({
@@ -229,41 +231,41 @@ export default new Router({
           name: 'TheTower',
           component: TheTower
         },
-		{// 机房
+        {// 机房
           path: 'ComputerRoom',
           name: 'ComputerRoom',
           component: ComputerRoom
-		},
-		{// 交流配电箱
+        },
+        {// 交流配电箱
           path: 'AcDistriButionBox',
           name: 'AcDistriButionBox',
           component: AcDistriButionBox
-		},
-		{// 机房空调
+        },
+        {// 机房空调
           path: 'ComputerRoomAirConditioning',
           name: 'ComputerRoomAirConditioning',
           component: ComputerRoomAirConditioning
-		},
-		{// 整流模块
+        },
+        {// 整流模块
           path: 'RectifierModule',
           name: 'RectifierModule',
           component: RectifierModule
-		},
-		{// 蓄电池
+        },
+        {// 蓄电池
           path: 'StorageBattery',
           name: 'StorageBattery',
           component: StorageBattery
-		},
-		{// 动力及环境监测单元
+        },
+        {// 动力及环境监测单元
           path: 'PowerAndEnvironment',
           name: 'PowerAndEnvironment',
           component: PowerAndEnvironment
-		},
-		{// 通讯与位置终端
+        },
+        {// 通讯与位置终端
           path: 'CommunicationAndLocation',
           name: 'CommunicationAndLocation',
           component: CommunicationAndLocation
-		},
+        },
         {// 备件类型列表
           path: 'Sparetype',
           name: 'Sparetype',
@@ -333,6 +335,11 @@ export default new Router({
           path: 'Alsorecord',
           name: 'Alsorecord',
           component: Alsorecord
+        },
+        {// 报废记录
+          path: 'ScrapRecord',
+          name: 'ScrapRecord',
+          component: ScrapRecord
         },
         {
           path: 'ZYResource',
@@ -485,14 +492,24 @@ export default new Router({
           component: NYEquipmentStatistics
         },
         {
-          path: 'HiddenDanger',
-          name: 'HiddenDanger',
-          component: HiddenDanger
+          path: 'NYHiddenDanger',
+          name: 'NYHiddenDanger',
+          component: NYHiddenDanger
         },
         {
-          path: 'Maintain',
-          name: 'Maintain',
-          component: Maintain
+          path: 'NYMaintain',
+          name: 'NYMaintain',
+          component: NYMaintain
+        },
+        {
+          path: 'ZYHiddenDanger',
+          name: 'ZYHiddenDanger',
+          component: ZYHiddenDanger
+        },
+        {
+          path: 'ZYMaintain',
+          name: 'ZYMaintain',
+          component: ZYMaintain
         },
         {
           path: 'ImportTemplate',
@@ -503,6 +520,11 @@ export default new Router({
           path: 'NYTaskManagement',
           name: 'NYTaskManagement',
           component: NYTaskManagement
+        },
+        {
+          path: 'ZYTaskManagement',
+          name: 'ZYTaskManagement',
+          component: ZYTaskManagement
         },
         {
           path: 'OilFiredGenerator',

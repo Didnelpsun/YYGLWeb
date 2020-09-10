@@ -129,7 +129,8 @@ export default {
         type: '',
         text: '',
         value: null,
-        sort: null
+        sort: null,
+        createtime: ''
       },
       AddRules: {
         type: [
@@ -160,7 +161,8 @@ export default {
           type: '',
           text: '',
           value: null,
-          sort: null
+          sort: null,
+          createtime: ''
         }
       }
     }
@@ -255,6 +257,7 @@ export default {
           this.AddForm.text = res.data.text
           this.AddForm.type = res.data.type
           this.AddForm.value = res.data.value
+          this.AddForm.createtime = res.data.createtime
         }
       })
     },
@@ -299,13 +302,14 @@ export default {
             } else {
               this.dictionaryBox = false
               this.$message.success('添加成功！')
-              this.Query = {}
+              // this.Query = {}
               this.getTableData1More(this.currentPage)
               this.AddForm = {
                 type: '',
                 text: '',
                 value: null,
-                sort: null
+                sort: null,
+                createtime: ''
               }
             }
           })
@@ -325,13 +329,14 @@ export default {
               this.$message.error(res.msg)
             } else {
               this.$message.success('修改成功！')
-              this.Query = {}
+              // this.Query = {}
               this.dictionaryBox = false
               this.AddForm = {
                 type: '',
                 text: '',
                 value: null,
-                sort: null
+                sort: null,
+                createtime: ''
               }
               this.getTableData1More(this.currentPage)
             }

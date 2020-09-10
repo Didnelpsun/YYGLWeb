@@ -71,9 +71,7 @@
               <td><div class="cell">资源类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 0 && isTask === 0">交流配电箱</div>
-                <div v-else>
-                  <el-input v-model="WriteData.equipmenttypename"></el-input>
-                </div></div>
+                <div v-else>{{WriteData.equipmenttypename}}</div></div>
               </td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
@@ -397,7 +395,7 @@ export default {
       this.WriteData.resource_id = id
       this.WriteData.resourcecode = code
       this.WriteData.resourcename = name
-    },
+    }
   },
   computed: {
     ImgList () {

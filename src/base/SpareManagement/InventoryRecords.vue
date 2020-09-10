@@ -32,10 +32,10 @@
             </colgroup>
             <tbody>
             <tr class="el-table__row">
-              <td><div class="cell">备件</div></td>
+              <td><div class="cell">备件编码</div></td>
               <td v-show="WriteState1 !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="sparepartsid">
-                  <el-input v-model="WriteData.sparepartsid"  placeholder="请扫码备件" clearable></el-input>
+                  <el-input v-model="WriteData.sparepartsid"  placeholder="请扫码备件编码" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState1 == 2"><div class="cell">{{WriteData.sparepartsid}}</div></td>
@@ -97,11 +97,6 @@
             <tr class="el-table__row" v-show="WriteState1==2">
               <td><div class="cell">权属</div></td>
               <td><div class="cell">{{WriteData.units}}</div></td>
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState1==2">
-              <td><div class="cell">备件编码</div></td>
-              <td><div class="cell"></div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState1==2">

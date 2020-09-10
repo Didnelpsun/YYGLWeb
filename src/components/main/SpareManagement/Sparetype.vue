@@ -77,7 +77,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {AreaList, DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetsparepartsList, GetsparepartsidList, Deletespareparts} from 'api/BJGL'
 import Details from 'base/SpareManagement/Sparetype'
 export default {
   name: 'Sparetype',
@@ -112,8 +112,8 @@ export default {
       },
       Query: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0
+        provinceid: null,
+        cityid: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -167,7 +167,7 @@ export default {
     formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+      this.$axios.get(GetsparepartsList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -182,7 +182,7 @@ export default {
       console.log(this.Query.AreaList)
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetsparepartsList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -203,7 +203,7 @@ export default {
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
+        this.$axios.get(GetsparepartsidList, {
           params: {
             Id: row.id
           }
@@ -220,7 +220,7 @@ export default {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareTyp, {
+        this.$axios.delete(Deletespareparts, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {

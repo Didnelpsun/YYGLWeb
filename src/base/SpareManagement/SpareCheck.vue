@@ -35,7 +35,7 @@
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
                 <div @click="Show=true">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择存放点名"></el-input>
+                  <el-input v-model="WriteData.operation" readonly placeholder="请选择存放点名"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -53,19 +53,20 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件类型</div></td>
+              <td><div class="cell"><i class="must">*</i>备件类型</div></td>
               <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.sparepartstypeid" clearable placeholder="请扫备件类型"></el-input>
+                <div @click="sparetypeShow=true">
+                  <el-input v-model="WriteData.sparepartstype" readonly placeholder="请选择备件类型"></el-input>
                 </div></div>
               </td>
+              <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">厂家</div></td>
+              <td><div class="cell"><i class="must">*</i>备件厂家</div></td>
               <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.manufacturerid" clearable placeholder="请扫厂家"></el-input>
+                <div  @click="SparemanufacturerShow=true">
+                  <el-input v-model="WriteData.manufacturer" readonly placeholder="请选择厂家"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -76,10 +77,10 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件型号</div></td>
+              <td><div class="cell"><i class="must">*</i>备件型号</div></td>
               <td><div class="cell">
-                <div>
-                  <el-input v-model="WriteData.sparemodelid" clearable placeholder="请扫备件型号"></el-input>
+                <div  @click="sparemodelShow=true">
+                  <el-input v-model="WriteData.sparemodel" readonly placeholder="请选择备件型号"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -101,12 +102,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">存放点类型</div></td>
-              <td><div class="cell">
-                <el-form-item  class="form-item" prop="depotstype">
-                  <el-input v-model="WriteData.depotstype" clearable placeholder="请扫存放点类型"></el-input>
-                </el-form-item>
-              </div>
-              </td>
+              <td><div class="cell">{{WriteData.depotstype}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -143,7 +139,7 @@
               <td><div class="cell">备注</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="reamrk">
-                  <el-input v-model="WriteData.reamrk"  clearable placeholder="请扫备注"></el-input>
+                  <el-input v-model="WriteData.reamrk"  clearable placeholder="请填入备注"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -168,34 +164,46 @@
       <el-button  @click="SubAdd()" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
-    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
+      <SelectUserOperation :check="check"  @SelectUserOperation="SelectUserOperation"/>
     </el-dialog>
+    <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selectsparetype :provinceid="WriteData.provinceid"   :cityid="WriteData.cityid" @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
+    <el-dialog top="1%" :visible.sync="SparemanufacturerShow" title="选择备件厂家" width="80%" :before-close="manufacturerClose">
+      <Selectmanufacturer :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selmanufacturerid="Selmanufacturerid"/>
+    </el-dialog>
+    <div v-if="sparemodelShow">
+      <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
+        <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
-import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
+import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
+import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
+import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
+import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 
 import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
 export default {
   name: 'SpareCheck',
   mixins: [GlobalRes],
-  props: {
-
-  },
   data () {
     return {
+      sparetypeShow: false,
+      sparemodelShow: false,
+      SparemanufacturerShow: false,
+      check: 1,
       Show: false,
       Loading: false,
       WriteData: {
         id: null,
         code: null,
-        sparepartstypeid: null,
-        manufacturerid: null,
         units: null,
-        sparemodelid: null,
         cityname: null,
         areaname: null,
         depotsid: null,
@@ -207,7 +215,13 @@ export default {
         realityname: '',
         createtime: null,
         typename: '', // 存放点名称
-        warehouseid: ''// 存放点di
+        warehouseid: '', // 存放点di
+        sparepartstype: null, // 备件类型名称
+        sparepartstypeid: '', // 备件类型id
+        manufacturerid: '', // 备件厂家id
+        sparemodel: '', // 备件型号名称
+        sparemodelid: '', // 备件型号id
+        manufacturer: '' // 备件厂家名称
       },
       Rules: {
         Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }]
@@ -228,11 +242,33 @@ export default {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
-    SpareWarehousePicker (name, code, id) {
-      this.WriteData.typename = name
-      this.WriteData.warehouseid = id
+    SelectUserOperation (operation, name, id) {
+      this.WriteData.operation = name
+      this.WriteData.operationid = id
     },
-    SpareWarehousClose () {
+    Selsparetypeid (name, id) {
+      this.sparetypeShow = false
+      this.WriteData.sparepartstypeid = id
+      this.WriteData.sparepartstype = name
+      this.WriteData.sparemodelid = null
+      this.WriteData.sparemodel = null
+    },
+    Selmanufacturerid (name, id) {
+      this.SparemanufacturerShow = false
+      this.WriteData.manufacturerid = id
+      this.WriteData.manufacturer = name
+      this.WriteData.sparemodelid = null
+      this.WriteData.sparemodel = null
+    },
+    SelSpareconModelid (name, id) {
+      this.sparemodelShow = false
+      this.WriteData.sparemodelid = id
+      this.WriteData.sparemodel = name
+    },
+    sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
+    manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
+    sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    SelectUserOperationClose () {
       this.Show = false
     },
     handleSubmit (val) {
@@ -277,7 +313,10 @@ export default {
     }
   },
   components: {
-    SpareWarehousePicker
+    SelectUserOperation,
+    Selectsparetype,
+    Selectmanufacturer,
+    SelectSpareconMode
   }
 }
 </script>

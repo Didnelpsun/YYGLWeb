@@ -234,9 +234,9 @@
                   </tr>
                   <!--站点编码-->
                   <tr class="el-table__row">
-                    <td><div class="cell">站点编码</div></td>
+                    <td><div class="cell"><i class="must">*</i>站点编码</div></td>
                     <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
-                      <el-form-item class="form-item">
+                      <el-form-item class="form-item" prop="code">
                         <el-input v-model="siteInfo.code"></el-input>
                       </el-form-item>
                     </div></td>
@@ -247,9 +247,9 @@
                   </tr>
                   <!--站点名称-->
                   <tr class="el-table__row">
-                    <td><div class="cell">站点名称</div></td>
+                    <td><div class="cell"><i class="must">*</i>站点名称</div></td>
                     <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
-                      <el-form-item class="form-item">
+                      <el-form-item class="form-item" prop="name">
                         <el-input v-model="siteInfo.name"></el-input>
                       </el-form-item>
                     </div></td>
@@ -289,6 +289,199 @@
                   <tr class="el-table__row" v-if="siteInfo.classify == 1">
                     <td><div class="cell">纬度</div></td>
                     <td @click="OpenMap(0)"><div class="cell">{{siteInfo.latitude}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--生命周期-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">生命周期</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.lifecycle"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.lifecycle}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--产权性质-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">产权性质</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.propertyrights"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.propertyrights}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--原产权单位-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">原产权单位</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-select v-model="siteInfo.rawpropertyrightunit" size="small">
+                        <el-option label="请选择" :value="null"></el-option>
+                        <el-option v-for="i in DicList.rawpropertyrightunit" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                      </el-select>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.rawpropertyrightunitname}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--机房类型-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">机房类型</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-select v-model="siteInfo.roomtype" size="small">
+                        <el-option label="请选择" :value="null"></el-option>
+                        <el-option v-for="i in DicList.roomtype" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                      </el-select>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.roomtypesname}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--建站模式-->
+                  <tr class="el-table__row">
+                    <td><div class="cell"><i class="must">*</i>建站模式</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item" prop="websitebuildingmode">
+                        <el-select v-model="siteInfo.websitebuildingmode" size="small">
+                          <el-option label="请选择" :value="null"></el-option>
+                          <el-option v-for="i in DicList.websitebuildingmode" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.websitebuildingmodename}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--机房位置-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">机房位置</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.computerroomposition"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.computerroomposition}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--是否拉远站-->
+                  <tr class="el-table__row">
+                    <td><div class="cell"><i class="must">*</i>是否拉远站</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item" prop="outstanding">
+                        <el-select v-model="siteInfo.outstanding" size="small">
+                          <el-option label="是" :value="true"></el-option>
+                          <el-option label="否" :value="false"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.outstanding ? '是' : '否'}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--站址地形-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">站址地形</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.siteterrain"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.siteterrain}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--覆盖场景-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">覆盖场景</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.coversthescenario"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.coversthescenario}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--合同签订主体-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">合同签订主体</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.contractsigning"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.contractsigning}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--移交批次-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">移交批次</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.handoverbatch"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.handoverbatch}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--是否共享-->
+                  <tr class="el-table__row">
+                    <td><div class="cell"><i class="must">*</i>是否共享</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item" prop="shared">
+                        <el-select v-model="siteInfo.shared" size="small">
+                          <el-option label="是" :value="true"></el-option>
+                          <el-option label="否" :value="false"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.shared ? '是' : '否'}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--共享单位-->
+                  <tr class="el-table__row" v-if="siteInfo.shared">
+                    <td><div class="cell">共享单位</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.sharedunit"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.sharedunit}}</div></td>
+                    <td><div class="cell"></div></td>
+                    <!--<td><div class="cell"></div></td>-->
+                    <td><div class="cell"></div></td>
+                  </tr>
+                  <!--资产识别码-->
+                  <tr class="el-table__row">
+                    <td><div class="cell">资产识别码</div></td>
+                    <td v-show="showType == 2 && siteInfo.censusstatename == '待执行'"><div class="cell">
+                      <el-form-item class="form-item">
+                        <el-input v-model="siteInfo.identificationcode"></el-input>
+                      </el-form-item>
+                    </div></td>
+                    <td v-if="showType == 1 || siteInfo.censusstatename == '待审核'"><div class="cell">{{siteInfo.identificationcode}}</div></td>
                     <td><div class="cell"></div></td>
                     <!--<td><div class="cell"></div></td>-->
                     <td><div class="cell"></div></td>
@@ -420,16 +613,18 @@
     </el-dialog>
 
     <el-dialog top="1%" append-to-body :visible.sync="showDialog" width="80%" :title="dialogTitle" :close-on-click-modal="false" :before-close="AddhandleClose">
-      <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="1" :resource_id="currentSiteId" @chooseDevice="chooseSite"/>
-      <deviceList v-if="deviceChoose" :resourcetype="1" :equipment_id="currentEquipmentId" @chooseDevice="chooseDevice"></deviceList>
-      <TaskChargingPile ref="TaskChargingPile" v-if="showChargingPile" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChargingPile>
-      <TaskSwitchCabinet ref="TaskSwitchCabinet" v-if="showSwitchCabinet" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskSwitchCabinet>
-      <TaskReservepover ref="TaskReservepover" v-if="showReservepover" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskReservepover>
-      <TaskChangeBattery ref="TaskChangeBattery" v-if="showChangeBattery" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskChangeBattery>
-      <TaskOilFiredGenerator ref="TaskOilFiredGenerator" v-if="showOilFiredGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskOilFiredGenerator>
-      <TaskBatteryGenerator ref="TaskBatteryGenerator" v-if="showBatteryGenerator" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TaskBatteryGenerator>
-      <AnElectricIntroduced ref="AnElectricIntroduced" v-if="showAnElectricIntroduced" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AnElectricIntroduced>
-      <Ammeter ref="Ammeter" v-if="showAmmeter" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
+      <ResourceList v-if="siteChoose" :isSite="1" :resourcetype="2" :resource_id="currentSiteId" @chooseDevice="chooseSite"/>
+      <deviceList v-if="deviceChoose" :resourcetype="2" :equipment_id="currentEquipmentId" @chooseDevice="chooseDevice"></deviceList>
+      <OperatorEquipment ref="OperatorEquipment" :isTask="1" v-if="showOperatorEquipment" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></OperatorEquipment>
+      <TheTower ref="TheTower" v-if="showTheTower" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></TheTower>
+      <ComputerRoom ref="ComputerRoom" v-if="showComputerRoom" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></ComputerRoom>
+      <AcDistriButionBox ref="AcDistriButionBox" v-if="showAcDistriButionBox" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></AcDistriButionBox>
+      <ComputerRoomAirConditioning ref="ComputerRoomAirConditioning" v-if="showComputerRoomAirConditioning" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></ComputerRoomAirConditioning>
+      <SwitchingPowerSupply ref="SwitchingPowerSupply" v-if="showSwitchingPowerSupply" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></SwitchingPowerSupply>
+      <StorageBattery ref="StorageBattery" v-if="showStorageBattery" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></StorageBattery>
+      <PowerAndEnvironment ref="PowerAndEnvironment" v-if="showPowerAndEnvironment" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></PowerAndEnvironment>
+      <CommunicationAndLocation ref="CommunicationAndLocation" v-if="showCommunicationAndLocation" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></CommunicationAndLocation>
+      <RectifierModule ref="RectifierModule" v-if="showRectifierModule" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></RectifierModule>
       <HiddenDanger ref="HiddenDanger" v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
       <Maintain ref="Maintain" v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
     </el-dialog>
@@ -444,18 +639,20 @@ import {DictionaryInfoList} from 'api/api'
 import ResourceList from 'base/Resource/ResourceList'
 import deviceList from 'base/Resource/deviceList'
 import GoogleMap from 'base/GoogleMap'
-import TaskChargingPile from 'base/TaskEquipment/TaskChargingPile'
-import TaskSwitchCabinet from 'base/TaskEquipment/TaskSwitchCabinet'
-import TaskReservepover from 'base/TaskEquipment/TaskReservepover'
-import TaskChangeBattery from 'base/TaskEquipment/TaskChangeBattery'
-import TaskOilFiredGenerator from 'base/TaskEquipment/TaskOilFiredGenerator'
-import TaskBatteryGenerator from 'base/TaskEquipment/TaskBatteryGenerator'
-import AnElectricIntroduced from 'base/TaskEquipment/AnElectricIntroduced'
-import Ammeter from 'base/TaskEquipment/Ammeter'
+import OperatorEquipment from 'base/ZYResource/OperatorEquipment'
+import TheTower from 'base/ZYResource/TheTower'
+import ComputerRoom from 'base/ZYResource/ComputerRoom'
+import AcDistriButionBox from 'base/ZYResource/AcDistriButionBox'
+import ComputerRoomAirConditioning from 'base/ZYResource/ComputerRoomAirConditioning'
+import SwitchingPowerSupply from 'base/ZYResource/SwitchingPowerSupply'
+import StorageBattery from 'base/ZYResource/StorageBattery'
+import PowerAndEnvironment from 'base/ZYResource/PowerAndEnvironment'
+import RectifierModule from 'base/ZYResource/RectifierModule'
+import CommunicationAndLocation from 'base/ZYResource/CommunicationAndLocation'
 import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
-import {GetEnergyTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetMaintainList,
-  UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetEnergyResourecEquipmentList, GetHiddenDangerList,
+import {GetResourcesTaskList, AddTask, GetTaskEquipmentList, GetTaskResourceList, GetMaintainList,
+  UpdateTaskResource, DelTaskEquipment, GetsubmitEquipmentaudit, GetResourecEquipmentList, GetHiddenDangerList,
   TaskAudit, TaskEquipment, GetEquipmentInfoList, GetTaskState, GetTaskResourceEquipment} from 'api/SurveyManagement'
 import {isValidLongitude, isValidLatitude} from 'common/js/validata'
 import {formatDate} from 'common/js/cache'
@@ -491,7 +688,7 @@ export default {
       addData: {
         taskbatch: '',
         completetime: '',
-        resourcetype: 1,
+        resourcetype: 2,
         createtasks: []
       },
       tableList: [], // 任务列表
@@ -510,11 +707,20 @@ export default {
       DeviceTypeList: [],
       result: '', // 任务状态
       siteRules: {
+        code: [
+          { required: true, message: '请填写站点编码', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请填写站点名称', trigger: 'blur' }
+        ],
         outstanding: [
-          { required: true, message: '是否拉远站', trigger: 'change' }
+          { required: true, message: '请选择是否拉远站', trigger: 'change' }
+        ],
+        websitebuildingmode: [
+          { required: true, message: '请选择建站模式', trigger: 'change' }
         ],
         shared: [
-          { required: true, message: '是否共享', trigger: 'change' }
+          { required: true, message: '请选择是否共享', trigger: 'change' }
         ],
         longitude: [
           {required: true, message: '请填写经度', trigger: 'blur'},
@@ -540,14 +746,16 @@ export default {
       siteChoose: false,
       showDialog: false,
       deviceChoose: false,
-      showChargingPile: false, // 充电桩详情
-      showSwitchCabinet: false, // 换电柜详情
-      showReservepover: false, // 备电详情
-      showChangeBattery: false, // 换电池详情
-      showOilFiredGenerator: false, // 燃油发电机详情
-      showBatteryGenerator: false,
-      showAnElectricIntroduced: false, // 外电引入详情
-      showAmmeter: false, // 电表详情
+      showOperatorEquipment: false, // 网络设备
+      showTheTower: false, // 铁塔
+      showComputerRoom: false, // 机房
+      showAcDistriButionBox: false, // 交流配电箱
+      showComputerRoomAirConditioning: false, // 机房空调
+      showSwitchingPowerSupply: false, // 开关电源
+      showStorageBattery: false, // 蓄电池
+      showPowerAndEnvironment: false, // 动力及环境监测单元
+      showCommunicationAndLocation: false, // 通讯与位置终端
+      showRectifierModule: false, // 整流模块
       showHiddenDanger: false, // 隐患详情
       showMaintain: false,
       showTaskDialog: false, // 选择任务设备类型弹框
@@ -577,13 +785,13 @@ export default {
   },
   methods: {
     initDictionariesArray () {
-      let arr = ['任务状态', '设备产权单位', '建站模式', '站点分类']
+      let arr = ['任务状态', '设备产权单位', '建站模式', '站点机房类型', '站点分类']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           this.DicList.classify = res.data.filter(i => {
             return i.type === '站点分类'
           })
-          this.DicList.models = res.data.filter(i => {
+          this.DicList.websitebuildingmode = res.data.filter(i => {
             return i.type === '建站模式'
           })
           this.DicList.states = res.data.filter(i => {
@@ -591,6 +799,12 @@ export default {
           })
           this.DicList.propertyrightunit = res.data.filter(i => {
             return i.type === '设备产权单位'
+          })
+          this.DicList.rawpropertyrightunit = res.data.filter(i => {
+            return i.type === '设备产权单位'
+          })
+          this.DicList.roomtype = res.data.filter(i => {
+            return i.type === '站点机房类型'
           })
         } else {
           this.$message.error(res.msg)
@@ -604,7 +818,7 @@ export default {
     getMore (e) {
       this.table1Loading = true
       this.$set(this.currentPage, 0, e)
-      this.$axios.get(GetEnergyTaskList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetResourcesTaskList, {params: Object.assign({}, this.Query, {
         PageIndex: e,
         PageSize: this.pageSize[0]
       })}).then(res => {
@@ -620,7 +834,7 @@ export default {
     getData1 () {
       this.$set(this.currentPage, 0, 1)
       this.table1Loading = true
-      this.$axios.get(GetEnergyTaskList, {
+      this.$axios.get(GetResourcesTaskList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize[0]
@@ -686,7 +900,7 @@ export default {
         params: {
           resource_id: this.editSiteId,
           PageIndex: 1,
-          resourcetype: 1,
+          resourcetype: 2,
           PageSize: this.pageSize[2]
         }
       }).then(res => {
@@ -706,7 +920,7 @@ export default {
         params: {
           resource_id: this.editSiteId,
           PageIndex: 1,
-          resourcetype: 1,
+          resourcetype: 2,
           PageSize: this.pageSize[4]
         }
       }).then(res => {
@@ -983,7 +1197,7 @@ export default {
       switch (this.ViewTabIndex) {
         case '0':
           this.showTaskDialog = true
-          this.$axios.get(GetEnergyResourecEquipmentList, {
+          this.$axios.get(GetResourecEquipmentList, {
             params: {
               resource_id: this.editSiteId,
               PageIndex: 1,
@@ -1044,92 +1258,114 @@ export default {
           this.showDialog = true
           this.WriteState = 0
           switch (this.SelectDeviceType) {
-            case '充电桩':
-              this.showChargingPile = true
+            case '网络设备':
+              this.showOperatorEquipment = true
               this.$nextTick(() => {
-                this.$refs.TaskChargingPile.WriteData.task_id = this.currentTaskId
-                this.$refs.TaskChargingPile.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskChargingPile.WriteData.resource_id = this.editSiteId
-                this.$refs.TaskChargingPile.WriteData.resourcecode = this.editResourcecode
-                this.$refs.TaskChargingPile.WriteData.resourcename = this.editResourcename
-                this.$refs.TaskChargingPile.WriteData.equipmenttypename = this.SelectDeviceType
+                this.$refs.OperatorEquipment.WriteData.task_id = this.currentTaskId
+                this.$refs.OperatorEquipment.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.OperatorEquipment.WriteData.resource_id = this.editSiteId
+                this.$refs.OperatorEquipment.WriteData.resourcecode = this.editResourcecode
+                this.$refs.OperatorEquipment.WriteData.resourcename = this.editResourcename
+                this.$refs.OperatorEquipment.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '换电柜':
-              this.showSwitchCabinet = true
+            case '铁塔':
+              this.showTheTower = true
               this.$nextTick(() => {
-                this.$refs.TaskSwitchCabinet.tableData.task_id = this.currentTaskId
-                this.$refs.TaskSwitchCabinet.tableData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskSwitchCabinet.tableData.resource_id = this.editSiteId
-                this.$refs.TaskSwitchCabinet.tableData.resourcecode = this.editResourcecode
-                this.$refs.TaskSwitchCabinet.tableData.resourcename = this.editResourcename
-                this.$refs.TaskSwitchCabinet.tableData.equipmenttypename = this.SelectDeviceType
+                this.$refs.TheTower.WriteData.task_id = this.currentTaskId
+                this.$refs.TheTower.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.TheTower.WriteData.resource_id = this.editSiteId
+                this.$refs.TheTower.WriteData.resourcecode = this.editResourcecode
+                this.$refs.TheTower.WriteData.resourcename = this.editResourcename
+                this.$refs.TheTower.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '备电':
-              this.showReservepover = true
+            case '机房':
+              this.showComputerRoom = true
               this.$nextTick(() => {
-                this.$refs.TaskReservepover.tableData.task_id = this.currentTaskId
-                this.$refs.TaskReservepover.tableData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskReservepover.tableData.resource_id = this.editSiteId
-                this.$refs.TaskReservepover.tableData.resourcecode = this.editResourcecode
-                this.$refs.TaskReservepover.tableData.resourcename = this.editResourcename
-                this.$refs.TaskReservepover.tableData.equipmenttypename = this.SelectDeviceType
+                this.$refs.ComputerRoom.WriteData.task_id = this.currentTaskId
+                this.$refs.ComputerRoom.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.ComputerRoom.WriteData.resource_id = this.editSiteId
+                this.$refs.ComputerRoom.WriteData.resourcecode = this.editResourcecode
+                this.$refs.ComputerRoom.WriteData.resourcename = this.editResourcename
+                this.$refs.ComputerRoom.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '换电电池':
-              this.showChangeBattery = true
+            case '交流配电柜':
+              this.showAcDistriButionBox = true
               this.$nextTick(() => {
-                this.$refs.TaskChangeBattery.tableData.task_id = this.currentTaskId
-                this.$refs.TaskChangeBattery.tableData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskChangeBattery.tableData.resource_id = this.editSiteId
-                this.$refs.TaskChangeBattery.tableData.resourcecode = this.editResourcecode
-                this.$refs.TaskChangeBattery.tableData.resourcename = this.editResourcename
-                this.$refs.TaskChangeBattery.tableData.equipmenttypename = this.SelectDeviceType
+                this.$refs.AcDistriButionBox.WriteData.task_id = this.currentTaskId
+                this.$refs.AcDistriButionBox.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.AcDistriButionBox.WriteData.resource_id = this.editSiteId
+                this.$refs.AcDistriButionBox.WriteData.resourcecode = this.editResourcecode
+                this.$refs.AcDistriButionBox.WriteData.resourcename = this.editResourcename
+                this.$refs.AcDistriButionBox.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '燃油发电机':
-              this.showOilFiredGenerator = true
+            case '机房空调':
+              this.showComputerRoomAirConditioning = true
               this.$nextTick(() => {
-                this.$refs.TaskOilFiredGenerator.tableData.task_id = this.currentTaskId
-                this.$refs.TaskOilFiredGenerator.tableData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskOilFiredGenerator.tableData.resource_id = this.editSiteId
-                this.$refs.TaskOilFiredGenerator.tableData.resourcecode = this.editResourcecode
-                this.$refs.TaskOilFiredGenerator.tableData.resourcename = this.editResourcename
-                this.$refs.TaskOilFiredGenerator.tableData.equipmenttypename = this.SelectDeviceType
+                this.$refs.ComputerRoomAirConditioning.WriteData.task_id = this.currentTaskId
+                this.$refs.ComputerRoomAirConditioning.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.ComputerRoomAirConditioning.WriteData.resource_id = this.editSiteId
+                this.$refs.ComputerRoomAirConditioning.WriteData.resourcecode = this.editResourcecode
+                this.$refs.ComputerRoomAirConditioning.WriteData.resourcename = this.editResourcename
+                this.$refs.ComputerRoomAirConditioning.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '电池发电装置':
-              this.showBatteryGenerator = true
+            case '开关电源':
+              this.showSwitchingPowerSupply = true
               this.$nextTick(() => {
-                this.$refs.TaskBatteryGenerator.WriteData.task_id = this.currentTaskId
-                this.$refs.TaskBatteryGenerator.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.TaskBatteryGenerator.WriteData.resource_id = this.editSiteId
-                this.$refs.TaskBatteryGenerator.WriteData.resourcecode = this.editResourcecode
-                this.$refs.TaskBatteryGenerator.WriteData.resourcename = this.editResourcename
-                this.$refs.TaskBatteryGenerator.WriteData.equipmenttypename = this.SelectDeviceType
+                this.$refs.SwitchingPowerSupply.WriteData.task_id = this.currentTaskId
+                this.$refs.SwitchingPowerSupply.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.SwitchingPowerSupply.WriteData.resource_id = this.editSiteId
+                this.$refs.SwitchingPowerSupply.WriteData.resourcecode = this.editResourcecode
+                this.$refs.SwitchingPowerSupply.WriteData.resourcename = this.editResourcename
+                this.$refs.SwitchingPowerSupply.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '外电引入':
-              this.showAnElectricIntroduced = true
+            case '蓄电池':
+              this.showStorageBattery = true
               this.$nextTick(() => {
-                this.$refs.AnElectricIntroduced.WriteData.task_id = this.currentTaskId
-                this.$refs.AnElectricIntroduced.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.AnElectricIntroduced.WriteData.resource_id = this.editSiteId
-                this.$refs.AnElectricIntroduced.WriteData.resourcecode = this.editResourcecode
-                this.$refs.AnElectricIntroduced.WriteData.resourcename = this.editResourcename
-                this.$refs.AnElectricIntroduced.WriteData.equipmenttypename = this.SelectDeviceType
+                this.$refs.StorageBattery.WriteData.task_id = this.currentTaskId
+                this.$refs.StorageBattery.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.StorageBattery.WriteData.resource_id = this.editSiteId
+                this.$refs.StorageBattery.WriteData.resourcecode = this.editResourcecode
+                this.$refs.StorageBattery.WriteData.resourcename = this.editResourcename
+                this.$refs.StorageBattery.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '电表':
-              this.showAmmeter = true
+            case '动力及环境监测单元':
+              this.showPowerAndEnvironment = true
               this.$nextTick(() => {
-                this.$refs.Ammeter.WriteData.task_id = this.currentTaskId
-                this.$refs.Ammeter.WriteData.equipmenttype_id = obj[0].equipmenttype_id
-                this.$refs.Ammeter.WriteData.resource_id = this.editSiteId
-                this.$refs.Ammeter.WriteData.resourcecode = this.editResourcecode
-                this.$refs.Ammeter.WriteData.resourcename = this.editResourcename
-                this.$refs.Ammeter.WriteData.equipmenttypename = '电表'
+                this.$refs.PowerAndEnvironment.WriteData.task_id = this.currentTaskId
+                this.$refs.PowerAndEnvironment.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.PowerAndEnvironment.WriteData.resource_id = this.editSiteId
+                this.$refs.PowerAndEnvironment.WriteData.resourcecode = this.editResourcecode
+                this.$refs.PowerAndEnvironment.WriteData.resourcename = this.editResourcename
+                this.$refs.PowerAndEnvironment.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '整流模块':
+              this.showRectifierModule = true
+              this.$nextTick(() => {
+                this.$refs.RectifierModule.WriteData.task_id = this.currentTaskId
+                this.$refs.RectifierModule.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.RectifierModule.WriteData.resource_id = this.editSiteId
+                this.$refs.RectifierModule.WriteData.resourcecode = this.editResourcecode
+                this.$refs.RectifierModule.WriteData.resourcename = this.editResourcename
+                this.$refs.RectifierModule.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
+            case '通讯与位置终端':
+              this.showCommunicationAndLocation = true
+              this.$nextTick(() => {
+                this.$refs.CommunicationAndLocation.WriteData.task_id = this.currentTaskId
+                this.$refs.CommunicationAndLocation.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.CommunicationAndLocation.WriteData.resource_id = this.editSiteId
+                this.$refs.CommunicationAndLocation.WriteData.resourcecode = this.editResourcecode
+                this.$refs.CommunicationAndLocation.WriteData.resourcename = this.editResourcename
+                this.$refs.CommunicationAndLocation.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
           }
@@ -1260,29 +1496,35 @@ export default {
       this.showDialog = true
       this.setTitle(row.equipmenttypename)
       switch (row.equipmenttypename) {
-        case '充电桩':
-          this.showChargingPile = true
+        case '网络设备':
+          this.showOperatorEquipment = true
           break
-        case '换电柜':
-          this.showSwitchCabinet = true
+        case '铁塔':
+          this.showTheTower = true
           break
-        case '备电':
-          this.showReservepover = true
+        case '机房':
+          this.showComputerRoom = true
           break
-        case '换电电池':
-          this.showChangeBattery = true
+        case '交流配电箱':
+          this.showAcDistriButionBox = true
           break
-        case '燃油发电机':
-          this.showOilFiredGenerator = true
+        case '机房空调':
+          this.showComputerRoomAirConditioning = true
           break
-        case '电池发电装置':
-          this.showBatteryGenerator = true
+        case '开关电源':
+          this.showSwitchingPowerSupply = true
           break
-        case '外电引入':
-          this.showAnElectricIntroduced = true
+        case '蓄电池':
+          this.showStorageBattery = true
           break
-        case '电表':
-          this.showAmmeter = true
+        case '动力及监测环境单元':
+          this.showPowerAndEnvironment = true
+          break
+        case '整流模块':
+          this.showRectifierModule = true
+          break
+        case '通讯与位置终端':
+          this.showCommunicationAndLocation = true
           break
       }
     },
@@ -1528,14 +1770,16 @@ export default {
         this.SelectDeviceType = ''
         this.siteChoose = false
         this.deviceChoose = false
-        this.showChargingPile = false
-        this.showSwitchCabinet = false
-        this.showReservepover = false
-        this.showChangeBattery = false// 换电池详情
-        this.showOilFiredGenerator = false // 燃油发电机详情
-        this.showBatteryGenerator = false
-        this.showAnElectricIntroduced = false
-        this.showAmmeter = false
+        this.showOperatorEquipment = false
+        this.showTheTower = false
+        this.showComputerRoom = false
+        this.showAcDistriButionBox = false
+        this.showComputerRoomAirConditioning = false
+        this.showSwitchingPowerSupply = false
+        this.showRectifierModule = false
+        this.showCommunicationAndLocation = false
+        this.showStorageBattery = false
+        this.showPowerAndEnvironment = false
         this.showHiddenDanger = false
         this.showMaintain = false
       }
@@ -1554,17 +1798,19 @@ export default {
     GoogleMap,
     ResourceList,
     deviceList,
-    TaskChargingPile,
-    TaskSwitchCabinet,
-    TaskReservepover,
+    OperatorEquipment,
+    TheTower,
+    ComputerRoom,
     ImgBox,
-    TaskChangeBattery,
-    TaskOilFiredGenerator,
-    TaskBatteryGenerator,
-    AnElectricIntroduced,
-    Ammeter,
+    AcDistriButionBox,
+    ComputerRoomAirConditioning,
+    SwitchingPowerSupply,
+    StorageBattery,
+    PowerAndEnvironment,
     HiddenDanger,
-    Maintain
+    Maintain,
+    RectifierModule,
+    CommunicationAndLocation
   }
 }
 </script>

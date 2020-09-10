@@ -48,7 +48,7 @@
         <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
         <el-table-column prop="name" label="存放点名称"></el-table-column>
         <el-table-column prop="code" label="存放点编码"></el-table-column>
-        <el-table-column prop="administrators" label="负责人"></el-table-column>
+        <el-table-column prop="administrators" :formatter="changeadministrator" label="负责人"></el-table-column>
         <el-table-column prop="remark" label="说明"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
@@ -115,6 +115,9 @@ export default {
     this.getDic()
   },
   methods: {
+    changeadministrator (val) {
+      return val.administrators.map(item => item.administrator).join(',')
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
@@ -157,8 +160,6 @@ export default {
         this.tableData = res.data.list
         this.total = res.data.total
       })
-      /* this.tableData = [{name: 1}]
-      this.total = 1 */
     },
     changeSize1 (page) {
       this.pageSize = page

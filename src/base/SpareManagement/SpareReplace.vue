@@ -7,7 +7,7 @@
             <el-col :span="8">
                 <div  @click="Show=true">
                   <el-form-item label="存放点：">
-                    <el-input v-model="Query.typename" readonly placeholder="请选择存放点"></el-input>
+                    <el-input v-model="operation" readonly placeholder="请选择存放点"></el-input>
                   </el-form-item>
                   </div>
             </el-col>
@@ -89,8 +89,8 @@
         <SelectSpareconMode   :sparetypeid="sparepartstypeid" :sparemanufacturerid="manufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
-    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker  @SpareWarehousePicker="SpareWarehousePicker"/>
+    <el-dialog top="1%"  :visible.sync="Show" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
+      <SelectUserOperation :check="check"  @SelectUserOperation="SelectUserOperation"/>
     </el-dialog>
   </div>
 </template>
@@ -104,17 +104,20 @@ import Details from 'base/SpareManagement/SpareReplaceDetail'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
-import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
+import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
 export default {
   name: 'SpareReplace',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
+        operationid: null,
         manufacturer: null,
         sparepartstype: null,
         sparemodel: null
       },
+      operation: null,
+      check: 6,
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -143,10 +146,10 @@ export default {
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
-    SpareWarehousClose () { this.Show = false },
-    SpareWarehousePicker (name, code, id) {
-      this.WriteData.typename = name
-      this.WriteData.warehouseid = id
+    SelectUserOperationClose () { this.Show = false },
+    SelectUserOperation (operation, name, id) {
+      this.operation = name
+      this.Query.operationid = id
     },
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
@@ -264,7 +267,7 @@ export default {
     Selectsparetype,
     Selectmanufacturer,
     SelectSpareconMode,
-    SpareWarehousePicker
+    SelectUserOperation
   }
 }
 </script>
