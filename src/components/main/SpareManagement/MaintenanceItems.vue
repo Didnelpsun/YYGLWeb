@@ -75,7 +75,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {maintenanceconfig, GetIdSpareTypList, Deletemaintenanceconfig} from 'api/BJGL'
+import {maintenanceconfig, Getidmanufacturerinfo, Deletemaintenanceconfig} from 'api/BJGL'
 import Details from 'base/SpareManagement/MaintenanceItems'
 export default {
   name: 'MaintenanceItems',
@@ -154,11 +154,9 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-      /*   this.WriteState = state
-      this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
+        this.$axios.get(Getidmanufacturerinfo, {
           params: {
             Id: row.id
           }
@@ -169,7 +167,7 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      } */
+      }
     },
     handle2 (row) {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {

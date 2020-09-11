@@ -77,7 +77,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {AreaList, DictionaryInfoList} from 'api/api'
-import {GetsparepartsList, GetsparepartsidList, Deletespareparts} from 'api/BJGL'
+import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
 import Details from 'base/SpareManagement/Sparetype'
 export default {
   name: 'Sparetype',
@@ -167,7 +167,7 @@ export default {
     formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
       this.Loading = true
-      this.$axios.get(GetsparepartsList, {
+      this.$axios.get(GetSpareTypList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -179,10 +179,9 @@ export default {
       })
     },
     getMore (page) {
-      console.log(this.Query.AreaList)
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetsparepartsList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -203,7 +202,7 @@ export default {
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetsparepartsidList, {
+        this.$axios.get(GetIdSpareTypList, {
           params: {
             Id: row.id
           }
@@ -220,7 +219,7 @@ export default {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(Deletespareparts, {
+        this.$axios.delete(DeleteSpareTyp, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {

@@ -358,13 +358,13 @@
                   <td class="el-table_8_column_64"><div class="cell"></div></td>
                 </tr>
                 <!--站点分类-->
-                <tr class="el-table__row">
+                <!--<tr class="el-table__row">
                   <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点分类</div></td>
                   <td class="el-table_8_column_61"><div class="cell">{{tableData.classifyname}}</div></td>
                   <td class="el-table_8_column_62"><div class="cell"></div></td>
-                  <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> -->
+                  &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> &ndash;&gt;
                   <td class="el-table_8_column_64"><div class="cell"></div></td>
-                </tr>
+                </tr>-->
                 <!--入网日期-->
                 <tr class="el-table__row">
                   <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>入网日期</div></td>

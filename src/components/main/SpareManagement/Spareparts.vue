@@ -48,9 +48,9 @@
         <el-table-column prop="cityname" label="地市" width="70"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="70"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="sparepartstype" label="备件类型"></el-table-column>
-        <el-table-column prop="manufacturer" label="厂家"></el-table-column>
-        <el-table-column prop="units" label="权属"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
+        <el-table-column prop="manufacturername" label="厂家"></el-table-column>
+        <el-table-column prop="depotsname" label="权属"></el-table-column>
         <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
         <el-table-column prop="depots" label="存放点 "></el-table-column>
         <el-table-column prop="warrantycode" label="备件质保编号" width="120"></el-table-column>
@@ -94,7 +94,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetsparepartsList, GetsparepartsidList, Deletespareparts} from 'api/BJGL'
 import Details from 'base/SpareManagement/Spareparts'
 import SpareCheck from 'base/SpareManagement/SpareCheck'
 import SpareReplace from 'base/SpareManagement/SpareReplace'
@@ -149,8 +149,8 @@ export default {
     },
     formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
-    /*  this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+      this.Loading = true
+      this.$axios.get(GetsparepartsList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -159,12 +159,12 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     getMore (page) {
-    /*  this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetsparepartsList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -173,7 +173,7 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -186,9 +186,9 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-      /*    if (state) {
+      if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
+        this.$axios.get(GetsparepartsidList, {
           params: {
             Id: row.id
           }
@@ -199,13 +199,13 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      } */
-    }
-    /* handle2 (row) {
+      }
+    },
+    handle2 (row) {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareTyp, {
+        this.$axios.delete(Deletespareparts, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
@@ -216,7 +216,7 @@ export default {
           }
         })
       })
-    } */
+    }
 
   },
   components: {

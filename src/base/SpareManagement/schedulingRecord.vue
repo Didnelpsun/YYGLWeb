@@ -33,7 +33,7 @@
             <tbody>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">地市</div></td>
-              <td><div class="cell">{{WriteData.units}}</div></td>
+              <td><div class="cell">{{WriteData.cityname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -43,42 +43,42 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">调度类型</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.schedulingtype}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">备件类型</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.typeencoding}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">备件编码</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.code}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">备件厂家</div></td>
-              <td><div class="cell">{{WriteData.reamrk}}</div></td>
+              <td><div class="cell">{{WriteData.manufacturername}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">备件型号</div></td>
-              <td><div class="cell">{{WriteData.inventorytime}}</div></td>
+              <td><div class="cell">{{WriteData.sparemodel}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">存放点</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.indepotname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">入库存放点</div></td>
-              <td><div class="cell">{{WriteData.newsparepartsstate}}</div></td>
+              <td><div class="cell">{{WriteData.indepots}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">状态</div></td>
-              <td><div class="cell">{{WriteData.units}}</div></td>
+              <td><div class="cell">{{WriteData.instate}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -93,17 +93,17 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">入库权属</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.inunits}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">申请人</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.applicanname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">申请时间</div></td>
-              <td><div class="cell">{{WriteData.reamrk}}</div></td>
+              <td><div class="cell">{{WriteData.applicanttime}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -118,7 +118,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">审核状态</div></td>
-              <td><div class="cell">{{WriteData.newsparepartsstate}}</div></td>
+              <td><div class="cell">{{WriteData.outauditstatus}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -162,6 +162,7 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
+      console.log(this.WriteData)
     },
     WriteClose () {
       this.ResetWrite()

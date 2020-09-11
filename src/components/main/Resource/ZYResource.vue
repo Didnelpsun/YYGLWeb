@@ -445,30 +445,6 @@
                 <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
-              <!--提交人-->
-              <tr class="el-table__row" v-show="pageType == '编辑' || pageType == '详情'">
-                <td class="el-table_8_column_60"><div class="cell">提交人</div></td>
-                <td class="el-table_8_column_61"><div class="cell">
-                  <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
-                    <el-input v-model="tableData.createusername" disabled></el-input>
-                  </el-form-item>
-                </div></td>
-                <td class="el-table_8_column_62"><div class="cell"></div></td>
-                <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
-                <td class="el-table_8_column_64"><div class="cell"></div></td>
-              </tr>
-              <!--创建时间-->
-              <tr class="el-table__row" v-show="pageType == '编辑' || pageType == '详情'">
-                <td class="el-table_8_column_60"><div class="cell">创建时间</div></td>
-                <td class="el-table_8_column_61"><div class="cell">
-                  <el-form-item label-width="0" :class="[isValid?'mb_reset':'']">
-                    <el-input v-model="tableData.createtime" disabled></el-input>
-                  </el-form-item>
-                </div></td>
-                <td class="el-table_8_column_62"><div class="cell"></div></td>
-                <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
-                <td class="el-table_8_column_64"><div class="cell"></div></td>
-              </tr>
               </tbody>
             </table>
           </div>
@@ -557,13 +533,13 @@
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
                   </tr>
                   <!--站点分类-->
-                  <tr class="el-table__row">
+                  <!--<tr class="el-table__row">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点分类</div></td>
                     <td class="el-table_8_column_61"><div class="cell">{{tableData.classifyname}}</div></td>
                     <td class="el-table_8_column_62"><div class="cell"></div></td>
-                    <!-- <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> -->
+                    &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell">{{writeDic(DicList.classify)}}</div></td> &ndash;&gt;
                     <td class="el-table_8_column_64"><div class="cell"></div></td>
-                  </tr>
+                  </tr>-->
                   <!--站点类型-->
                   <tr class="el-table__row">
                     <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>站点类型</div></td>

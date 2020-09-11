@@ -43,10 +43,10 @@
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="depotsid" label="存放点"></el-table-column>
-        <el-table-column prop="inventorystatus" label="盘存状态"></el-table-column>
+        <el-table-column prop="depotsname" label="存放点"></el-table-column>
+        <el-table-column prop="inventorystatus" :formatter="Showstatus" label="盘存状态"></el-table-column>
         <el-table-column prop="Inventoryresults" label="盘存结果"></el-table-column>
-        <el-table-column prop="createuserid" label="盘存人"></el-table-column>
+        <el-table-column prop="createusername" label="盘存人"></el-table-column>
         <el-table-column prop="starttime" label="开始时间"></el-table-column>
         <el-table-column prop="endtime" label="结束时间"></el-table-column>
         <el-table-column label="操作" width="140">
@@ -74,7 +74,7 @@
 
 <script>
 import layuiTitle from 'base/layui-title'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetIdInventoryTaskList, GetInventoryTaskList, DeleteInventoryTask} from 'api/BJGL'
 import Details from 'base/SpareManagement/Inventory'
 export default {
   name: 'Inventory',
@@ -99,9 +99,12 @@ export default {
     this.getData1()
   },
   methods: {
+    Showstatus (val) {
+      return val ? '结束' : '未结束'
+    },
     getData1 () {
-    /*  this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+      this.Loading = true
+      this.$axios.get(GetInventoryTaskList, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -110,26 +113,23 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
-      this.tableData = [{cityname: '武汉'}]
-      this.total = 1
+      })
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
     },
     getMore (page) {
-    /*  this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetInventoryTaskList, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
-        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -139,9 +139,9 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-      /*   if (state) {
+      if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
+        this.$axios.get(GetIdInventoryTaskList, {
           params: {
             Id: row.id
           }
@@ -152,23 +152,23 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      } */
+      }
     },
     handle2 (row) {
-      /*     this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareTyp, {
+        this.$axios.delete(DeleteInventoryTask, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
-            this.getMore(this.currentPage)
             this.$message.success('删除成功！')
+            this.getMore(1)
           } else {
             this.$message.error(res.msg)
           }
         })
-      }) */
+      })
     }
 
   },

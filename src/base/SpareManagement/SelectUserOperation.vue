@@ -12,11 +12,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="center">
+  <!--  <div class="center">
       <el-pagination @current-change="getTableData1More" @size-change="handelSizeChange" :current-page="pagination.currentPage"
                      :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" :total="pagination.total"
                      background layout="total, prev, pager, next, sizes"></el-pagination>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -49,12 +49,12 @@ export default {
       this.Table1Loading = true
       this.$axios.get(GetUserOperation, {
         params: {
-          /* operationid: this.check */
+          operationid: this.check
         }}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.tableList = res.data.list
-        this.pagination.total = res.data.total
+        this.tableList = res.data
+        /*   this.pagination.total = res.data.total */
       })
     },
     // 分页处理函数
@@ -78,7 +78,7 @@ export default {
       })
     },
     handleChoose (index, row) {
-      this.$emit('SelectUserOperation', row.operation, row.name, row.id)
+      this.$emit('SelectUserOperation', row.operation, row.name, row.Warehousesid)
     }
   }
 }

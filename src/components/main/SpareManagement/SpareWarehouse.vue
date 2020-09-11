@@ -45,7 +45,7 @@
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
+        <el-table-column prop="warehousetype" :formatter="Showwarehousetype" label="存放点类型"></el-table-column>
         <el-table-column prop="name" label="存放点名称"></el-table-column>
         <el-table-column prop="code" label="存放点编码"></el-table-column>
         <el-table-column prop="administrators" :formatter="changeadministrator" label="负责人"></el-table-column>
@@ -115,6 +115,9 @@ export default {
     this.getDic()
   },
   methods: {
+    Showwarehousetype (val) {
+      return val === 1 ? '市公司备件库' : val === 2 ? '市公司维修库' : val === 3 ? '市公司报废库' : '工作备件库'
+    },
     changeadministrator (val) {
       return val.administrators.map(item => item.administrator).join(',')
     },

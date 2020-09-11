@@ -126,14 +126,14 @@
             <tr class="el-table__row">
               <td><div class="cell">是否预留移动油机输入接口</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="Oilmachineinputinterface">
-                  <el-select v-model="WriteData.Oilmachineinputinterface">
+                <el-form-item class="form-item" prop="oilmachineinputinterface">
+                  <el-select v-model="WriteData.oilmachineinputinterface">
                     <el-option label="是" :value="true"></el-option>
                     <el-option label="否" :value="false"></el-option>
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.Oilmachineinputinterface ? '是' : '否'}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.oilmachineinputinterface ? '是' : '否'}}</div></td>
               <td @click="OpenImgBox(4)"><div class="cell">{{ImgList4.length}}</div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -200,7 +200,7 @@ export default {
         models: null,
         state: 1,
         totalcapacity: '',
-        Oilmachineinputinterface: false,
+        oilmachineinputinterface: false,
         imglist: []
       },
       Rules: {
@@ -267,10 +267,10 @@ export default {
         this.$emit('fatherOpenImgBox', '资源型号', 'models', this.ImgList2)
       }
       if (val === 3) {
-        this.$emit('fatherOpenImgBox', '总容量(A)', 'manufacturer', this.ImgList3)
+        this.$emit('fatherOpenImgBox', '总容量(A)', 'totalcapacity', this.ImgList3)
       }
       if (val === 4) {
-        this.$emit('fatherOpenImgBox', '是否预留移动油机输入接口', 'models', this.ImgList4)
+        this.$emit('fatherOpenImgBox', '是否预留移动油机输入接口', 'oilmachineinputinterface', this.ImgList4)
       }
     },
     SubWrite (state) {
@@ -387,7 +387,7 @@ export default {
       this.ImgList1 = list.filter(i => { return i.field_name === 'manufacturer' })
       this.ImgList2 = list.filter(i => { return i.field_name === 'models' })
       this.ImgList3 = list.filter(i => { return i.field_name === 'totalcapacity' })
-      this.ImgList4 = list.filter(i => { return i.field_name === 'Oilmachineinputinterface' })
+      this.ImgList4 = list.filter(i => { return i.field_name === 'oilmachineinputinterface' })
     },
     DetailhandleClose () { this.isShow = !this.isShow },
     selectResource (name, id, code) {

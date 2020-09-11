@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {GetwarehouseList, GetUserOperation} from 'api/BJGL'
+import {GetwarehouseList} from 'api/BJGL'
 import {DictionaryInfoList} from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
 
@@ -123,13 +123,8 @@ export default {
       })
     },
     _getTableData1 () {
-      console.log(this.check)
-      var url = GetwarehouseList
-      if (this.check) {
-        url = GetUserOperation
-      }
       this.Table1Loading = true
-      this.$axios.get(url, {
+      this.$axios.get(GetwarehouseList, {
         params: {
           PageIndex: 1,
           PageSize: 10,
@@ -148,13 +143,9 @@ export default {
       this.getTableData1More(this.pagination.currentPage)
     },
     getTableData1More  (page) {
-      var url = GetwarehouseList
-      if (this.check) {
-        url = GetUserOperation
-      }
       this.pagination.currentPage = page
       this.Table1Loading = true
-      this.$axios.get(url, {params: Object.assign({}, this.query, {
+      this.$axios.get(GetwarehouseList, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
         PageSize: this.pagination.pageSize,
         provinceid: this.provinceid,

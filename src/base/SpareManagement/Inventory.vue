@@ -47,9 +47,9 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.typename}}</div>
+                <div v-if="WriteState == 2">{{WriteData.depotsname}}</div>
                 <div v-if="WriteState !== 2" @click="SpareWarehouseShow=true">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择存放点名"></el-input>
+                  <el-input v-model="WriteData.depotsname" readonly placeholder="请选择存放点名"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -66,12 +66,12 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">区域</div></td>
-              <td><div class="cell">{{WriteData.createtime}}</div></td>
+              <td><div class="cell">{{WriteData.cityname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">盘存状态</div></td>
-              <td><div class="cell">{{WriteData.inventorystatus}}</div></td>
+              <td><div class="cell">{{WriteData.inventorystatus  ? '结束' : '未结束'}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -91,7 +91,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">盘错数量</div></td>
-              <td><div class="cell">{{WriteData.realityname}}</div></td>
+              <td><div class="cell">{{WriteData.wrongnumber}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -187,12 +187,12 @@
       <el-button v-show="!showWrite" @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker  @SpareWarehousePicker="SpareWarehousePickers"/>
     </el-dialog>
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState1 === 0 ? '添加盘存记录' : WriteState1 === 1 ? '编辑盘存记录' : '盘存记录详情'"></layuiTitle>
 
-      <Details :WriteState1="WriteState1"
+      <Details :WriteState1="WriteState1" :inventoryid="WriteData.id"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose1" ref="Details"></Details>
 
     </div>
@@ -201,7 +201,7 @@
 
 <script>
 
-import {EditSpareTyp, AddSpareTyp, GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {AddInventoryTask, EditInventoryTask, GetInventoryrecords} from 'api/BJGL'
 import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 import layuiTitle from 'base/layui-title'
 import Details from 'base/SpareManagement/InventoryRecords'
@@ -225,12 +225,11 @@ export default {
       isShow: false,
       Loading: false,
       WriteData: {
-        id: null,
-        cityname: '',
-        typename: null, // 存放点名称
+        depotsname: null, // 存放点名称
         depotsid: null, // 存放点
-        realityname: '',
-        createtime: null
+        createtime: null,
+        sparenumbe: null,
+        titile: null
       },
       WriteState1: null,
       currentPage: 1,
@@ -264,8 +263,6 @@ export default {
             this.tableData = res.data.list
             this.total = res.data.total
           }) */
-      this.tableData = [{cityname: '武汉'}]
-      this.total = 1
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
@@ -309,20 +306,20 @@ export default {
     handleWrite (state, row) {
       this.WriteState1 = state
       this.showWrite = true
-      /*   if (state) {
-          this.$refs.Details.Loading = true
-          this.$axios.get(GetIdSpareTypList, {
-            params: {
-              Id: row.id
-            }
-          }).then(res => {
-            this.$refs.Details.Loading = false
-            this.$refs.Details.setWriteData(res.data)
-          }).catch(err => {
-            this.$refs.Details.Loading = false
-            console.log(err)
-          })
-        } */
+      if (state) {
+        this.$refs.Details.Loading = true
+        this.$axios.get(GetInventoryrecords, {
+          params: {
+            Id: row.id
+          }
+        }).then(res => {
+          this.$refs.Details.Loading = false
+          this.$refs.Details.setWriteData(res.data)
+        }).catch(err => {
+          this.$refs.Details.Loading = false
+          console.log(err)
+        })
+      }
     },
     handle2 (row) {
       /*     this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
@@ -340,8 +337,9 @@ export default {
           })
         }) */
     },
-    SpareWarehousePicker (name, code, id) {
-      this.WriteData.typename = name
+    SpareWarehousePickers (name, code, id) {
+      this.SpareWarehouseShow = false
+      this.WriteData.depotsname = name.trim()
       this.WriteData.depotsid = id
     },
     SpareWarehousClose () {
@@ -359,12 +357,12 @@ export default {
       if (this.WriteState === 1) this.SubEdit()
     },
     SubAdd () {
-    /*  this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddSpareTyp, this.WriteData).then(res => {
+          this.$axios.post(AddInventoryTask, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -372,15 +370,15 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     },
     SubEdit () {
-      /*    this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditSpareTyp, this.WriteData).then(res => {
+          this.$axios.put(EditInventoryTask, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -389,7 +387,7 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     }
   },
   components: {

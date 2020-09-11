@@ -16,7 +16,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label-width="125px" label="电池类型：">
-                <el-select class="searchSelect" v-model="Query.powersupplymode">
+                <el-select class="searchSelect" v-model="Query.states">
                   <el-option label="请选择" :value="null"></el-option>
                   <el-option v-for="i in DicList.powersupplymode" :key="i.value" :label="i.text" :value="i.value"></el-option>
                 </el-select>
@@ -70,8 +70,7 @@
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handleDelete(scope.row)">删除</el-button>-->
+            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -113,7 +112,7 @@ export default {
         cityid: 0,
         areaid: 0,
         resourcename: '',
-        powersupplymode: null,
+        states: null,
         starttime: '',
         endtime: ''
       },
@@ -147,7 +146,7 @@ export default {
       let arr = ['蓄电池设备类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
+          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '蓄电池设备类型' })
         } else {
           this.$message.error(res.msg)
         }

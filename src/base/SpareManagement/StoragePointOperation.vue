@@ -95,7 +95,6 @@ export default {
       Loading: false,
       SpareWarehouseShow: false,
       WriteData: {
-        id: null,
         operation: null,
         operationid: null,
         typename: null, // 存放点名称
@@ -116,7 +115,7 @@ export default {
     },
     SpareWarehousePicker (name, code, id) {
       this.SpareWarehouseShow = false
-      this.WriteData.typename = name
+      this.WriteData.typename = name.trim()
       this.WriteData.code = code
       this.WriteData.warehouseid = id
     },

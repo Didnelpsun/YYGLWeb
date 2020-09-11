@@ -53,19 +53,6 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>所属类型</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="belongtype">
-                  <el-select v-model="WriteData.belongtype">
-                    <el-option v-for="i in DicList.Belongtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择所属类型"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.belongtype}}</div></td>
-              <!-- <td><div class="cell"></div></td>-->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>类型编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="typeencoding">
@@ -177,7 +164,6 @@ export default {
       Rules: {
         AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
         typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
         typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
       }
     }
@@ -225,8 +211,6 @@ export default {
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
@@ -243,8 +227,6 @@ export default {
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

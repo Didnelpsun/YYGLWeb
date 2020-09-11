@@ -48,7 +48,7 @@
               <td><div class="cell"><i class="must">*</i>区域</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader :key="i" v-model="WriteData.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -78,19 +78,18 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点单位</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="orgid">
-                  <el-input v-model="WriteData.orgid"  placeholder="请填写存放点单位" clearable></el-input>
-                </el-form-item>
-              </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.orgid}}</div></td>
-              <!-- <td><div class="cell"></div></td>-->
+              <td><div class="cell">
+                <div v-if="WriteState == 2">{{WriteData.orgname}}</div>
+                <div v-if="WriteState !== 2" @click="orgidshow=true">
+                  <el-input v-model="WriteData.orgname" readonly placeholder="请填写存放点单位"></el-input>
+                </div></div>
+              </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点管理员</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.administratoridname}}</div>
+                <div v-if="WriteState == 2">{{administratoridname}}</div>
                 <div v-if="WriteState !== 2" @click="administratorShow=true">
                   <el-input v-model="administratoridname" readonly placeholder="请选择存放点管理员"></el-input>
                 </div></div>
@@ -157,13 +156,20 @@
       <Details  @Chooseusr="Chooseusr"/>
     </el-dialog>
     </div>
+      <div v-if="orgidshow">
+      <el-dialog top="1%" :visible.sync="orgidshow" title="选择存放点单位" width="80%" :before-close="WarehouseUintPickerClose">
+        <WarehouseUintPicker  @WarehouseUintPicker="WarehouseUintPicker"/>
+      </el-dialog>
+      </div>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
+import {AreaList} from 'api/api'
 import {Addwarehouse, Editwarehouse} from 'api/BJGL'
 import Details from 'base/SpareManagement/selSpareWarehouse'
+import WarehouseUintPicker from 'base/SpareManagement/WarehouseUintPicker'
 export default {
   name: 'SpareWarehouse',
   mixins: [GlobalRes],
@@ -180,7 +186,35 @@ export default {
     }
   },
   data () {
+    var _this = this
     return {
+      areaProps: {
+        lazy: true,
+        label: 'name',
+        value: 'id',
+        lazyLoad (node, resolve) {
+          if (!node.level) {
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          } else {
+            if (!node.hasChildren) return resolve([])
+            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          }
+        }
+      },
+      orgidshow: false,
+      i: 1,
       administratoridname: '',
       administratorShow: false,
       isShow: false,
@@ -197,6 +231,7 @@ export default {
         name: ' ',
         code: '',
         orgid: '',
+        orgname: '',
         administrators: [
 
         ]
@@ -213,6 +248,14 @@ export default {
   },
 
   methods: {
+    WarehouseUintPickerClose () {
+      this.orgidshow = false
+    },
+    WarehouseUintPicker (id, orgname) {
+      this.orgidshow = false
+      this.WriteData.orgid = id
+      this.WriteData.orgname = orgname
+    },
     Chooseusr (arr) {
       this.administratorShow = false
       if (arr) {
@@ -233,6 +276,18 @@ export default {
       console.log(i)
       console.log(value)
     }, */
+    changeArea (obj) {
+      // console.log(obj)
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
+      obj.areaid = obj.AreaList[2]
+    },
+    setArea (list, key = 'csArea') {
+      this.nodes = list
+      this.$refs[key].panel.activePath = []
+      this.$refs[key].panel.loadCount = 0
+      this.$refs[key].panel.lazyLoad()
+    },
     _normalizeCityAreaLevel (list) {
       for (let i in list) {
         if (list[i].leveltype >= 3) list[i].leaf = true
@@ -246,9 +301,10 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data[0]
-      this.WriteData.administratoridname = this.WriteData.administrators.map(item => item.administrator).join(',')
-      this.WriteData.AreaList = [data.provinceid, data.cityid, data.areaid]
-      this.setArea(this.WriteData.AreaList, 'csArea')
+      this.i++
+      this.administratoridname = this.WriteData.administrators.map(item => item.administrator).toString()
+      this.WriteData.AreaList = [data[0].provinceid, data[0].cityid, data[0].areaid]
+      /*   this.setArea(this.WriteData.AreaList, 'csArea') */
       if (this.WriteState === 2) {
         switch (this.WriteData.warehousetype) {
           case 1:
@@ -267,7 +323,7 @@ export default {
       }
     },
     WriteClose () {
-      this.setArea([])
+      this.i = 1
       this.ResetWrite()
       this.$emit('fatherClose')
     },
@@ -324,7 +380,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    WarehouseUintPicker
   }
 }
 </script>

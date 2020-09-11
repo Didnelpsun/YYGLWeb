@@ -33,16 +33,20 @@ export const Addmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Addma
 export const Editmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Editmanufacturerinfo` // 编辑备件管理维修厂家
 export const Deletemanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Deletemanufacturerinfo` // 删除编辑备件管理维修厂家
 export const Getmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Getmanufacturerinfo` // 获取备件管理维修厂家
+export const Getidmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Getidmanufacturerinfo` // 根据id获取详情
 // 维修项目 (备件管理维修厂家配置)
 export const Addmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Addmaintenanceconfig` // 添加备件管理维修厂家配置
 export const Editmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Editmaintenanceconfig` // 编辑备件管理维修厂家配置
 export const Deletemaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Deletemaintenanceconfig` // 删除备件管理维修厂家配置
 export const maintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/maintenanceconfig` // 获取备件管理维修厂家配置
+
 // 存放点操作配置列表(备件管理仓库配置)
 export const Addconfiguration = `${reqURL}/BJGL/configurationSevcie/Addconfiguration` // 添加存放点操作配置列表(添加仓库配置)
 export const Editconfiguration = `${reqURL}/BJGL/configurationSevcie/Editconfiguration` // 编辑存放点操作配置列表(修改仓库配置)
 export const GetUserOperation = `${reqURL}/BJGL/configurationSevcie/GetUserOperation` // 查看当前用户操作
+export const GetIdconfigurationsList = `${reqURL}/BJGL/configurationSevcie/GetIdconfigurationsList` // 获取配置详情
 export const GetconfigurationsList = `${reqURL}/BJGL/configurationSevcie/GetconfigurationsList` // 获取存放点操作配置列表(查看仓库配置)
+export const Deleteconfiguration = `${reqURL}/BJGL/configurationSevcie/Deleteconfiguration` // 删除
 // 备件管理备件
 export const GetsparepartsList = `${reqURL}/BJGL/spareparts/GetsparepartsList` // 获取备件列表
 export const Addspareparts = `${reqURL}/BJGL/spareparts/Addspareparts` // 添加备件
@@ -53,3 +57,24 @@ export const GetsparepartsidList = `${reqURL}/BJGL/spareparts/GetsparepartsidLis
 export const Sparecode = `${reqURL}/BJGL/spareparts/Sparecode` // 扫码查找备件
 export const Outwarehouse = `${reqURL}/BJGL/spareparts/Outwarehouse` // 出入库方法
 export const Addborrow = `${reqURL}/BJGL/spareparts/Addborrow` // 生成借件还件记录
+// 调度日志 调度审核
+export const Operationlog = `${reqURL}/BJGL/schedulingSevice/Operationlog` // 查看调度日志
+export const Schedulingdetails = `${reqURL}/BJGL/schedulingSevice/Schedulingdetails` // 查看调度日志详情
+// 盘存任务
+export const AddInventoryTask = `${reqURL}/BJGL/inventorySevcie/AddInventoryTask` // 添加盘存任务
+export const EditInventoryTask = `${reqURL}/BJGL/inventorySevcie/EditInventoryTask` // 编辑盘存任务
+export const DeleteInventoryTask = `${reqURL}/BJGL/inventorySevcie/DeleteInventoryTask` // 删除盘存任务
+export const GetInventoryTaskList = `${reqURL}/BJGL/inventorySevcie/GetInventoryTaskList` // 查看盘存任务
+export const GetIdInventoryTaskList = `${reqURL}/BJGL/inventorySevcie/GetIdInventoryTaskList` // 根据任务id获取盘存任务
+export const EndInventory = `${reqURL}/BJGL/inventorySevcie/EndInventory` // 根据任务id获取盘存记录
+
+// 盘存记录
+export const GetInventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/GetInventoryrecords` // 根据任务id获取盘存记录
+export const Addinventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/Addinventoryrecords` // 添加盘存
+
+// 还件记录
+export const GetAlsorecord = `${reqURL}/BJGL/AlsorecordSevcie/GetAlsorecord` // 还件记录
+// 维修记录
+export const Maintenancerecord = `${reqURL}/BJGL/maintenance/Maintenancerecord` // 维修记录
+// 报废记录
+export const ScrapRecord = `${reqURL}/BJGL/schedulingSevice/ScrapRecord` // 报废记录

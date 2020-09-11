@@ -165,7 +165,6 @@
             </el-table-column>
             <el-table-column prop="equipmenttypename" label="设备类型"></el-table-column>
             <el-table-column prop="accessdate" label="入网日期"></el-table-column>
-            <el-table-column prop="statename" label="设备状态"></el-table-column>
             <el-table-column prop="createtime" label="创建日期"></el-table-column>
             <el-table-column prop="createusername" label="创建人"></el-table-column>
             <el-table-column prop="censusstatename" label="普查状态"></el-table-column>
@@ -1291,7 +1290,7 @@ export default {
                 this.$refs.ComputerRoom.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
-            case '交流配电柜':
+            case '交流配电箱':
               this.showAcDistriButionBox = true
               this.$nextTick(() => {
                 this.$refs.AcDistriButionBox.WriteData.task_id = this.currentTaskId
@@ -1517,7 +1516,7 @@ export default {
         case '蓄电池':
           this.showStorageBattery = true
           break
-        case '动力及监测环境单元':
+        case '动力及环境监测单元':
           this.showPowerAndEnvironment = true
           break
         case '整流模块':
@@ -1563,8 +1562,18 @@ export default {
             this.$message.error(res.msg)
           } else {
             this.$message.success('删除成功！')
-            this.$set(this.currentPage, 1, 1)
-            this.getDeviceDetail(this.currentTaskId)
+            this.checkState().then((result) => {
+              if (result.errorCode === '200') {
+                if (result.msg === '待执行') {
+                  this.$set(this.currentPage, 1, 1)
+                  this.getDeviceDetail(this.currentTaskId)
+                } else {
+                  this.closeShowEdit()
+                }
+              } else {
+                this.$message.error(result.msg)
+              }
+            })
           }
         })
       })

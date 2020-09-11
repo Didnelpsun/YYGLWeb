@@ -32,7 +32,7 @@
         </el-table-column>-->
       </el-table>
       <div class="center">
-        <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
+        <el-pagination @current-change="getData1(this.currentPage)" @size-change="changeSize1" :current-page="currentPage"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
@@ -42,12 +42,11 @@
 </template>
 
 <script>
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetAlsorecord} from 'api/BJGL'
 export default {
   name: 'Alsorecord',
   data () {
     return {
-
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -59,46 +58,31 @@ export default {
     }
   },
   activated () {
-    this.getData1()
+    this.getData1(1)
   },
   methods: {
-    ResetQuery () {
-      Object.assign(this.$data, this.$options.data.call(this))
-      this.getData1()
-    },
-    getData1 () {
-      /* this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+    getData1 (page) {
+      this.currentPage = page
+      this.Loading = true
+      this.$axios.get(GetAlsorecord, {
         params: {
-          PageIndex: 1,
-          PageSize: 10
+          PageIndex: this.currentPage,
+          PageSize: this.pageSize
         }}).then(res => {
         this.Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
-    },
-    getMore (page) {
-      /*
-      this.currentPage = page
-      this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
-        PageIndex: this.currentPage,
-        PageSize: this.pageSize
-      })}).then(res => {
-        this.Loading = false
-        this.getDic()
-        if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.tableData = res.data.list
-        this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
-      this.getMore(this.currentPage)
+      this.getData1(this.currentPage)
     },
-    WriteClose () { this.showWrite = false }
+    WriteClose () {
+      this.showWrite = false
+      Object.assign(this.$data, this.$options.data.call(this))
+    }
   }
 }
 </script>

@@ -84,7 +84,7 @@
 
 <script>
 import layuiTitle from 'base/layui-title'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {Operationlog, Schedulingdetails} from 'api/BJGL'
 import Details from 'base/SpareManagement/schedulingRecord'
 export default {
   name: 'schedulingRecord',
@@ -111,36 +111,34 @@ export default {
   },
   methods: {
     getData1 () {
-      /*  this.Loading = true
-            this.$axios.get(GetSpareTypList, {
-              params: {
-                PageIndex: 1,
-                PageSize: 10
-              }}).then(res => {
-              this.Loading = false
-              if (res.errorCode !== '200') return this.$message.error(res.msg)
-              this.tableData = res.data.list
-              this.total = res.data.total
-            }) */
-      this.tableData = [{cityname: '武汉'}]
-      this.total = 1
+      this.Loading = true
+      this.$axios.get(Operationlog, {
+        params: {
+          PageIndex: 1,
+          PageSize: 10
+        }}).then(res => {
+        this.Loading = false
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
     },
     getMore (page) {
-      /*  this.currentPage = page
-            this.Loading = true
-            this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
-              PageIndex: this.currentPage,
-              PageSize: this.pageSize
-            })}).then(res => {
-              this.Loading = false
-              this.getDic()
-              if (res.errorCode !== '200') return this.$message.error(res.msg)
-              this.tableData = res.data.list
-              this.total = res.data.total
-            }) */
+      this.currentPage = page
+      this.Loading = true
+      this.$axios.get(Operationlog, {params: Object.assign({}, this.Query, {
+        PageIndex: this.currentPage,
+        PageSize: this.pageSize
+      })}).then(res => {
+        this.Loading = false
+        this.getDic()
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -150,37 +148,21 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-      /*   if (state) {
-            this.$refs.Details.Loading = true
-            this.$axios.get(GetIdSpareTypList, {
-              params: {
-                Id: row.id
-              }
-            }).then(res => {
-              this.$refs.Details.Loading = false
-              this.$refs.Details.setWriteData(res.data)
-            }).catch(err => {
-              this.$refs.Details.Loading = false
-              console.log(err)
-            })
-          } */
+      if (state) {
+        this.$refs.Details.Loading = true
+        this.$axios.get(Schedulingdetails, {
+          params: {
+            Id: row.id
+          }
+        }).then(res => {
+          this.$refs.Details.Loading = false
+          this.$refs.Details.setWriteData(res.data)
+        }).catch(err => {
+          this.$refs.Details.Loading = false
+          console.log(err)
+        })
+      }
     }
-  /*  handle2 (row) {
-        this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
-            type: 'warning'
-          }).then(() => {
-            this.$axios.delete(DeleteSpareTyp, {
-              params: {id: row.id}
-            }).then(res => {
-              if (res.errorCode === '200') {
-                this.getMore(this.currentPage)
-                this.$message.success('删除成功！')
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          })
-    } */
 
   },
   components: {

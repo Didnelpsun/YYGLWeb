@@ -21,11 +21,6 @@
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
           </div>
         </el-col>
-        <el-col :span="6" style="margin-top: 11px">
-          <div class="fr">
-            <el-button type="primary"  @click="SelChange">选择</el-button>
-          </div>
-        </el-col>
       </el-row>
     </el-form>
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->

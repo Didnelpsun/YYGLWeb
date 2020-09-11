@@ -34,20 +34,20 @@
             <tr class="el-table__row">
               <td><div class="cell">备件编码</div></td>
               <td v-show="WriteState1 !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="sparepartsid">
-                  <el-input v-model="WriteData.sparepartsid"  placeholder="请扫码备件编码" clearable></el-input>
+                <el-form-item class="form-item" prop="code">
+                  <el-input v-model="WriteData.code"  placeholder="请扫码备件编码" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState1 == 2"><div class="cell">{{WriteData.sparepartsid}}</div></td>
+              <td v-if="WriteState1 == 2"><div class="cell">{{WriteData.code}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件类型</div></td>
               <td><div class="cell">
-                <div v-if="WriteState1 == 2">{{WriteData.sparepartstype}}</div>
+                <div v-if="WriteState1 == 2">{{WriteData.newsparepartstype}}</div>
                 <div v-if="WriteState1 !== 2" @click="sparetypeShow=true">
-                  <el-input v-model="WriteData.sparepartstype" readonly placeholder="请选择备件类型"></el-input>
+                  <el-input v-model="WriteData.newsparepartstype" readonly placeholder="请选择备件类型"></el-input>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
@@ -56,7 +56,7 @@
             <tr class="el-table__row">
               <td><div class="cell">备件厂家</div></td>
               <td><div class="cell">
-                <div v-if="WriteState1 == 2">{{WriteData.manufacturer}}</div>
+                <div v-if="WriteState1 == 2">{{WriteData.newmanufacturerid}}</div>
                 <div v-if="WriteState1 !== 2" @click="SparemanufacturerShow=true">
                   <el-input v-model="WriteData.manufacturer" readonly placeholder="请选择厂家"></el-input>
                 </div></div>
@@ -76,9 +76,9 @@
             <tr class="el-table__row">
               <td><div class="cell">备件状态</div></td>
               <td><div class="cell">
-                <div v-if="WriteState1 == 2">{{WriteData.sparepartsstate}}</div>
+                <div v-if="WriteState1 == 2">{{WriteData.newsparepartsstate}}</div>
                 <el-form-item class="form-item" prop="" v-if="WriteState1!== 2">
-                  <el-select v-model="WriteData.sparepartsstate" placeholder="请选择备件状态"></el-select>
+                  <el-select v-model="WriteData.newsparepartsstate" placeholder="请选择备件状态"></el-select>
                 </el-form-item>
                 </div>
               </td>
@@ -144,25 +144,25 @@
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
-      <Selectsparetype :provinceid="WriteData.provinceid"   :cityid="WriteData.cityid" @Selsparetypeid="Selsparetypeid"/>
+      <Selectsparetype  @Selsparetypeid="Selsparetypeid"/>
     </el-dialog>
     <el-dialog top="1%" :visible.sync="SparemanufacturerShow" title="选择备件厂家" width="80%" :before-close="manufacturerClose">
-      <Selectmanufacturer :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selmanufacturerid="Selmanufacturerid"/>
+      <Selectmanufacturer  @Selmanufacturerid="Selmanufacturerid"/>
     </el-dialog>
     <div v-if="sparemodelShow">
       <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
-        <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
+        <SelectSpareconMode    :sparetypeid="WriteData.sparepartsid" :sparemanufacturerid="WriteData.newmanufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
     <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker   @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 
-import {EditSpareTyp, AddSpareTyp} from 'api/BJGL'
+import {EditSpareTyp, Addinventoryrecords} from 'api/BJGL'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
@@ -173,7 +173,8 @@ export default {
     WriteState1: {
       type: Number,
       default: 0
-    }
+    },
+    inventoryid: null
   },
   data () {
     return {
@@ -184,18 +185,16 @@ export default {
       isShow: false,
       Loading: false,
       WriteData: {
-        id: null,
-        cityname: '',
-        realityname: '',
-        createtime: null,
-        sparepartstype: null, // 备件类型名称
-        sparepartstypeid: '', // 备件类型id
-        manufacturerid: '', // 备件厂家id
+        code: null,
+        newsparepartstype: null, // 备件类型名称
+        sparepartsid: '', // 备件类型id
+        newmanufacturerid: '', // 备件厂家id
         sparemodel: '', // 备件型号名称
         sparemodelid: '', // 备件型号id
         manufacturer: '', // 备件厂家名称
         typename: '', // 存放点名称
-        depotsid: '', // 存放点id
+        newwarehouseid: '', // 存放点id
+        inventoryid: '' // 任务id
       },
       Rules: {
         AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
@@ -208,14 +207,14 @@ export default {
   methods: {
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
-      this.WriteData.sparepartstypeid = id
-      this.WriteData.sparepartstype = name
+      this.WriteData.sparepartsid = id
+      this.WriteData.newsparepartstype = name
       this.WriteData.sparemodelid = null
       this.WriteData.sparemodel = null
     },
     Selmanufacturerid (name, id) {
       this.SparemanufacturerShow = false
-      this.WriteData.manufacturerid = id
+      this.WriteData.newmanufacturerid = id
       this.WriteData.manufacturer = name
       this.WriteData.sparemodelid = null
       this.WriteData.sparemodel = null
@@ -226,8 +225,9 @@ export default {
       this.WriteData.sparemodel = name
     },
     SpareWarehousePicker (name, code, id) {
+      this.SpareWarehouseShow = false
       this.WriteData.typename = name
-      this.WriteData.depotsid = id
+      this.WriteData.newwarehouseid = id
     },
     SpareWarehousClose () { this.SpareWarehouseShow = false },
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
@@ -251,20 +251,22 @@ export default {
       if (this.WriteState1 === 1) this.SubEdit()
     },
     SubAdd () {
-      /*  this.$refs.WriteForm.validate((vali, msg) => {
-            if (!vali) {
-              return this.$message.error('请补全信息！')
-            } else {
-              this.Loading = true
-              this.$axios.post(AddSpareTyp, this.WriteData).then(res => {
-                this.Loading = false
-                if (res.errorCode !== '200') return this.$message.error(res.msg)
-                this.$message.success('添加成功!')
-                this.$emit('fatheretMore')
-                this.WriteClose()
-              })
-            }
-          }) */
+      this.WriteData.inventoryid = this.inventoryid
+
+      this.$refs.WriteForm.validate((vali, msg) => {
+        if (!vali) {
+          return this.$message.error('请补全信息！')
+        } else {
+          this.Loading = true
+          this.$axios.post(Addinventoryrecords, this.WriteData).then(res => {
+            this.Loading = false
+            if (res.errorCode !== '200') return this.$message.error(res.msg)
+            this.$message.success('添加成功!')
+            this.$emit('fatheretMore')
+            this.WriteClose()
+          })
+        }
+      })
     },
     SubEdit () {
       /*    this.$refs.WriteForm.validate((vali, msg) => {

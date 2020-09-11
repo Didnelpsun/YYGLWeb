@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加存放点操作配置' : WriteState === 1 ? '编辑存放点操作配置' : '添加存放点操作配置'"></layuiTitle>
+      <layuiTitle :title="WriteState === 0 ? '添加存放点操作配置' : WriteState === 1 ? '编辑存放点操作配置' : '存放点操作配置详情'"></layuiTitle>
 
       <Details :WriteState="WriteState" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
@@ -87,7 +87,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetconfigurationsList, GetwarehouseIdList, DeleteSpareTyp} from 'api/BJGL'
+import {GetconfigurationsList, GetIdconfigurationsList, Deleteconfiguration} from 'api/BJGL'
 import Details from 'base/SpareManagement/StoragePointOperation'
 export default {
   name: 'StoragePointOperation',
@@ -169,7 +169,7 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetconfigurationsList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetconfigurationsList, {params: Object.assign({}, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -190,11 +190,11 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
-    /*  this.WriteState = state
+      this.WriteState = state
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(null, {
+        this.$axios.get(GetIdconfigurationsList, {
           params: {
             Id: row.id
           }
@@ -205,13 +205,13 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      } */
+      }
     },
     handle2 (row) {
-      /*     this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
+      this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(DeleteSpareTyp, {
+        this.$axios.delete(Deleteconfiguration, {
           params: {id: row.id}
         }).then(res => {
           if (res.errorCode === '200') {
@@ -222,8 +222,6 @@ export default {
           }
         })
       })
-    } */
-
     }
   },
   components: {

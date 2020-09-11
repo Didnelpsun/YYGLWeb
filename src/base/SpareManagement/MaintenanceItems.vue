@@ -33,7 +33,7 @@
             <tbody>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>城市</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
                   <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
@@ -75,9 +75,9 @@
             <tr class="el-table__row">
               <td><div class="cell">备件型号</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.sparemodelname}}</div>
+                <div v-if="WriteState == 2">{{WriteData.sparemodel}}</div>
                 <div v-if="WriteState !== 2" @click="sparemodelShow=true">
-                  <el-input v-model="WriteData.sparemodelname" readonly placeholder="请选择备件型号"></el-input>
+                  <el-input v-model="WriteData.sparemodel" readonly placeholder="请选择备件型号"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -138,18 +138,18 @@
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
-      <Selectsparetype :provinceid="WriteData.provinceid"   :cityid="WriteData.cityid" @Selsparetypeid="Selsparetypeid"/>
+      <Selectsparetype  @Selsparetypeid="Selsparetypeid"/>
     </el-dialog>
     <el-dialog top="1%" :visible.sync="SparemanufacturerShow" title="选择备件厂家" width="80%" :before-close="manufacturerClose">
-      <Selectmanufacturer :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selmanufacturerid="Selmanufacturerid"/>
+      <Selectmanufacturer  @Selmanufacturerid="Selmanufacturerid"/>
     </el-dialog>
     <div v-if="sparemodelShow">
     <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
-      <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparetypeid" :sparemanufacturerid="WriteData.sparemanufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
+      <SelectSpareconMode  :sparetypeid="WriteData.sparetypeid"  :sparemanufacturerid="WriteData.sparemanufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
     </el-dialog>
     </div>
     <el-dialog top="1%" destroy-on-close :visible.sync="manufactureridShow" title="选择维修厂家" width="80%" :before-close="AfterSaleContractClose">
-      <SelAfterSaleContract  :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @SelAfterSaleContract="SelAfterSaleContract"/>
+      <SelAfterSaleContract  @SelAfterSaleContract="SelAfterSaleContract"/>
     </el-dialog>
   </div>
 </template>
@@ -213,12 +213,6 @@ export default {
       isShow: false,
       Loading: false,
       WriteData: {
-        id: null,
-        cityname: '',
-        belongtype: null,
-        remark: '',
-        realityname: '',
-        createtime: null,
         price: null,
         warrantyperiod: null,
         maintenancettime: null, //
@@ -226,7 +220,7 @@ export default {
         sparetypeid: '', // 备件类型id
         sparemanufacturerid: '', // 备件厂家id
         manufacturersname: '', // 维修厂家名称
-        sparemodelname: '', // 备件型号名称
+        sparemodel: '', // 备件型号名称
         sparemodelid: '', // 备件型号id
         manufacturerid: '', // 维修厂家
         name: ''// 备件厂家名称
@@ -280,19 +274,19 @@ export default {
       this.WriteData.sparetypeid = id
       this.WriteData.typename = name
       this.WriteData.sparemodelid = null
-      this.WriteData.sparemodelname = null
+      this.WriteData.sparemodel = null
     },
     Selmanufacturerid (name, id) {
       this.SparemanufacturerShow = false
       this.WriteData.sparemanufacturerid = id
       this.WriteData.name = name
       this.WriteData.sparemodelid = null
-      this.WriteData.sparemodelname = null
+      this.WriteData.sparemodel = null
     },
     SelSpareconModelid (name, id) {
       this.sparemodelShow = false
       this.WriteData.sparemodelid = id
-      this.WriteData.sparemodelname = name
+      this.WriteData.sparemodel = name
     },
     SelAfterSaleContract (name, id) {
       this.manufactureridShow = false
@@ -306,8 +300,6 @@ export default {
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true

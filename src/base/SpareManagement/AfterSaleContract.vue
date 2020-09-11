@@ -33,9 +33,9 @@
             <tbody>
             <tr class="el-table__row">
               <td><div class="cell">城市</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader :key="key" v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -213,6 +213,7 @@ export default {
           }
         }
       },
+      key: 1,
       administratorShow: false,
       isShow: false,
       Loading: false,
@@ -241,16 +242,16 @@ export default {
       this.WriteData.phonenum = phone
     },
     administratorClose () { this.administratorShow = !this.administratorShow },
-    changecityArea (obj) {
-      // console.log(obj)
-      obj.provinceid = obj.AreaList[0]
-      obj.cityid = obj.AreaList[1]
-    },
     setArea (list, key = 'csArea') {
       this.nodes = list
       this.$refs[key].panel.activePath = []
       this.$refs[key].panel.loadCount = 0
       this.$refs[key].panel.lazyLoad()
+    },
+    changecityArea (obj) {
+      // console.log(obj)
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
     },
     _normalizeCityAreaLevel (list) {
       for (let i in list) {
@@ -264,10 +265,13 @@ export default {
       this.ImgList1 = []
     },
     setWriteData (data) {
+      //   console.log(data)
       this.WriteData = data
-      this.setImgList(data.imglist)
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
-      this.setArea(this.WriteData.AreaList, 'csArea')
+      //  this.setImgList(data.imglist)
+      this.key++
+      this.WriteData.AreaList = [data.provinceid, data.cityid]
+      /*   this.setArea(this.WriteData.AreaList, 'csArea') */
+      console.log(this.WriteData.AreaList)
       if (parseInt(this.WriteState) === 2) {
         this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'
       }
@@ -282,7 +286,6 @@ export default {
       if (val === 1) this.$emit('fatherOpenImgBox', '合同文件', 'files', this.ImgList1)
     },
     WriteClose () {
-      this.setArea([])
       this.ResetWrite()
       this.$emit('fatherClose')
     },

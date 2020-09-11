@@ -216,11 +216,11 @@
                 <el-form-item class="form-item" prop="networktype">
                   <el-select v-model="WriteData.networktype" multiple>
                     <el-option label="请选择" :value="null"></el-option>
-                    <el-option v-for="i in DicList.networktype" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                    <el-option v-for="i in DicList.networktype" :key="i.text" :label="i.text" :value="i.text"></el-option>
                   </el-select>
                 </el-form-item>
               </div></td>
-              <td v-show="WriteState === 2"><div class="cell">{{WriteData.networktypename}}</div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{WriteData.networktype}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell">{{writeDic(DicList.networktype)}}</div></td> -->
               <td><div class="cell"></div></td>
@@ -347,6 +347,9 @@ export default {
       }).then(res => {
         this.Loading = false
         this.WriteData = res.data
+        if(this.WriteState === 1){
+          this.WriteData.networktype = this.WriteData.networktype ? this.WriteData.networktype.split(',') : this.WriteData.networktype.split('')
+        }
         this.setImgList(res.data.imglist)
       })
     }
@@ -404,9 +407,17 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
+          if (this.WriteData.networktype.length) {
+            this.WriteData.networktype = this.WriteData.networktype.join(',')
+          } else {
+            this.WriteData.networktype = this.WriteData.networktype.toString()
+          }
           this.$axios.post(AddOperatorEquipment, this.WriteData).then(res => {
             this.Loading = false
-            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode !== '200') {
+              this.WriteData.networktype = this.WriteData.networktype ? this.WriteData.networktype.split(',') : this.WriteData.networktype.split('')
+              this.$message.error(res.errorMessage)
+            }
             this.$message.success('添加成功!')
             this.$emit('fatheretMore')
             this.WriteClose()
@@ -424,9 +435,17 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
+          if (this.WriteData.networktype.length) {
+            this.WriteData.networktype = this.WriteData.networktype.join(',')
+          } else {
+            this.WriteData.networktype = this.WriteData.networktype.toString()
+          }
           this.$axios.put(UpdateOperatorEquipment, this.WriteData).then(res => {
             this.Loading = false
-            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode !== '200') {
+              this.WriteData.networktype = this.WriteData.networktype ? this.WriteData.networktype.split(',') : this.WriteData.networktype.split('')
+              this.$message.error(res.errorMessage)
+            }
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
               this.$emit('fatheretMore')
@@ -447,13 +466,21 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
+          if (this.WriteData.networktype.length) {
+            this.WriteData.networktype = this.WriteData.networktype.join(',')
+          } else {
+            this.WriteData.networktype = this.WriteData.networktype.toString()
+          }
           this.$axios.post(AddOperatorEquipmentTaskEquipment, this.WriteData, {
             params: {
               censusstate: state
             }
           }).then(res => {
             this.Loading = false
-            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode !== '200') {
+              this.WriteData.networktype = this.WriteData.networktype ? this.WriteData.networktype.split(',') : this.WriteData.networktype.split('')
+              this.$message.error(res.errorMessage)
+            }
             this.$message.success('添加成功!')
             this.$emit('fatheretMore')
             this.WriteClose()
@@ -471,13 +498,21 @@ export default {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
+          if (this.WriteData.networktype.length) {
+            this.WriteData.networktype = this.WriteData.networktype.join(',')
+          } else {
+            this.WriteData.networktype = this.WriteData.networktype.toString()
+          }
           this.$axios.put(EditOperatorEquipmentTaskEquipment, this.WriteData, {
             params: {
               censusstate: state
             }
           }).then(res => {
             this.Loading = false
-            if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
+            if (res.errorCode !== '200') {
+              this.WriteData.networktype = this.WriteData.networktype ? this.WriteData.networktype.split(',') : this.WriteData.networktype.split('')
+              this.$message.error(res.errorMessage)
+            }
             if (res.errorCode === '200') {
               this.$message.success('编辑成功!')
               this.$emit('fatheretMore')

@@ -400,10 +400,13 @@
               <td><div class="cell">外爬塔爬梯离地高度是否2米(m)</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="liftoffheight">
-                  <el-input v-model="WriteData.liftoffheight"></el-input>
+                  <el-select v-model="WriteData.liftoffheight">
+                    <el-option label="是" :value="true"></el-option>
+                    <el-option label="否" :value="false"></el-option>
+                  </el-select>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState === 2"><div class="cell">{{WriteData.liftoffheight}}</div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{WriteData.liftoffheight ? '是' : '否'}}</div></td>
               <td><div class="cell"></div></td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
@@ -573,7 +576,7 @@ export default {
         flatnumber: '',
         rrunumber: '',
         platformusingunit: null,
-        liftoffheight: '',
+        liftoffheight: true,
         warninglabels: false,
         floorderricknumber: '',
         antennanum: '',
@@ -666,10 +669,10 @@ export default {
         this.$emit('fatherOpenImgBox', '资源型号', 'models', this.ImgList2)
       }
       if (val === 3) {
-        this.$emit('fatherOpenImgBox', '经度', 'models', this.ImgList3)
+        this.$emit('fatherOpenImgBox', '经度', 'longitude', this.ImgList3)
       }
       if (val === 4) {
-        this.$emit('fatherOpenImgBox', '铁塔类型', 'models', this.ImgList4)
+        this.$emit('fatherOpenImgBox', '铁塔类型', 'thetowertype', this.ImgList4)
       }
     },
     SubWrite (state) {

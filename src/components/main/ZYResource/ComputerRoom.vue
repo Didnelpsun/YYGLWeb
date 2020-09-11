@@ -48,8 +48,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
           </div>
         </el-col>
       </el-row>
@@ -70,8 +70,7 @@
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
+            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>-->
           </template>
         </el-table-column>
       </el-table>

@@ -82,7 +82,7 @@ import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from '../../../base/ImgBox'
-import {Getmanufacturerinfo, GetIdSpareTypList, Deletemanufacturerinfo} from 'api/BJGL'
+import {Getmanufacturerinfo, Getidmanufacturerinfo, Deletemanufacturerinfo} from 'api/BJGL'
 import Details from 'base/SpareManagement/AfterSaleContract'
 export default {
   name: 'AfterSaleContract',
@@ -171,12 +171,8 @@ export default {
       this.WriteState = state
       this.showWrite = true
       if (state) {
-        this.$refs.Details.Loading = false
-        this.$refs.Details.setWriteData({realityname: 'sjw'})
-      }
-      /*     if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(null, {
+        this.$axios.get(Getidmanufacturerinfo, {
           params: {
             Id: row.id
           }
@@ -187,7 +183,7 @@ export default {
           this.$refs.Details.Loading = false
           console.log(err)
         })
-      } */
+      }
     },
     handle2 (row) {
       this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {

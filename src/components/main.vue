@@ -106,8 +106,8 @@ export default {
       })
       if (index < 0) {
         this.currentIndex = this.MenuList.length
-        if (this.MenuList.length === 10) {
-          return this.$message.error('页面打开上限为10个,请手动关闭页面')
+        if (this.MenuList.length === 15) {
+          return this.$message.error('页面打开上限为15个,请手动关闭页面')
         } else {
           this.MenuList.push(e)
         }

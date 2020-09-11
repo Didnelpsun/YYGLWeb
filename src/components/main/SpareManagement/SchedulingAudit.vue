@@ -46,12 +46,12 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="schedulingtype" label="调度类型"></el-table-column>
+        <el-table-column prop="schedulingtype" :formatter="schedulingtypeShow" label="调度类型"></el-table-column>
         <el-table-column prop="inqrcode" label="备件编码"></el-table-column>
         <el-table-column prop="sparepartstypeid" label="备件类型"></el-table-column>
         <el-table-column prop="manufacturerid" label="设备厂家"></el-table-column>
         <el-table-column prop="" label="备件型号"></el-table-column>
-        <el-table-column prop="instate" label="备件状态"></el-table-column>
+        <el-table-column prop="instate"  label="备件状态"></el-table-column>
         <el-table-column prop="depotsid" label="存放点"></el-table-column>
         <el-table-column prop="indepotsid" label="入库存放点"></el-table-column>
         <el-table-column prop="applicantid" label="申请时间"></el-table-column>
@@ -82,7 +82,7 @@
 <script>
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {Operationlog, Schedulingdetails} from 'api/BJGL'
 import Details from 'base/SpareManagement/SchedulingAudit'
 export default {
   name: 'SchedulingAudit',
@@ -110,6 +110,10 @@ export default {
     this.getDic()
   },
   methods: {
+
+    schedulingtypeShow (val) {
+      return val === 1 ? '新增' : val === 2 ? '报修' : val === 3 ? '送修' : val === 4 ? '报废' : val === 5 ? '借用' : val === 6 ? '替换' : val === 7 ? '归还' : val === 8 ? '点验' : val === 9 ? ' 上站' : val === 9 ? ' 领用' : '返修'
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
@@ -126,8 +130,8 @@ export default {
       })
     },
     getData1 () {
-      /* this.Loading = true
-      this.$axios.get(GetSpareTypList, {
+      this.Loading = true
+      this.$axios.get(Operationlog, {
         params: {
           PageIndex: 1,
           PageSize: 10
@@ -136,14 +140,14 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
       this.tableData = [{cityname: '武汉'}]
       this.total = 1
     },
     getMore (page) {
-      /* this.currentPage = page
+      this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(Operationlog, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       })}).then(res => {
@@ -152,7 +156,7 @@ export default {
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
-      }) */
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -161,20 +165,18 @@ export default {
     WriteClose () { this.showWrite = false },
     Audit (row) {
       this.showWrite = true
-      /*      if (state) {
-        this.$refs.Details.Loading = true
-        this.$axios.get(GetIdSpareTypList, {
-          params: {
-            Id: row.id
-          }
-        }).then(res => {
-          this.$refs.Details.Loading = false
-          this.$refs.Details.setWriteData(res.data)
-        }).catch(err => {
-          this.$refs.Details.Loading = false
-          console.log(err)
-        })
-      } */
+      this.$refs.Details.Loading = true
+      this.$axios.get(Schedulingdetails, {
+        params: {
+          Id: row.id
+        }
+      }).then(res => {
+        this.$refs.Details.Loading = false
+        this.$refs.Details.setWriteData(res.data)
+      }).catch(err => {
+        this.$refs.Details.Loading = false
+        console.log(err)
+      })
     }
   },
   components: {

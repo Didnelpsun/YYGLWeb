@@ -34,9 +34,9 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.typename}}</div>
-                <div v-if="WriteState !== 2" @click="SpareWarehouseShowchange">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择存放点名"></el-input>
+                <div v-if="WriteState == 2">{{depotstype}}</div>
+                <div v-if="WriteState !== 2" @click="SpareWarehouseShow=true">
+                  <el-input v-model="depotstype" readonly placeholder="请选择存放点名"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -69,7 +69,7 @@
               <td><div class="cell">权属</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.unitsname}}</div>
-                <div v-if="WriteState !== 2" @click="unitsShowchange">
+                <div v-if="WriteState !== 2" @click="unitsShow=true">
                   <el-input v-model="WriteData.unitsname" readonly placeholder="请选择权属"></el-input>
                 </div></div>
               </td>
@@ -112,7 +112,7 @@
         </div>
       </el-form>
       <el-form   v-loading="Loading" ref="WriteForm1" label-width="0" :show-message="false">
-        <div class="el-table__body-wrapper is-scrolling-none"  v-for="(item,key) in WriteData1" :key="key">
+        <div class="el-table__body-wrapper is-scrolling-none"  v-for="(item,key) in WriteData.list" :key="key">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
               <col width="80"/>
@@ -170,8 +170,13 @@
         <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
-    <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
+    <div v-if="SpareWarehouseShow">
+    <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
       <SelectUserOperation :check="check"  @SelectUserOperation="SelectUserOperation"/>
+    </el-dialog>
+    </div>
+    <el-dialog top="1%" :visible.sync="unitsShow" title="选择存放点" width="80%" :before-close="SpareWarehousePickerClose">
+      <SpareWarehousePicker   @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
   </div>
 </template>
@@ -182,8 +187,9 @@ import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
+import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 
-import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
+import {Editspareparts, Addspareparts} from 'api/BJGL'
 export default {
   name: 'Spareparts',
   mixins: [GlobalRes],
@@ -202,7 +208,6 @@ export default {
   data () {
     return {
       code: '',
-      Show: false,
       unitsShow: false,
       sparetypeShow: false,
       sparemodelShow: false,
@@ -210,23 +215,22 @@ export default {
       SpareWarehouseShow: false,
       isShow: false,
       check: 1,
+      depotstype: null,
       Loading: false,
-      WriteData1: [],
+
       WriteData: {
-        id: null,
-        cityname: '',
-        remark: '',
-        storestate: null,
-        realityname: '',
-        createtime: null,
         sparepartstype: null, // 备件类型名称
         sparepartstypeid: '', // 备件类型id
         manufacturerid: '', // 备件厂家id
         sparemodel: '', // 备件型号名称
         sparemodelid: '', // 备件型号id
         manufacturer: '', // 备件厂家名称
-        typename: '', // 存放点名称
-        warehouseid: ''// 存放点di
+        /* depotstype: '', // 存放点名称 */
+        depotsid: '', // 存放点di
+        /*   operationtype: 1,
+        storestate: 0 */
+        list: [],
+        unitsname: ''
       },
       Rules: {
         Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }]
@@ -239,14 +243,6 @@ export default {
     handledelete (val) {
       this.WriteData1.splice(val, 1)
     },
-    SpareWarehouseShowchange () {
-      this.SpareWarehouseShow = true
-      this.Show = true
-    },
-    unitsShowchange () {
-      this.Show = true
-      this.unitsShow = true
-    },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
@@ -256,6 +252,7 @@ export default {
     },
     WriteClose () {
       this.ResetWrite()
+      this.depotstype = null
       this.$emit('fatherClose')
     },
     SubWrite () {
@@ -281,33 +278,28 @@ export default {
       this.WriteData.sparemodelid = id
       this.WriteData.sparemodel = name
     },
-    SelectUserOperation (name, code, id) {
-      if (this.SpareWarehouseShow) {
-        this.WriteData.typename = name
-        this.WriteData.warehouseid = id
-      }
-      if (this.unitsShow) {
-        this.WriteData.unitsname = name
-        this.WriteData.units = id
-      }
-    },
-    SelectUserOperationClose () {
+    SelectUserOperation (operation, name, Warehousesid) {
       this.SpareWarehouseShow = false
-      this.unitsShow = false
-      this.Show = false
+      this.depotstype = name.trim()
+      this.WriteData.depotsid = Warehousesid
     },
+    SpareWarehousePicker (name, code, id) {
+      this.unitsShow = false
+      this.WriteData.unitsname = name
+      this.WriteData.units = id
+    },
+    SelectUserOperationClose () { this.SpareWarehouseShow = false },
+    SpareWarehousePickerClose () { this.unitsShow = false },
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
     SubAdd () {
-      /*   this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(Addmaintenanceconfig, this.WriteData).then(res => {
+          this.$axios.post(Addspareparts, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -315,17 +307,15 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     },
     SubEdit () {
-      /*    this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(Editmaintenanceconfig, this.WriteData).then(res => {
+          this.$axios.put(Editspareparts, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -334,19 +324,20 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
     }
   },
   components: {
     Selectsparetype,
     Selectmanufacturer,
     SelectSpareconMode,
-    SelectUserOperation
+    SelectUserOperation,
+    SpareWarehousePicker
   },
   watch: {
     code () {
       if (this.code.length) {
-        this.WriteData1.push({code: this.code, assetsencoding: '', warrantycode: ''})
+        this.WriteData.list.push({code: this.code, assetsencoding: '', warrantycode: ''})
       }
       this.code = ''
     }
