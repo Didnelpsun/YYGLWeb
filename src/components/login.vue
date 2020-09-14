@@ -58,6 +58,7 @@ export default {
     ...mapGetters(['token'])
   },
   created () {
+    this.getBrowserInfo()
     this.hasToken()
     this.handleVailImg()
   },
@@ -70,6 +71,16 @@ export default {
     this.enterKeyupDestroyed()
   },
   methods: {
+    getBrowserInfo () {
+      var userAgent = navigator.userAgent // 取得浏览器的userAgent字符串
+      var isOpera = userAgent.indexOf('Opera') > -1
+      if (isOpera) { // 判断是否Opera浏览器
+        return this.$message.error('请使用谷歌浏览器')
+      }
+      if (userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1 && !isOpera) { // 判断是否IE浏览器
+        return this.$message.error('请使用谷歌浏览器')
+      }
+    },
     enterKey (event) {
       const componentName = this.$options.name
       if (componentName === 'login') {

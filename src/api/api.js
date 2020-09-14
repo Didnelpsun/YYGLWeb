@@ -178,12 +178,12 @@ export const GetBatteryGeneratorExcel = `${reqURL}/ZYGL/BatteryGenerator/GetBatt
 // 外电引入
 export const GetElectricIntroducedInfo = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedInfo` // 获取外电引入详情
 export const GetElectricIntroducedList = `${reqURL}/ZYGL/AnElectricIntroduced/GetElectricIntroducedList` // 获取外电引入列表
-export const GetElectricIntroducedExcel = `${reqURL}/ZYGL/AnElectricIntroduced/GetBatteryExcel` // 获取外电引入详情
+export const GetElectricIntroducedExcel = `${reqURL}/ZYGL/AnElectricIntroduced/GetBatteryExcel` // 外电引入导出
 
 // 电表
 export const GetElectricMeterInfo = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterInfo` // 获取电表详情
 export const GetElectricMeterList = `${reqURL}/ZYGL/ElectricMeter/GetElectricMeterList` // 获取电表列表
-export const GetAmmeterExcel = `${reqURL}/ZYGL/ElectricMeter/GetBatteryExcel` // 获取电表详情
+export const GetAmmeterExcel = `${reqURL}/ZYGL/ElectricMeter/GetBatteryExcel` // 电表导出
 
 // FuelGenerator 燃油发电机
 export const AddOilFiredGenerator = `${reqURL}/ZYGL/OilFiredGenerator/AddOilFiredGenerator` // 新增燃油发电机

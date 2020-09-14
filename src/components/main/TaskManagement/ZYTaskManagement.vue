@@ -624,6 +624,7 @@
       <PowerAndEnvironment ref="PowerAndEnvironment" v-if="showPowerAndEnvironment" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></PowerAndEnvironment>
       <CommunicationAndLocation ref="CommunicationAndLocation" v-if="showCommunicationAndLocation" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></CommunicationAndLocation>
       <RectifierModule ref="RectifierModule" v-if="showRectifierModule" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></RectifierModule>
+      <Ammeter ref="Ammeter" v-if="showAmmeter" :isTask="1" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Ammeter>
       <HiddenDanger ref="HiddenDanger" v-if="showHiddenDanger" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></HiddenDanger>
       <Maintain ref="Maintain" v-if="showMaintain" :DeviceID="DeviceID" :WriteState="WriteState"  @fatherOpenImgBox="OpenImgBox" @fatherClose="WriteClose"></Maintain>
     </el-dialog>
@@ -647,6 +648,7 @@ import SwitchingPowerSupply from 'base/ZYResource/SwitchingPowerSupply'
 import StorageBattery from 'base/ZYResource/StorageBattery'
 import PowerAndEnvironment from 'base/ZYResource/PowerAndEnvironment'
 import RectifierModule from 'base/ZYResource/RectifierModule'
+import Ammeter from 'base/ZYResource/Ammeter'
 import CommunicationAndLocation from 'base/ZYResource/CommunicationAndLocation'
 import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
@@ -754,6 +756,7 @@ export default {
       showStorageBattery: false, // 蓄电池
       showPowerAndEnvironment: false, // 动力及环境监测单元
       showCommunicationAndLocation: false, // 通讯与位置终端
+      showAmmeter: false,
       showRectifierModule: false, // 整流模块
       showHiddenDanger: false, // 隐患详情
       showMaintain: false,
@@ -1367,6 +1370,17 @@ export default {
                 this.$refs.CommunicationAndLocation.WriteData.equipmenttypename = this.SelectDeviceType
               })
               break
+            case '电表':
+              this.showAmmeter = true
+              this.$nextTick(() => {
+                this.$refs.Ammeter.WriteData.task_id = this.currentTaskId
+                this.$refs.Ammeter.WriteData.equipmenttype_id = obj[0].equipmenttype_id
+                this.$refs.Ammeter.WriteData.resource_id = this.editSiteId
+                this.$refs.Ammeter.WriteData.resourcecode = this.editResourcecode
+                this.$refs.Ammeter.WriteData.resourcename = this.editResourcename
+                this.$refs.Ammeter.WriteData.equipmenttypename = this.SelectDeviceType
+              })
+              break
           }
         } else {
           this.$message.error(res.msg)
@@ -1524,6 +1538,9 @@ export default {
           break
         case '通讯与位置终端':
           this.showCommunicationAndLocation = true
+          break
+        case '电表':
+          this.showAmmeter = true
           break
       }
     },
@@ -1787,6 +1804,7 @@ export default {
         this.showSwitchingPowerSupply = false
         this.showRectifierModule = false
         this.showCommunicationAndLocation = false
+        this.showAmmeter = false
         this.showStorageBattery = false
         this.showPowerAndEnvironment = false
         this.showHiddenDanger = false
@@ -1819,7 +1837,8 @@ export default {
     HiddenDanger,
     Maintain,
     RectifierModule,
-    CommunicationAndLocation
+    CommunicationAndLocation,
+    Ammeter
   }
 }
 </script>

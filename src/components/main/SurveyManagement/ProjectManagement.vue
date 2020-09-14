@@ -95,9 +95,10 @@
         <el-table-column prop="" label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleSend(scope.$index, scope.row)">派发</el-button>
-            <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row)">详情</el-button>
+            <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row, 2)">详情</el-button>
             <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>
-            <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑项目</el-button>
+            <el-button v-if="scope.row.taskstatename === '待执行'" type="text" size="mini" @click="handleWrite(scope.$index, scope.row, 1)">编辑项目明细</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -344,7 +345,6 @@
           <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template></el-table-column>
           <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
           <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-          <el-table-column prop="" label="起租情况" width=""></el-table-column>
           <el-table-column prop="M" label="需求距离（m）" width="" :formatter="formatDistance"></el-table-column>
         </el-table>
       </div>
@@ -762,9 +762,10 @@ export default {
         })
       })
     },
-    handleWrite (index, row) {
+    handleWrite (index, row, state) {
       let data = {
         id: row.id,
+        state: state,
         taskstate: row.taskstatename,
         from: 'ProjectManagement'
       }

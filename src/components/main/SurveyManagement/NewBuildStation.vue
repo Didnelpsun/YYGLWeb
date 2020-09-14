@@ -1,6 +1,6 @@
 <template>
   <div v-loading="WriteLoading" style="margin:15px">
-    <layuiTitle title="新建站详情"></layuiTitle>
+    <layuiTitle :title="SurveyInfo.state === 1 ? '编辑新建站' : '新建站详情'"></layuiTitle>
     <el-tabs class="content-card" v-model="ViewTabIndex">
       <el-tab-pane label="项目详情">
       <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
@@ -282,7 +282,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -292,70 +292,84 @@
               <col width="100"/>
             </colgroup>
             <tbody>
-              <!--基站地址-->
+            <!--基站地址-->
             <tr class="el-table__row">
               <td><div class="cell">基站地址</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.resourceaddress}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="resourceaddress">
+                  <el-input v-model="tableData.resourceaddress"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{tableData.resourceaddress}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--地理环境-->
             <tr class="el-table__row">
               <td><div class="cell">地理环境</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.geographicname}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="geographic">
+                  <el-select v-model="tableData.geographic">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.geographic" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.geographicname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--建站模式-->
             <tr class="el-table__row">
               <td><div class="cell">建站模式</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.websitebuildingmodename}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="websitebuildingmode">
+                  <el-select v-model="tableData.websitebuildingmode">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.websitebuildingmode" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.websitebuildingmodename}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--覆盖场景-->
             <tr class="el-table__row">
               <td><div class="cell">覆盖场景</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.coversscenarioname}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="coversscenario">
+                  <el-select v-model="tableData.coversscenario">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.coversscenario" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.coversscenarioname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--实际经度-->
             <tr class="el-table__row">
               <td><div class="cell">实际经度</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.realitylongitude}}</div>
-                </div>
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                <el-form-item class="form-item" prop="realitylongitude">
+                  <el-input v-model="tableData.realitylongitude" readonly style="width: 80%"></el-input>
+                  <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell location"><span>{{tableData.realitylongitude}}</span><i class="el-icon-location icon_location"></i></div>
               </td>
-              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--实际纬度-->
             <tr class="el-table__row">
               <td><div class="cell">实际纬度</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.realitylatitude}}</div>
-                </div>
+              <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
+                <el-form-item class="form-item" prop="realitylatitude">
+                  <el-input v-model="tableData.realitylatitude" readonly style="width: 80%"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2" @click="OpenMap(0)">
+                <div class="cell">{{tableData.realitylatitude}}</div>
               </td>
-              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--与需求偏移距离-->
@@ -363,21 +377,24 @@
               <td><div class="cell">与规划偏移距离(米)</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.demanddistance ? tableData.demanddistance.toFixed(2) : tableData.demanddistance}}</div>
+                  <div>{{tableData.demanddistance}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
-            <!--归属运营商-->
             <tr class="el-table__row">
               <td><div class="cell">本次需求归属运营商</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.ownedoperator}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell">{{this.writeDic(dictionaryList.ownedoperatorList)}}</div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="ownedoperator">
+                  <el-select v-model="tableData.ownedoperator" multiple placeholder="请选择" size="small">
+                    <!--<el-option label="请选择" :value="0"></el-option>-->
+                    <el-option v-for="i in DicList.ownedoperator" :key="i.text" :label="i.text" :value="i.text"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{tableData.ownedoperator}}</div></td>
+              <!--<td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <!--最近站点-->
@@ -385,10 +402,11 @@
               <td><div class="cell">最近站点</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.recentlyresourcename}}</div>
-                </div>
+                  <div v-show="WriteState == 2">{{tableData.recentlyresourcename}}</div>
+                  <div v-show="WriteState !== 2" @click="showDialog">
+                    <el-input v-model="tableData.recentlyresourcename" readonly placeholder="请选择"></el-input>
+                  </div></div>
               </td>
-              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <!--与存量站之间的距离-->
@@ -396,7 +414,7 @@
               <td><div class="cell">与存量站之间的距离(米)</div></td>
               <td>
                 <div class="cell">
-                  <div>{{tableData.resourcedistance ? tableData.resourcedistance.toFixed(2) : tableData.resourcedistance}}</div>
+                  <div>{{tableData.resourcedistance}}</div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -430,7 +448,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -442,251 +460,301 @@
             <tbody>
             <template v-if="tableData.websitebuildingmode===1">
             <!--建筑物类型-->
-            <tr class="el-table__row">
-              <td><div class="cell">建筑物类型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.buildingtype}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">建筑物类型</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="buildingtype">
+                    <el-input v-model="tableData.buildingtype"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.buildingtype}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否能够获取楼面结构情况-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否能够获取楼面结构情况</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.floorstructurecondition === true">是</div>
-                  <div v-else-if="tableData.floorstructurecondition === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否能够获取楼面结构情况</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="floorstructurecondition">
+                    <el-select v-model="tableData.floorstructurecondition">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.floorstructurecondition === null ? '' : tableData.floorstructurecondition ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--维护是否方便-->
-            <tr class="el-table__row">
-              <td><div class="cell">维护是否方便</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.maintenancefriendly === true">是</div>
-                  <div v-else-if="tableData.maintenancefriendly === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">维护是否方便</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="maintenancefriendly">
+                    <el-select v-model="tableData.maintenancefriendly">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.maintenancefriendly === null ? '' : tableData.maintenancefriendly ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--建筑总楼层-->
-            <tr class="el-table__row">
-              <td><div class="cell">建筑总楼层</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.mainbuildingfloor}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">建筑总楼层</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="mainbuildingfloor">
+                    <el-input v-model="tableData.mainbuildingfloor"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.mainbuildingfloor}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--机房所在楼层-->
-            <tr class="el-table__row">
-              <td><div class="cell">机房所在楼层</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.computerroomfloor}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">机房所在楼层</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="computerroomfloor">
+                    <el-input v-model="tableData.computerroomfloor"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.computerroomfloor}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--塔桅所在楼层-->
-            <tr class="el-table__row">
-              <td><div class="cell">塔桅所在楼层</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermastfloor}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">塔桅所在楼层</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermastfloor">
+                    <el-input v-model="tableData.towermastfloor"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermastfloor}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--楼面安全评估-->
-            <tr class="el-table__row">
-              <td><div class="cell">楼面安全评估</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.floorsafetyassessment}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">楼面安全评估</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="floorsafetyassessment">
+                    <el-input v-model="tableData.floorsafetyassessment"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.floorsafetyassessment}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--新建塔型-->
-            <tr class="el-table__row">
+              <tr class="el-table__row">
                 <td><div class="cell">新建塔型</div></td>
-                <td>
-                  <div class="cell">
-                    <div>{{tableData.newtower}}</div>
-                  </div>
-                </td>
-                <!-- <td><div class="cell"></div></td> -->
+                <td v-if="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="newtower">
+                    <el-select v-model="tableData.newtower" multiple placeholder="请选择" size="small">
+                      <!--<el-option label="请选择" :value="0"></el-option>-->
+                      <el-option v-for="i in DicList.newtower" :key="i.text" :label="i.text" :value="i.text"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState == 2"><div class="cell">{{tableData.newtower instanceof Array ? '' : tableData.newtower}}</div></td>
+                <!--<td><div class="cell"></div></td>-->
                 <td><div class="cell"></div></td>
               </tr>
             </template>
             <template v-if="tableData.websitebuildingmode===2">
             <!--是否存在危险源-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否存在危险源</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.existinghazard === true">是</div>
-                  <div v-else-if="tableData.existinghazard === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否存在危险源</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="existinghazard">
+                    <el-select v-model="tableData.existinghazard">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.existinghazard === null ? '' : tableData.existinghazard ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否在河道/铁路/高速附近-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否在河道/铁路/高速附近</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.theriver === true">是</div>
-                  <div v-else-if="tableData.theriver === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否在河道/铁路/高速附近</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="theriver">
+                    <el-select v-model="tableData.theriver">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.theriver === null ? '' : tableData.theriver ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--地势低洼-->
-            <tr class="el-table__row">
-              <td><div class="cell">地势低洼</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.owlying ? '是' : '否'}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">地势低洼</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="lowlying">
+                    <el-select v-model="tableData.lowlying">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.lowlying === null ? '' : tableData.lowlying ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要护坡/挡土墙-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要护坡/挡土墙</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.needrevetment === true">是</div>
-                  <div v-else-if="tableData.needrevetment === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要护坡/挡土墙</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="needrevetment">
+                    <el-select v-model="tableData.needrevetment">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.needrevetment === null ? '' : tableData.needrevetment ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要修建围墙-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要修建围墙</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.buildwall === true">是</div>
-                  <div v-else-if="tableData.buildwall === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要修建围墙</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="buildwall">
+                    <el-select v-model="tableData.buildwall">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.buildwall === null ? '' : tableData.buildwall ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要修建道路-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要修建道路</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.buildroads === true">是</div>
-                  <div v-if="tableData.buildroads === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要修建道路</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="buildroads">
+                    <el-select v-model="tableData.buildroads">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.buildroads === null ? '' : tableData.buildroads ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要二次搬运-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要二次搬运</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.secondaryhandling === true">是</div>
-                  <div v-if="tableData.secondaryhandling === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要二次搬运</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="secondaryhandling">
+                    <el-select v-model="tableData.secondaryhandling">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.secondaryhandling === null ? '' : tableData.secondaryhandling ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要接地外引-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要接地外引</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.Irfpagrounding === true">是</div>
-                  <div v-else-if="tableData.Irfpagrounding === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要接地外引</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="Irfpagrounding">
+                    <el-select v-model="tableData.Irfpagrounding">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.Irfpagrounding === null ? '' : tableData.Irfpagrounding ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否有较深垃圾回填土质-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否有较深垃圾回填土质</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.backfillsoil === true">是</div>
-                  <div v-else-if="tableData.backfillsoil === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否有较深垃圾回填土质</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="backfillsoil">
+                    <el-select v-model="tableData.backfillsoil">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.backfillsoil === null ? '' : tableData.backfillsoil ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--施工吊装机械是否可用入场-->
-            <tr class="el-table__row">
-              <td><div class="cell">施工吊装机械是否可用入场</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.hoistingmachinery === true">是</div>
-                  <div v-else-if="tableData.hoistingmachinery === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">施工吊装机械是否可用入场</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="hoistingmachinery">
+                    <el-select v-model="tableData.hoistingmachinery">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.hoistingmachinery === null ? '' : tableData.hoistingmachinery ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--施工空间是否足够-->
-            <tr class="el-table__row">
-              <td><div class="cell">施工空间是否足够</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.constructionspace === true">是</div>
-                  <div v-else-if="tableData.constructionspace === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">施工空间是否足够</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="constructionspace">
+                    <el-select v-model="tableData.constructionspace">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.constructionspace === null ? '' : tableData.constructionspace ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--是否需要地勘-->
-            <tr class="el-table__row">
-              <td><div class="cell">是否需要地勘</div></td>
-              <td>
-                <div class="cell">
-                  <div v-if="tableData.geologicalexploration === true">是</div>
-                  <div v-else-if="tableData.geologicalexploration === false">否</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">是否需要地勘</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="geologicalexploration">
+                    <el-select v-model="tableData.geologicalexploration">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option label="是" :value="true"></el-option>
+                      <el-option label="否" :value="false"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.geologicalexploration === null ? '' : tableData.geologicalexploration ? '是' : '否'}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--新建塔型-->
-            <tr class="el-table__row">
-              <td><div class="cell">新建塔型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.newtower}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-          </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">新建塔型</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="newtower">
+                    <el-select v-model="tableData.newtower">
+                      <el-option label="请选择" :value="null"></el-option>
+                      <el-option v-for="i in DicList.newtower" :key="i.id" :label="i.text" :value="i.text"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div></td>
+                <td v-show="WriteState === 2"><div class="cell">{{tableData.newtower}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             </template>
             </tbody>
           </table>
@@ -716,7 +784,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -728,91 +796,91 @@
             <tbody>
             <template v-if="tableData.websitebuildingmode === 1">
             <!--楼面站拟建楼面高度（米）-->
-            <tr class="el-table__row">
-              <td><div class="cell">楼面站拟建楼面高度（米）</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.floorheight}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">楼面站拟建楼面高度（米）</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="floorheight">
+                    <el-input v-model="tableData.floorheight"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.floorheight}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--楼面站拟建塔桅数量，高度（米），及塔型-->
-            <tr class="el-table__row">
-              <td><div class="cell">楼面站拟建塔桅数量</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermastnumber}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">楼面站拟建塔桅高度(米)</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermastheight}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">楼面站拟建塔桅塔型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermasttype}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">楼面站拟建塔桅数量</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermastnumber">
+                    <el-input v-model="tableData.towermastnumber"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermastnumber}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">楼面站拟建塔桅高度(米)</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermastheight">
+                    <el-input v-model="tableData.towermastheight"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermastheight}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">楼面站拟建塔桅塔型</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermasttype">
+                    <el-input v-model="tableData.towermasttype"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermasttype}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             </template>
             <template v-if="tableData.websitebuildingmode === 2">
             <!--地面站拟建塔桅数量、高度（米）、及塔型-->
-            <tr class="el-table__row">
-              <td><div class="cell">地面站拟建塔桅数量</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermastnumber}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">地面站拟建塔桅高度(米)</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermastheight}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">地面站拟建塔桅塔型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.towermasttype}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">地面站拟建塔桅数量</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermastnumber">
+                    <el-input v-model="tableData.towermastnumber"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermastnumber}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">地面站拟建塔桅高度(米)</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermastheight">
+                    <el-input v-model="tableData.towermastheight"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermastheight}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">地面站拟建塔桅塔型</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="towermasttype">
+                    <el-input v-model="tableData.towermasttype"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.towermasttype}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             <!--地面站拟建场地山高（米），平面填零-->
-            <tr class="el-table__row">
-              <td><div class="cell">地面站拟建场地山高（米），平面填零</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.sitegrowtaller}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">地面站拟建场地山高（米），平面填零</div></td>
+                <td v-show="WriteState !== 2"><div class="cell">
+                  <el-form-item class="form-item" prop="sitegrowtaller">
+                    <el-input v-model="tableData.sitegrowtaller"></el-input>
+                  </el-form-item>
+                </div></td>
+                <td v-if="WriteState === 2"><div class="cell">{{tableData.sitegrowtaller}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
             </template>
             </tbody>
           </table>
@@ -842,7 +910,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -854,41 +922,54 @@
             <tbody>
             <!--拟建机房类型-->
             <tr class="el-table__row">
-              <td><div class="cell">拟建机房类型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.roomtypename}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell">建站模式</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="roomtype">
+                  <el-select v-model="tableData.roomtype">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.roomtype" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.roomtypename}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--拟建机房细分类型-->
             <tr class="el-table__row" v-if="tableData.roomtype === 5">
               <td><div class="cell">拟建机房细分类型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.roomsubdividetypename}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="roomsubdividetype">
+                  <el-select v-model="tableData.roomsubdividetype">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.roomsubdividetype" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.roomsubdividetypename}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-if="tableData.roomtype === 1 || tableData.roomtype === 3 || tableData.roomtype === 4 || tableData.roomtype === 7">
-              <td><div class="cell">拟建机房产权 </div></td>
-              <td><div class="cell">{{tableData.roompropertyname}}</div></td>
-              <!--<td><div class="cell"></div></td>-->
+              <td><div class="cell">拟建机房产权</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="roomproperty">
+                  <el-select v-model="tableData.roomproperty">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.roomproperty" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.roompropertyname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--拟建机房尺寸-->
             <tr class="el-table__row" v-if="tableData.roomtype !== 5 && tableData.roomtype !== 6">
               <td><div class="cell">拟建机房尺寸</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.roomsize}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="roomsize">
+                  <el-input v-model="tableData.roomsize"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{tableData.roomsize}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -919,7 +1000,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -932,23 +1013,40 @@
             <!--原有引入类型-->
             <tr class="el-table__row">
               <td><div class="cell">引入类型</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.introducetypename}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="introducetype">
+                  <el-select v-model="tableData.introducetype">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.introducetype" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.introducetypename}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <!--原有引入电压-->
             <tr class="el-table__row">
               <td><div class="cell">引入电压</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.introducevoltagename}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="introducevoltage">
+                  <el-select v-model="tableData.introducevoltage">
+                    <el-option label="请选择" :value="null"></el-option>
+                    <el-option v-for="i in DicList.introducevoltage" :key="i.id" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div></td>
+              <td v-show="WriteState === 2"><div class="cell">{{tableData.introducevoltagename}}</div></td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <!--引入距离-->
+            <tr class="el-table__row">
+              <td><div class="cell">引入距离</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item" prop="introducedistance">
+                  <el-input v-model.number="tableData.introducedistance"></el-input>
+                </el-form-item>
+              </div></td>
+              <td v-if="WriteState === 2"><div class="cell">{{tableData.introducedistance}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -979,7 +1077,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading">
+        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -990,16 +1088,16 @@
             </colgroup>
             <tbody>
              <!--特殊情况说明-->
-            <tr class="el-table__row el-table__row--striped">
-              <td><div class="cell">特殊情况说明</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData.special}}</div>
-                </div>
-              </td>
-              <!-- <td><div class="cell"></div></td> -->
-              <td><div class="cell"></div></td>
-            </tr>
+             <tr class="el-table__row">
+               <td><div class="cell">特殊情况说明</div></td>
+               <td v-show="WriteState !== 2"><div class="cell">
+                 <el-form-item class="form-item" prop="special">
+                   <el-input v-model.number="tableData.special"></el-input>
+                 </el-form-item>
+               </div></td>
+               <td v-if="WriteState === 2"><div class="cell">{{tableData.special}}</div></td>
+               <td><div class="cell"></div></td>
+             </tr>
             </tbody>
           </table>
         </div>
@@ -1111,16 +1209,22 @@
         </el-row>
       </el-form>
     </el-dialog>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
+
+    <el-dialog top="1%" :visible.sync="isShow" title="选择站点" width="80%" :before-close="DialogClose">
+      <ResourceList v-if="isShow" :lng="tableData.realitylongitude" :lat="tableData.realitylatitude" @selectResource="selectResource"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask } from 'api/SurveyManagement'
+import GoogleMap from 'base/GoogleMap'
+import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask, GetDistance } from 'api/SurveyManagement'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from 'base/ImgBox'
 import EnvironmentImgBox from 'base/EnvironmentImgBox'
 import {mapGetters} from 'vuex'
-import ResourceList from 'base/Resource/ResourceList'
+import ResourceList from 'base/SurveyManagement/ResourceList'
 import layuiTitle from 'base/layui-title'
 import {GlobalRes} from 'common/js/mixins'
 
@@ -1131,15 +1235,10 @@ export default {
     return {
       ViewTabIndex: '0',
       WriteLoading: false,
-      // 保存属性取值的列表
-      dictionaryList: {
-        // taskstatename
-        taskstatenameList: [],
-        // ownedoperator
-        ownedoperatorList: [],
-        // constructionmode
-        constructionmodeList: []
-      },
+      WriteState: null,
+      showMap: false,
+      isShow: false,
+      DicList: {},
       SurveyInfo: {},
       // 项目属性
       tableData2: {
@@ -1188,6 +1287,7 @@ export default {
         resourceaddress: '',
         // 地理环境
         geographicname: '',
+        geographic: null,
         // 建站模式
         websitebuildingmode: 0,
         // 覆盖场景
@@ -1199,7 +1299,7 @@ export default {
         // 与需求偏移距离
         demanddistance: 0,
         // 归属运营商
-        ownedoperator: '',
+        ownedoperator: [],
         // 最近站点
         recentlyresourcename: '',
         // 与存量站之间的距离
@@ -1265,6 +1365,8 @@ export default {
         introducetypename: '',
         // 引入电压
         introducevoltagename: '',
+        // 引入距离
+        introducedistance: null,
         // 特殊情况说明
         special: '',
         // 图片列表
@@ -1288,8 +1390,9 @@ export default {
     } else if (this.SurveyInfoType === 2) {
       this.SurveyInfo = this.TaskSurveyInfo
     }
+    this.WriteState = this.SurveyInfo.state
     this.ViewTabIndex = '0'
-    // this.getList()
+    this.getList()
     this.getTableData()
     if (this.SurveyInfo.taskstate) {
       this.getNewBuildStationInfo()
@@ -1322,6 +1425,8 @@ export default {
       }).then(res => {
         if (res.data != null) {
           this.tableData = res.data
+          this.tableData.demanddistance = this.tableData.demanddistance ? this.tableData.demanddistance : '请选择经纬度后计算'
+          this.tableData.resourcedistance = this.tableData.resourcedistance ? this.tableData.resourcedistance.toFixed(2) : ''
           // if (res.data.environment) {
           //   this.environment = JSON.parse(res.data.environment)
           //   this.housingconstruction = JSON.parse(res.data.housingconstruction)
@@ -1333,19 +1438,41 @@ export default {
       })
     },
     getList () {
-      let s = ['勘察审核状态', '勘察建站方式', '勘察归属地运营商']
+      let s = ['勘察建站模式', '勘察运营商', '勘察地理环境', '勘察覆盖场景',
+        '勘察塔型', '勘察机房细分类型', '勘察机房类型', '勘察引入类型', '勘察引入电压', '勘察机房产权']
       this.Loading = true
       this.$axios.post(DictionaryInfoList, s).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
-          this.dictionaryList.taskstatenameList = data.filter(i => {
-            return i.type === '勘察审核状态'
+          this.DicList.geographic = data.filter(i => {
+            return i.type === '勘察地理环境'
           })
-          this.dictionaryList.constructionmodeList = data.filter(i => {
-            return i.type === '勘察建站方式'
+          this.DicList.websitebuildingmode = data.filter(i => {
+            return i.type === '勘察建站模式'
           })
-          this.dictionaryList.ownedoperatorList = data.filter(i => {
-            return i.type === '勘察归属地运营商'
+          this.DicList.coversscenario = data.filter(i => {
+            return i.type === '勘察覆盖场景'
+          })
+          this.DicList.ownedoperator = data.filter(i => {
+            return i.type === '勘察运营商'
+          })
+          this.DicList.roomsubdividetype = data.filter(i => {
+            return i.type === '勘察机房细分类型'
+          })
+          this.DicList.roomtype = data.filter(i => {
+            return i.type === '勘察机房类型'
+          })
+          this.DicList.roomproperty = data.filter(i => {
+            return i.type === '勘察机房产权'
+          })
+          this.DicList.introducetype = data.filter(i => {
+            return i.type === '勘察引入类型'
+          })
+          this.DicList.introducevoltage = data.filter(i => {
+            return i.type === '勘察引入电压'
+          })
+          this.DicList.newtower = data.filter(i => {
+            return i.type === '勘察塔型'
           })
         }
       })
@@ -1364,12 +1491,12 @@ export default {
           break
       }
       this.$refs.ImgBox.Open()
-      this.$refs.ImgBox.Flag = true
+      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
     Open360ImgBox () {
       this.$refs.EnvironmentImgBox.SetData('360环境照片', 'environment', this.tableData.environment, true)
       this.$refs.EnvironmentImgBox.Open()
-      this.$refs.EnvironmentImgBox.Flag = true
+      this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
     },
     // 返回关闭函数
     closeWrite () {
@@ -1421,6 +1548,59 @@ export default {
     },
     formatString (val) {
       return val !== undefined && val.length ? `有（${val.length}张）` : '无'
+    },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.tableData.realitylongitude
+        this.$refs.GoogleMap.latitude = this.tableData.realitylatitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      console.log(this.$refs.GoogleMap.showType)
+      this.showMap = false
+      if (longitude && this.$refs.GoogleMap.showType === 1) {
+        this.tableData.realitylongitude = longitude
+      }
+      if (latitude && this.$refs.GoogleMap.showType === 1) {
+        this.tableData.realitylatitude = latitude
+      }
+      if (longitude && latitude && this.$refs.GoogleMap.showType === 1) {
+        this.$axios.get(GetDistance, {
+          params: {
+            lat1: latitude,
+            lng1: longitude,
+            lat2: this.tableData2.planninglatitude,
+            lng2: this.tableData2.planninglongitude
+          }
+        }).then(res => {
+          if (res.errorCode === '200') {
+            if (res.data) {
+              this.tableData.demanddistance = res.data.toFixed(2)
+            }
+          } else {
+            this.$message.warning(res.msg)
+          }
+        })
+      }
+    },
+    DialogClose () {
+      this.isShow = !this.isShow
+    },
+    selectResource (name, id, M) {
+      this.tableData.recentlyresource_id = id
+      this.tableData.resourcedistance = M
+      this.tableData.recentlyresourcename = name
+      this.isShow = false
+    },
+    showDialog () {
+      if (this.tableData.realitylongitude && this.tableData.realitylatitude) {
+        this.isShow = true
+      } else {
+        this.$message.error('请选择实际经纬度')
+      }
     }
   },
   computed: {
@@ -1446,7 +1626,8 @@ export default {
     ResourceList,
     ImgBox,
     EnvironmentImgBox,
-    layuiTitle
+    layuiTitle,
+    GoogleMap
   }
 }
 </script>

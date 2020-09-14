@@ -53,8 +53,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
           </div>
         </el-col>
       </el-row>
@@ -75,8 +75,7 @@
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
+            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -87,9 +86,9 @@
       </div>
     </div>
 
-    <div class="write" v-show="showWrite">
+    <div class="write" v-if="showWrite">
       <layuiTitle :title="WriteState === 0 ? '添加电表' : WriteState === 1 ? '修改电表' : '电表详情'"></layuiTitle>
-      <AmmeterDetail v-loading="Loading" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+      <AmmeterDetail v-loading="Loading" :DeviceID="DeviceID" :WriteState="WriteState" @fatherClose="WriteClose" ref="Details"
                      @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></AmmeterDetail>
     </div>
 
@@ -98,13 +97,13 @@
 </template>
 
 <script>
-import {DictionaryInfoList, GetElectricMeterList, DelEquipment, GetElectricMeterInfo, GetAmmeterExcel} from 'api/api'
+import {DictionaryInfoList, GetElectricMeterList, GetAmmeterExcel} from 'api/api'
 import {exportMethod} from 'api/YDSZ'
 import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
-import AmmeterDetail from 'base/Resource/Ammeter'
+import AmmeterDetail from 'base/ZYResource/Ammeter'
 
 export default {
   name: 'Ammeter',
@@ -133,7 +132,7 @@ export default {
         manufacturer: [],
         models: []
       },
-
+      DeviceID: '',
       showWrite: false,
       WriteData: {},
       WriteState: 0 // 0为添加 1为编辑 2为详情
@@ -168,7 +167,8 @@ export default {
       this.$axios.get(GetElectricMeterList, {
         params: {
           PageIndex: 1,
-          PageSize: this.pageSize
+          PageSize: this.pageSize,
+          resoucetype: 2
         }
       }).then(res => {
         this.Loading = false
@@ -188,7 +188,8 @@ export default {
       this.$axios.get(GetElectricMeterList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
-          PageSize: this.pageSize
+          PageSize: this.pageSize,
+          resoucetype: 2
         })
       }).then(res => {
         this.Loading = false
@@ -205,21 +206,8 @@ export default {
     formatAccessDate (row) { return formatDate(row.accessdate) },
     handleWrite (state, row) {
       this.WriteState = state
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
-      if (state !== 0) {
-        this.Loading = true
-        this.$axios.get(GetElectricMeterInfo, {
-          params: {id: row.id}
-        }).then(res => {
-          this.Loading = false
-          if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
-          this.WriteData = res.data
-          this.$refs.Details.setWriteData(this.WriteData)
-        }).catch(err => {
-          this.Loading = false
-          this.$message.error(err)
-        })
-      }
     },
     WriteClose () {
       this.showWrite = false
@@ -229,23 +217,6 @@ export default {
       this.$refs.ImgBox.SetData(title, name, list)
       this.$refs.ImgBox.Open()
       this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
-    },
-    handle2 (row) {
-      this.$confirm(`您确认要删除 ${row.devicecode} 电池发电设备吗？`, '提示').then(() => {
-        this.$axios.delete(DelEquipment, {
-          id: row.id
-        }).then(res => {
-          if (res.errorCode === '200') {
-            this.$message.success('成功！')
-          } else {
-            this.$message.error(res.msg)
-          }
-        }).catch(err => {
-          this.$message.error(err)
-        })
-      }).catch(() => {
-        console.log('err')
-      })
     },
     changeSize1 (page) {
       this.pageSize = page

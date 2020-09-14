@@ -205,6 +205,7 @@ export default {
     checkDetail (row) {
       let data = {
         id: row.project_id,
+        state: 2,
         taskid: row.id,
         taskstate: row.taskstatename,
         from: 'TaskManagement'

@@ -39,6 +39,8 @@ export const AddTaskEquipmentBatteryGenerator = `${reqURL}/ZYGL/BatteryGenerator
 export const GetTaskElectricIntroducedInfo = `${reqURL}/ZYGL/AnElectricIntroduced/GetTaskElectricIntroducedInfo` // 获取外电引入详情
 export const AddTaskAnElectricIntroduced = `${reqURL}/ZYGL/AnElectricIntroduced/AddTaskAnElectricIntroduced` // 添加外电引入任务设备
 export const UpdateTaskElectricIntroduced = `${reqURL}/ZYGL/AnElectricIntroduced/UpdateTaskElectricIntroduced` // 修改外电引入任务设备
+export const AddElectricMeter = `${reqURL}/ZYGL/ElectricMeter/AddElectricMeter` // 新增电表
+export const UpdateElectricMeter = `${reqURL}/ZYGL/ElectricMeter/UpdateElectricMeter` // 编辑电表
 export const GetTaskElectricMeterList = `${reqURL}/ZYGL/ElectricMeter/GetTaskElectricMeterList` // 获取电表任务列表
 export const AddTaskElectricMeter = `${reqURL}/ZYGL/ElectricMeter/AddTaskElectricMeter` // 添加电表任务设备
 export const GetTaskElectricMeterInfo = `${reqURL}/ZYGL/ElectricMeter/GetTaskElectricMeterInfo` // 获取电表任务设备详情
@@ -67,6 +69,7 @@ export const UpdateProject = `${reqURL}/KCGL/Project/UpdateProject` // 修改项
 export const DelProject = `${reqURL}/KCGL/Project/DelProject` // 删除项目
 export const GetProjectExcel = `${reqURL}/KCGL/Project/GetProjectExcel` // 项目管理导出
 export const GetKCProjectExcel = `${reqURL}/KCGL/Project/GetKCProjectExcel` // 项目管理项目资料导出
+export const GetDistance = `${reqURL}/KCGL/Project/GetDistance` // 通过两个经纬度获取距离（返回数据为M）
 
 // 勘察任务管理
 export const GetWebTaskList = `${reqURL}/KCGL/Task/GerWebTaskList` // 获取勘察任务管理列表

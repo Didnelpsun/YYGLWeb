@@ -10,24 +10,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="站点名称：">
-                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="电表编号：">
-                <el-input v-model="Query.electricmeterno" placeholder=请输入电表编号 @keyup.enter.native="getMore1(1)"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="供电方式：">
-                <el-select class="searchSelect" v-model="Query.powersupplymode">
-                  <el-option label="请选择" :value="null"></el-option>
-                  <el-option v-for="i in DicList.powersupplymode" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="创建时间：">
                 <el-date-picker class="tableSelect" v-model="Query.starttime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择开始时间">
                 </el-date-picker>
@@ -37,6 +19,11 @@
               <el-form-item label="至：">
                 <el-date-picker class="tableSelect" v-model="Query.endtime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择结束时间">
                 </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="站点名称：">
+                <el-input v-model="Query.resourcename" placeholder=请输入站点名称 @keyup.enter.native="getMore1(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -53,8 +40,8 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
-            <!--<el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>-->
             <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
+            <el-button @click="handleWrite(0)" type="success" icon="el-icon-plus">添加</el-button>
           </div>
         </el-col>
       </el-row>
@@ -65,18 +52,17 @@
         </el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
-        <el-table-column prop="electricmeterno" label="电表编号" width=""></el-table-column>
-        <el-table-column prop="powersupplymodename" label="供电方式" width=""></el-table-column>
-        <el-table-column prop="powersupplytheowner" label="供电业主" width=""></el-table-column>
-        <el-table-column prop="theownerphone" label="供电联系方式" width=""></el-table-column>
+        <el-table-column prop="externalpacking" label="外电是否报装" width="" :formatter="formatState1"></el-table-column>
+        <el-table-column prop="poleline" label="有无杆路" width="" :formatter="formatState2"></el-table-column>
+        <el-table-column prop="polelinenumber" label="杆路数量" width=""></el-table-column>
+        <el-table-column prop="polelineheight" label="杆路高度(米)" width=""></el-table-column>
+        <el-table-column prop="polelinelength" label="杆路长度(米)" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
         <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <!--<el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
+            <el-button type="text" size="mini" @click="handleWrite(1,scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -88,9 +74,9 @@
     </div>
 
     <div class="write" v-show="showWrite">
-      <layuiTitle :title="WriteState === 0 ? '添加电表' : WriteState === 1 ? '修改电表' : '电表详情'"></layuiTitle>
-      <AmmeterDetail v-loading="Loading" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
-                     @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></AmmeterDetail>
+      <layuiTitle :title="WriteState === 0 ? '添加外电引入' : WriteState === 1 ? '修改外电引入' : '外电引入详情'"></layuiTitle>
+      <Detail v-loading="Loading" :DeviceID="DeviceID" :WriteState="WriteState" :DicList="DicList" @fatherClose="WriteClose" ref="Details"
+                     @fatherOpenImgBox="OpenImgBox" @fatheretMore="getMore1(currentPage)"></Detail>
     </div>
 
     <ImgBox ref="ImgBox"></ImgBox>
@@ -98,16 +84,15 @@
 </template>
 
 <script>
-import {DictionaryInfoList, GetElectricMeterList, DelEquipment, GetElectricMeterInfo, GetAmmeterExcel} from 'api/api'
+import {GetElectricIntroducedList, GetElectricIntroducedExcel} from 'api/api'
 import {exportMethod} from 'api/YDSZ'
-import {formatDate} from 'common/js/cache'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
-import AmmeterDetail from 'base/Resource/Ammeter'
+import Detail from 'base/ZYResource/AnElectricIntroduced'
 
 export default {
-  name: 'Ammeter',
+  name: 'AnElectricIntroduced',
   mixins: [GlobalRes],
   data () {
     return {
@@ -117,8 +102,6 @@ export default {
         cityid: 0,
         areaid: 0,
         resourcename: '',
-        electricmeterno: '',
-        powersupplymode: null,
         starttime: '',
         endtime: ''
       },
@@ -128,12 +111,8 @@ export default {
       pageSize: 10,
       total: 0,
       DicList: {
-        propertyrightunit: [],
-        maintenanceunit: [],
-        manufacturer: [],
-        models: []
       },
-
+      DeviceID: '',
       showWrite: false,
       WriteData: {},
       WriteState: 0 // 0为添加 1为编辑 2为详情
@@ -152,20 +131,11 @@ export default {
       Object.assign(Object.assign(this.$data.WriteData, this.$options.data().WriteData))
     },
     getDicList () {
-      let arr = ['电表供电方式']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          this.DicList.powersupplymode = res.data.filter(i => { return i.type === '电表供电方式' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
+
     },
     getTable1 () {
       this.Loading = true
-      this.$axios.get(GetElectricMeterList, {
+      this.$axios.get(GetElectricIntroducedList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -185,7 +155,7 @@ export default {
     getMore1 (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetElectricMeterList, {
+      this.$axios.get(GetElectricIntroducedList, {
         params: Object.assign({}, this.Query, {
           PageIndex: 1,
           PageSize: this.pageSize
@@ -202,24 +172,12 @@ export default {
         this.$message.error(err)
       })
     },
-    formatAccessDate (row) { return formatDate(row.accessdate) },
+    formatState1 (row) { return row.externalpacking ? '是' : '否' },
+    formatState2 (row) { return row.poleline ? '是' : '否' },
     handleWrite (state, row) {
       this.WriteState = state
+      this.DeviceID = row ? row.id : ''
       this.showWrite = true
-      if (state !== 0) {
-        this.Loading = true
-        this.$axios.get(GetElectricMeterInfo, {
-          params: {id: row.id}
-        }).then(res => {
-          this.Loading = false
-          if (res.errorCode !== '200') return this.$message.error(res.errorMessage)
-          this.WriteData = res.data
-          this.$refs.Details.setWriteData(this.WriteData)
-        }).catch(err => {
-          this.Loading = false
-          this.$message.error(err)
-        })
-      }
     },
     WriteClose () {
       this.showWrite = false
@@ -229,23 +187,6 @@ export default {
       this.$refs.ImgBox.SetData(title, name, list)
       this.$refs.ImgBox.Open()
       this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
-    },
-    handle2 (row) {
-      this.$confirm(`您确认要删除 ${row.devicecode} 电池发电设备吗？`, '提示').then(() => {
-        this.$axios.delete(DelEquipment, {
-          id: row.id
-        }).then(res => {
-          if (res.errorCode === '200') {
-            this.$message.success('成功！')
-          } else {
-            this.$message.error(res.msg)
-          }
-        }).catch(err => {
-          this.$message.error(err)
-        })
-      }).catch(() => {
-        console.log('err')
-      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -257,15 +198,15 @@ export default {
       }).then(() => {
         let myObj = {
           method: 'get',
-          url: GetAmmeterExcel,
-          fileName: '电表',
+          url: GetElectricIntroducedExcel,
+          fileName: '外电引入',
           data: this.Query
         }
         exportMethod(myObj)
       })
     }
   },
-  components: {AmmeterDetail, layuiTitle, ImgBox}
+  components: {Detail, layuiTitle, ImgBox}
 }
 </script>
 

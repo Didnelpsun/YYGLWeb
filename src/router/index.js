@@ -50,6 +50,7 @@ import RectifierModule from '../components/main/ZYResource/RectifierModule' // �
 import StorageBattery from '../components/main/ZYResource/StorageBattery' // 蓄电池
 import PowerAndEnvironment from '../components/main/ZYResource/PowerAndEnvironment' // 动力及环境监测单元
 import CommunicationAndLocation from '../components/main/ZYResource/CommunicationAndLocation' // 通讯与位置终端
+import ZYAmmeter from '../components/main/ZYResource/ZYAmmeter' // 电表
 
 // 能源统计
 import NYEquipmentStatistics from '../components/main/TaskManagement/NYEquipmentStatistics' // 能源资源统计
@@ -265,6 +266,11 @@ export default new Router({
           path: 'CommunicationAndLocation',
           name: 'CommunicationAndLocation',
           component: CommunicationAndLocation
+        },
+        {// 资源电表
+          path: 'ZYAmmeter',
+          name: 'ZYAmmeter',
+          component: ZYAmmeter
         },
         {// 备件类型列表
           path: 'Sparetype',
