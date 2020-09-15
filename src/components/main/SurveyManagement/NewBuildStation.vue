@@ -1140,7 +1140,7 @@
             <tr class="el-table__row">
               <td><div class="cell">360环境照片</div></td>
               <td>
-                <div class="cell" @click="Open360ImgBox()">
+                <div class="cell" @click="OpenImgBox('environment')">
                   {{formatString(tableData.environment)}}
                 </div>
               </td>
@@ -1219,9 +1219,9 @@
 
 <script>
 import GoogleMap from 'base/GoogleMap'
-import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask, GetDistance } from 'api/SurveyManagement'
+import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask, GetDistance, GetInvestigateImgConfigurationList } from 'api/SurveyManagement'
 import {DictionaryInfoList} from 'api/api'
-import ImgBox from 'base/ImgBox'
+import ImgBox from 'base/SurveyImgBox'
 import EnvironmentImgBox from 'base/EnvironmentImgBox'
 import {mapGetters} from 'vuex'
 import ResourceList from 'base/SurveyManagement/ResourceList'
@@ -1478,15 +1478,95 @@ export default {
       })
       this.Loading = false
     },
+    getImgTitle (val) {
+      return this.$axios.get(GetInvestigateImgConfigurationList, {
+        params: {
+          attribution: val,
+          constructionmode: 1,
+          PageIndex: 1,
+          PageSize: 200
+        }
+      }).then((res) => {
+        return Promise.resolve(res)
+      })
+    },
+    getEnvironmentTitle () {
+      return this.$axios.post(DictionaryInfoList, ['360度环境照片']).then((res) => {
+        return Promise.resolve(res)
+      })
+    },
     OpenImgBox (s) {
       switch (s) {
+        case 'environment':
+          this.getEnvironmentTitle().then((res) => {
+            if (res.data.length) {
+              res.data.forEach(item => {
+                if (!this.tableData.environment.filter(it => it.title === item.text).length) {
+                  const obj = {
+                    field_name: 'environment',
+                    remarks: '',
+                    title: item.text,
+                    url: ''
+                  }
+                  this.tableData.environment.push(obj)
+                }
+              })
+            }
+          })
+          this.$refs.ImgBox.SetData('360环境照片', 'environment', this.tableData.environment, true)
+          break
         case 'housingconstruction':
+          this.getImgTitle('机房建设地照片').then((res) => {
+            if (res.data.total) {
+              res.data.list.forEach(item => {
+                if (!this.tableData.housingconstruction.filter(it => it.title === item.title).length) {
+                  const obj = {
+                    field_name: 'housingconstruction',
+                    remarks: '',
+                    title: item.title,
+                    url: ''
+                  }
+                  this.tableData.housingconstruction.push(obj)
+                }
+              })
+            }
+          })
           this.$refs.ImgBox.SetData('机房建设地照片', 'housingconstruction', this.tableData.housingconstruction, true)
           break
         case 'roofing':
+          this.getImgTitle('塔桅及天面照片').then((res) => {
+            if (res.data.total) {
+              res.data.list.forEach(item => {
+                if (!this.tableData.roofing.filter(it => it.title === item.title).length) {
+                  const obj = {
+                    field_name: 'roofing',
+                    remarks: '',
+                    title: item.title,
+                    url: ''
+                  }
+                  this.tableData.roofing.push(obj)
+                }
+              })
+            }
+          })
           this.$refs.ImgBox.SetData('塔桅及天面照片', 'roofing', this.tableData.roofing, true)
           break
         case 'sketch':
+          this.getImgTitle('勘察草图').then((res) => {
+            if (res.data.total) {
+              res.data.list.forEach(item => {
+                if (!this.tableData.sketch.filter(it => it.title === item.title).length) {
+                  const obj = {
+                    field_name: 'sketch',
+                    remarks: '',
+                    title: item.title,
+                    url: ''
+                  }
+                  this.tableData.sketch.push(obj)
+                }
+              })
+            }
+          })
           this.$refs.ImgBox.SetData('勘察草图', 'sketch', this.tableData.sketch, true)
           break
       }
@@ -1547,7 +1627,7 @@ export default {
       this.auitData.remark = ''
     },
     formatString (val) {
-      return val !== undefined && val.length ? `有（${val.length}张）` : '无'
+      return val !== undefined && val.filter(it => it.url).length ? `有（${val.filter(it => it.url).length}张）` : '无'
     },
     OpenMap (val) { // 0: 查看 1: 编辑/新增
       this.showMap = true
