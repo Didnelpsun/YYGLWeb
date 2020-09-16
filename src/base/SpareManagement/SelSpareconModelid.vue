@@ -5,9 +5,11 @@
         <!--选择器-->
         <el-col :span="18">
           <el-col :span="8">
-            <el-form-item label="备件类型：">
-              <el-input v-model="query.typename" placeholder="请填写备件类型"  @keyup.enter.native="getTableData1More(1)"></el-input>
-            </el-form-item>
+            <div  @click="sparetypeidShow=true">
+              <el-form-item class="form-item" label="备件类型">
+                <el-input v-model="query.typename" readonly placeholder="请选择备件类型"></el-input>
+              </el-form-item>
+            </div>
           </el-col>
           <el-col :span="8">
             <el-form-item label="备件型号：">
@@ -47,12 +49,16 @@
                      :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" :total="pagination.total"
                      background layout="total, prev, pager, next, sizes"></el-pagination>
     </div>
+    <el-dialog top="1%" :visible.sync="sparetypeidShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selsparetypeid   @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {GetSpareConfigList} from 'api/BJGL'
 import { GlobalRes } from 'common/js/mixins'
+import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
 
 export default {
   name: 'SelSpareconModelid',
@@ -71,15 +77,18 @@ export default {
       default: null
     },
     sparetypeid: null,
-    sparemanufacturerid: null
+    sparemanufacturerid: null,
+    istrue: false
   },
   data () {
     return {
       // 查询相关属性
       query: {
-        typename: '', // 类型名称
-        sparemodel: ''// 类型编码
+        typename: null,
+        sparemodel: null,
+        sparetypeid: null
       },
+      sparetypeidShow: false,
       tableList: [],
       // 分页相关属性
       pagination: {
@@ -96,14 +105,20 @@ export default {
     this._getTableData1()
   },
   methods: {
+    sparetypeClose () { this.sparetypeidShow = !this.sparetypeidShow },
+    Selsparetypeid (name, id) {
+      this.sparetypeidShow = false
+      this.query.sparetypeid = id
+      this.query.typename = name
+    },
     _getTableData1 () {
       this.Table1Loading = true
       this.$axios.get(GetSpareConfigList, {
         params: {
           PageIndex: 1,
           PageSize: 10,
-          provinceid: this.provinceid,
-          cityid: this.cityid,
+          /*  provinceid: this.provinceid,
+          cityid: this.cityid, */
           sparetypeid: this.sparetypeid,
           sparemanufacturerid: this.sparemanufacturerid
         }}).then(res => {
@@ -121,19 +136,33 @@ export default {
     getTableData1More  (page) {
       this.pagination.currentPage = page
       this.Table1Loading = true
-      this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.query, {
-        PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize,
-        provinceid: this.provinceid,
-        cityid: this.cityid,
-        sparetypeid: this.sparetypeid,
-        sparemanufacturerid: this.sparemanufacturerid
-      })}).then(res => {
-        this.Table1Loading = false
-        if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.tableList = res.data.list
-        this.pagination.total = res.data.total
-      })
+      if (this.istrue) {
+        this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.query, {
+          PageIndex: this.pagination.currentPage,
+          PageSize: this.pagination.pageSize
+          /*    provinceid: this.provinceid,
+          cityid: this.cityid */
+        })}).then(res => {
+          this.Table1Loading = false
+          if (res.errorCode !== '200') return this.$message.error(res.msg)
+          this.tableList = res.data.list
+          this.pagination.total = res.data.total
+        })
+      } else {
+        this.$axios.get(GetSpareConfigList, {params: Object.assign({}, this.query, {
+          PageIndex: this.pagination.currentPage,
+          PageSize: this.pagination.pageSize,
+          provinceid: this.provinceid,
+          cityid: this.cityid,
+          sparetypeid: this.sparetypeid,
+          sparemanufacturerid: this.sparemanufacturerid
+        })}).then(res => {
+          this.Table1Loading = false
+          if (res.errorCode !== '200') return this.$message.error(res.msg)
+          this.tableList = res.data.list
+          this.pagination.total = res.data.total
+        })
+      }
     },
     // 重置按钮
     resetQueryForm () {
@@ -144,6 +173,9 @@ export default {
     handleChoose (index, row) {
       this.$emit('SelSpareconModelid', row.sparemodel, row.id)
     }
+  },
+  components: {
+    Selsparetypeid
   }
 }
 </script>

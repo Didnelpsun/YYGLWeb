@@ -5,14 +5,18 @@
         <el-row >
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                  <el-input v-model="Query.sparetypeid" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div @click="sparetypeShow=true">
+                <el-form-item class="form-item" label="备件类型">
+                  <el-input v-model="Query.typename" readonly placeholder="请选择备件类型"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodelid" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div  @click="sparemodelShow=true">
+                <el-form-item class="form-item" label="备件型号：">
+                  <el-input v-model="Query.sparemodel" readonly placeholder="请选择备件型号"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
           </el-col>
           <el-col :span="6">
@@ -22,7 +26,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row style="margin-top: 10px">
           <el-col :span="18">
             <p class="SearchResult">查询结果</p>
           </el-col>
@@ -46,7 +50,7 @@
         <el-table-column prop="warrantyperiod" label="保修期"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
           <!--  <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
@@ -67,7 +71,16 @@
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <div v-if="sparetypeShow">
+    <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selectsparetype  @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
+    </div>
+    <div v-if="sparemodelShow">
+      <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
+        <SelectSpareconMode    :sparetypeid="Query.sparetypeid"   @SelSpareconModelid="SelSpareconModelid"/>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -75,8 +88,10 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {maintenanceconfig, Getidmanufacturerinfo, Deletemaintenanceconfig} from 'api/BJGL'
+import {maintenanceconfig, Getidmaintenanceconfig, Deletemaintenanceconfig} from 'api/BJGL'
 import Details from 'base/SpareManagement/MaintenanceItems'
+import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
+import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 export default {
   name: 'MaintenanceItems',
   mixins: [GlobalRes],
@@ -86,6 +101,8 @@ export default {
         sparetypeid: null,
         sparemodelid: null
       },
+      sparetypeShow: false,
+      sparemodelShow: false,
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -103,6 +120,20 @@ export default {
     this.getDic()
   },
   methods: {
+    Selsparetypeid (name, id) {
+      this.sparetypeShow = false
+      this.Query.sparetypeid = id
+      this.Query.typename = name
+      this.Query.sparemodelid = null
+      this.Query.sparemodel = null
+    },
+    SelSpareconModelid (name, id) {
+      this.sparemodelShow = false
+      this.Query.sparemodelid = id
+      this.Query.sparemodel = name
+    },
+    sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
@@ -156,13 +187,14 @@ export default {
       this.showWrite = true
       if (state) {
         this.$refs.Details.Loading = true
-        this.$axios.get(Getidmanufacturerinfo, {
+        this.$axios.get(Getidmaintenanceconfig, {
           params: {
             Id: row.id
           }
         }).then(res => {
           this.$refs.Details.Loading = false
           this.$refs.Details.setWriteData(res.data)
+          console.log(1)
         }).catch(err => {
           this.$refs.Details.Loading = false
           console.log(err)
@@ -189,7 +221,9 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    Selectsparetype,
+    SelectSpareconMode
   }
 }
 </script>

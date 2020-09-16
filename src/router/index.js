@@ -88,6 +88,7 @@ import ElectricityMeter from 'components/main/YDSZ/ElectricityMeter' // 电表�
 
 // 勘察管理
 import ProjectManagement from 'components/main/SurveyManagement/ProjectManagement' // 项目管理
+import MyProject from 'components/main/SurveyManagement/MyProject' // 待执行项目管理
 import StockStation from 'components/main/SurveyManagement/StockStation' // 存量站
 
 import TaskManagement from 'components/main/SurveyManagement/TaskManagement' // 任务管理
@@ -541,6 +542,11 @@ export default new Router({
           path: 'ProjectManagement',
           name: 'ProjectManagement',
           component: ProjectManagement
+        },
+        {
+          path: 'MyProject',
+          name: 'MyProject',
+          component: MyProject
         },
         {
           path: 'StockStation',

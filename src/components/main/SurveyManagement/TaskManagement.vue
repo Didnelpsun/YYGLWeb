@@ -77,7 +77,7 @@
         <el-table-column prop="constructionmodename" label="建设方式" width=""></el-table-column>
         <el-table-column prop="taskstatename" label="审核状态" width="100"></el-table-column>
         <el-table-column prop="updatetime" label="创建时间" width=""></el-table-column>
-        <el-table-column label="操作" width="90" fixed="right">
+        <el-table-column label="操作" width="90">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="checkDetail(scope.row)" v-if="scope.row.taskstatename!=='已完成'">审核</el-button>
             <el-button type="text" size="mini" @click="handleDelete(scope.row)" v-if="scope.row.taskstatename==='待执行'">删除</el-button>
@@ -214,9 +214,11 @@ export default {
       if (row.constructionmodename === '新建站') {
         this.$router.push({name: 'NewBuildStation'})
         this.$emit('handleChange', 'NewBuildStation', 'dc73026f-3906-4f64-a8bd-1a2bc646f1fe')
+        this.setSurveyInfoType(2)
       } else if (row.constructionmodename === '存量站') {
         this.$router.push({name: 'StockStation'})
         this.$emit('handleChange', 'StockStation', 'dc73026f-3906-4f64-a8bd-1a2bc646f1fe')
+        this.setSurveyInfoType(2)
       }
     },
     handleDelete (row) {
@@ -243,7 +245,8 @@ export default {
       // console.log(this.pagination)
     },
     ...mapMutations({
-      setSurveyInfo: 'SET_TASKSURVEY_INFO'
+      setSurveyInfo: 'SET_TASKSURVEY_INFO',
+      setSurveyInfoType: 'SET_SURVEYINFOTYPE'
     })
   },
   components: {

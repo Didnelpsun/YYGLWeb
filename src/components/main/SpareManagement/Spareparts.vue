@@ -5,19 +5,25 @@
         <el-row >
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparepartstype" clearable placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div @click="sparetypeShow=true">
+                <el-form-item label="备件类型：">
+                  <el-input v-model="Query.sparepartstype" clearable placeholder="请选择备件类型"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodel" clearable placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div @click="SparemanufacturerShow=true">
+                <el-form-item label="厂家：">
+                  <el-input v-model="Query.manufacturer" clearable placeholder="请选择厂家"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备件编码：">
-                <el-input v-model="Query.code" clearable placeholder="请填写备件编码"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div @click="sparemodelShow=true">
+                <el-form-item label="备件型号：">
+                  <el-input v-model="Query.sparemodel" clearable placeholder="请选择备件型号"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
           </el-col>
           <el-col :span="6">
@@ -50,21 +56,21 @@
         <el-table-column prop="code" label="备件编码"></el-table-column>
         <el-table-column prop="typename" label="备件类型"></el-table-column>
         <el-table-column prop="manufacturername" label="厂家"></el-table-column>
-        <el-table-column prop="depotsname" label="权属"></el-table-column>
+        <el-table-column prop="unitname" label="权属"></el-table-column>
         <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-        <el-table-column prop="depots" label="存放点 "></el-table-column>
+        <el-table-column prop="depotsname" label="存放点 "></el-table-column>
         <el-table-column prop="warrantycode" label="备件质保编号" width="120"></el-table-column>
         <el-table-column prop="assetsencoding" label="资产编码"></el-table-column>
         <el-table-column prop="qrcode" label="二维码"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
-      <!--  <el-table-column label="操作" width="140">
-          <template slot-scope="scope">
+        <el-table-column label="操作" width="130"  fixed="right">
+          <template slot-scope="scope" >
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
       <div class="center">
         <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
@@ -86,7 +92,17 @@
       <SpareReplace  v-show="Sparepartstate === 1" :WriteState="WriteState" :DicList="DicList"
                   @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareReplace"></SpareReplace>
     </div>
-
+    <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selectsparetype    @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
+    <el-dialog top="1%" :visible.sync="SparemanufacturerShow" title="选择备件厂家" width="80%" :before-close="manufacturerClose">
+      <Selectmanufacturer  @Selmanufacturerid="Selmanufacturerid"/>
+    </el-dialog>
+    <div v-if="sparemodelShow">
+      <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
+        <SelectSpareconMode :istrue="true"  :sparetypeid="Query.sparepartstypeid" :sparemanufacturerid="Query.manufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -98,15 +114,21 @@ import {GetsparepartsList, GetsparepartsidList, Deletespareparts} from 'api/BJGL
 import Details from 'base/SpareManagement/Spareparts'
 import SpareCheck from 'base/SpareManagement/SpareCheck'
 import SpareReplace from 'base/SpareManagement/SpareReplace'
+import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
+import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
+import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 export default {
   name: 'Spareparts',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
-        code: null,
         sparepartstype: null,
-        sparemodel: null
+        sparepartstypeid: null,
+        sparemodelid: null,
+        sparemodel: null,
+        manufacturerid: null,
+        manufacturer: null
       },
       handleShow: false,
       currentPage: 1,
@@ -119,7 +141,10 @@ export default {
       WriteState: 0, // 0为添加 1为编辑 2为查看
       Sparepartstate: 0, // 0为上站 1为替换 2点验
       WriteLoading: false,
-      DicList: {storestate: []}
+      DicList: {storestate: []},
+      sparetypeShow: false,
+      SparemanufacturerShow: false,
+      sparemodelShow: false
     }
   },
   activated () {
@@ -127,6 +152,28 @@ export default {
     this.getDic()
   },
   methods: {
+    sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
+    manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
+    sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    Selsparetypeid (name, id) {
+      this.sparetypeShow = false
+      this.Query.sparepartstypeid = id
+      this.Query.sparepartstype = name
+      this.Query.sparemodelid = null
+      this.Query.sparemodel = null
+    },
+    Selmanufacturerid (name, id) {
+      this.SparemanufacturerShow = false
+      this.Query.manufacturerid = id
+      this.Query.manufacturer = name
+      this.Query.sparemodelid = null
+      this.Query.sparemodel = null
+    },
+    SelSpareconModelid (name, id) {
+      this.sparemodelShow = false
+      this.Query.sparemodelid = id
+      this.Query.sparemodel = name
+    },
     handleSpareparts (val) {
       this.Sparepartstate = val
       this.showWrite = true
@@ -223,7 +270,10 @@ export default {
     layuiTitle,
     Details,
     SpareCheck,
-    SpareReplace
+    SpareReplace,
+    Selectsparetype,
+    Selectmanufacturer,
+    SelectSpareconMode
   }
 }
 </script>

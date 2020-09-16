@@ -46,7 +46,9 @@
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.manufacturersname}}</div>
                 <div v-if="WriteState !== 2" @click="manufactureridShow=true">
+                  <el-form-item class="form-item" prop="manufacturersname">
                   <el-input v-model="WriteData.manufacturersname" readonly placeholder="请选择厂家"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
@@ -57,18 +59,20 @@
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.typename}}</div>
                 <div v-if="WriteState !== 2" @click="sparetypeidShow=true">
+                  <el-form-item class="form-item" prop="typename">
                   <el-input v-model="WriteData.typename" readonly placeholder="请选择备件类型"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件型号</div></td>
+              <td><div class="cell"><i class="must">*</i>备件型号</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.sparemodel}}</div>
                 <el-form-item v-show="WriteState !== 2" class="form-item" prop="sparemodel">
-                  <el-input v-model="WriteData.sparemodel" placeholder="请填入备件型号"></el-input>
+                  <el-input v-model="WriteData.sparemodel" placeholder="请填入备件型号" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td><div class="cell"></div></td>
@@ -77,7 +81,7 @@
               <td><div class="cell">说明</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写说明"></el-input>
+                  <el-input v-model="WriteData.remark" placeholder="请填写说明" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
@@ -171,8 +175,8 @@ export default {
       sparemodelShow: false,
       WriteData: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0,
+        provinceid: null,
+        cityid: null,
         id: null,
         cityname: '',
         sparetypeid: '', // 类型id
@@ -187,16 +191,14 @@ export default {
         sparemodelname: null
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
-        manufacturerid: [{ required: true, message: '请选择厂家id', trigger: 'blur' }],
-        sparetypeid: [{ required: true, message: '请选择备件类型', trigger: 'blur' }],
+        manufacturersname: [{ required: true, message: '请选择厂家', trigger: 'change' }],
+        typename: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
         sparemodel: [{ required: true, message: '请填入备件型号', trigger: 'change' }]
       }
     }
   },
   methods: {
     changecityArea (obj) {
-      // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
     },
@@ -254,9 +256,8 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
@@ -273,9 +274,8 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

@@ -7,3 +7,5 @@ export const ProjectSurveyInfo = state => state.ProjectSurveyInfo
 export const TaskSurveyInfo = state => state.TaskSurveyInfo
 
 export const SurveyInfoType = state => state.SurveyInfoType
+
+export const MyProject = state => state.MyProject

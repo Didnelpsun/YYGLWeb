@@ -50,7 +50,7 @@
         <el-table-column prop="administrator" label="负责人 "></el-table-column>
         <el-table-column prop="starttime" label="开始时间"></el-table-column>
         <el-table-column prop="endtime" label="结束时间"></el-table-column>
-        <el-table-column prop="realityname" label="提交人"></el-table-column>
+        <el-table-column prop="createusername" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
         <el-table-column label="操作" width="140">
           <template slot-scope="scope">
@@ -90,12 +90,9 @@ export default {
   data () {
     return {
       Query: {
-        AreaList: [],
-        provinceid: null,
-        cityid: null,
-        contractno: null,
-        code: null,
-        name: null
+        contractno: '',
+        code: '',
+        name: ''
       },
       currentPage: 1,
       pageSize: 10,

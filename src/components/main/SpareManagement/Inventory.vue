@@ -6,14 +6,14 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="存放点名称：">
-                <el-input v-model="Query.depotsid" placeholder="请填写存放点名称"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.depotsname" placeholder="请填写存放点名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="盘存是否结束：" label-width="120px" >
                 <el-select v-model="Query.inventorystatus" placeholder="请选择盘存状态">
-                  <el-option value="1" label="是"></el-option>
-                  <el-option value="0" label="否"></el-option>
+                  <el-option value="true" label="是"></el-option>
+                  <el-option value="false" label="否"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -45,7 +45,6 @@
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="depotsname" label="存放点"></el-table-column>
         <el-table-column prop="inventorystatus" :formatter="Showstatus" label="盘存状态"></el-table-column>
-        <el-table-column prop="Inventoryresults" label="盘存结果"></el-table-column>
         <el-table-column prop="createusername" label="盘存人"></el-table-column>
         <el-table-column prop="starttime" label="开始时间"></el-table-column>
         <el-table-column prop="endtime" label="结束时间"></el-table-column>
@@ -82,7 +81,7 @@ export default {
     return {
       Query: {
         inventorystatus: null,
-        depotsid: ''
+        depotsname: ''
       },
       currentPage: 1,
       pageSize: 10,
@@ -100,6 +99,7 @@ export default {
   },
   methods: {
     Showstatus (val) {
+      val = val.inventorystatus
       return val ? '结束' : '未结束'
     },
     getData1 () {
@@ -117,6 +117,7 @@ export default {
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
+      this.getData1()
     },
     getMore (page) {
       this.currentPage = page

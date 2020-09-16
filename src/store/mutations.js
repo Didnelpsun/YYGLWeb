@@ -10,6 +10,9 @@ const mutations = {
   [types.SET_PROJECTSURVEY_INFO] (state, ProjectSurveyInfo) {
     state.ProjectSurveyInfo = ProjectSurveyInfo
   },
+  [types.SET_MYPROJECT_INFO] (state, MyProject) {
+    state.MyProject = MyProject
+  },
   [types.SET_TASKSURVEY_INFO] (state, TaskSurveyInfo) {
     state.TaskSurveyInfo = TaskSurveyInfo
   },

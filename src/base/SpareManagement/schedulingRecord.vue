@@ -38,7 +38,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">区域</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.areaname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -67,28 +67,28 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
-              <td><div class="cell">存放点</div></td>
-              <td><div class="cell">{{WriteData.indepotname}}</div></td>
+              <td><div class="cell">出库存放点</div></td>
+              <td><div class="cell">{{WriteData.outdepotname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">入库存放点</div></td>
-              <td><div class="cell">{{WriteData.indepots}}</div></td>
+              <td><div class="cell">{{WriteData.indepotname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
-              <td><div class="cell">状态</div></td>
-              <td><div class="cell">{{WriteData.instate}}</div></td>
+              <td><div class="cell">出库状态</div></td>
+              <td><div class="cell">{{WriteData.outstate | state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">入库状态</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.instate | state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
-              <td><div class="cell">权属</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">出库权属</div></td>
+              <td><div class="cell">{{WriteData.outunits}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -108,17 +108,17 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">审核人</div></td>
-              <td><div class="cell">{{WriteData.inventorytime}}</div></td>
+              <td><div class="cell">{{WriteData.outaudname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">审核时间</div></td>
-              <td><div class="cell"></div></td>
+              <td><div class="cell">{{WriteData.outaudittime}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">审核状态</div></td>
-              <td><div class="cell">{{WriteData.outauditstatus}}</div></td>
+              <td><div class="cell">{{WriteData.outauditstatus===4? '通过' :'不通过'}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -162,7 +162,30 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
-      console.log(this.WriteData)
+      switch (parseInt(this.WriteData.schedulingtype)) {
+        case 1:this.WriteData.schedulingtype = '新增'
+          break
+        case 2:this.WriteData.schedulingtype = '报修'
+          break
+        case 3:this.WriteData.schedulingtype = '送修'
+          break
+        case 4:this.WriteData.schedulingtype = '报废'
+          break
+        case 5:this.WriteData.schedulingtype = '借用'
+          break
+        case 6:this.WriteData.schedulingtype = '替换'
+          break
+        case 7:this.WriteData.schedulingtype = '归还'
+          break
+        case 8:this.WriteData.schedulingtype = '点验'
+          break
+        case 9:this.WriteData.schedulingtype = '上站'
+          break
+        case 10:this.WriteData.schedulingtype = '领用'
+          break
+        case 11:this.WriteData.schedulingtype = '返修'
+          break
+      }
     },
     WriteClose () {
       this.ResetWrite()
@@ -171,6 +194,12 @@ export default {
   },
   components: {
 
+  },
+  filters: {
+    state (val) {
+      val = parseInt(val)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
+    }
   }
 }
 </script>

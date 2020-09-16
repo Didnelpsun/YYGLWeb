@@ -56,6 +56,8 @@ export default {
         this.setSurveyInfoType(1)
       } else if (item.id === 'dc73026f-3906-4f64-a8bd-1a2bc646f1fe') {
         this.setSurveyInfoType(2)
+      } else if (item.id === '296a0c73-6a8a-450a-9e3e-f1ac571a695d') {
+        this.setSurveyInfoType(3)
       }
       this.$emit('selectAside', item)
     },

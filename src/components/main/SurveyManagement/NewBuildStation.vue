@@ -168,9 +168,9 @@
             <!--规划经度-->
             <tr class="el-table__row">
               <td><div class="cell">需求经度</div></td>
-              <td>
-                <div class="cell">
-                  <div>{{tableData2.planninglongitude}}</div>
+              <td @click="OpenMap(0, true)">
+                <div class="cell location">
+                  <div><span>{{tableData2.planninglongitude}}<i class="el-icon-location icon_location"></i></span></div>
                 </div>
               </td>
               <!-- <td><div class="cell"></div></td> -->
@@ -179,7 +179,7 @@
             <!--规划纬度-->
             <tr class="el-table__row">
               <td><div class="cell">需求纬度</div></td>
-              <td>
+              <td @click="OpenMap(0, true)">
                 <div class="cell">
                   <div>{{tableData2.planninglatitude}}</div>
                 </div>
@@ -282,7 +282,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
+        <el-form :model="tableData" :rules="Rules1" v-loading="WriteLoading" ref="WriteForm1" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -294,7 +294,7 @@
             <tbody>
             <!--基站地址-->
             <tr class="el-table__row">
-              <td><div class="cell">基站地址</div></td>
+              <td><div class="cell"><i class="must">*</i>基站地址</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="resourceaddress">
                   <el-input v-model="tableData.resourceaddress"></el-input>
@@ -305,7 +305,7 @@
             </tr>
             <!--地理环境-->
             <tr class="el-table__row">
-              <td><div class="cell">地理环境</div></td>
+              <td><div class="cell"><i class="must">*</i>地理环境</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="geographic">
                   <el-select v-model="tableData.geographic">
@@ -319,7 +319,7 @@
             </tr>
             <!--建站模式-->
             <tr class="el-table__row">
-              <td><div class="cell">建站模式</div></td>
+              <td><div class="cell"><i class="must">*</i>建站模式</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="websitebuildingmode">
                   <el-select v-model="tableData.websitebuildingmode">
@@ -333,7 +333,7 @@
             </tr>
             <!--覆盖场景-->
             <tr class="el-table__row">
-              <td><div class="cell">覆盖场景</div></td>
+              <td><div class="cell"><i class="must">*</i>覆盖场景</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="coversscenario">
                   <el-select v-model="tableData.coversscenario">
@@ -347,7 +347,7 @@
             </tr>
             <!--实际经度-->
             <tr class="el-table__row">
-              <td><div class="cell">实际经度</div></td>
+              <td><div class="cell"><i class="must">*</i>实际经度</div></td>
               <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                 <el-form-item class="form-item" prop="realitylongitude">
                   <el-input v-model="tableData.realitylongitude" readonly style="width: 80%"></el-input>
@@ -361,7 +361,7 @@
             </tr>
             <!--实际纬度-->
             <tr class="el-table__row">
-              <td><div class="cell">实际纬度</div></td>
+              <td><div class="cell"><i class="must">*</i>实际纬度</div></td>
               <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                 <el-form-item class="form-item" prop="realitylatitude">
                   <el-input v-model="tableData.realitylatitude" readonly style="width: 80%"></el-input>
@@ -374,7 +374,7 @@
             </tr>
             <!--与需求偏移距离-->
             <tr class="el-table__row">
-              <td><div class="cell">与规划偏移距离(米)</div></td>
+              <td><div class="cell"><i class="must">*</i>与规划偏移距离(米)</div></td>
               <td>
                 <div class="cell">
                   <div>{{tableData.demanddistance}}</div>
@@ -384,7 +384,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">本次需求归属运营商</div></td>
+              <td><div class="cell"><i class="must">*</i>本次需求归属运营商</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="ownedoperator">
                   <el-select v-model="tableData.ownedoperator" multiple placeholder="请选择" size="small">
@@ -399,19 +399,21 @@
             </tr>
             <!--最近站点-->
             <tr class="el-table__row">
-              <td><div class="cell">最近站点</div></td>
+              <td><div class="cell"><i class="must">*</i>最近站点</div></td>
               <td>
                 <div class="cell">
                   <div v-show="WriteState == 2">{{tableData.recentlyresourcename}}</div>
                   <div v-show="WriteState !== 2" @click="showDialog">
-                    <el-input v-model="tableData.recentlyresourcename" readonly placeholder="请选择"></el-input>
+                    <el-form-item class="form-item" prop="recentlyresourcename">
+                      <el-input v-model="tableData.recentlyresourcename" readonly placeholder="请选择"></el-input>
+                    </el-form-item>
                   </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <!--与存量站之间的距离-->
             <tr class="el-table__row">
-              <td><div class="cell">与存量站之间的距离(米)</div></td>
+              <td><div class="cell"><i class="must">*</i>与存量站之间的距离(米)</div></td>
               <td>
                 <div class="cell">
                   <div>{{tableData.resourcedistance}}</div>
@@ -448,7 +450,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
+        <el-form :model="tableData" v-loading="WriteLoading" :rules="Rules2" ref="WriteForm2" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -461,7 +463,7 @@
             <template v-if="tableData.websitebuildingmode===1">
             <!--建筑物类型-->
               <tr class="el-table__row">
-                <td><div class="cell">建筑物类型</div></td>
+                <td><div class="cell"><i class="must">*</i>建筑物类型</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="buildingtype">
                     <el-input v-model="tableData.buildingtype"></el-input>
@@ -472,7 +474,7 @@
               </tr>
             <!--是否能够获取楼面结构情况-->
               <tr class="el-table__row">
-                <td><div class="cell">是否能够获取楼面结构情况</div></td>
+                <td><div class="cell"><i class="must">*</i>是否能够获取楼面结构情况</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="floorstructurecondition">
                     <el-select v-model="tableData.floorstructurecondition">
@@ -487,7 +489,7 @@
               </tr>
             <!--维护是否方便-->
               <tr class="el-table__row">
-                <td><div class="cell">维护是否方便</div></td>
+                <td><div class="cell"><i class="must">*</i>维护是否方便</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="maintenancefriendly">
                     <el-select v-model="tableData.maintenancefriendly">
@@ -502,7 +504,7 @@
               </tr>
             <!--建筑总楼层-->
               <tr class="el-table__row">
-                <td><div class="cell">建筑总楼层</div></td>
+                <td><div class="cell"><i class="must">*</i>建筑总楼层</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="mainbuildingfloor">
                     <el-input v-model="tableData.mainbuildingfloor"></el-input>
@@ -513,7 +515,7 @@
               </tr>
             <!--机房所在楼层-->
               <tr class="el-table__row">
-                <td><div class="cell">机房所在楼层</div></td>
+                <td><div class="cell"><i class="must">*</i>机房所在楼层</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="computerroomfloor">
                     <el-input v-model="tableData.computerroomfloor"></el-input>
@@ -524,7 +526,7 @@
               </tr>
             <!--塔桅所在楼层-->
               <tr class="el-table__row">
-                <td><div class="cell">塔桅所在楼层</div></td>
+                <td><div class="cell"><i class="must">*</i>塔桅所在楼层</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermastfloor">
                     <el-input v-model="tableData.towermastfloor"></el-input>
@@ -535,7 +537,7 @@
               </tr>
             <!--楼面安全评估-->
               <tr class="el-table__row">
-                <td><div class="cell">楼面安全评估</div></td>
+                <td><div class="cell"><i class="must">*</i>楼面安全评估</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="floorsafetyassessment">
                     <el-input v-model="tableData.floorsafetyassessment"></el-input>
@@ -546,7 +548,7 @@
               </tr>
             <!--新建塔型-->
               <tr class="el-table__row">
-                <td><div class="cell">新建塔型</div></td>
+                <td><div class="cell"><i class="must">*</i>新建塔型</div></td>
                 <td v-if="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="newtower">
                     <el-select v-model="tableData.newtower" multiple placeholder="请选择" size="small">
@@ -563,7 +565,7 @@
             <template v-if="tableData.websitebuildingmode===2">
             <!--是否存在危险源-->
               <tr class="el-table__row">
-                <td><div class="cell">是否存在危险源</div></td>
+                <td><div class="cell"><i class="must">*</i>是否存在危险源</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="existinghazard">
                     <el-select v-model="tableData.existinghazard">
@@ -578,7 +580,7 @@
               </tr>
             <!--是否在河道/铁路/高速附近-->
               <tr class="el-table__row">
-                <td><div class="cell">是否在河道/铁路/高速附近</div></td>
+                <td><div class="cell"><i class="must">*</i>是否在河道/铁路/高速附近</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="theriver">
                     <el-select v-model="tableData.theriver">
@@ -593,7 +595,7 @@
               </tr>
             <!--地势低洼-->
               <tr class="el-table__row">
-                <td><div class="cell">地势低洼</div></td>
+                <td><div class="cell"><i class="must">*</i>地势低洼</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="lowlying">
                     <el-select v-model="tableData.lowlying">
@@ -608,7 +610,7 @@
               </tr>
             <!--是否需要护坡/挡土墙-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要护坡/挡土墙</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要护坡/挡土墙</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="needrevetment">
                     <el-select v-model="tableData.needrevetment">
@@ -623,7 +625,7 @@
               </tr>
             <!--是否需要修建围墙-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要修建围墙</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要修建围墙</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="buildwall">
                     <el-select v-model="tableData.buildwall">
@@ -638,7 +640,7 @@
               </tr>
             <!--是否需要修建道路-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要修建道路</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要修建道路</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="buildroads">
                     <el-select v-model="tableData.buildroads">
@@ -653,7 +655,7 @@
               </tr>
             <!--是否需要二次搬运-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要二次搬运</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要二次搬运</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="secondaryhandling">
                     <el-select v-model="tableData.secondaryhandling">
@@ -668,7 +670,7 @@
               </tr>
             <!--是否需要接地外引-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要接地外引</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要接地外引</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="Irfpagrounding">
                     <el-select v-model="tableData.Irfpagrounding">
@@ -683,7 +685,7 @@
               </tr>
             <!--是否有较深垃圾回填土质-->
               <tr class="el-table__row">
-                <td><div class="cell">是否有较深垃圾回填土质</div></td>
+                <td><div class="cell"><i class="must">*</i>是否有较深垃圾回填土质</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="backfillsoil">
                     <el-select v-model="tableData.backfillsoil">
@@ -698,7 +700,7 @@
               </tr>
             <!--施工吊装机械是否可用入场-->
               <tr class="el-table__row">
-                <td><div class="cell">施工吊装机械是否可用入场</div></td>
+                <td><div class="cell"><i class="must">*</i>施工吊装机械是否可用入场</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="hoistingmachinery">
                     <el-select v-model="tableData.hoistingmachinery">
@@ -713,7 +715,7 @@
               </tr>
             <!--施工空间是否足够-->
               <tr class="el-table__row">
-                <td><div class="cell">施工空间是否足够</div></td>
+                <td><div class="cell"><i class="must">*</i>施工空间是否足够</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="constructionspace">
                     <el-select v-model="tableData.constructionspace">
@@ -728,7 +730,7 @@
               </tr>
             <!--是否需要地勘-->
               <tr class="el-table__row">
-                <td><div class="cell">是否需要地勘</div></td>
+                <td><div class="cell"><i class="must">*</i>是否需要地勘</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="geologicalexploration">
                     <el-select v-model="tableData.geologicalexploration">
@@ -743,7 +745,7 @@
               </tr>
             <!--新建塔型-->
               <tr class="el-table__row">
-                <td><div class="cell">新建塔型</div></td>
+                <td><div class="cell"><i class="must">*</i>新建塔型</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="newtower">
                     <el-select v-model="tableData.newtower">
@@ -784,7 +786,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
+        <el-form :model="tableData" v-loading="WriteLoading" :rules="Rules3" ref="WriteForm3" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -797,7 +799,7 @@
             <template v-if="tableData.websitebuildingmode === 1">
             <!--楼面站拟建楼面高度（米）-->
               <tr class="el-table__row">
-                <td><div class="cell">楼面站拟建楼面高度（米）</div></td>
+                <td><div class="cell"><i class="must">*</i>楼面站拟建楼面高度（米）</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="floorheight">
                     <el-input v-model="tableData.floorheight"></el-input>
@@ -808,7 +810,7 @@
               </tr>
             <!--楼面站拟建塔桅数量，高度（米），及塔型-->
               <tr class="el-table__row">
-                <td><div class="cell">楼面站拟建塔桅数量</div></td>
+                <td><div class="cell"><i class="must">*</i>楼面站拟建塔桅数量</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermastnumber">
                     <el-input v-model="tableData.towermastnumber"></el-input>
@@ -818,7 +820,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
-                <td><div class="cell">楼面站拟建塔桅高度(米)</div></td>
+                <td><div class="cell"><i class="must">*</i>楼面站拟建塔桅高度(米)</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermastheight">
                     <el-input v-model="tableData.towermastheight"></el-input>
@@ -828,7 +830,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
-                <td><div class="cell">楼面站拟建塔桅塔型</div></td>
+                <td><div class="cell"><i class="must">*</i>楼面站拟建塔桅塔型</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermasttype">
                     <el-input v-model="tableData.towermasttype"></el-input>
@@ -841,7 +843,7 @@
             <template v-if="tableData.websitebuildingmode === 2">
             <!--地面站拟建塔桅数量、高度（米）、及塔型-->
               <tr class="el-table__row">
-                <td><div class="cell">地面站拟建塔桅数量</div></td>
+                <td><div class="cell"><i class="must">*</i>地面站拟建塔桅数量</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermastnumber">
                     <el-input v-model="tableData.towermastnumber"></el-input>
@@ -851,7 +853,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
-                <td><div class="cell">地面站拟建塔桅高度(米)</div></td>
+                <td><div class="cell"><i class="must">*</i>地面站拟建塔桅高度(米)</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermastheight">
                     <el-input v-model="tableData.towermastheight"></el-input>
@@ -861,7 +863,7 @@
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
-                <td><div class="cell">地面站拟建塔桅塔型</div></td>
+                <td><div class="cell"><i class="must">*</i>地面站拟建塔桅塔型</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="towermasttype">
                     <el-input v-model="tableData.towermasttype"></el-input>
@@ -872,7 +874,7 @@
               </tr>
             <!--地面站拟建场地山高（米），平面填零-->
               <tr class="el-table__row">
-                <td><div class="cell">地面站拟建场地山高（米），平面填零</div></td>
+                <td><div class="cell"><i class="must">*</i>地面站拟建场地山高（米），平面填零</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="sitegrowtaller">
                     <el-input v-model="tableData.sitegrowtaller"></el-input>
@@ -910,7 +912,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
+        <el-form :model="tableData" v-loading="WriteLoading" :rules="Rules4" ref="WriteForm4" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -922,7 +924,7 @@
             <tbody>
             <!--拟建机房类型-->
             <tr class="el-table__row">
-              <td><div class="cell">建站模式</div></td>
+              <td><div class="cell"><i class="must">*</i>建站模式</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomtype">
                   <el-select v-model="tableData.roomtype">
@@ -936,7 +938,7 @@
             </tr>
             <!--拟建机房细分类型-->
             <tr class="el-table__row" v-if="tableData.roomtype === 5">
-              <td><div class="cell">拟建机房细分类型</div></td>
+              <td><div class="cell"><i class="must">*</i>拟建机房细分类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomsubdividetype">
                   <el-select v-model="tableData.roomsubdividetype">
@@ -949,7 +951,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-if="tableData.roomtype === 1 || tableData.roomtype === 3 || tableData.roomtype === 4 || tableData.roomtype === 7">
-              <td><div class="cell">拟建机房产权</div></td>
+              <td><div class="cell"><i class="must">*</i>拟建机房产权</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomproperty">
                   <el-select v-model="tableData.roomproperty">
@@ -963,7 +965,7 @@
             </tr>
             <!--拟建机房尺寸-->
             <tr class="el-table__row" v-if="tableData.roomtype !== 5 && tableData.roomtype !== 6">
-              <td><div class="cell">拟建机房尺寸</div></td>
+              <td><div class="cell"><i class="must">*</i>拟建机房尺寸</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomsize">
                   <el-input v-model="tableData.roomsize"></el-input>
@@ -1000,7 +1002,7 @@
           </table>
         </div>
         <!--表体-->
-        <el-form :model="tableData" v-loading="WriteLoading" label-width="0">
+        <el-form :model="tableData" v-loading="WriteLoading" :rules="Rules5" ref="WriteForm5" label-width="0">
         <div class="el-table__body-wrapper is-scrolling-none">
           <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
             <colgroup>
@@ -1012,7 +1014,7 @@
             <tbody>
             <!--原有引入类型-->
             <tr class="el-table__row">
-              <td><div class="cell">引入类型</div></td>
+              <td><div class="cell"><i class="must">*</i>引入类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="introducetype">
                   <el-select v-model="tableData.introducetype">
@@ -1026,7 +1028,7 @@
             </tr>
             <!--原有引入电压-->
             <tr class="el-table__row">
-              <td><div class="cell">引入电压</div></td>
+              <td><div class="cell"><i class="must">*</i>引入电压</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="introducevoltage">
                   <el-select v-model="tableData.introducevoltage">
@@ -1040,7 +1042,7 @@
             </tr>
             <!--引入距离-->
             <tr class="el-table__row">
-              <td><div class="cell">引入距离</div></td>
+              <td><div class="cell"><i class="must">*</i>引入距离</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="introducedistance">
                   <el-input v-model.number="tableData.introducedistance"></el-input>
@@ -1138,7 +1140,7 @@
             <tbody>
             <!--360环境照片-->
             <tr class="el-table__row">
-              <td><div class="cell">360环境照片</div></td>
+              <td><div class="cell"><i class="must">*</i>360环境照片</div></td>
               <td>
                 <div class="cell" @click="OpenImgBox('environment')">
                   {{formatString(tableData.environment)}}
@@ -1188,6 +1190,8 @@
       </el-tab-pane>
     </el-tabs>
     <div class="center" style="padding-bottom: 100px">
+      <el-button v-if="WriteState === 1" @click="SubmitAuit" type="primary" icon="el-icon-back">提交审核</el-button>
+      <el-button v-if="WriteState === 1" @click="SubmitSave" type="primary" icon="el-icon-back">保存</el-button>
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
       <el-button type="warning" @click="subAuit(2)" v-if="SurveyInfoType===2">审核打回</el-button>
       <el-button type="success" @click="subAuit(1)" v-if="SurveyInfoType===2">审核通过</el-button>
@@ -1219,7 +1223,7 @@
 
 <script>
 import GoogleMap from 'base/GoogleMap'
-import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask, GetDistance, GetInvestigateImgConfigurationList } from 'api/SurveyManagement'
+import { GetProjectInfo, GetNewResourceCensusInfo, AuitTask, GetDistance, GetInvestigateImgConfigurationList, UpdateNewResourceCensus, GetNewResourceSubmitAuit } from 'api/SurveyManagement'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from 'base/SurveyImgBox'
 import EnvironmentImgBox from 'base/EnvironmentImgBox'
@@ -1289,27 +1293,28 @@ export default {
         geographicname: '',
         geographic: null,
         // 建站模式
-        websitebuildingmode: 0,
+        websitebuildingmode: null,
         // 覆盖场景
-        coversscenarioname: '',
+        coversscenario: '',
         // 实际经度
         realitylongitude: '',
         // 实际纬度
         realitylatitude: '',
         // 与需求偏移距离
-        demanddistance: 0,
+        demanddistance: null,
         // 归属运营商
         ownedoperator: [],
         // 最近站点
         recentlyresourcename: '',
+        recentlyresource: '',
         // 与存量站之间的距离
-        resourcedistance: 0,
+        resourcedistance: null,
         // 建筑物类型
         buildingtype: '',
         // 是否能获取楼面结构情况
-        floorstructurecondition: '',
+        floorstructurecondition: null,
         // 维护是否方便
-        maintenancefriendly: '',
+        maintenancefriendly: null,
         // 建筑总楼层
         mainbuildingfloor: '',
         // 机房所在楼层
@@ -1321,29 +1326,29 @@ export default {
         // 新建塔型
         newtower: '',
         // 是否存在危险源
-        existinghazard: '',
+        existinghazard: null,
         // 是否在河道/铁路/高速附近
-        theriver: '',
+        theriver: null,
         // 地势低洼
-        lowlying: '',
+        lowlying: null,
         // 是否需要护坡/挡土墙
-        needrevetment: '',
+        needrevetment: null,
         // 是否需要修建围墙
-        buildwall: '',
+        buildwall: null,
         // 是否需要修建道路
-        buildroads: '',
+        buildroads: null,
         // 是否需要二次搬运
-        secondaryhandling: '',
+        secondaryhandling: null,
         // 是否需要接地外引
-        Irfpagrounding: '',
+        Irfpagrounding: null,
         // 是否有较深垃圾回填土质
-        backfillsoil: '',
+        backfillsoil: null,
         // 施工吊装机械是否可以入场
-        hoistingmachinery: '',
+        hoistingmachinery: null,
         // 施工空间是否足够
-        constructionspace: '',
+        constructionspace: null,
         // 是否需要地勘
-        geologicalexploration: '',
+        geologicalexploration: null,
         // 楼面站拟建楼面高度（米）
         floorheight: '',
         // 楼面站/地面站拟建塔桅数量，高度（米），及塔型
@@ -1353,7 +1358,11 @@ export default {
         // 地面站拟建场地山高（米），平面填零
         sitegrowtaller: '',
         //  拟建机房类型
-        roomtype: '',
+        roomtype: null,
+        // 机房细分类型
+        roomsubdividetype: null,
+        // 机房产权
+        roomproperty: null,
         roomtypename: '',
         //  拟建机房细分类型
         roomsubdividetypename: '',
@@ -1362,9 +1371,9 @@ export default {
         // 拟建机房尺寸
         roomsize: '',
         // 引入类型
-        introducetypename: '',
+        introducetype: null,
         // 引入电压
-        introducevoltagename: '',
+        introducevoltage: null,
         // 引入距离
         introducedistance: null,
         // 特殊情况说明
@@ -1374,6 +1383,136 @@ export default {
         housingconstruction: [],
         roofing: [],
         sketch: []
+      },
+      Rules1: {
+        resourceaddress: [
+          { required: true, message: '请输入基站地址', trigger: 'blur' }
+        ],
+        geographic: [
+          { required: true, message: '请选择地理环境', trigger: 'change' }
+        ],
+        websitebuildingmode: [
+          { required: true, message: '请选择建站模式', trigger: 'change' }
+        ],
+        coversscenario: [
+          { required: true, message: '请选择覆盖场景', trigger: 'change' }
+        ],
+        realitylongitude: [
+          { required: true, message: '请选择经度', trigger: 'change' }
+        ],
+        realitylatitude: [
+          { required: true, message: '请选择纬度', trigger: 'change' }
+        ],
+        ownedoperator: [
+          { required: true, message: '请选择本次需求运营商', trigger: 'change' }
+        ],
+        recentlyresourcename: [
+          { required: true, message: '请选择最近站点', trigger: 'change' }
+        ]
+      },
+      Rules2: {
+        buildingtype: [
+          { required: true, message: '请输入建筑物类型', trigger: 'blur' }
+        ],
+        floorstructurecondition: [
+          { required: true, message: '请选择是否能获取楼面结构情况', trigger: 'change' }
+        ],
+        maintenancefriendly: [
+          { required: true, message: '请选择维护是否方便', trigger: 'change' }
+        ],
+        mainbuildingfloor: [
+          { required: true, message: '请输入建筑总楼层', trigger: 'blur' }
+        ],
+        computerroomfloor: [
+          { required: true, message: '请输入机房所在楼层', trigger: 'blur' }
+        ],
+        towermastfloor: [
+          { required: true, message: '请输入塔桅所在楼层', trigger: 'blur' }
+        ],
+        floorsafetyassessment: [
+          { required: true, message: '请输入楼面安全评估', trigger: 'blur' }
+        ],
+        newtower: [
+          { required: true, message: '请选择新建塔型', trigger: 'change' }
+        ],
+        existinghazard: [
+          { required: true, message: '请选择是否存在危险源', trigger: 'change' }
+        ],
+        theriver: [
+          { required: true, message: '请选择是否在河道/铁路/高速附近', trigger: 'change' }
+        ],
+        lowlying: [
+          { required: true, message: '请选择是否地势低洼', trigger: 'change' }
+        ],
+        needrevetment: [
+          { required: true, message: '请选择是否需要护坡/挡土墙', trigger: 'change' }
+        ],
+        buildwall: [
+          { required: true, message: '请选择是否需要修建围墙', trigger: 'change' }
+        ],
+        buildroads: [
+          { required: true, message: '请选择是否需要修建道路', trigger: 'change' }
+        ],
+        secondaryhandling: [
+          { required: true, message: '请选择是否需要二次搬运', trigger: 'change' }
+        ],
+        Irfpagrounding: [
+          { required: true, message: '请选择是否需要接地外引', trigger: 'change' }
+        ],
+        backfillsoil: [
+          { required: true, message: '请选择是否有较深垃圾回填土质', trigger: 'change' }
+        ],
+        hoistingmachinery: [
+          { required: true, message: '请选择施工吊装机械是否可以入场', trigger: 'change' }
+        ],
+        constructionspace: [
+          { required: true, message: '请选择施工空间是否足够', trigger: 'change' }
+        ],
+        geologicalexploration: [
+          { required: true, message: '请选择是否需要地勘', trigger: 'change' }
+        ]
+      },
+      Rules3: {
+        floorheight: [
+          { required: true, message: '请输入楼面站拟建楼面高度（米）', trigger: 'blur' }
+        ],
+        towermasttype: [
+          { required: true, message: '请输入楼面站拟建塔桅塔型', trigger: 'blur' }
+        ],
+        towermastnumber: [
+          { required: true, message: '请输入楼面站拟建塔桅数量', trigger: 'blur' }
+        ],
+        towermastheight: [
+          { required: true, message: '请输入楼面站拟建塔桅高度(米)', trigger: 'blur' }
+        ],
+        sitegrowtaller: [
+          { required: true, message: '请输入地面站拟建场地山高（米），平面填零', trigger: 'blur' }
+        ]
+      },
+      Rules4: {
+        roomtype: [
+          { required: true, message: '请选择拟建机房类型', trigger: 'change' }
+        ],
+        roomsubdividetype: [
+          { required: true, message: '请选择拟建机房细分类型', trigger: 'change' }
+        ],
+        roomproperty: [
+          { required: true, message: '请选择拟建机房产权', trigger: 'change' }
+        ],
+        roomsize: [
+          { required: true, message: '请输入拟建机房尺寸', trigger: 'blur' }
+        ]
+      },
+      Rules5: {
+        introducetype: [
+          { required: true, message: '请选择引入类型', trigger: 'change' }
+        ],
+        introducevoltage: [
+          { required: true, message: '请选择引入电压', trigger: 'change' }
+        ],
+        introducedistance: [
+          { required: true, message: '请输入引入距离', trigger: 'blur' }
+        ]
       },
       // 审核弹窗
       auitShow: false,
@@ -1389,6 +1528,8 @@ export default {
       this.SurveyInfo = this.ProjectSurveyInfo
     } else if (this.SurveyInfoType === 2) {
       this.SurveyInfo = this.TaskSurveyInfo
+    } else if (this.SurveyInfoType === 3) {
+      this.SurveyInfo = this.MyProject
     }
     this.WriteState = this.SurveyInfo.state
     this.ViewTabIndex = '0'
@@ -1406,6 +1547,7 @@ export default {
           id: this.SurveyInfo.id
         }
       }).then(res => {
+        this.WriteLoading = false
         if (res.data != null) {
           this.tableData2 = res.data
         }
@@ -1413,9 +1555,9 @@ export default {
           this.closeWrite()
         }
       }).catch(error => {
+        this.WriteLoading = false
         console.log(error)
       })
-      this.WriteLoading = false
     },
     getNewBuildStationInfo () {
       this.$axios.get(GetNewResourceCensusInfo, {
@@ -1425,8 +1567,15 @@ export default {
       }).then(res => {
         if (res.data != null) {
           this.tableData = res.data
+          this.tableData.websitebuildingmode = this.tableData.websitebuildingmode === 0 ? null : this.tableData.websitebuildingmode
           this.tableData.demanddistance = this.tableData.demanddistance ? this.tableData.demanddistance : '请选择经纬度后计算'
           this.tableData.resourcedistance = this.tableData.resourcedistance ? this.tableData.resourcedistance.toFixed(2) : ''
+          if (this.WriteState === 1) {
+            if (this.tableData.websitebuildingmode === 1) {
+              this.tableData.newtower = this.tableData.newtower ? this.tableData.newtower.split(',') : this.tableData.newtower === null ? [] : this.tableData.newtower.split('')
+            }
+            this.tableData.ownedoperator = this.tableData.ownedoperator ? this.tableData.ownedoperator.split(',') : this.tableData.ownedoperator === null ? [] : this.tableData.ownedoperator.split('')
+          }
           // if (res.data.environment) {
           //   this.environment = JSON.parse(res.data.environment)
           //   this.housingconstruction = JSON.parse(res.data.housingconstruction)
@@ -1478,6 +1627,117 @@ export default {
       })
       this.Loading = false
     },
+    SubmitSave () {
+      this.WriteLoading = true
+      if (this.tableData.websitebuildingmode === 1) {
+        if (this.tableData.newtower.length) {
+          this.tableData.newtower = this.tableData.newtower.join(',')
+        } else {
+          this.tableData.newtower = this.tableData.newtower.toString()
+        }
+      }
+      if (this.tableData.ownedoperator.length) {
+        this.tableData.ownedoperator = this.tableData.ownedoperator.join(',')
+      } else {
+        this.tableData.ownedoperator = this.tableData.ownedoperator.toString()
+      }
+      this.tableData.environment = this.tableData.environment.filter(i => i.url)
+      this.tableData.housingconstruction = this.tableData.housingconstruction.filter(i => i.url)
+      this.tableData.roofing = this.tableData.roofing.filter(i => i.url)
+      this.tableData.sketch = this.tableData.sketch.filter(i => i.url)
+      this.$axios.put(UpdateNewResourceCensus, this.tableData).then(res => {
+        this.WriteLoading = false
+        if (res.errorCode === '200') {
+          this.$message.success('保存成功!')
+          this.closeWrite()
+        } else {
+          this.tableData.newtower = this.tableData.newtower ? this.tableData.newtower.split(',') : this.tableData.newtower.split('')
+          this.tableData.ownedoperator = this.tableData.ownedoperator ? this.tableData.ownedoperator.split(',') : this.tableData.ownedoperator.split('')
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    SubmitSaveAsync () {
+      this.WriteLoading = true
+      if (this.tableData.websitebuildingmode === 1) {
+        if (this.tableData.newtower.length) {
+          this.tableData.newtower = this.tableData.newtower.join(',')
+        } else {
+          this.tableData.newtower = this.tableData.newtower.toString()
+        }
+      }
+      if (this.tableData.ownedoperator.length) {
+        this.tableData.ownedoperator = this.tableData.ownedoperator.join(',')
+      } else {
+        this.tableData.ownedoperator = this.tableData.ownedoperator.toString()
+      }
+      this.tableData.environment = this.tableData.environment.filter(i => i.url)
+      this.tableData.housingconstruction = this.tableData.housingconstruction.filter(i => i.url)
+      this.tableData.roofing = this.tableData.roofing.filter(i => i.url)
+      this.tableData.sketch = this.tableData.sketch.filter(i => i.url)
+      return this.$axios.put(UpdateNewResourceCensus, this.tableData).then((res) => {
+        return Promise.resolve(res)
+      })
+    },
+    SubmitAuit () {
+      if (this.tableData.environment.filter(it => it.url).length !== 8) return this.$message.error('请补全360环境照片！')
+      this.$refs.WriteForm1.validate((vali, msg) => {
+        if (!vali) {
+          return this.$message.error('基本情况有未填完信息,请补全！')
+        } else {
+          this.$refs.WriteForm2.validate((vali, msg) => {
+            if (!vali) {
+              return this.$message.error('站点情况有未填完信息,请补全！')
+            } else {
+              this.$refs.WriteForm3.validate((vali, msg) => {
+                if (!vali) {
+                  return this.$message.error('铁塔情况有未填完信息,请补全！')
+                } else {
+                  this.$refs.WriteForm4.validate((vali, msg) => {
+                    if (!vali) {
+                      return this.$message.error('机房情况有未填完信息,请补全！')
+                    } else {
+                      this.$refs.WriteForm5.validate((vali, msg) => {
+                        if (!vali) {
+                          return this.$message.error('外电引入有未填完信息,请补全！')
+                        } else {
+                          this.SubmitSaveAsync().then((res) => {
+                            if (res.errorCode === '200') {
+                              this.$axios.get(GetNewResourceSubmitAuit, {
+                                params: {
+                                  project_id: this.SurveyInfo.id
+                                }
+                              }).then(res => {
+                                console.log(res)
+                                if (res.errorCode === '200') {
+                                  this.WriteLoading = false
+                                  this.$message.success('提交审核成功!')
+                                  this.closeWrite()
+                                } else {
+                                  this.WriteLoading = false
+                                  this.$message.error(res.msg)
+                                }
+                              }).catch(error => {
+                                this.WriteLoading = false
+                                console.log(error)
+                              })
+                            } else {
+                              this.WriteData.newtower = this.WriteData.newtower ? this.WriteData.newtower.split(',') : this.WriteData.newtower.split('')
+                              this.WriteData.ownedoperator = this.WriteData.ownedoperator ? this.WriteData.ownedoperator.split(',') : this.WriteData.ownedoperator.split('')
+                              this.$message.error(res.msg)
+                            }
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+    },
     getImgTitle (val) {
       return this.$axios.get(GetInvestigateImgConfigurationList, {
         params: {
@@ -1498,75 +1758,83 @@ export default {
     OpenImgBox (s) {
       switch (s) {
         case 'environment':
-          this.getEnvironmentTitle().then((res) => {
-            if (res.data.length) {
-              res.data.forEach(item => {
-                if (!this.tableData.environment.filter(it => it.title === item.text).length) {
-                  const obj = {
-                    field_name: 'environment',
-                    remarks: '',
-                    title: item.text,
-                    url: ''
+          if (this.WriteState === 1) {
+            this.getEnvironmentTitle().then((res) => {
+              if (res.data.length) {
+                res.data.forEach(item => {
+                  if (!this.tableData.environment.filter(it => it.title === item.text).length) {
+                    const obj = {
+                      field_name: 'environment',
+                      remarks: '',
+                      title: item.text,
+                      url: ''
+                    }
+                    this.tableData.environment.push(obj)
                   }
-                  this.tableData.environment.push(obj)
-                }
-              })
-            }
-          })
+                })
+              }
+            })
+          }
           this.$refs.ImgBox.SetData('360环境照片', 'environment', this.tableData.environment, true)
           break
         case 'housingconstruction':
-          this.getImgTitle('机房建设地照片').then((res) => {
-            if (res.data.total) {
-              res.data.list.forEach(item => {
-                if (!this.tableData.housingconstruction.filter(it => it.title === item.title).length) {
-                  const obj = {
-                    field_name: 'housingconstruction',
-                    remarks: '',
-                    title: item.title,
-                    url: ''
+          if (this.WriteState === 1) {
+            this.getImgTitle('机房建设地照片').then((res) => {
+              if (res.data.total) {
+                res.data.list.forEach(item => {
+                  if (!this.tableData.housingconstruction.filter(it => it.title === item.title).length) {
+                    const obj = {
+                      field_name: 'housingconstruction',
+                      remarks: '',
+                      title: item.title,
+                      url: ''
+                    }
+                    this.tableData.housingconstruction.push(obj)
                   }
-                  this.tableData.housingconstruction.push(obj)
-                }
-              })
-            }
-          })
+                })
+              }
+            })
+          }
           this.$refs.ImgBox.SetData('机房建设地照片', 'housingconstruction', this.tableData.housingconstruction, true)
           break
         case 'roofing':
-          this.getImgTitle('塔桅及天面照片').then((res) => {
-            if (res.data.total) {
-              res.data.list.forEach(item => {
-                if (!this.tableData.roofing.filter(it => it.title === item.title).length) {
-                  const obj = {
-                    field_name: 'roofing',
-                    remarks: '',
-                    title: item.title,
-                    url: ''
+          if (this.WriteState === 1) {
+            this.getImgTitle('塔桅及天面照片').then((res) => {
+              if (res.data.total) {
+                res.data.list.forEach(item => {
+                  if (!this.tableData.roofing.filter(it => it.title === item.title).length) {
+                    const obj = {
+                      field_name: 'roofing',
+                      remarks: '',
+                      title: item.title,
+                      url: ''
+                    }
+                    this.tableData.roofing.push(obj)
                   }
-                  this.tableData.roofing.push(obj)
-                }
-              })
-            }
-          })
+                })
+              }
+            })
+          }
           this.$refs.ImgBox.SetData('塔桅及天面照片', 'roofing', this.tableData.roofing, true)
           break
         case 'sketch':
-          this.getImgTitle('勘察草图').then((res) => {
-            if (res.data.total) {
-              res.data.list.forEach(item => {
-                if (!this.tableData.sketch.filter(it => it.title === item.title).length) {
-                  const obj = {
-                    field_name: 'sketch',
-                    remarks: '',
-                    title: item.title,
-                    url: ''
+          if (this.WriteState === 1) {
+            this.getImgTitle('勘察草图').then((res) => {
+              if (res.data.total) {
+                res.data.list.forEach(item => {
+                  if (!this.tableData.sketch.filter(it => it.title === item.title).length) {
+                    const obj = {
+                      field_name: 'sketch',
+                      remarks: '',
+                      title: item.title,
+                      url: ''
+                    }
+                    this.tableData.sketch.push(obj)
                   }
-                  this.tableData.sketch.push(obj)
-                }
-              })
-            }
-          })
+                })
+              }
+            })
+          }
           this.$refs.ImgBox.SetData('勘察草图', 'sketch', this.tableData.sketch, true)
           break
       }
@@ -1589,6 +1857,9 @@ export default {
       } else if (this.SurveyInfo.from === 'TaskManagement') {
         this.$router.push({name: 'TaskManagement'})
         this.$emit('handleChange', 'TaskManagement', 'dc73026f-3906-4f64-a8bd-1a2bc646f1fe')
+      } else if (this.SurveyInfo.from === 'MyProject') {
+        this.$router.push({name: 'MyProject'})
+        this.$emit('handleChange', 'MyProject', '296a0c73-6a8a-450a-9e3e-f1ac571a695d')
       }
     },
     subAuit (s) {
@@ -1629,17 +1900,23 @@ export default {
     formatString (val) {
       return val !== undefined && val.filter(it => it.url).length ? `有（${val.filter(it => it.url).length}张）` : '无'
     },
-    OpenMap (val) { // 0: 查看 1: 编辑/新增
+    OpenMap (val, isCheck = false) { // 0: 查看 1: 编辑/新增
       this.showMap = true
       this.$nextTick(() => {
         this.$refs.GoogleMap.Open()
         this.$refs.GoogleMap.showType = val
-        this.$refs.GoogleMap.longitude = this.tableData.realitylongitude
-        this.$refs.GoogleMap.latitude = this.tableData.realitylatitude
+        if (isCheck) {
+          this.$refs.GoogleMap.longitude = this.tableData2.planninglongitude
+          this.$refs.GoogleMap.latitude = this.tableData2.planninglatitude
+        } else {
+          this.$refs.GoogleMap.longitude = this.tableData.realitylongitude
+          this.$refs.GoogleMap.latitude = this.tableData.realitylatitude
+          this.$refs.GoogleMap.Query.longitude = this.tableData.realitylongitude
+          this.$refs.GoogleMap.Query.latitude = this.tableData.realitylatitude
+        }
       })
     },
     getMapData (longitude, latitude) {
-      console.log(this.$refs.GoogleMap.showType)
       this.showMap = false
       if (longitude && this.$refs.GoogleMap.showType === 1) {
         this.tableData.realitylongitude = longitude
@@ -1684,7 +1961,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType'])
+    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType', 'MyProject'])
   },
   watch: {
     SurveyInfoType (newd, old) {
@@ -1693,6 +1970,8 @@ export default {
           this.SurveyInfo = this.ProjectSurveyInfo
         } else if (this.SurveyInfoType === 2) {
           this.SurveyInfo = this.TaskSurveyInfo
+        } else if (this.SurveyInfoType === 3) {
+          this.SurveyInfo = this.MyProject
         }
         this.ViewTabIndex = '0'
         this.getTableData()

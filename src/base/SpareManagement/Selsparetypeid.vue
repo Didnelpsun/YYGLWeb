@@ -100,9 +100,9 @@ export default {
       this.$axios.get(GetSpareTypList, {
         params: {
           PageIndex: 1,
-          PageSize: 10,
-          provinceid: this.provinceid,
-          cityid: this.cityid
+          PageSize: 10
+          /* provinceid: this.provinceid,
+          cityid: this.cityid */
         }}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -120,9 +120,9 @@ export default {
       this.Table1Loading = true
       this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.query, {
         PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize,
-        provinceid: this.provinceid,
-        cityid: this.cityid
+        PageSize: this.pagination.pageSize
+        /*   provinceid: this.provinceid,
+        cityid: this.cityid */
       })}).then(res => {
         this.Table1Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)

@@ -116,6 +116,7 @@ export default {
   },
   methods: {
     Showwarehousetype (val) {
+      val = parseInt(val.warehousetype)
       return val === 1 ? '市公司备件库' : val === 2 ? '市公司维修库' : val === 3 ? '市公司报废库' : '工作备件库'
     },
     changeadministrator (val) {
@@ -124,6 +125,7 @@ export default {
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
+      this.getDic()
     },
     getDic () {
       let arr = ['备件存放点类型']

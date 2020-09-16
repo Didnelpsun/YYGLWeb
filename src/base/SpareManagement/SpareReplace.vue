@@ -14,21 +14,21 @@
             <el-col :span="8">
               <div @click="sparetypeShow=true">
               <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparepartstype" clearable placeholder="请选择备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.sparepartstype" clearable placeholder="请选择备件类型"></el-input>
               </el-form-item>
               </div>
             </el-col>
             <el-col :span="8">
               <div @click="SparemanufacturerShow=true">
               <el-form-item label="厂家：">
-                <el-input v-model="Query.manufacturer" clearable placeholder="请选择厂家"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.manufacturer" clearable placeholder="请选择厂家"></el-input>
               </el-form-item>
               </div>
             </el-col>
             <el-col :span="8">
               <div @click="sparemodelShow=true">
               <el-form-item label="备件型号：">
-                <el-input v-model="Query.sparemodel" clearable placeholder="请选择备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.sparemodel" clearable placeholder="请选择备件型号"></el-input>
               </el-form-item>
               </div>
             </el-col>

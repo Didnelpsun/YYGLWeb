@@ -43,32 +43,32 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件类型</div></td>
-              <td><div class="cell">{{WriteData.sparepartstypeid}}</div></td>
+              <td><div class="cell">{{WriteData.typeencoding}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">厂家</div></td>
-              <td><div class="cell">{{WriteData.manufacturerid}}</div></td>
+              <td><div class="cell">{{WriteData.manufacturername}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">规格型号</div></td>
-              <td><div class="cell">{{WriteData.innumcode}}</div></td>
+              <td><div class="cell">{{WriteData.sparemodel}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">存放点</div></td>
-              <td><div class="cell">{{WriteData.depotsid}}</div></td>
+              <td><div class="cell">出库存放点</div></td>
+              <td><div class="cell">{{WriteData.depots}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">入库存放点 </div></td>
-              <td><div class="cell">{{WriteData.indepotsid}}</div></td>
+              <td><div class="cell">{{WriteData.indepots}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">权属</div></td>
-              <td><div class="cell">{{WriteData.units}}</div></td>
+              <td><div class="cell">出库权属</div></td>
+              <td><div class="cell">{{WriteData.outunits}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -77,44 +77,37 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">状态</div></td>
-              <td><div class="cell">{{WriteData.state}}</div></td>
+              <td><div class="cell">出库状态</div></td>
+              <td><div class="cell">{{WriteData.outstate | state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">入库状态</div></td>
-              <td><div class="cell">{{WriteData.instate}}</div></td>
+              <td><div class="cell">{{WriteData.instate | state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">申请时间</div></td>
-              <td><div class="cell">{{WriteData.applicantid}}</div></td>
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">申请人</div></td>
               <td><div class="cell">{{WriteData.applicanttime}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
+              <td><div class="cell">申请人</div></td>
+              <td><div class="cell">{{WriteData.applicanname}}</div></td>
+              <td><div class="cell"></div></td>
+            </tr>
+            <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>关联借用备件</div></td>
-              <td>
-                <div class="cell">
-                  <el-form-item label-width="0" prop="assistantstate" class="form-item">
-                    <el-select class="tableSelect" v-model="WriteData.assistantstate">
-<el-option v-for="i in DicList.schedulingtype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择关联借用备件"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </td>
+              <td v-if="WriteData.isborrow"><div class="cell" @click="showisborrow">是</div></td>
+              <td v-if="!WriteData.isborrow"><div class="cell">否</div></td>
               <td></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>审核状态</div></td>
               <td>
                 <div class="cell">
-                  <el-form-item label-width="0" prop="inauditstatus" class="form-item">
-                    <el-select class="tableSelect" v-model="WriteData.inauditstatus" placeholder="请选择审核状态">
+                  <el-form-item label-width="0" prop="outauditstatus" class="form-item">
+                    <el-select class="tableSelect" v-model="WriteData.outauditstatus" placeholder="请选择审核状态">
                       <el-option  label="通过" :value="4"></el-option>
                       <el-option  label="不通过" :value="3"></el-option>
                     </el-select>
@@ -127,8 +120,8 @@
               <td><div class="cell">审核意见</div></td>
               <td>
                 <div class="cell">
-                  <el-form-item label-width="0" prop="inauditopinion" class="form-item">
-                    <el-input v-model="WriteData.inauditopinion" placeholder="请填入审核意见" type="textarea" :rows="2"></el-input>
+                  <el-form-item label-width="0" prop="outauditopinion" class="form-item">
+                    <el-input v-model="WriteData.outauditopinion" placeholder="请填入审核意见" type="textarea" :rows="2"></el-input>
                   </el-form-item>
                 </div>
               </td>
@@ -143,11 +136,17 @@
       <el-button @click="Audit" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
+   <div v-if="show">
+      <el-dialog top="1%" :visible.sync="show" title="借用备件详情" width="80%" :before-close="showClose">
+        <SelBorrowerDetails/>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import {EditSpareTyp} from 'api/BJGL'
+import SelBorrowerDetails from 'base/SpareManagement/SelBorrowerDetails'
+import {AuditScrapRecord} from 'api/BJGL'
 export default {
   name: 'SchedulingAudit',
   props: {
@@ -164,26 +163,59 @@ export default {
   },
   data () {
     return {
+      show: false,
       isShow: false,
       Loading: false,
       WriteData: {
-        inauditstatus: null,
-        inauditopinion: null,
-        assistantstate: null
+        id: null,
+        outauditstatus: null,
+        outauditopinion: null,
+        isborrow: null
       },
       Rules: {
-        typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
+        outauditopinion: [{ required: true, message: '请填入审核意见', trigger: 'change' }]
       }
     }
   },
 
   methods: {
+    showisborrow () {
+      this.show = true
+    },
+    showClose () {
+      this.show = false
+    },
     ResetWrite () {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
     },
     setWriteData (data) {
       this.WriteData = data
+      this.WriteData.outauditstatus = 3
+      switch (parseInt(this.WriteData.schedulingtype)) {
+        case 1:this.WriteData.schedulingtype = '新增'
+          break
+        case 2:this.WriteData.schedulingtype = '报修'
+          break
+        case 3:this.WriteData.schedulingtype = '送修'
+          break
+        case 4:this.WriteData.schedulingtype = '报废'
+          break
+        case 5:this.WriteData.schedulingtype = '借用'
+          break
+        case 6:this.WriteData.schedulingtype = '替换'
+          break
+        case 7:this.WriteData.schedulingtype = '归还'
+          break
+        case 8:this.WriteData.schedulingtype = '点验'
+          break
+        case 9:this.WriteData.schedulingtype = '上站'
+          break
+        case 10:this.WriteData.schedulingtype = '领用'
+          break
+        case 11:this.WriteData.schedulingtype = '返修'
+          break
+      }
     },
     WriteClose () {
       this.ResetWrite()
@@ -191,12 +223,17 @@ export default {
     },
 
     Audit () {
-      /*   this.$refs.WriteForm.validate((vali, msg) => {
+      this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
-          this.Loading = true
-          this.$axios.post(AddSpareTyp, this.WriteData).then(res => {
+          /* this.Loading = true */
+          let params = {
+            Id: this.WriteData.id,
+            outauditstatus: this.WriteData.outauditstatus,
+            outauditopinion: this.WriteData.outauditopinion
+          }
+          this.$axios.post(AuditScrapRecord, params).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('审核成功!')
@@ -204,7 +241,16 @@ export default {
             this.WriteClose()
           })
         }
-      }) */
+      })
+    }
+  },
+  components: {
+    SelBorrowerDetails
+  },
+  filters: {
+    state (val) {
+      val = parseInt(val)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
     }
   }
 }

@@ -81,7 +81,7 @@
         </el-table-column>
       </el-table>
       <div class="center">
-        <el-pagination @current-change="getMore1(currentPage)" @size-change="changeSize1" :current-page="currentPage"
+        <el-pagination @current-change="getMore1" @size-change="changeSize1" :current-page="currentPage"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
@@ -187,7 +187,7 @@ export default {
       this.Loading = true
       this.$axios.get(GetElectricMeterList, {
         params: Object.assign({}, this.Query, {
-          PageIndex: 1,
+          PageIndex: page,
           PageSize: this.pageSize
         })
       }).then(res => {

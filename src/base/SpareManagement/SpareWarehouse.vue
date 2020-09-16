@@ -57,7 +57,7 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="typename">
+                <el-form-item class="form-item" prop="name">
                   <el-input v-model="WriteData.name"  placeholder="请填写存放点名称" clearable></el-input>
                 </el-form-item>
               </div></td>
@@ -81,7 +81,9 @@
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.orgname}}</div>
                 <div v-if="WriteState !== 2" @click="orgidshow=true">
+                  <el-form-item prop="orgname" class="form-item">
                   <el-input v-model="WriteData.orgname" readonly placeholder="请填写存放点单位"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -96,8 +98,32 @@
               </td>
               <td><div class="cell"></div></td>
             </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-form>
+      <el-form  v-show="!Loading"   ref="WriteForms" label-width="0" :show-message="false">
+        <div class="el-table__body-wrapper is-scrolling-none">
+          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
+            <colgroup>
+              <col width="80"/>
+              <col width="100"/>
+              <!--  <col width="50"/>-->
+              <col width="100"/>
+            </colgroup>
+            <tbody>
+            <tr  class="el-table__row" v-for="(item,key) of WriteData.administrators" :key="key">
+              <td><div class="cell"><i class="must">{{item.administrator}}</i>管理员联系电话</div></td>
+              <td  v-if="WriteState == 2"><div class="cell">{{item.phonenum}}</div></td>
+              <td v-show="WriteState !== 2"><div class="cell">
+                <el-form-item class="form-item">
+                  <el-input  v-model="item.phonenum"  placeholder="请填写存放点管理员联系电话" clearable></el-input>
+                </el-form-item>
+              </div></td>
+              <td><div class="cell"></div></td>
+            </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>说明</div></td>
+              <td><div class="cell">说明</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.remark}}</div>
                 <div v-if="WriteState !== 2" >
@@ -115,32 +141,8 @@
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交人</div></td>
               <td><div class="cell">{{WriteData.realityname}}</div></td>
-
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </el-form>
-      <el-form  v-loading="Loading"  ref="WriteForms" label-width="0" :show-message="false">
-        <div class="el-table__body-wrapper is-scrolling-none" v-for="(item,key) of WriteData.administrators" :key="key">
-          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
-            <colgroup>
-              <col width="80"/>
-              <col width="100"/>
-              <!--  <col width="50"/>-->
-              <col width="100"/>
-            </colgroup>
-            <tbody>
-            <tr  class="el-table__row">
-              <td><div class="cell"><i class="must">{{item.administrator}}</i>管理员联系电话</div></td>
-              <td  v-if="WriteState == 2"><div class="cell">{{item.phonenum}}</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item">
-                  <el-input  v-model="item.phonenum"  placeholder="请填写存放点管理员联系电话" clearable></el-input>
-                </el-form-item>
-              </div></td>
             </tr>
             </tbody>
           </table>
@@ -228,7 +230,7 @@ export default {
         areaid: null,
         warehousetype: '',
         warehousetypename: null,
-        name: ' ',
+        name: '',
         code: '',
         orgid: '',
         orgname: '',
@@ -237,12 +239,10 @@ export default {
         ]
       },
       Rules: {
-        /*       AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'blur' }],
         name: [{ required: true, message: '请填入存放点名称', trigger: 'change' }],
-        code: [{ required: true, message: '请填入存放点编码', trigger: 'change' }],
-        orgid: [{ required: true, message: '请填入存放点单位', trigger: 'change' }],
-        administratorname: [{ required: true, message: '请选择存放点管理员', trigger: 'blur' }] */
+        code: [{ required: true, message: '请填入存放点编码', trigger: 'change' }]
+      /*  orgname: [{ required: true, message: '请填入存放点单位', trigger: 'change' }] */
       }
     }
   },
@@ -263,7 +263,7 @@ export default {
         var administrators = []
         for (var i in arr) {
           users[i] = arr[i].realityname
-          administrators.push({administratorid: arr[i].id, administratoridname: arr[i].realityname, phonenum: arr[i].mobile_no})
+          administrators.push({administratorid: arr[i].id, administrator: arr[i].realityname, phonenum: arr[i].mobile_no})
         }
       }
       this.administratoridname = users.join(',')
@@ -298,6 +298,7 @@ export default {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
       this.administratoridname = null
+      this.WriteData.reamrk = null
     },
     setWriteData (data) {
       this.WriteData = data[0]
@@ -344,7 +345,10 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
+        if (!vali || this.WriteData.AreaList.length === 0 || this.WriteData.orgname === '' || this.administratoridname === '') {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
+          if (this.WriteData.orgname === '') return this.$message.error('请选择存放点单位！')
+          if (this.administratoridname === '') return this.$message.error('请选择存放点管理员！')
           return this.$message.error('请补全信息！')
         } else {
           console.log(1)
@@ -361,9 +365,10 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0 || this.administratoridname === '') {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
+          /* if (this.WriteData.orgname || this.WriteData.orgname.length === 0) return this.$message.error('请选择存放点单位！') */
+          if (this.administratoridname === '') return this.$message.error('请选择存放点管理员！')
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

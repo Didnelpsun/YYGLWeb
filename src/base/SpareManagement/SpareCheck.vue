@@ -35,7 +35,9 @@
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
                 <div @click="Show=true">
+                  <el-form-item class="form-item" prop="operation">
                   <el-input v-model="WriteData.operation" readonly placeholder="请选择存放点名"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -56,7 +58,9 @@
               <td><div class="cell"><i class="must">*</i>备件类型</div></td>
               <td><div class="cell">
                 <div @click="sparetypeShow=true">
+                  <el-form-item class="form-item" prop="sparepartstype">
                   <el-input v-model="WriteData.sparepartstype" readonly placeholder="请选择备件类型"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
@@ -66,7 +70,9 @@
               <td><div class="cell"><i class="must">*</i>备件厂家</div></td>
               <td><div class="cell">
                 <div  @click="SparemanufacturerShow=true">
+                  <el-form-item class="form-item" prop="manufacturer">
                   <el-input v-model="WriteData.manufacturer" readonly placeholder="请选择厂家"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -80,7 +86,9 @@
               <td><div class="cell"><i class="must">*</i>备件型号</div></td>
               <td><div class="cell">
                 <div  @click="sparemodelShow=true">
+                  <el-form-item class="form-item" prop="sparemodel">
                   <el-input v-model="WriteData.sparemodel" readonly placeholder="请选择备件型号"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -187,8 +195,7 @@ import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
-
-import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
+import {Editspareparts} from 'api/BJGL'
 export default {
   name: 'SpareCheck',
   mixins: [GlobalRes],
@@ -224,8 +231,14 @@ export default {
         manufacturer: '' // 备件厂家名称
       },
       Rules: {
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }]
-
+        operation: [{ required: true, message: '请选择存放点', trigger: 'change' }],
+        sparepartstype: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
+        manufacturer: [{ required: true, message: '请选择厂家', trigger: 'change' }],
+        sparemodel: [{ required: true, message: '请选择备件型号', trigger: 'change' }],
+        code: [{ required: true, message: '请扫备件编码', trigger: 'change' }],
+        warrantycode: [{ required: true, message: '请扫备件质保编码', trigger: 'change' }],
+        assetsencoding: [{ required: true, message: '请扫资产编码', trigger: 'change' }],
+        qrcode: [{ required: true, message: '请选择二维码', trigger: 'change' }]
       }
     }
   },
@@ -271,41 +284,16 @@ export default {
     SelectUserOperationClose () {
       this.Show = false
     },
-    handleSubmit (val) {
-
-    },
     SubAdd () {
       /*   this.$refs.WriteForm.validate((vali, msg) => {
           if (!vali) {
-            if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-            if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
             return this.$message.error('请补全信息！')
           } else {
             this.Loading = true
-            this.$axios.post(Addmaintenanceconfig, this.WriteData).then(res => {
+            this.$axios.post(Editspareparts, this.WriteData).then(res => {
               this.Loading = false
               if (res.errorCode !== '200') return this.$message.error(res.msg)
               this.$message.success('添加成功!')
-              this.$emit('fatheretMore')
-              this.WriteClose()
-            })
-          }
-        }) */
-    },
-    SubEdit () {
-      /*    this.$refs.WriteForm.validate((vali, msg) => {
-          if (!vali) {
-            if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-            if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
-            this.$message.error('请补全信息！')
-          } else {
-            this.Loading = true
-            this.$axios.put(Editmaintenanceconfig, this.WriteData).then(res => {
-              this.Loading = false
-              if (res.errorCode !== '200') return this.$message.error(res.msg)
-              this.$message.success('编辑成功!')
-              this.$emit('fatheretMore')
-              this.ResetWrite()
               this.WriteClose()
             })
           }

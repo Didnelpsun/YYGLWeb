@@ -46,7 +46,9 @@
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.name}}</div>
                 <div v-if="WriteState !== 2">
+                  <el-form-item prop="name" class="form-item">
                   <el-input v-model="WriteData.name"  placeholder="请填入厂家名称"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
@@ -157,10 +159,8 @@ export default {
         manufacturername: ''
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         name: [{ required: true, message: '请填入厂家名称', trigger: 'change' }],
-        sparetypeid: [{ required: true, message: '请填入厂家编码', trigger: 'change' }],
-        sparemodel: [{ required: true, message: '请填入备件型号', trigger: 'change' }]
+        code: [{ required: true, message: '请填入厂家编码', trigger: 'change' }]
       }
     }
   },
@@ -204,9 +204,8 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
@@ -223,9 +222,8 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

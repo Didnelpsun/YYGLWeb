@@ -61,6 +61,11 @@
                   <el-input v-model="Query.resourcename" placeholder="请输入站点名称" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item label="区域：">
+                  <el-cascader v-model="Query.AreaList" :props="QareaProps" @change="changeArea(Query)" ref="queryInput"></el-cascader>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :span="6">
@@ -77,10 +82,12 @@
           <div class="fr">
             <el-button @click="SiteExport" type="success" icon="el-icon-download">导出</el-button>
             <el-button @click="handleAdd" type="success" icon="el-icon-plus">添加</el-button>
+            <el-button @click="BatchSend" type="success" icon="el-icon-plus">派发</el-button>
           </div>
         </el-col>
       </el-row>
-      <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">
+      <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px" @selection-change="handleSelect1">
+        <el-table-column type="selection" width="40" :selectable="selectable"></el-table-column>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template></el-table-column>
         <el-table-column prop="cityname" label="地市" width="80"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="80"></el-table-column>
@@ -92,13 +99,12 @@
         <el-table-column prop="constructionmodename" label="建设方式" width=""></el-table-column>
         <el-table-column prop="taskstatename" label="审核状态" width=""></el-table-column>
         <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
-        <el-table-column prop="" label="操作" width="200" align="center">
+        <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleSend(scope.$index, scope.row)">派发</el-button>
             <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row, 2)">详情</el-button>
             <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑项目</el-button>
-            <el-button v-if="scope.row.taskstatename === '待执行'" type="text" size="mini" @click="handleWrite(scope.$index, scope.row, 1)">编辑项目明细</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -252,23 +258,26 @@
               </tr>
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>需求经度</div></td>
-                <td v-show="WriteState !== 2"><div class="cell">
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="planninglongitude">
-                    <el-input v-model="WriteData.planninglongitude"></el-input>
+                    <el-input v-model="WriteData.planninglongitude" readonly style="width: 80%"></el-input>
+                    <i class="el-icon-location" style="font-size: 20px;color:#F64245;"></i>
                   </el-form-item>
                 </div></td>
-                <td v-show="WriteState == 2"><div class="cell">{{WriteData.planninglongitude}}</div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)">
+                  <div class="cell"><span>{{WriteData.planninglongitude}}</span><i class="el-icon-location icon_location"></i></div>
+                </td>
                 <!--<td><div class="cell"></div></td>-->
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>需求纬度</div></td>
-                <td v-show="WriteState !== 2"><div class="cell">
+                <td v-show="WriteState !== 2" @click="OpenMap(1)"><div class="cell">
                   <el-form-item class="form-item" prop="planninglatitude">
-                    <el-input v-model="WriteData.planninglatitude"></el-input>
+                    <el-input v-model="WriteData.planninglatitude" readonly style="width: 80%"></el-input>
                   </el-form-item>
                 </div></td>
-                <td v-show="WriteState == 2"><div class="cell">{{WriteData.planninglatitude}}</div></td>
+                <td v-show="WriteState == 2" @click="OpenMap(0)"><div class="cell">{{WriteData.planninglatitude}}</div></td>
                 <!--<td><div class="cell"></div></td>-->
                 <td><div class="cell"></div></td>
               </tr>
@@ -350,11 +359,13 @@
       </div>
       <SelectUser v-if="showUser" @selectUser="selectUser"></SelectUser>
     </el-dialog>
+    <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
   </div>
 </template>
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
+import GoogleMap from 'base/GoogleMap'
 import layuiTitle from 'base/layui-title'
 import {mapMutations} from 'vuex'
 import {DictionaryInfoList, AreaList} from 'api/api'
@@ -393,6 +404,11 @@ export default {
         }
       },
       Query: {
+        AreaList: [
+        ],
+        provinceid: null, // 省份
+        cityid: null, // 城市
+        areaid: null, // 区域
         demandname: '',
         resourcename: '',
         constructionmode: null,
@@ -453,15 +469,16 @@ export default {
           { required: false, message: '请选择原运营商', trigger: 'change' }
         ],
         planninglongitude: [
-          { required: true, pattern: /^-?(180(\.0{0,6})?|(1[0-7][0-9]|[1-9]?[0-9])(\.[0-9]{0,6}))$/, message: '请输入正确的经度,保留小数6位', trigger: 'blur' }
+          { required: true, pattern: /^-?(180(\.0{0,6})?|(1[0-7][0-9]|[1-9]?[0-9])(\.[0-9]{0,6}))$/, message: '请输入正确的经度,保留小数6位', trigger: 'change' }
         ],
         planninglatitude: [
-          { required: true, pattern: /^-?(90(\.0{0,6})?|[1-8]?[0-9](\.[0-9]{0,6})?)$/, message: '请输入正确的纬度.保留小数6位', trigger: 'blur' }
+          { required: true, pattern: /^-?(90(\.0{0,6})?|[1-8]?[0-9](\.[0-9]{0,6})?)$/, message: '请输入正确的纬度.保留小数6位', trigger: 'change' }
         ]
       },
       DicList: {},
       showWrite: false,
       WriteState: null,
+      showMap: false,
       tableList: [],
       ResourceList: [],
       DialogLoading: false,
@@ -476,7 +493,9 @@ export default {
       userId: '',
       projectId: '',
       isStockStation: false,
-      ExportLoading: false
+      ExportLoading: false,
+      selectId: [],
+      isBatch: false
     }
   },
   activated () {
@@ -540,12 +559,10 @@ export default {
     getData1 () {
       this.currentPage = 1
       this.Loading = true
-      this.$axios.get(GetProjectList, {
-        params: {
-          PageIndex: 1,
-          PageSize: this.pageSize
-        }
-      }).then(res => {
+      this.$axios.get(GetProjectList, {params: Object.assign({}, this.Query, {
+        PageIndex: 1,
+        PageSize: this.pageSize
+      })}).then(res => {
         this.Loading = false
         if (res.errorCode === '200') {
           this.tableList = res.data.list
@@ -684,9 +701,14 @@ export default {
       this.$confirm('您确认要派发给当前用户吗？', '提示', {
         type: 'warning'
       }).then(() => {
-        this.$axios.get(GetDistributeProject, {
+        var arr = []
+        if (this.isBatch) {
+          arr = this.selectId
+        } else {
+          arr = this.projectId.split(',')
+        }
+        this.$axios.post(GetDistributeProject, arr, {
           params: {
-            id: this.projectId,
             userid: id
           }
         }).then((res) => {
@@ -699,12 +721,31 @@ export default {
             this.showUser = false
             this.currentPage = 1
             this.getData1()
+            this.selectId = []
+            this.projectId = ''
           }
         })
       })
     },
+    selectable (row, index) {
+      if (!row.taskstatename) {
+        return true
+      } else {
+        return false
+      }
+    },
+    handleSelect1 (list) {
+      this.selectId = list.map(item => item.id)
+    },
     handleSend (index, row) {
+      this.isBatch = false
       this.projectId = row.id
+      this.DialogVisible = true
+      this.showUser = true
+    },
+    BatchSend () {
+      if (!this.selectId.length) return this.$message.error('请选择可派发的项目！')
+      this.isBatch = true
       this.DialogVisible = true
       this.showUser = true
     },
@@ -724,7 +765,6 @@ export default {
         this.isStockStation = false
         this.WriteData.planninglongitude = this.WriteData.planninglongitude ? this.WriteData.planninglongitude : null
         this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : null
-        // this.WriteData.rawoperator = this.WriteData.rawoperator.split(',')
         this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
         this.WriteData.demandside = this.WriteData.demandside.split(',')
       })
@@ -828,6 +868,26 @@ export default {
         })
       })
     },
+    OpenMap (val) { // 0: 查看 1: 编辑/新增
+      this.showMap = true
+      this.$nextTick(() => {
+        this.$refs.GoogleMap.Open()
+        this.$refs.GoogleMap.showType = val
+        this.$refs.GoogleMap.longitude = this.WriteData.planninglongitude
+        this.$refs.GoogleMap.latitude = this.WriteData.planninglatitude
+        this.$refs.GoogleMap.Query.longitude = this.WriteData.planninglongitude
+        this.$refs.GoogleMap.Query.latitude = this.WriteData.planninglatitude
+      })
+    },
+    getMapData (longitude, latitude) {
+      this.showMap = false
+      if (longitude) {
+        this.WriteData.planninglongitude = longitude
+      }
+      if (latitude) {
+        this.WriteData.planninglatitude = latitude
+      }
+    },
     formatDistance (row) {
       return row.M.toFixed(2)
     },
@@ -860,7 +920,8 @@ export default {
   },
   components: {
     layuiTitle,
-    SelectUser
+    SelectUser,
+    GoogleMap
   }
 }
 </script>

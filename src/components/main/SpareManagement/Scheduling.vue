@@ -137,9 +137,11 @@
     <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
       <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
+    <div v-if="SelectUserOperationShow">
     <el-dialog top="1%" :visible.sync="SelectUserOperationShow" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
       <SelectUserOperation :check="WriteData.schedulingtype"  @SpareWarehousePicker="SelectUserOperation"/>
     </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -152,7 +154,7 @@ import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
-import {EditSpareTyp, AddSpareTyp} from 'api/BJGL'
+import {Dispatchoutbound} from 'api/BJGL'
 export default {
   name: 'Scheduling',
   mixins: [GlobalRes],
@@ -182,7 +184,7 @@ export default {
         unitsname: ''// 权属名称
       },
       DicList: {
-        schedulingtype: []
+        instate: []
       },
       Rules: {
         /* AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
@@ -231,10 +233,11 @@ export default {
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
     getDic () {
-      let arr = ['备件调度类型']
+      let arr = ['备件状态', '备件调度类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
+          this.DicList.instate = data.filter(i => { return i.type === '备件状态' })
           this.DicList.schedulingtype = data.filter(i => { return i.type === '备件调度类型' })
         } else {
           this.$message.error(res.msg)
@@ -251,15 +254,13 @@ export default {
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(null, this.WriteData).then(res => {
+          this.$axios.post(Dispatchoutbound, this.WriteData).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
-            this.$emit('fatheretMore')
             this.ResetWrite()
           })
         }

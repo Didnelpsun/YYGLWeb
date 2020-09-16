@@ -945,6 +945,8 @@ export default {
         this.$refs.GoogleMap.showType = val
         this.$refs.GoogleMap.longitude = this.tableData.longitude
         this.$refs.GoogleMap.latitude = this.tableData.latitude
+        this.$refs.GoogleMap.Query.longitude = this.tableData.longitude
+        this.$refs.GoogleMap.Query.latitude = this.tableData.latitude
       })
     },
     getMapData (longitude, latitude) {

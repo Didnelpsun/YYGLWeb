@@ -67,7 +67,7 @@
               <td><div class="cell">说明</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="remark">
-                  <el-input v-model="WriteData.remark" placeholder="请填写说明"></el-input>
+                  <el-input v-model="WriteData.remark" placeholder="请填写说明" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
@@ -150,19 +150,13 @@ export default {
       Loading: false,
       WriteData: {
         AreaList: [],
-        provinceid: 0,
-        cityid: 0,
-        id: null,
-        cityname: '',
-        typename: null,
-        belongtype: null,
+        provinceid: null,
+        cityid: null,
+        tpename: null,
         typeencoding: '',
-        remark: '',
-        realityname: '',
-        createtime: null
+        remark: ''
       },
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
         typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
         typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
       }
@@ -210,7 +204,8 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
@@ -226,7 +221,8 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

@@ -5,9 +5,11 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="备件类型：">
-                <el-input v-model="Query.typename" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
-              </el-form-item>
+              <div  @click="sparetypeidShow=true">
+                <el-form-item class="form-item" label="备件类型">
+                  <el-input v-model="Query.typename" readonly placeholder="请选择备件类型"></el-input>
+                </el-form-item>
+              </div>
             </el-col>
             <el-col :span="8">
               <el-form-item label="备件型号：">
@@ -65,7 +67,9 @@
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <el-dialog top="1%" :visible.sync="sparetypeidShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selsparetypeid  @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -74,15 +78,18 @@ import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig} from 'api/BJGL'
 import Details from 'base/SpareManagement/SpareconModel'
+import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
 export default {
   name: 'SpareconModel',
   mixins: [GlobalRes],
   data () {
     return {
       Query: {
-        typename: '',
-        sparemodel: ''
+        typename: null,
+        sparemodel: null,
+        sparetypeid: null
       },
+      sparetypeidShow: false,
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -98,8 +105,15 @@ export default {
     this.getData1()
   },
   methods: {
+    sparetypeClose () { this.sparetypeidShow = !this.sparetypeidShow },
+    Selsparetypeid (name, id) {
+      this.sparetypeidShow = false
+      this.Query.sparetypeid = id
+      this.Query.typename = name
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
+      this.Query.sparetypeid = null
       this.getData1()
     },
     getData1 () {
@@ -171,7 +185,8 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    Selsparetypeid
   }
 }
 </script>

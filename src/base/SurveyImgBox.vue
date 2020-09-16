@@ -81,12 +81,54 @@ export default {
       this.Close()
     },
     beforUpload (file) { // 过滤图片格式 图片大小
-      let type = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp']
+      /* let type = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp']
       const fileType = type.includes(file.type)
       const fileSize = file.size / 1024 / 1024 < 5
       if (!fileType) this.$message.error('上传图片只能是 JPG 和 PNG 格式!')
       if (!fileSize) this.$message.error('上传图片大小不能超过 5MB!')
-      return fileType && fileSize
+      return fileType && fileSize */
+      const _this = this
+      return new Promise(resolve => {
+        const reader = new FileReader()
+        const image = new Image()
+        image.onload = (imageEvent) => {
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d')
+          let width = image.width
+          let height = image.height
+          // 等比缩放第二种 宽或高超过1280，等比缩放
+          let rate = 1280 / width > 1
+          let tate = 1280 / height > 1
+          if (!rate) {
+            let product = 1280 / width
+            width = Math.floor((width * product) * 100) / 100
+            height = Math.floor((height * product) * 100) / 100
+          } else if (!tate) {
+            let product = 1280 / height
+            width = Math.floor((width * product) * 100) / 100
+            height = Math.floor((height * product) * 100) / 100
+          }
+          canvas.width = width
+          canvas.height = height
+          context.clearRect(0, 0, width, height)
+          context.drawImage(image, 0, 0, width, height)
+          const dataUrl = canvas.toDataURL(file.type)
+          const blobData = _this.dataURItoBlob(dataUrl, file.type)
+          resolve(blobData)
+        }
+        reader.onload = e => {
+          image.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+      })
+    },
+    dataURItoBlob (dataURI, type) {
+      var binary = atob(dataURI.split(',')[1])
+      var array = []
+      for (var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i))
+      }
+      return new Blob([new Uint8Array(array)], {type: type})
     },
     onSuccess (res, row) {
       if (res.error) {

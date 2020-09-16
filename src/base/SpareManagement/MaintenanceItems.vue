@@ -38,55 +38,61 @@
                   <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.areaname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">维修厂家</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.manufacturersname}}</div>
+                <div v-if="WriteState == 2">{{WriteData.manufacturername}}</div>
                 <div v-if="WriteState !== 2" @click="manufactureridShow=true">
-                  <el-input v-model="WriteData.manufacturersname" readonly placeholder="请选择维修厂家"></el-input>
+                  <el-input v-model="WriteData.manufacturername" readonly placeholder="请选择维修厂家"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件厂家</div></td>
+              <td><div class="cell"><i class="must">*</i>备件厂家</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.name}}</div>
                 <div v-if="WriteState !== 2" @click="SparemanufacturerShow=true">
+                  <el-form-item class="form-item" prop="name">
                   <el-input v-model="WriteData.name" readonly placeholder="请选择厂家"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件类型</div></td>
+              <td><div class="cell"><i class="must">*</i>备件类型</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.typename}}</div>
                 <div v-if="WriteState !== 2" @click="sparetypeShow=true">
+                  <el-form-item class="form-item" prop="typename">
                   <el-input v-model="WriteData.typename" readonly placeholder="请选择备件类型"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">备件型号</div></td>
+              <td><div class="cell"><i class="must">*</i>备件型号</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.sparemodel}}</div>
                 <div v-if="WriteState !== 2" @click="sparemodelShow=true">
+                  <el-form-item class="form-item" prop="sparemodel">
                   <el-input v-model="WriteData.sparemodel" readonly placeholder="请选择备件型号"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">维修单价</div></td>
+              <td><div class="cell"><i class="must">*</i>维修单价</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="price">
-                  <el-input v-model="WriteData.price"  type="number" placeholder="请填写维修单价" clearable></el-input>
+                  <el-input v-model="WriteData.price"  placeholder="请填写维修单价" ></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.price}}</div></td>
@@ -94,7 +100,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">维修期</div></td>
+              <td><div class="cell"><i class="must">*</i>维修期</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="maintenancettime">
                   <el-input v-model="WriteData.maintenancettime" type="number"  placeholder="请填写维修期" clearable></el-input>
@@ -105,7 +111,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">保修期</div></td>
+              <td><div class="cell"><i class="must">*</i>保修期</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="warrantyperiod">
                   <el-input v-model="WriteData.warrantyperiod" type="number"  placeholder="请填写保修期" clearable></el-input>
@@ -213,13 +219,14 @@ export default {
       isShow: false,
       Loading: false,
       WriteData: {
+        AreaList: [],
         price: null,
         warrantyperiod: null,
         maintenancettime: null, //
         typename: null, // 备件类型名称
         sparetypeid: '', // 备件类型id
         sparemanufacturerid: '', // 备件厂家id
-        manufacturersname: '', // 维修厂家名称
+        manufacturername: '', // 维修厂家名称
         sparemodel: '', // 备件型号名称
         sparemodelid: '', // 备件型号id
         manufacturerid: '', // 维修厂家
@@ -227,7 +234,12 @@ export default {
 
       },
       Rules: {
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }]
+        price: [{ required: true, message: '请填写维修单价', trigger: 'change' }],
+        typename: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
+        sparemodel: [{ required: true, message: '请选择备件型号', trigger: 'change' }],
+        warrantyperiod: [{ required: true, message: '请填写保修期', trigger: 'change' }],
+        maintenancettime: [{ required: true, message: '请填写维修期', trigger: 'change' }],
+        name: [{ required: true, message: '请选择厂家', trigger: 'change' }]
 
       }
     }
@@ -257,11 +269,12 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
-      this.setArea(this.WriteData.AreaList, 'csArea')
+      if (this.WriteState !== 2) {
+        this.WriteData.AreaList = [ data.provinceid, data.cityid ]
+        this.setArea(this.WriteData.AreaList, 'csArea')
+      }
     },
     WriteClose () {
-      this.setArea([])
       this.ResetWrite()
       this.$emit('fatherClose')
     },
@@ -291,7 +304,7 @@ export default {
     SelAfterSaleContract (name, id) {
       this.manufactureridShow = false
       this.WriteData.manufacturerid = id
-      this.WriteData.manufacturersname = name
+      this.WriteData.manufacturername = name
     },
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
@@ -299,7 +312,8 @@ export default {
     AfterSaleContractClose () { this.manufactureridShow = !this.manufactureridShow },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
@@ -315,9 +329,8 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.AreaList.length === 0) {
+          if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true

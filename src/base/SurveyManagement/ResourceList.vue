@@ -37,11 +37,11 @@ export default {
   name: 'ResourceList',
   props: {
     lng: {
-      type: String,
+      // type: String,
       default: ''
     },
     lat: {
-      type: String,
+      // type: String,
       default: ''
     }
   },

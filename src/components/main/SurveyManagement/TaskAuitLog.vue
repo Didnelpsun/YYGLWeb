@@ -17,13 +17,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="需求名称：">
-                <el-input class="searchSelect" v-model="query.resourcename" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="站点名称：">
+                <el-input class="searchSelect" v-model="query.resourcename" placeholder="请输入站点名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="站点编码：">
                 <el-input v-model="query.resourcecode" placeholder="请输入站点编码" @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="需求名称：">
+                <el-input v-model="query.demandname" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
           </el-col>
@@ -46,7 +51,8 @@
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
-        <el-table-column prop="resourcename" label="需求名称" width=""></el-table-column>
+        <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
+        <el-table-column prop="demandname" label="需求名称" width=""></el-table-column>
         <el-table-column prop="steps" label="操作步骤" width="100"></el-table-column>
         <el-table-column prop="auitstate" label="审核状态" width=""></el-table-column>
         <el-table-column prop="auidopinion" label="审核意见" width="100"></el-table-column>
@@ -79,7 +85,8 @@ export default {
         resourcename: '',
         starttime: '',
         endtime: '',
-        resourcecode: ''
+        resourcecode: '',
+        demandname: ''
       },
       // 加载
       Loading: false,
@@ -113,7 +120,8 @@ export default {
             resourcename: this.query.resourcename,
             resourcecode: this.query.resourcecode,
             starttime: this.query.starttime,
-            endtime: this.query.endtime
+            endtime: this.query.endtime,
+            demandname: this.query.demandname
           }
         })
         .then(res => {

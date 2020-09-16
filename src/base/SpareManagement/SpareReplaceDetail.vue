@@ -149,7 +149,7 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 
-import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
+import {Editspareparts} from 'api/BJGL'
 export default {
   name: 'SpareReplaceDetail',
   mixins: [GlobalRes],
@@ -181,7 +181,10 @@ export default {
         warehouseid: ''// 存放点di
       },
       Rules: {
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }]
+        code: [{ required: true, message: '请扫备件编码', trigger: 'change' }],
+        warrantycode: [{ required: true, message: '请扫备件质保编码', trigger: 'change' }],
+        assetsencoding: [{ required: true, message: '请扫资产编码', trigger: 'change' }],
+        qrcode: [{ required: true, message: '请选择二维码', trigger: 'change' }]
 
       }
     }
@@ -199,42 +202,17 @@ export default {
       this.ResetWrite()
       this.$emit('fatherClose')
     },
-
-    handleSubmit (val) {
-
-    },
     SubAdd () {
       /*   this.$refs.WriteForm.validate((vali, msg) => {
             if (!vali) {
-              if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-              if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
               return this.$message.error('请补全信息！')
             } else {
               this.Loading = true
-              this.$axios.post(Addmaintenanceconfig, this.WriteData).then(res => {
+              this.$axios.post(Editspareparts, this.WriteData).then(res => {
                 this.Loading = false
                 if (res.errorCode !== '200') return this.$message.error(res.msg)
                 this.$message.success('添加成功!')
                 this.$emit('fatheretMore')
-                this.WriteClose()
-              })
-            }
-          }) */
-    },
-    SubEdit () {
-      /*    this.$refs.WriteForm.validate((vali, msg) => {
-            if (!vali) {
-              if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-              if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
-              this.$message.error('请补全信息！')
-            } else {
-              this.Loading = true
-              this.$axios.put(Editmaintenanceconfig, this.WriteData).then(res => {
-                this.Loading = false
-                if (res.errorCode !== '200') return this.$message.error(res.msg)
-                this.$message.success('编辑成功!')
-                this.$emit('fatheretMore')
-                this.ResetWrite()
                 this.WriteClose()
               })
             }

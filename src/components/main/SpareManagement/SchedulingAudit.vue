@@ -13,12 +13,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="存放点：">
-                <el-input v-model="Query.depotsid" placeholder="请填写类型编码"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.depotsname" placeholder="请填写类型编码"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
                 <el-form-item label="备件类型：">
-                  <el-input v-model="Query.sparepartstypeid" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+                  <el-input v-model="Query.typename" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
           </el-col>
@@ -46,17 +46,17 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="schedulingtype" :formatter="schedulingtypeShow" label="调度类型"></el-table-column>
-        <el-table-column prop="inqrcode" label="备件编码"></el-table-column>
-        <el-table-column prop="sparepartstypeid" label="备件类型"></el-table-column>
-        <el-table-column prop="manufacturerid" label="设备厂家"></el-table-column>
-        <el-table-column prop="" label="备件型号"></el-table-column>
-        <el-table-column prop="instate"  label="备件状态"></el-table-column>
-        <el-table-column prop="depotsid" label="存放点"></el-table-column>
-        <el-table-column prop="indepotsid" label="入库存放点"></el-table-column>
-        <el-table-column prop="applicantid" label="申请时间"></el-table-column>
-        <el-table-column prop="applicanttime" label="申请人"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="schedulingtype" width="69" :formatter="schedulingtypeShow" label="调度类型"></el-table-column>
+        <el-table-column prop="code" label="备件编码"></el-table-column>
+        <el-table-column prop="typeencoding" label="备件类型"></el-table-column>
+        <el-table-column prop="manufacturername" label="设备厂家"></el-table-column>
+        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
+        <el-table-column prop="instate"  width="69" :formatter="instateShow" label="备件状态"></el-table-column>
+        <el-table-column prop="outdepotname" label="出库存放点"></el-table-column>
+        <el-table-column prop="indepotname" label="入库存放点"></el-table-column>
+        <el-table-column prop="applicanttime" label="申请时间"></el-table-column>
+        <el-table-column prop="applicanname" label="申请人"></el-table-column>
+        <el-table-column label="操作" width="50px">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>
           </template>
@@ -91,8 +91,8 @@ export default {
 
       Query: {
         schedulingtype: null,
-        depotsid: null,
-        sparepartstypeid: null
+        depotsname: null,
+        typename: null
       },
       currentPage: 1,
       pageSize: 10,
@@ -110,20 +110,25 @@ export default {
     this.getDic()
   },
   methods: {
-
+    instateShow (val) {
+      val = parseInt(val.instate)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
+    },
     schedulingtypeShow (val) {
-      return val === 1 ? '新增' : val === 2 ? '报修' : val === 3 ? '送修' : val === 4 ? '报废' : val === 5 ? '借用' : val === 6 ? '替换' : val === 7 ? '归还' : val === 8 ? '点验' : val === 9 ? ' 上站' : val === 9 ? ' 领用' : '返修'
+      val = val.schedulingtype
+      return val === 1 ? '新增' : val === 2 ? '报修' : val === 3 ? '送修' : val === 4 ? '报废' : val === 5 ? '借用' : val === 6 ? '替换' : val === 7 ? '归还' : val === 8 ? '点验' : val === 9 ? '上站' : val === 10 ? '领用' : '返修'
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
+      this.getDic()
     },
     getDic () {
-      let arr = ['调度类型']
+      let arr = ['备件调度类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
-          this.DicList.schedulingtype = data.filter(i => { return i.type === '调度类型' })
+          this.DicList.schedulingtype = data.filter(i => { return i.type === '备件调度类型' })
         } else {
           this.$message.error(res.msg)
         }
@@ -134,7 +139,8 @@ export default {
       this.$axios.get(Operationlog, {
         params: {
           PageIndex: 1,
-          PageSize: 10
+          PageSize: 10,
+          outauditstatus: 2
         }}).then(res => {
         this.Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -149,7 +155,8 @@ export default {
       this.Loading = true
       this.$axios.get(Operationlog, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
-        PageSize: this.pageSize
+        PageSize: this.pageSize,
+        outauditstatus: 2
       })}).then(res => {
         this.Loading = false
         this.getDic()

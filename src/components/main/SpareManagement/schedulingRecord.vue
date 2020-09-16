@@ -6,7 +6,7 @@
           <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="备件类型：">
-                <el-input v-model="Query.sparepartstype" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="Query.typename" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -44,19 +44,19 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="schedulingtype" label="调度类型"></el-table-column>
-        <el-table-column prop="sparepartstype" label="备件类型"></el-table-column>
+        <el-table-column prop="schedulingtype" :formatter="schedulingtypeShow" label="调度类型"></el-table-column>
+        <el-table-column prop="typeencoding" label="备件类型"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="manufacturerid" label="备件厂家"></el-table-column>
+        <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
         <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-        <el-table-column prop="code" label="备件状态"></el-table-column>
-        <el-table-column prop="warehouseid" label="存放点"></el-table-column>
-        <el-table-column prop="indepotsid" label="入库存放点"></el-table-column>
+        <el-table-column prop="instate"  :formatter="instateShow" label="备件状态"></el-table-column>
+        <el-table-column prop="outdepotname" label="出库存放点"></el-table-column>
+        <el-table-column prop="indepotname" label="入库存放点"></el-table-column>
         <el-table-column prop="applicanttime" label="申请时间"></el-table-column>
-        <el-table-column prop="applicantid" label="申请人"></el-table-column>
-        <el-table-column prop="" label="审核结果"></el-table-column>
-        <el-table-column prop="audituserid" label="确认人"></el-table-column>
-        <el-table-column prop="audittime" label="确认时间"></el-table-column>
+        <el-table-column prop="applicanname" label="申请人"></el-table-column>
+        <el-table-column prop="outauditstatus" label="审核结果"></el-table-column>
+        <el-table-column prop="outaudname" label="确认人"></el-table-column>
+        <el-table-column prop="outaudittime" label="确认时间"></el-table-column>
         <el-table-column label="操作" fixed="right" width="60">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
@@ -91,7 +91,7 @@ export default {
   data () {
     return {
       Query: {
-        sparepartstype: null,
+        typename: null,
         code: '',
         sparemodel: null
       },
@@ -110,12 +110,21 @@ export default {
     this.getData1()
   },
   methods: {
+    instateShow (val) {
+      val = parseInt(val.instate)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
+    },
+    schedulingtypeShow (val) {
+      val = parseInt(val.schedulingtype)
+      return val === 1 ? '新增' : val === 2 ? '报修' : val === 3 ? '送修' : val === 4 ? '报废' : val === 5 ? '借用' : val === 6 ? '替换' : val === 7 ? '归还' : val === 8 ? '点验' : val === 9 ? '上站' : val === 10 ? '领用' : '返修'
+    },
     getData1 () {
       this.Loading = true
       this.$axios.get(Operationlog, {
         params: {
           PageIndex: 1,
-          PageSize: 10
+          PageSize: 10,
+          outauditstatus: 2
         }}).then(res => {
         this.Loading = false
         if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -125,16 +134,17 @@ export default {
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
+      this.getData1()
     },
     getMore (page) {
       this.currentPage = page
       this.Loading = true
       this.$axios.get(Operationlog, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
-        PageSize: this.pageSize
+        PageSize: this.pageSize,
+        outauditstatus: 2
       })}).then(res => {
         this.Loading = false
-        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total

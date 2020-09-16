@@ -128,6 +128,7 @@
         var IMSI = "";
         //地图初始化
       window.addEventListener('message',function(e){
+        console.log(222)
         console.log(e.data)
         if(e.data.longitude){
           map_longitude = e.data.longitude
@@ -141,9 +142,9 @@
         }
         type = e.data.type
         initialize()
-      },false)
+      })
       function initialize() {
-        if (map == undefined || map == null) {
+        // if (map == undefined || map == null) {
           var myOptions = {
             center: new google.maps.LatLng(map_latitude, map_longitude),
             zoom: 15,
@@ -168,7 +169,7 @@
             document.getElementById("dizhi").style.display="none";
             document.getElementById("btn").innerHTML= '返&nbsp;回'
           }
-        }
+        // }
         }
         // 选择位置
         function SelectThis () {

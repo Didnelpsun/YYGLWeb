@@ -35,6 +35,8 @@ export default {
         this.setSurveyInfoType(1)
       } else if (e.name === 'dc73026f-3906-4f64-a8bd-1a2bc646f1fe') {
         this.setSurveyInfoType(2)
+      } else if (e.name === '296a0c73-6a8a-450a-9e3e-f1ac571a695d') {
+        this.setSurveyInfoType(3)
       }
       let index = e.index
       if (this.data[index].id !== this.currentMenu.id) {

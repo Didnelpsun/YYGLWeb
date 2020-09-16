@@ -34,9 +34,11 @@
             <tr class="el-table__row">
               <td><div class="cell">存放点名称</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.typename}}</div>
+                <div v-if="WriteState == 2"><i class="must">*</i>{{WriteData.warehousename}}</div>
                 <div v-if="WriteState !== 2" @click="SpareWarehouseShow=true">
-                  <el-input v-model="WriteData.typename" readonly placeholder="请选择存放点名称"></el-input>
+                  <el-form-item class="form-item" prop="warehousename">
+                  <el-input v-model="WriteData.warehousename" readonly placeholder="请选择存放点名称"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -97,14 +99,12 @@ export default {
       WriteData: {
         operation: null,
         operationid: null,
-        typename: null, // 存放点名称
+        warehousename: '', // 存放点名称
         code: null, // 存放点编码
         warehouseid: null// 存放点id
       },
       Rules: {
-        typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
-        typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
+        operationid: [{ required: true, message: '请选择操作通途', trigger: 'blur' }]
       }
     }
   },
@@ -115,7 +115,7 @@ export default {
     },
     SpareWarehousePicker (name, code, id) {
       this.SpareWarehouseShow = false
-      this.WriteData.typename = name.trim()
+      this.WriteData.warehousename = name.trim()
       this.WriteData.code = code
       this.WriteData.warehouseid = id
     },
@@ -162,13 +162,12 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
+        if (!vali || this.WriteData.warehousename === '') {
+          if (this.WriteData.warehousename === '') return this.$message.error('请选择存放点名称！')
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(Addconfiguration, this.WriteData).then(res => {
+          this.$axios.post(Addconfiguration, {warehouseid: this.WriteData.warehouseid, operation: this.WriteData.operation, operationid: this.WriteData.operationid}).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
@@ -181,12 +180,10 @@ export default {
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          if (msg.longitude) return this.$message.warning(msg.longitude[0].message)
-          if (msg.latitude) return this.$message.warning(msg.latitude[0].message)
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(Editconfiguration, this.WriteData).then(res => {
+          this.$axios.put(Editconfiguration, {warehouseid: this.WriteData.warehouseid, operation: this.WriteData.operation, operationid: this.WriteData.operationid, Id: this.WriteData.id}).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')

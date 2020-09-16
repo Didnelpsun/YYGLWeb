@@ -39,6 +39,7 @@ export const Addmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Addm
 export const Editmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Editmaintenanceconfig` // 编辑备件管理维修厂家配置
 export const Deletemaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Deletemaintenanceconfig` // 删除备件管理维修厂家配置
 export const maintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/maintenanceconfig` // 获取备件管理维修厂家配置
+export const Getidmaintenanceconfig = `${reqURL}/BJGL/maintenanceconfigSevcie/Getidmaintenanceconfig` // 获取备件管理维修厂家配置
 
 // 存放点操作配置列表(备件管理仓库配置)
 export const Addconfiguration = `${reqURL}/BJGL/configurationSevcie/Addconfiguration` // 添加存放点操作配置列表(添加仓库配置)
@@ -60,6 +61,9 @@ export const Addborrow = `${reqURL}/BJGL/spareparts/Addborrow` // 生成借件�
 // 调度日志 调度审核
 export const Operationlog = `${reqURL}/BJGL/schedulingSevice/Operationlog` // 查看调度日志
 export const Schedulingdetails = `${reqURL}/BJGL/schedulingSevice/Schedulingdetails` // 查看调度日志详情
+export const schedulingtype = `${reqURL}/BJGL/schedulingSevice/schedulingtype` // 查看调度日志详情
+export const AuditScrapRecord = `${reqURL}/BJGL/schedulingSevice/AuditScrapRecord` // 提交
+export const Getdetails = `${reqURL}/BJGL/schedulingSevice/Getdetails` // 获取借用详情
 // 盘存任务
 export const AddInventoryTask = `${reqURL}/BJGL/inventorySevcie/AddInventoryTask` // 添加盘存任务
 export const EditInventoryTask = `${reqURL}/BJGL/inventorySevcie/EditInventoryTask` // 编辑盘存任务
@@ -69,9 +73,8 @@ export const GetIdInventoryTaskList = `${reqURL}/BJGL/inventorySevcie/GetIdInven
 export const EndInventory = `${reqURL}/BJGL/inventorySevcie/EndInventory` // 根据任务id获取盘存记录
 
 // 盘存记录
-export const GetInventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/GetInventoryrecords` // 根据任务id获取盘存记录
 export const Addinventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/Addinventoryrecords` // 添加盘存
-
+export const GetInventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/GetInventoryrecords` // 添加盘存
 // 还件记录
 export const GetAlsorecord = `${reqURL}/BJGL/AlsorecordSevcie/GetAlsorecord` // 还件记录
 // 维修记录

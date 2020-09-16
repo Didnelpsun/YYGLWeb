@@ -79,10 +79,15 @@ export const GetTaskAuitLogList = `${reqURL}/KCGL/Task/GetTaskAuitLogList` // �
 export const GetTaskStateList = `${reqURL}/KCGL/Task/GetTaskStateList` // web任务管理获取审核状态
 export const GetTaskExcel = `${reqURL}/KCGL/Task/GetTaskExcel` // 导出任务数据
 export const GetTaskAuitLogExcel = `${reqURL}/KCGL/Task/GetTaskAuitLogExcel` // 导出任务审核记录
+export const GetPerformWebTaskList = `${reqURL}/KCGL/Task/GetPerformWebTaskList` // 获取待执行项目列表
 
 // 勘察新建站普查管理
 export const GetNewResourceCensusInfo = `${reqURL}/KCGL/NewResourceCensus/GetNewResourceCensusInfo` // 获取新建站普查详情
 export const GetStockResourceCensusInfo = `${reqURL}/KCGL/StockResourceCensus/GetStockResourceCensusInfo` // 获取存量站详情
+export const UpdateNewResourceCensus = `${reqURL}/KCGL/NewResourceCensus/UpdateNewResourceCensus` // 修改新建站普查
+export const GetNewResourceSubmitAuit = `${reqURL}/KCGL/NewResourceCensus/GetNewResourceSubmitAuit` // 勘察人新建站提交审核
+export const UpdateStockResourceCensus = `${reqURL}/KCGL/StockResourceCensus/UpdateStockResourceCensus` // 修改存量站普查
+export const GetStockResourceCensusSubmitAuit = `${reqURL}/KCGL/StockResourceCensus/GetStockResourceCensusSubmitAuit` // 勘察人存量站提交审核
 export const GetResourceList = `${reqURL}/KCGL/Project/GetResourceList` // 获取存量筛查列表
 export const GetDistributeProject = `${reqURL}/KCGL/Project/GetDistributeProject` // 项目派发
 // 勘察图片配置管理

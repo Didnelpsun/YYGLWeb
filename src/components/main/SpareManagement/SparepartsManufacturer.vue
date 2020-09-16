@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="name" label="厂家名称"></el-table-column>
-        <el-table-column prop="code" label="厂家类型"></el-table-column>
+        <el-table-column prop="code" label="厂家编码"></el-table-column>
         <el-table-column prop="remark" label="说明"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>

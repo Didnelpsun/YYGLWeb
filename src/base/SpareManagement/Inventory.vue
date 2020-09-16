@@ -49,7 +49,9 @@
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.depotsname}}</div>
                 <div v-if="WriteState !== 2" @click="SpareWarehouseShow=true">
+                  <el-form-item class="form-item" prop="depotsname">
                   <el-input v-model="WriteData.depotsname" readonly placeholder="请选择存放点名"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -72,11 +74,6 @@
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">盘存状态</div></td>
               <td><div class="cell">{{WriteData.inventorystatus  ? '结束' : '未结束'}}</div></td>
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row" v-show="WriteState==2">
-              <td><div class="cell">盘存结果</div></td>
-              <td><div class="cell">{{WriteData.Inventoryresults}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -106,7 +103,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交人</div></td>
-              <td><div class="cell">{{WriteData.realityname}}</div></td>
+              <td><div class="cell">{{WriteData.createusername}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -117,18 +114,22 @@
       </el-tab-pane>
       <el-tab-pane label="盘存记录列表" v-if="WriteState===2">
         <div class="main" v-show="!showWrite">
-          <el-form :model="Query">
+          <el-form :model="Query" ref="Inventory">
             <el-row >
               <el-col :span="18">
                 <el-col :span="8">
-                  <el-form-item label="备件类型：">
-                    <el-input v-model="Query.sparepartstype" placeholder="请填写备件类型"  @keyup.enter.native="getMore(1)"></el-input>
-                  </el-form-item>
+                  <div @click="sparetypeShow=true">
+                    <el-form-item label="备件类型：">
+                      <el-input v-model="Query.typename" clearable placeholder="请选择备件类型"></el-input>
+                    </el-form-item>
+                  </div>
                 </el-col>
                 <el-col :span="8">
+                  <div @click="sparemodelShow=true">
                   <el-form-item label="备件型号：">
-                    <el-input v-model="Query.sparemodel" placeholder="请填写备件型号"  @keyup.enter.native="getMore(1)"></el-input>
+                    <el-input v-model="Query.sparemodel" clearable placeholder="请选择备件型号"></el-input>
                   </el-form-item>
+                </div>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="备件编码：">
@@ -160,19 +161,19 @@
             </el-table-column>
             <el-table-column prop="cityname" label="地市"></el-table-column>
             <el-table-column prop="code" label="备件编码"></el-table-column>
-            <el-table-column prop="sparepartstype" label="备件类型"></el-table-column>
-            <el-table-column prop="manufacturerid" label="备件厂家"></el-table-column>
+            <el-table-column prop="typename" label="备件类型"></el-table-column>
+            <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
             <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
-            <el-table-column prop="warehouseid" label="存放点"></el-table-column>
-            <el-table-column prop="inventorystatus" label="盘存状态"></el-table-column>
-            <el-table-column prop="inventorytime" label="盘存时间"></el-table-column>
-            <el-table-column prop="" label="盘存人"></el-table-column>
-            <el-table-column label="操作" width="140">
+            <el-table-column prop="depotname" label="存放点"></el-table-column>
+            <el-table-column prop="Inventoryresults" :formatter="showInventoryresults" label="盘存状态"></el-table-column>
+            <el-table-column prop="createtime" label="盘存时间"></el-table-column>
+            <el-table-column prop="realityname" label="盘存人"></el-table-column>
+          <!--  <el-table-column label="操作" width="140">
               <template slot-scope="scope">
                 <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
                 <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
               </template>
-            </el-table-column>
+            </el-table-column>-->
           </el-table>
           <div class="center">
             <el-pagination @current-change="getMore" @size-change="changeSize1" :current-page="currentPage"
@@ -192,19 +193,29 @@
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState1 === 0 ? '添加盘存记录' : WriteState1 === 1 ? '编辑盘存记录' : '盘存记录详情'"></layuiTitle>
 
-      <Details :WriteState1="WriteState1" :inventoryid="WriteData.id"
+      <Details :WriteState1="WriteState1" :inventoryid="WriteData.id" :DicList="DicList"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose1" ref="Details"></Details>
 
+    </div>
+    <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+      <Selectsparetype    @Selsparetypeid="Selsparetypeid"/>
+    </el-dialog>
+    <div v-if="sparemodelShow">
+      <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
+        <SelectSpareconMode   :sparetypeid="sparepartstypeid"   @SelSpareconModelid="SelSpareconModelid"/>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-
+import {DictionaryInfoList} from 'api/api'
 import {AddInventoryTask, EditInventoryTask, GetInventoryrecords} from 'api/BJGL'
 import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 import layuiTitle from 'base/layui-title'
 import Details from 'base/SpareManagement/InventoryRecords'
+import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
+import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 export default {
   name: 'Inventory',
   props: {
@@ -216,21 +227,22 @@ export default {
   data () {
     return {
       Query: {
-        sparepartstype: null,
-        code: '',
+        typename: null,
+        code: null,
         sparemodel: null
       },
+      sparepartstypeid: null,
       SpareWarehouseShow: false,
       ViewTabIndex: 0,
       isShow: false,
       Loading: false,
       WriteData: {
-        depotsname: null, // 存放点名称
         depotsid: null, // 存放点
-        createtime: null,
         sparenumbe: null,
         titile: null
       },
+      sparetypeShow: false,
+      sparemodelShow: false,
       WriteState1: null,
       currentPage: 1,
       pageSize: 10,
@@ -240,46 +252,80 @@ export default {
       showWrite: false,
       WriteLoading: false,
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
-        typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-        Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
-        typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }]
-      }
+        depotsname: [{ required: true, message: '请选择存放点', trigger: 'change' }]
+
+      },
+      DicList: {}
     }
   },
   activated () {
     this.getData1()
+    this.getDic()
   },
   methods: {
+    sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
+    manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
+    sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    Selsparetypeid (name, id) {
+      this.sparetypeShow = false
+      this.sparepartstypeid = id
+      this.Query.typename = name
+      this.Query.sparemodelid = null
+      this.Query.sparemodel = null
+    },
+    SelSpareconModelid (name, id) {
+      this.sparemodelShow = false
+      /* this.Query.sparemodelid = id */
+      this.Query.sparemodel = name
+    },
+    showInventoryresults (val) {
+      val = parseInt(val.Inventoryresults)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
+    },
     getData1 () {
-      /*  this.Loading = true
-          this.$axios.get(GetSpareTypList, {
-            params: {
-              PageIndex: 1,
-              PageSize: 10
-            }}).then(res => {
-            this.Loading = false
-            if (res.errorCode !== '200') return this.$message.error(res.msg)
-            this.tableData = res.data.list
-            this.total = res.data.total
-          }) */
+      this.Loading = true
+      this.$axios.get(GetInventoryrecords, {
+        params: {
+          PageIndex: 1,
+          PageSize: 10,
+          Id: this.WriteData.id
+        }}).then(res => {
+        this.Loading = false
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
+    },
+    getDic () {
+      let arr = ['备件状态']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.newsparepartsstate = data.filter(i => { return i.type === '备件状态' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     ResetQuery () {
-      Object.assign(this.$data, this.$options.data.call(this))
+      Object.assign(this.$data.Query, this.$options.data().Query)
+      this.$refs.Inventory.resetFields()
+      this.getData1()
     },
     getMore (page) {
-      /*  this.currentPage = page
-          this.Loading = true
-          this.$axios.get(GetSpareTypList, {params: Object.assign({}, this.Query, {
-            PageIndex: this.currentPage,
-            PageSize: this.pageSize
-          })}).then(res => {
-            this.Loading = false
-            this.getDic()
-            if (res.errorCode !== '200') return this.$message.error(res.msg)
-            this.tableData = res.data.list
-            this.total = res.data.total
-          }) */
+      this.currentPage = page
+      this.Loading = true
+      this.Query.sparepartstypeid = null
+      this.$axios.get(GetInventoryrecords, {params: Object.assign({}, this.Query, {
+        PageIndex: this.currentPage,
+        PageSize: this.pageSize,
+        Id: this.WriteData.id
+      })}).then(res => {
+        this.Loading = false
+        if (res.errorCode !== '200') return this.$message.error(res.msg)
+        this.tableData = res.data.list
+        this.total = res.data.total
+      })
     },
     changeSize1 (page) {
       this.pageSize = page
@@ -288,15 +334,18 @@ export default {
 
     changeTab () {
       if (this.ViewTabIndex === '0') {
-
+        this.getDic()
       }
       if (this.ViewTabIndex === '1') {
         this.getData1()
+        this.getDic()
       }
     },
     WriteClose () {
       this.showWrite = false
       this.ViewTabIndex = '0'
+      Object.assign(this.$data.WriteData, this.$options.data().WriteData)
+      this.$refs.WriteForm.resetFields()
       this.$emit('fatherClose')
     },
     WriteClose1 () {
@@ -362,23 +411,26 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.post(AddInventoryTask, this.WriteData).then(res => {
+
+          this.$axios.post(AddInventoryTask, {title: this.WriteData.title, depotsid: this.WriteData.depotsid, sparenumber: this.WriteData.sparenumber}).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
             this.$emit('fatheretMore')
+            this.ResetWrite()
             this.WriteClose()
           })
         }
       })
     },
     SubEdit () {
+      console.log()
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           this.$message.error('请补全信息！')
         } else {
           this.Loading = true
-          this.$axios.put(EditInventoryTask, this.WriteData).then(res => {
+          this.$axios.put(EditInventoryTask, {title: this.WriteData.title, depotsid: this.WriteData.depotsid, sparenumber: this.WriteData.sparenumber, Id: this.WriteData.id}).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
@@ -393,7 +445,9 @@ export default {
   components: {
     SpareWarehousePicker,
     layuiTitle,
-    Details
+    Details,
+    Selectsparetype,
+    SelectSpareconMode
   }
 }
 </script>
