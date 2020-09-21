@@ -12,8 +12,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="存放点：">
-                <el-input v-model="Query.depotsname" placeholder="请填写类型编码"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="出库存放点：">
+                <el-input v-model="Query.outdepotname" placeholder="请填写出库存放点"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -48,7 +48,7 @@
         <el-table-column prop="areaname" label="区域"></el-table-column>
         <el-table-column prop="schedulingtype" width="69" :formatter="schedulingtypeShow" label="调度类型"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="typeencoding" label="备件类型"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
         <el-table-column prop="manufacturername" label="设备厂家"></el-table-column>
         <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
         <el-table-column prop="instate"  width="69" :formatter="instateShow" label="备件状态"></el-table-column>
@@ -91,7 +91,7 @@ export default {
 
       Query: {
         schedulingtype: null,
-        depotsname: null,
+        outdepotname: null,
         typename: null
       },
       currentPage: 1,

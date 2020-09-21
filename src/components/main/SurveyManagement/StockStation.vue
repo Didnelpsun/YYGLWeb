@@ -59,6 +59,12 @@
                   <td><div class="cell"></div></td>
                 </tr>
                 <tr class="el-table__row">
+                  <td><div class="cell">任务单号 </div></td>
+                  <td><div class="cell">{{WriteData.taskno}}</div></td>
+                  <!--<td><div class="cell"></div></td>-->
+                  <td><div class="cell"></div></td>
+                </tr>
+                <tr class="el-table__row">
                   <td><div class="cell">需求单号 </div></td>
                   <td><div class="cell">{{WriteData.demandno}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
@@ -1163,13 +1169,24 @@
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
+                <!--电表照片-->
+                <tr class="el-table__row">
+                  <td><div class="cell">电表照片</div></td>
+                  <td>
+                    <div class="cell" @click="OpenSurveyImgBox('电表照片')">
+                      {{formatResult(StockStationInfo.electricmeterimg)}}
+                    </div>
+                  </td>
+                  <!-- <td><div class="cell"></div></td> -->
+                  <td><div class="cell"></div></td>
+                </tr>
                 </tbody>
               </table>
             </div>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane v-if="SurveyInfo.taskstate" label="勘察隐患">
+      <el-tab-pane v-if="SurveyInfo.taskstate" label="站点隐患">
         <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--mini">
           <!--表头-->
           <div class="el-table__header-wrapper">
@@ -1254,24 +1271,40 @@
       <el-button v-if="WriteState === 1" @click="SubmitAuit" type="primary" icon="el-icon-back">提交审核</el-button>
       <el-button v-if="WriteState === 1" @click="SubmitSave" type="primary" icon="el-icon-back">保存</el-button>
       <el-button @click="closeShowEdit" type="primary" style="margin-bottom: 40px;" icon="el-icon-arrow-left">返回</el-button>
-      <el-button type="warning" @click="subAuit(2)" v-if="SurveyInfoType===2">审核打回</el-button>
+      <el-button type="warning" @click="subAuit(2)" v-if="SurveyInfoType===2">审核退回</el-button>
       <el-button type="success" @click="subAuit(1)" v-if="SurveyInfoType===2">审核通过</el-button>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
     <SurveyImgBox ref="SurveyImgBox"></SurveyImgBox>
     <EnvironmentImgBox ref="EnvironmentImgBox"></EnvironmentImgBox>
-    <el-dialog title="审核打回" :visible.sync="auitShow" center width="30%" @close="auitClose">
+    <el-dialog title="审核退回" v-loading="dialogLoading" :visible.sync="auitShow" center width="30%" @close="auitClose">
       <el-form :data="auitData">
         <el-row style="margin-bottom:15px">
-          <el-col :span="6">项目名称</el-col>
-          <el-col :span="16">{{WriteData.resourcename}}</el-col>
+          <el-form-item label="审核意见：">
+            <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见，退回必填" v-model="auitData.remark"></el-input>
+          </el-form-item>
         </el-row>
-        <el-row style="margin-bottom:15px">
-          <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见" v-model="auitData.remark"></el-input>
-        </el-row>
-        <el-row type="flex" justify="end">
+        <el-row type="flex" justify="center">
           <el-button type="success" @click="handleAuit(2)">提交</el-button>
           <el-button type="primary" @click="auitShow = false">返回</el-button>
+        </el-row>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="审核通过" v-loading="dialogLoading" :visible.sync="auitPassShow" center width="30%" @close="auitPassClose">
+      <el-form :data="auitData">
+        <el-row style="margin-bottom:15px">
+          <el-form-item label="需求单号：" v-if="WriteData.taskstatename === '地市审核'">
+            <el-input v-model="auitData.demandno" placeholder="请输入需求单号"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row style="margin-bottom:15px">
+          <el-form-item label="审核意见：">
+            <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见，退回必填" v-model="auitData.remark"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row type="flex" justify="center">
+          <el-button type="success" @click="handleAuit(1)">提交</el-button>
+          <el-button type="primary" @click="auitPassShow = false">返回</el-button>
         </el-row>
       </el-form>
     </el-dialog>
@@ -1386,6 +1419,7 @@ export default {
         sketch: [],
         roomequipmentimg: [],
         cabinetquipmentimg: [],
+        electricmeterimg: [],
         roomsarehd: [],
         roomequipmenthd: [],
         towermasthd: [],
@@ -1539,10 +1573,13 @@ export default {
       },
       // 审核弹窗
       auitShow: false,
+      auitPassShow: false,
+      dialogLoading: false,
       // 审核数据
       auitData: {
         taskid: '',
-        remark: ''
+        remark: '',
+        demandno: ''
       },
       table1Loading: false,
       SurveyInfo: {
@@ -1557,6 +1594,8 @@ export default {
       this.SurveyInfo = this.TaskSurveyInfo
     } else if (this.SurveyInfoType === 3) {
       this.SurveyInfo = this.MyProject
+    } else if (this.SurveyInfoType === 4) {
+      this.SurveyInfo = this.CompletedProject
     }
     this.WriteState = this.SurveyInfo.state
     this.ViewTabIndex = '0'
@@ -1683,6 +1722,8 @@ export default {
       this.StockStationInfo.sketch = this.StockStationInfo.sketch.filter(i => i.url)
       this.StockStationInfo.roomequipmentimg = this.StockStationInfo.roomequipmentimg.filter(i => i.url)
       this.StockStationInfo.cabinetquipmentimg = this.StockStationInfo.cabinetquipmentimg.filter(i => i.url)
+      this.StockStationInfo.electricmeterimg = this.StockStationInfo.electricmeterimg.filter(i => i.url)
+      this.StockStationInfo.demanddistance = this.StockStationInfo.demanddistance === '请选择经纬度后计算' ? null : this.StockStationInfo.demanddistance
       this.$axios.put(UpdateStockResourceCensus, this.StockStationInfo).then(res => {
         this.WriteLoading = false
         if (res.errorCode === '200') {
@@ -1715,6 +1756,8 @@ export default {
       this.StockStationInfo.sketch = this.StockStationInfo.sketch.filter(i => i.url)
       this.StockStationInfo.roomequipmentimg = this.StockStationInfo.roomequipmentimg.filter(i => i.url)
       this.StockStationInfo.cabinetquipmentimg = this.StockStationInfo.cabinetquipmentimg.filter(i => i.url)
+      this.StockStationInfo.electricmeterimg = this.StockStationInfo.electricmeterimg.filter(i => i.url)
+      this.StockStationInfo.demanddistance = this.StockStationInfo.demanddistance === '请选择经纬度后计算' ? null : this.StockStationInfo.demanddistance
       return this.$axios.put(UpdateStockResourceCensus, this.StockStationInfo).then((res) => {
         return Promise.resolve(res)
       })
@@ -1804,6 +1847,9 @@ export default {
       } else if (this.SurveyInfo.from === 'MyProject') {
         this.$router.push({name: 'MyProject'})
         this.$emit('handleChange', 'MyProject', '296a0c73-6a8a-450a-9e3e-f1ac571a695d')
+      } else if (this.SurveyInfo.from === 'CompletedProject') {
+        this.$router.push({name: 'CompletedProject'})
+        this.$emit('handleChange', 'CompletedProject', '68574cc1-6d88-4d03-a9c0-4493b0c0754b')
       }
     },
     getImgTitle (val) {
@@ -1945,6 +1991,26 @@ export default {
           }
           this.$refs.SurveyImgBox.SetData('设备照片(室外一体化机柜)', 'cabinetquipmentimg', this.StockStationInfo.cabinetquipmentimg, true)
           break
+        case '电表照片':
+          if (this.WriteState === 1) {
+            this.getImgTitle('电表照片').then((res) => {
+              if (res.data.total) {
+                res.data.list.forEach(item => {
+                  if (!this.StockStationInfo.electricmeterimg.filter(it => it.title === item.title).length) {
+                    const obj = {
+                      field_name: 'electricmeterimg',
+                      remarks: '',
+                      title: item.title,
+                      url: ''
+                    }
+                    this.StockStationInfo.electricmeterimg.push(obj)
+                  }
+                })
+              }
+            })
+          }
+          this.$refs.SurveyImgBox.SetData('电表照片', 'electricmeterimg', this.StockStationInfo.electricmeterimg, true)
+          break
       }
       this.$refs.SurveyImgBox.Open()
       this.WriteState === 2 ? this.$refs.SurveyImgBox.Flag = true : this.$refs.SurveyImgBox.Flag = false
@@ -1988,25 +2054,30 @@ export default {
       if (s === 2) {
         this.auitShow = true
       } else {
-        this.$confirm('您确认要通过审核吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.handleAuit(s)
-        })
+        this.auitPassShow = true
       }
     },
     handleAuit (state) {
       if (!this.auitData.remark && state === 2) return this.$message.warning('请输入审核意见')
+      if (!this.auitData.demandno && state === 1 && this.WriteData.taskstatename === '地市审核') return this.$message.warning('请输入需求单号')
+      this.dialogLoading = true
       this.$axios.get(AuitTask, {
         params: {
           taskid: this.auitData.taskid,
           state: state,
-          remark: this.auitData.remark
+          remark: this.auitData.remark,
+          demandno: this.auitData.demandno
         }
       }).then(res => {
+        this.dialogLoading = false
         if (res.errorCode === '200') {
-          state === 1 ? this.$message.success('审核成功') : this.$message.success('打回成功')
-          this.auitShow = false
+          if (state === 1) {
+            this.$message.success('审核成功')
+            this.auitPassShow = false
+          } else {
+            this.$message.success('退回成功')
+            this.auitShow = false
+          }
           this.closeShowEdit()
         } else {
           this.$message.warning(res.msg)
@@ -2014,6 +2085,10 @@ export default {
       })
     },
     auitClose () {
+      this.auitData.remark = ''
+    },
+    auitPassClose () {
+      this.auitData.demandno = ''
       this.auitData.remark = ''
     },
     formatString (val) {
@@ -2067,7 +2142,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType', 'MyProject'])
+    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType', 'MyProject', 'CompletedProject'])
   },
   watch: {
     SurveyInfoType (newd, old) {
@@ -2078,6 +2153,8 @@ export default {
           this.SurveyInfo = this.TaskSurveyInfo
         } else if (this.SurveyInfoType === 3) {
           this.SurveyInfo = this.MyProject
+        } else if (this.SurveyInfoType === 4) {
+          this.SurveyInfo = this.CompletedProject
         }
         this.ViewTabIndex = '0'
         this.getDetailInfo()

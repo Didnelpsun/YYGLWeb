@@ -40,15 +40,15 @@
                   <el-input v-model="WriteData.title"  placeholder="请填写标题" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.title}}</div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.title}}</div></td>
               <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.depotsname}}</div>
-                <div v-if="WriteState !== 2" @click="SpareWarehouseShow=true">
+                <div v-show="WriteState == 2">{{WriteData.depotsname}}</div>
+                <div v-show="WriteState !== 2" @click="SpareWarehouseShow=true">
                   <el-form-item class="form-item" prop="depotsname">
                   <el-input v-model="WriteData.depotsname" readonly placeholder="请选择存放点名"></el-input>
                   </el-form-item>
@@ -60,10 +60,10 @@
               <td><div class="cell">备件数量</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="sparenumber">
-                  <el-input v-model="WriteData.sparenumber" type="number"  placeholder="请填写备件数量" clearable></el-input>
+                  <el-input v-model="WriteData.sparenumber"   placeholder="请填写备件数量" clearable></el-input>
                 </el-form-item>
               </div></td>
-              <td v-if="WriteState == 2"><div class="cell">{{WriteData.sparenumber}}</div></td>
+              <td v-show="WriteState == 2"><div class="cell">{{WriteData.sparenumber}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -112,24 +112,30 @@
       </el-form>
     </div>
       </el-tab-pane>
-      <el-tab-pane label="盘存记录列表" v-if="WriteState===2">
+      <el-tab-pane label="盘存记录列表" v-if="Inventoryshow">
         <div class="main" v-show="!showWrite">
           <el-form :model="Query" ref="Inventory">
             <el-row >
               <el-col :span="18">
                 <el-col :span="8">
-                  <div @click="sparetypeShow=true">
+                  <!--<div @click="sparetypeShow=true">
                     <el-form-item label="备件类型：">
                       <el-input v-model="Query.typename" clearable placeholder="请选择备件类型"></el-input>
                     </el-form-item>
-                  </div>
+                  </div>-->
+                  <el-form-item label="备件类型：">
+                    <el-input v-model="Query.typename"  @keyup.enter.native="getMore(1)" clearable placeholder="请选择备件类型"></el-input>
+                  </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <div @click="sparemodelShow=true">
+                 <!-- <div @click="sparemodelShow=true">
                   <el-form-item label="备件型号：">
                     <el-input v-model="Query.sparemodel" clearable placeholder="请选择备件型号"></el-input>
                   </el-form-item>
-                </div>
+                </div>-->
+                  <el-form-item label="备件型号：">
+                    <el-input v-model="Query.sparemodel" @keyup.enter.native="getMore(1)" clearable placeholder="请选择备件型号"></el-input>
+                  </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="备件编码：">
@@ -197,14 +203,14 @@
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose1" ref="Details"></Details>
 
     </div>
-    <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
+  <!--  <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
       <Selectsparetype    @Selsparetypeid="Selsparetypeid"/>
     </el-dialog>
     <div v-if="sparemodelShow">
       <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
         <SelectSpareconMode   :sparetypeid="sparepartstypeid"   @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -214,8 +220,8 @@ import {AddInventoryTask, EditInventoryTask, GetInventoryrecords} from 'api/BJGL
 import SpareWarehousePicker from 'base/SpareManagement/SpareWarehousePicker'
 import layuiTitle from 'base/layui-title'
 import Details from 'base/SpareManagement/InventoryRecords'
-import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
-import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
+/* import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
+import Selectsparetype from 'base/SpareManagement/Selsparetypeid' */
 export default {
   name: 'Inventory',
   props: {
@@ -231,7 +237,7 @@ export default {
         code: null,
         sparemodel: null
       },
-      sparepartstypeid: null,
+      /* sparepartstypeid: null, */
       SpareWarehouseShow: false,
       ViewTabIndex: 0,
       isShow: false,
@@ -241,6 +247,7 @@ export default {
         sparenumbe: null,
         titile: null
       },
+      Inventoryshow: false,
       sparetypeShow: false,
       sparemodelShow: false,
       WriteState1: null,
@@ -252,8 +259,8 @@ export default {
       showWrite: false,
       WriteLoading: false,
       Rules: {
-        depotsname: [{ required: true, message: '请选择存放点', trigger: 'change' }]
-
+        /* depotsname: [{ required: true, message: '请选择存放点', trigger: 'change' }] */
+        sparenumber: [{type: 'number', message: '备件数量只允许输入数字'}]
       },
       DicList: {}
     }
@@ -263,9 +270,8 @@ export default {
     this.getDic()
   },
   methods: {
-    sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
-    manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
-    sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
+    /* sparetypeClose () { this.sparetypeShow = !this.sparetypeShow }, */
+    /*  sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
       this.sparepartstypeid = id
@@ -275,8 +281,10 @@ export default {
     },
     SelSpareconModelid (name, id) {
       this.sparemodelShow = false
-      /* this.Query.sparemodelid = id */
       this.Query.sparemodel = name
+    }, */
+    open (state) {
+      state === 2 ? this.Inventoryshow = true : this.Inventoryshow = false
     },
     showInventoryresults (val) {
       val = parseInt(val.Inventoryresults)
@@ -315,7 +323,6 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.Query.sparepartstypeid = null
       this.$axios.get(GetInventoryrecords, {params: Object.assign({}, this.Query, {
         PageIndex: this.currentPage,
         PageSize: this.pageSize,
@@ -388,7 +395,7 @@ export default {
     },
     SpareWarehousePickers (name, code, id) {
       this.SpareWarehouseShow = false
-      this.WriteData.depotsname = name.trim()
+      this.WriteData.depotsname = name
       this.WriteData.depotsid = id
     },
     SpareWarehousClose () {
@@ -407,11 +414,11 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
+        if (this.WriteData.depotsname === undefined) return this.$message.error('存放点未选择！')
         if (!vali) {
-          return this.$message.error('请补全信息！')
+          return this.$message.error(msg.sparenumber[0])
         } else {
           this.Loading = true
-
           this.$axios.post(AddInventoryTask, {title: this.WriteData.title, depotsid: this.WriteData.depotsid, sparenumber: this.WriteData.sparenumber}).then(res => {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
@@ -427,7 +434,7 @@ export default {
       console.log()
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
-          this.$message.error('请补全信息！')
+          this.$message.error(msg.sparenumber[0])
         } else {
           this.Loading = true
           this.$axios.put(EditInventoryTask, {title: this.WriteData.title, depotsid: this.WriteData.depotsid, sparenumber: this.WriteData.sparenumber, Id: this.WriteData.id}).then(res => {
@@ -445,9 +452,9 @@ export default {
   components: {
     SpareWarehousePicker,
     layuiTitle,
-    Details,
-    Selectsparetype,
-    SelectSpareconMode
+    Details
+  /*  Selectsparetype,
+    SelectSpareconMode */
   }
 }
 </script>

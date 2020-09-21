@@ -31,6 +31,11 @@
                 <el-input v-model="query.demandname" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="任务单号：">
+                <el-input v-model="query.taskno" placeholder="请输入任务单号" @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top:0">
@@ -52,6 +57,7 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
+        <el-table-column prop="taskno" label="任务单号" width="120"></el-table-column>
         <el-table-column prop="demandname" label="需求名称" width=""></el-table-column>
         <el-table-column prop="steps" label="操作步骤" width="100"></el-table-column>
         <el-table-column prop="auitstate" label="审核状态" width=""></el-table-column>
@@ -86,7 +92,8 @@ export default {
         starttime: '',
         endtime: '',
         resourcecode: '',
-        demandname: ''
+        demandname: '',
+        taskno: ''
       },
       // 加载
       Loading: false,

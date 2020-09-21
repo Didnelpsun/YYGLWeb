@@ -119,7 +119,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">状态</div></td>
-              <td><div class="cell">{{WriteData.storestate}}</div></td>
+              <td><div class="cell">{{WriteData.storestate |state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
@@ -127,7 +127,7 @@
               <td><div class="cell">{{WriteData.depotsname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" >
+            <tr class="el-table__row" v-show="WriteState!==0" >
               <td><div class="cell">备件编码</div></td>
               <td v-show="WriteState==2"><div class="cell">{{WriteData.code}}</div></td>
               <td v-show="WriteState==1"><div class="cell">
@@ -137,7 +137,7 @@
               </div></td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" >
+            <tr class="el-table__row" v-show="WriteState!==0" >
               <td><div class="cell">备件质保编号</div></td>
               <td  v-show="WriteState==2"><div class="cell">{{WriteData.warrantycode}}</div></td>
               <td v-show="WriteState==1"><div class="cell">
@@ -147,7 +147,7 @@
               </div></td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row">
+            <tr class="el-table__row" v-show="WriteState!==0">
               <td><div class="cell">资产编码</div></td>
               <td  v-show="WriteState==2"><div class="cell">{{WriteData.assetsencoding}}</div></td>
               <td v-show="WriteState==1"><div class="cell">
@@ -236,8 +236,8 @@
       <Selectmanufacturer :provinceid="WriteData.provinceid" :cityid="WriteData.cityid" @Selmanufacturerid="Selmanufacturerid"/>
     </el-dialog>
     <div v-if="sparemodelShow">
-      <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
-        <SelectSpareconMode :istrue="true" :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
+      <el-dialog top="1%" :visible.sync="sparemodelShow"  title="选择备件型号" width="80%" :before-close="sparemodelClose">
+        <SelectSpareconMode  :provinceid="WriteData.provinceid"  :sparetypeid="WriteData.sparepartstypeid" :sparemanufacturerid="WriteData.manufacturerid" :cityid="WriteData.cityid" @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
     <div v-if="SpareWarehouseShow">
@@ -285,6 +285,7 @@ export default {
       SpareWarehouseShow: false,
       isShow: false,
       check: 1,
+      haslist: null,
       Loading: false,
       showloading: true,
       WriteData: {
@@ -372,6 +373,14 @@ export default {
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
+        if (this.WriteData.list.length === 0) return this.$message.error('请扫码！')
+        this.WriteData.list.forEach(item => {
+          for (var key in item) {
+            this.haslist = item[key] === ''
+            if (this.haslist) { return }
+          }
+        })
+        if (this.haslist) { return this.$message.error('资产编码或质保编码未扫码！') }
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
@@ -388,8 +397,11 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
+        if (this.WriteData.warrantycode === '') return this.$message.error('质保编码信息不得为空！')
+        if (this.WriteData.assetsencoding === '') return this.$message.error('资产编码信息不得为空！')
+        if (this.WriteData.code === '') return this.$message.error('备件编码信息不得为空！')
         if (!vali) {
-          this.$message.error('请补全信息！')
+          return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
           this.$axios.put(Editspareparts, this.WriteData).then(res => {
@@ -425,6 +437,12 @@ export default {
         this.$message.error('请不要扫相同备件编码！')
       }
       this.code = ''
+    }
+  },
+  filters: {
+    state (val) {
+      val = parseInt(val)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
     }
   }
 }

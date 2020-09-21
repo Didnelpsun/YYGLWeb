@@ -9,3 +9,5 @@ export const TaskSurveyInfo = state => state.TaskSurveyInfo
 export const SurveyInfoType = state => state.SurveyInfoType
 
 export const MyProject = state => state.MyProject
+
+export const CompletedProject = state => state.CompletedProject

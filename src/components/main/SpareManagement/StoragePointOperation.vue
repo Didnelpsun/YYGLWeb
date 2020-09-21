@@ -186,6 +186,7 @@ export default {
     },
     WriteClose () {
       this.showWrite = false
+      this.getMore(this.currentPage)
     },
     handleWrite (state, row) {
       this.WriteState = state

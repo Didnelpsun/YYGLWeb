@@ -34,7 +34,7 @@
       <el-table-column prop="email" label="email" ></el-table-column>
       <el-table-column prop="orgname" label="部门" ></el-table-column>
       <el-table-column prop="createtime" label="注册时间" ></el-table-column>
-      <<el-table-column label="操作" width="">
+      <el-table-column label="操作" width="">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
         </template>

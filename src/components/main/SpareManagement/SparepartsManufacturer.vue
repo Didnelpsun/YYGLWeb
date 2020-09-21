@@ -33,6 +33,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -69,15 +70,16 @@
                @fatheretMore="getData1 () " @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import {AreaList} from 'api/api'
 import layuiTitle from 'base/layui-title'
-import {GetsparepartsmanufacturerList, Deletesparepartsmanufacturer, GetIdsparepartsmanufacturerList} from 'api/BJGL'
+import {GetsparepartsmanufacturerList, Deletesparepartsmanufacturer, GetIdsparepartsmanufacturerList, manufacturerImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/SparepartsManufacturer'
 export default {
   name: 'SparepartsManufacturer',
@@ -131,8 +133,15 @@ export default {
   },
   activated () {
     this.getData1()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = manufacturerImport
+      this.$refs.ImportBox.fileName = '错误备件厂家列表导入数据'
+    },
     changecityArea (obj) {
       // console.log(obj)
       obj.provinceid = obj.AreaList[0]
@@ -225,7 +234,8 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    Import
   }
 }
 </script>

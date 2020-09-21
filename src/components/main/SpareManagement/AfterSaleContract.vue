@@ -33,6 +33,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -47,7 +48,7 @@
         <el-table-column prop="name" label="厂家名称 "></el-table-column>
         <el-table-column prop="contractno" label="合同编号"></el-table-column>
         <el-table-column prop="year" label="合同年度"></el-table-column>
-        <el-table-column prop="administrator" label="负责人 "></el-table-column>
+        <el-table-column prop="administratorname" label="负责人 "></el-table-column>
         <el-table-column prop="starttime" label="开始时间"></el-table-column>
         <el-table-column prop="endtime" label="结束时间"></el-table-column>
         <el-table-column prop="createusername" label="提交人"></el-table-column>
@@ -74,15 +75,17 @@
 
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
 import ImgBox from '../../../base/ImgBox'
-import {Getmanufacturerinfo, Getidmanufacturerinfo, Deletemanufacturerinfo} from 'api/BJGL'
+import {Getmanufacturerinfo, Getidmanufacturerinfo, Deletemanufacturerinfo, manufacturerinfoImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/AfterSaleContract'
 export default {
   name: 'AfterSaleContract',
@@ -109,8 +112,15 @@ export default {
   activated () {
     this.getData1()
     this.getDic()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = manufacturerinfoImport
+      this.$refs.ImportBox.fileName = '错误售后合同文件导入'
+    },
     OpenImgBox (title, name, list) {
       this.$refs.ImgBox.SetData(title, name, list)
       this.$refs.ImgBox.Open()
@@ -202,7 +212,8 @@ export default {
   components: {
     layuiTitle,
     Details,
-    ImgBox
+    ImgBox,
+    Import
   }
 }
 </script>

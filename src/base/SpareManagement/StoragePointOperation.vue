@@ -171,7 +171,6 @@ export default {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
-            this.$emit('fatheretMore')
             this.WriteClose()
           })
         }
@@ -187,8 +186,6 @@ export default {
             this.Loading = false
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('编辑成功!')
-            this.$emit('fatheretMore')
-            this.ResetWrite()
             this.WriteClose()
           })
         }

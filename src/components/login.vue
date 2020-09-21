@@ -120,6 +120,7 @@ export default {
       if (!this.userpassword) return this.$message.warning('请输入密码')
       if (this.code.toLowerCase() !== this.userVali.toLowerCase()) {
         this.userVali = ''
+        this.handleVailImg()
         return this.$message.error('验证码错误')
       }
       if (this.Logging) return false

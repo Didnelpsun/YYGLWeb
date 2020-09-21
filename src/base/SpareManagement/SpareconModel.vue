@@ -85,20 +85,16 @@
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.remark}}</div></td>
-              <!-- <td><div class="cell"></div></td>-->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交时间</div></td>
               <td><div class="cell">{{WriteData.createtime}}</div></td>
-              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">提交人</div></td>
               <td><div class="cell">{{WriteData.realityname}}</div></td>
-
-              <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -201,6 +197,7 @@ export default {
     changecityArea (obj) {
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
+      this.$forceUpdate()
     },
     setArea (list, key = 'csArea') {
       this.nodes = list

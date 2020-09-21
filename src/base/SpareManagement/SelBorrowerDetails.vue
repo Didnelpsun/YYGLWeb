@@ -1,6 +1,5 @@
 <template>
-  <div class="content">
-    <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
+ <!-- <div class="content">
     <el-table :data="tableList" v-loading="Table1Loading">
       <el-table-column prop="cityname" label="地市"></el-table-column>
       <el-table-column prop="areaname" label="区域"></el-table-column>
@@ -18,48 +17,138 @@
       <el-table-column prop="alsopersontime" label="还件时间"></el-table-column>
       <el-table-column prop="alsopersonid" label="还件人"></el-table-column>
     </el-table>
-    <div class="center">
-      <el-pagination @current-change="getTableData1More" @size-change="handelSizeChange" :current-page="pagination.currentPage"
-                     :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" :total="pagination.total"
-                     background layout="total, prev, pager, next, sizes"></el-pagination>
+  </div>-->
+    <div class="write">
+      <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
+        <!--表头-->
+        <div class="el-table__header-wrapper">
+          <table cellspacing="0" cellpadding="0" border="0" class="el-table__header" width="100%">
+            <colgroup>
+              <col width="80"/>
+              <col width="100"/>
+              <!--  <col width="50"/>-->
+              <col width="100"/>
+            </colgroup>
+            <thead>
+            <tr>
+              <th colspan="1" rowspan="1" class="el-table_8_column_60     table-headerStyle"><div class="cell">字段</div></th>
+              <th colspan="1" rowspan="1" class="el-table_8_column_61     table-headerStyle"><div class="cell">属性</div></th>
+              <!--<th colspan="1" rowspan="1" class="el-table_8_column_62     table-headerStyle"><div class="cell">照片</div></th>-->
+              <th colspan="1" rowspan="1" class="el-table_8_column_64     table-headerStyle"><div class="cell">填写要求</div></th>
+            </tr>
+            </thead>
+          </table>
+        </div>
+        <!--表体-->
+        <el-form :model="WriteData" v-loading="loading" label-width="0" :show-message="false">
+          <div class="el-table__body-wrapper is-scrolling-none">
+            <table cellspacing="0" cellpadding="0" border="0" class="el-table__body" width="100%">
+              <colgroup>
+                <col width="80"/>
+                <col width="100"/>
+                <!--  <col width="50"/>-->
+                <col width="100"/>
+              </colgroup>
+              <tbody>
+              <tr class="el-table__row">
+                <td><div class="cell">地市</div></td>
+                <td><div class="cell">{{WriteData.cityname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">区域</div></td>
+                <td><div class="cell">{{WriteData.areaname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">备件类型</div></td>
+                <td><div class="cell">{{WriteData.sparepartstype}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">备件编码</div></td>
+                <td><div class="cell">{{WriteData.code}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">备件厂家</div></td>
+                <td><div class="cell">{{WriteData.manufacturername}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">备件型号</div></td>
+                <td><div class="cell">{{WriteData.sparemodel}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">存放点</div></td>
+                <td><div class="cell">{{WriteData.depotsname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">权属</div></td>
+                <td><div class="cell">{{WriteData.units}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">借用人</div></td>
+                <td><div class="cell">{{WriteData.borrowername}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">借用时间</div></td>
+                <td><div class="cell">{{WriteData.borrowtime}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">还件编码</div></td>
+                <td><div class="cell">{{WriteData.alsocode}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">还件存放点</div></td>
+                <td><div class="cell">{{WriteData.alsodepotsname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row" >
+                <td><div class="cell">还件权属</div></td>
+                <td><div class="cell">{{WriteData.alsounits}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row" >
+                <td><div class="cell">还件时间</div></td>
+                <td><div class="cell">{{WriteData.alsopersontime}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              <tr class="el-table__row">
+                <td><div class="cell">还件人</div></td>
+                <td><div class="cell">{{WriteData.alsopersonname}}</div></td>
+                <td><div class="cell"></div></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </el-form>
+      </div>
+      <div class="center">
+        <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
-import {GetAlsorecord} from 'api/BJGL'
+import {Getdetails} from 'api/BJGL'
 export default {
   name: 'SelBorrowerDetails',
   props: {
-    resourcetype: {
-      type: Number,
-      default: 1
-    },
-    provinceid: {// 省份
-      type: Number,
-      default: null
-    },
-    cityid: {// 城市
-      type: Number,
-      default: null
-    }
+    id: null
   },
   data () {
     return {
-      // 查询相关属性
-      query: {
-        depotsid: '', // 存放点
-        inventorystatus: '' // 盘存状态
-      },
-      tableList: [],
-      // 分页相关属性
-      pagination: {
-        total: 0,
-        pageSize: 10,
-        currentPage: 1,
-        PageIndex: 1
-      },
-      Table1Loading: false
+      /*   tableList: [],
+      Table1Loading: false */
+      WriteData: {},
+      Loading: false
     }
   },
   created () {
@@ -67,44 +156,22 @@ export default {
   },
   methods: {
     _getTableData1 () {
-      this.Table1Loading = true
-      this.$axios.get(GetAlsorecord, {
+      this.loading = true
+      /* this.Table1Loading = true */
+      this.$axios.get(Getdetails, {
         params: {
-          PageIndex: 1,
-          PageSize: 10
+          id: this.id
         }}).then(res => {
-        this.Table1Loading = false
+        /* this.Table1Loading = false */
         if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.tableList = res.data.list
-        this.pagination.total = res.data.total
+        this.WriteData = res.data
+        this.loading = false
+        /* this.tableList = res.data.list
+         this.pagination.total = res.data.total */
       })
     },
-    // 分页处理函数
-    handelSizeChange (page) {
-      this.pagination.pageSize = page
-      this.getTableData1More(this.pagination.currentPage)
-    },
-    getTableData1More  (page) {
-      this.currentPage = page
-      this.Table1Loading = true
-      this.$axios.get(GetAlsorecord, {params: Object.assign({}, this.query, {
-        PageIndex: this.pagination.currentPage,
-        PageSize: this.pagination.pageSize
-      })}).then(res => {
-        this.Table1Loading = false
-        if (res.errorCode !== '200') return this.$message.error(res.msg)
-        this.tableList = res.data.list
-        this.pagination.total = res.data.total
-      })
-    },
-    // 重置按钮
-    resetQueryForm () {
-      Object.assign(this.$data.query, this.$options.data().query)
-      // Object.assign(this.$data.AreaList, this.$options.data().AreaList)
-      this._getTableData1()
-    },
-    handleChoose (index, row) {
-      this.$emit('SelInventory', row.title, row.id)
+    WriteClose () {
+      this.$emit('SelBorrowerDetails')
     }
   }
 }

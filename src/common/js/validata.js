@@ -18,3 +18,12 @@ export function isNumber (num) {
 // 经纬度
 export const isValidLongitude = /^(?:[0-9]|[1-9][0-9]|1[0-7][0-9]|180)\.([0-9]{1,6})$/
 export const isValidLatitude = /^(?:[0-9]|[1-8][0-9]|90)\.([0-9]{1,6})$/
+
+export const valiNumbers = (rule, value, callback) => {
+  let reg = /(^\d{1,}$)|(^\d{1,}\.\d{1,2}$)/
+  if (!reg.test(value)) {
+    callback(new Error('请输入数字,小数点不能超过3位'))
+  } else {
+    callback()
+  }
+}

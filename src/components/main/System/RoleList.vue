@@ -154,37 +154,37 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="授权资源" name="2">
-          <el-form :model="resQuery" ref="resQuery">
-            <el-row>
-              <el-col :sm="12" :md="9">
-                <el-form-item label="资源类型：">
-                  <el-select v-model="resQuery.resource">
-                    <el-option label="全部" value=""></el-option>
-                    <el-option v-for="(item, index) in resTypeOp" :key="item" :label="item" :value="index+1"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :sm="12" :md="9" :offset="1">
-                <el-button @click="getMore2(1)" icon="el-icon-search">查询</el-button>
-              </el-col>
-            </el-row>
-          </el-form>
-          <el-table :data="ViewResource" v-loading="ViewReLoading" :tree-props="{children: 'child'}" row-key="id" ref="ViewResourceTable">
-            <el-table-column prop="name" label="资源名称" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="resources" label="资源类型" width="70" :formatter="formatRType"></el-table-column>
-            <el-table-column prop="url" label="资源路径" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="isope" label="操作授权" width="150">
+          <el-table :data="ViewResource" v-loading="ViewReLoading" :tree-props="{children: 'child', hasChildren: 'hasChild'}" row-key="id" lazy :load="handleLoadChild" ref="ViewResourceTable">
+            <el-table-column prop="name" label="菜单名称" width="200"></el-table-column>
+            <el-table-column prop="" label="菜单资源" width="250">
               <template slot-scope="scope">
-                <el-switch v-model="scope.row.isope" inactive-color="#ff4949" @change="changeSwitch(scope.row)"></el-switch>
+                <el-row>
+                  <el-checkbox v-for="item in scope.row.menuresource" :key="item.id"
+                               v-if="item.resourcesname"
+                               :label="item.id"
+                               v-model="item.isope"
+                               @change="changeSwitch(item)">
+                    {{item.resourcesname}}
+                  </el-checkbox>
+                </el-row>
+                <!--</el-checkbox-group>-->
               </template>
             </el-table-column>
-
+            <el-table-column prop="" label="接口资源">
+              <template slot-scope="scope">
+                <el-row>
+                  <el-checkbox v-for="item in scope.row.interresource[0]" :key="item.id"
+                               v-if="item.resourcesname"
+                               :label="item.id"
+                               v-model="item.isope"
+                               @change="changeSwitch(item)">
+                    {{item.resourcesname}}
+                  </el-checkbox>
+                </el-row>
+                <!--</el-checkbox-group>-->
+              </template>
+            </el-table-column>
           </el-table>
-          <div class="center">
-            <el-pagination @current-change="getMore2" @size-change="changeSize2" :page-sizes="[10, 20, 30, 50]"
-                           :current-page="currentPage2" :page-size="pageSize2" :total="total2"
-                           background layout="total, prev, pager, next, sizes"></el-pagination>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="授权用户" name="3">
           <el-table :data="ViewUser" v-loading="ViewUserLoading">
@@ -265,11 +265,7 @@ export default {
       ViewTabIndex: '1',
       ViewRoleId: 0,
       ViewInfo: {},
-      resQuery: {resource: ''},
       ViewResource: [],
-      total2: 0,
-      currentPage2: 1,
-      pageSize2: 10,
       ViewReLoading: false,
       ViewChecking: false,
       ViewUser: [],
@@ -466,9 +462,26 @@ export default {
         if (res.error) {
           this.$message.error(res.errorMessage)
         } else {
-          this.ViewResource = _normalizeTreeData(res.data, 'id', 'parentid', 'child', null)
+          res.data.sort((a, b) => { return b.id - a.id })
+          let list = _normalizeTreeData(res.data, 'id', 'parentid', 'child', null)
+          this.ViewResource = this.hasChilds(list)
         }
       })
+    },
+    hasChilds (list) {
+      for (let i in list) {
+        if (list[i].child && list[i].child.length) {
+          list[i].hasChild = true
+        } else {
+          list[i].hasChild = false
+        }
+      }
+      return list
+    },
+    handleLoadChild (row, treeNode, resolve) {
+      if (!treeNode.level) {
+        resolve(this.hasChilds(row.child))
+      }
     },
     changeSwitch (row) {
       if (row.isope) { // 授权操作
@@ -494,26 +507,6 @@ export default {
           }
         })
       }
-    },
-    getMore2 (val) {
-      this.currentPage2 = val
-      this.$axios.post(RolesAuthorizedResources, Object.assign({}, this.resQuery, {
-        id: this.ViewRoleId,
-        page: val,
-        pagesize: this.pageSize2
-      })).then((res) => {
-        this.ViewReLoading = false
-        if (res.error) {
-          this.$message.error(res.errorMessage)
-        } else {
-          this.ViewResource = res.data.list
-          this.total2 = res.data.total
-        }
-      })
-    },
-    changeSize2 (n) {
-      this.pageSize2 = n
-      this.getMore2(this.currentPage2)
     },
     tabs3 () {
       this.ViewUserLoading = true

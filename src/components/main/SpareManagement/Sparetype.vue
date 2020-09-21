@@ -33,6 +33,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -69,15 +70,16 @@
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {AreaList, DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp, SpareTypeImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/Sparetype'
 export default {
   name: 'Sparetype',
@@ -130,10 +132,16 @@ export default {
   activated () {
     this.getData1()
     this.getDic()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = SpareTypeImport
+      this.$refs.ImportBox.fileName = '错误备件类型列表导入数据'
+    },
     changecityArea (obj) {
-      // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
     },
@@ -152,6 +160,7 @@ export default {
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
+      this.getDic()
     },
     getDic () {
       let arr = ['备件类型']
@@ -235,7 +244,8 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    Import
   }
 }
 </script>

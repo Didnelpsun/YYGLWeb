@@ -79,6 +79,7 @@ export default {
     }, 200),
     ResetQuery () {
       Object.assign(Object.assign(this.$data.Query, this.$options.data().Query))
+      this.getTableData1()
     },
     handleSelect (row) {
       this.$emit('WarehouseUintPicker', row.id, row.orgname)

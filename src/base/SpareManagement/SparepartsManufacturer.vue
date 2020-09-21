@@ -169,6 +169,7 @@ export default {
       // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
+      this.$forceUpdate()
     },
     setArea (list, key = 'csArea') {
       this.nodes = list

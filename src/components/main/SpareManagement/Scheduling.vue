@@ -43,7 +43,7 @@
               </div></td>
               <td><div class="cell"></div></td>
             </tr>
-            <tr class="el-table__row" v-if="WriteData.schedulingtype">
+            <tr class="el-table__row" v-show="WriteData.schedulingtype">
               <td><div class="cell"><i class="must">*</i>存放点名称</div></td>
               <td><div class="cell">
                 <div @click="SelectUserOperationShow=true">
@@ -139,7 +139,7 @@
     </el-dialog>
     <div v-if="SelectUserOperationShow">
     <el-dialog top="1%" :visible.sync="SelectUserOperationShow" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
-      <SelectUserOperation :check="WriteData.schedulingtype"  @SpareWarehousePicker="SelectUserOperation"/>
+      <SelectUserOperation :check="WriteData.schedulingtype"  @SelectUserOperation="SelectUserOperation"/>
     </el-dialog>
     </div>
   </div>
@@ -199,6 +199,7 @@ export default {
   },
   methods: {
     SelectUserOperation (operation, name, id) {
+      this.SelectUserOperationShow = false
       this.WriteData.operation = name
       this.WriteData.operationid = id
     },

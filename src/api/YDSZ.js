@@ -45,6 +45,13 @@ export const DelElectricMeter = `${reqURL}/YDSZ/ElectricMeter/DelElectricMeter` 
 export const DelSiteElectricMeter = `${reqURL}/YDSZ/ElectricMeter/DelSiteElectricMeter` // 删除站址电表关系
 export const GetElectricMeterExcel = `${reqURL}/YDSZ/ElectricMeter/GetElectricMeterExcel` // 导出电表列表
 
+// 设备找站
+export const ImportEquipmentExcel = `${reqURL}/YDSZ/YDSZEquipment/ImportEquipmentExcel` // 导入设备
+export const EquipmenTcontrastList = `${reqURL}/YDSZ/YDSZEquipment/EquipmenTcontrastList` // 逻辑站列表
+export const SitenetWorkList = `${reqURL}/YDSZ/YDSZEquipment/SitenetWorkList` // 网元列表
+export const OrderSiteList = `${reqURL}/YDSZ/YDSZEquipment/OrderSiteList` // 订单站址
+export const UpdateEquipmenTcontrast = `${reqURL}/YDSZ/YDSZEquipment/UpdateEquipmenTcontrast` // 批量修改逻辑站数据
+
 export function exportMethod (data) {
   axios({
     method: data.method,

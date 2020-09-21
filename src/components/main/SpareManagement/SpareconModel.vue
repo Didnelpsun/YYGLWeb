@@ -30,6 +30,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -70,13 +71,15 @@
     <el-dialog top="1%" :visible.sync="sparetypeidShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
       <Selsparetypeid  @Selsparetypeid="Selsparetypeid"/>
     </el-dialog>
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig} from 'api/BJGL'
+import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig, SpareConfigImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/SpareconModel'
 import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
 export default {
@@ -103,8 +106,15 @@ export default {
   },
   activated () {
     this.getData1()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = SpareConfigImport
+      this.$refs.ImportBox.fileName = '错误备件型号列表导入数据'
+    },
     sparetypeClose () { this.sparetypeidShow = !this.sparetypeidShow },
     Selsparetypeid (name, id) {
       this.sparetypeidShow = false
@@ -186,7 +196,8 @@ export default {
   components: {
     layuiTitle,
     Details,
-    Selsparetypeid
+    Selsparetypeid,
+    Import
   }
 }
 </script>

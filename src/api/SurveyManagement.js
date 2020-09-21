@@ -68,6 +68,7 @@ export const GetProjectInfo = `${reqURL}/KCGL/Project/GetProjectInfo` // 获取�
 export const UpdateProject = `${reqURL}/KCGL/Project/UpdateProject` // 修改项目
 export const DelProject = `${reqURL}/KCGL/Project/DelProject` // 删除项目
 export const GetProjectExcel = `${reqURL}/KCGL/Project/GetProjectExcel` // 项目管理导出
+export const ProjectDetailExcel = `${reqURL}/KCGL/Project/ProjectDetailExcel` // 项目管理批量导出
 export const GetKCProjectExcel = `${reqURL}/KCGL/Project/GetKCProjectExcel` // 项目管理项目资料导出
 export const GetDistance = `${reqURL}/KCGL/Project/GetDistance` // 通过两个经纬度获取距离（返回数据为M）
 

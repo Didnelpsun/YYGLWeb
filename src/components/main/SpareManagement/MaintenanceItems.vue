@@ -32,6 +32,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -81,14 +82,16 @@
         <SelectSpareconMode    :sparetypeid="Query.sparetypeid"   @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {maintenanceconfig, Getidmaintenanceconfig, Deletemaintenanceconfig} from 'api/BJGL'
+import {maintenanceconfig, Getidmaintenanceconfig, Deletemaintenanceconfig, maintenanceconfigImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/MaintenanceItems'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
@@ -118,8 +121,15 @@ export default {
   activated () {
     this.getData1()
     this.getDic()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = maintenanceconfigImport
+      this.$refs.ImportBox.fileName = '错误备件类型列表导入数据'
+    },
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
       this.Query.sparetypeid = id
@@ -194,7 +204,6 @@ export default {
         }).then(res => {
           this.$refs.Details.Loading = false
           this.$refs.Details.setWriteData(res.data)
-          console.log(1)
         }).catch(err => {
           this.$refs.Details.Loading = false
           console.log(err)
@@ -223,7 +232,8 @@ export default {
     layuiTitle,
     Details,
     Selectsparetype,
-    SelectSpareconMode
+    SelectSpareconMode,
+    Import
   }
 }
 </script>

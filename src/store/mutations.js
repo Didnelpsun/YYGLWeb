@@ -18,6 +18,9 @@ const mutations = {
   },
   [types.SET_SURVEYINFOTYPE] (state, SurveyInfoType) {
     state.SurveyInfoType = SurveyInfoType
+  },
+  [types.SET_COMPLETEDPROJECT_INFO] (state, CompletedProject) {
+    state.CompletedProject = CompletedProject
   }
 }
 

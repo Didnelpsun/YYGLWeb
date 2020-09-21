@@ -1,5 +1,5 @@
 <template>
-  <div class="content" v-loading="ExportLoading" element-loading-text="正在导出,请等待！" element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div class="content">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query">
         <el-row>
@@ -7,29 +7,25 @@
           <el-col :span="18">
             <el-row>
               <el-col :span="8">
+                <el-form-item label="区域：">
+                  <el-cascader v-model="Query.AreaList" :props="QareaProps" @change="changeArea(Query)" ref="queryInput"></el-cascader>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
                 <el-form-item label="需求名称：">
                   <el-input v-model="Query.demandname" placeholder="请输入需求名称" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="建站方式：">
-                  <el-select class="searchSelect" v-model="Query.constructionmode">
-                    <el-option v-for="i in DicList.constructionmode" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="审核状态：">
-                  <el-select class="searchSelect" v-model="Query.taskstate">
-                    <el-option v-for="i in DicList.taskstate" :key="i.value" :label="i.text" :value="i.value"></el-option>
-                  </el-select>
+                <el-form-item label="需求单号：">
+                  <el-input v-model="Query.demandno" placeholder="请输入需求单号" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
-                <el-form-item label="需求单号：">
-                  <el-input v-model="Query.demandno" placeholder="请输入需求单号" @keyup.enter.native="getMore(1)"></el-input>
+                <el-form-item label="需求批次：">
+                  <el-input v-model="Query.demandbatch" placeholder="请输入需求批次" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -47,8 +43,8 @@
             </el-row>
             <el-row>
               <el-col :span="8">
-                <el-form-item label="需求批次：">
-                  <el-input v-model="Query.demandbatch" placeholder="请输入需求批次" @keyup.enter.native="getMore(1)"></el-input>
+                <el-form-item label="任务单号：">
+                  <el-input v-model="Query.taskno" placeholder="请输入任务单号" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -62,8 +58,17 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="区域：">
-                  <el-cascader v-model="Query.AreaList" :props="QareaProps" @change="changeArea(Query)" ref="queryInput"></el-cascader>
+                <el-form-item label="审核状态：">
+                  <el-select class="searchSelect" v-model="Query.taskstate">
+                    <el-option v-for="i in DicList.taskstate" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="建站方式：">
+                  <el-select class="searchSelect" v-model="Query.constructionmode">
+                    <el-option v-for="i in DicList.constructionmode" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -91,6 +96,7 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template></el-table-column>
         <el-table-column prop="cityname" label="地市" width="80"></el-table-column>
         <el-table-column prop="areaname" label="区域" width="80"></el-table-column>
+        <el-table-column prop="taskno" label="任务单号" width="120"></el-table-column>
         <el-table-column prop="demandname" label="需求名称" width="120"></el-table-column>
         <el-table-column prop="demandno" label="需求单号" width=""></el-table-column>
         <el-table-column prop="demandbatch" label="需求批次" width=""></el-table-column>
@@ -103,7 +109,7 @@
           <template slot-scope="scope">
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleSend(scope.$index, scope.row)">派发</el-button>
             <el-button type="text" size="mini" @click="handleWrite(scope.$index, scope.row, 2)">详情</el-button>
-            <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>
+            <!--<el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>-->
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑项目</el-button>
             <el-button v-if="!scope.row.taskstatename" type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -187,7 +193,13 @@
                 <!--<td><div class="cell"></div></td>-->
                 <td><div class="cell"></div></td>
               </tr>
-              <tr class="el-table__row">
+              <tr v-if="WriteState !== 0" class="el-table__row">
+                <td><div class="cell">任务单号</div></td>
+                <td><div class="cell">{{WriteData.taskno}}</div></td>
+                <!--<td><div class="cell"></div></td>-->
+                <td><div class="cell"></div></td>
+              </tr>
+              <!--<tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>需求单号</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
                   <el-form-item class="form-item" prop="demandno">
@@ -195,9 +207,9 @@
                   </el-form-item>
                 </div></td>
                 <td v-show="WriteState == 2"><div class="cell">{{WriteData.demandno}}</div></td>
-                <!--<td><div class="cell"></div></td>-->
+                &lt;!&ndash;<td><div class="cell"></div></td>&ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               <tr class="el-table__row">
                 <td><div class="cell"><i class="must">*</i>需求名称</div></td>
                 <td v-show="WriteState !== 2"><div class="cell">
@@ -417,7 +429,8 @@ export default {
         starttime: '',
         endtime: '',
         demandbatch: '',
-        resourcecode: ''
+        resourcecode: '',
+        taskno: ''
       },
       WriteData: {
         AreaList: [],
@@ -843,7 +856,6 @@ export default {
       this.WriteData.recentlyresource_id = ''
     },
     handleExport (index, row) {
-      console.log(row)
       this.$confirm(`您确定要导出项目资料吗？`, '提示', {
         type: 'info'
       }).then(() => {

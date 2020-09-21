@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-loading="ExportLoading" element-loading-text="正在导出,请等待！" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query">
         <el-row>
@@ -57,6 +57,13 @@
                   <el-input v-model="Query.taskno" placeholder="请输入任务单号" @keyup.enter.native="getMore(1)"></el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item label="建站方式：">
+                  <el-select class="searchSelect" v-model="Query.constructionmode">
+                    <el-option v-for="i in DicList.constructionmode" :key="i.value" :label="i.text" :value="i.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-col>
           <el-col :span="6">
@@ -71,6 +78,7 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
+            <el-button @click="BatchExport" type="success" icon="el-icon-plus">批量导出项目明细</el-button>
           </div>
         </el-col>
       </el-row>
@@ -93,7 +101,7 @@
         <el-table-column prop="" label="操作" width="150">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-            <el-button v-if="scope.row.constructionmode === 1" type="text" size="mini" @click="handleWrite(1,scope.row)">编辑项目明细</el-button>
+            <el-button type="text" @click="handleExport(scope.$index, scope.row)" size="mini">导出项目资料</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -109,14 +117,15 @@
 </template>
 
 <script>
-import {GetPerformWebTaskList} from 'api/SurveyManagement'
+import {GetProjectList, ProjectDetailExcel} from 'api/SurveyManagement'
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import ImgBox from 'base/ImgBox'
 import {mapMutations} from 'vuex'
+import {reqURL, DictionaryInfoList} from 'api/api'
 
 export default {
-  name: 'MyProject',
+  name: 'CompletedProject',
   mixins: [GlobalRes],
   data () {
     return {
@@ -134,7 +143,8 @@ export default {
         endtime: '',
         demandbatch: '',
         resourcecode: '',
-        taskno: ''
+        taskno: '',
+        taskstate: 4
       },
       tableData: [],
       Loading: false,
@@ -144,14 +154,37 @@ export default {
       DicList: {
       },
       showWrite: false,
+      ExportLoading: false,
       WriteData: {},
       WriteState: 0 // 0为添加 1为编辑 2为详情
     }
   },
   activated () {
+    this.initDictionariesArray()
     this.getTable()
   },
   methods: {
+    initDictionariesArray () {
+      let arr = ['勘察建站方式', '建站模式', '勘察审核状态', '勘察运营商']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          this.DicList.models = res.data.filter(i => {
+            return i.type === '建站模式'
+          })
+          this.DicList.taskstate = res.data.filter(i => {
+            return i.type === '勘察审核状态'
+          })
+          this.DicList.constructionmode = res.data.filter(i => {
+            return i.type === '勘察建站方式'
+          })
+          this.DicList.rawoperator = res.data.filter(i => {
+            return i.type === '勘察运营商'
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     ResetQuery () {
       Object.assign(Object.assign(this.$data.Query, this.$options.data().Query))
       this.getTable()
@@ -161,7 +194,7 @@ export default {
     },
     getTable () {
       this.Loading = true
-      this.$axios.get(GetPerformWebTaskList, {params: Object.assign({}, this.Query, {
+      this.$axios.get(GetProjectList, {params: Object.assign({}, this.Query, {
         PageIndex: 1,
         PageSize: this.pageSize
       })}).then(res => {
@@ -179,7 +212,7 @@ export default {
     getMore (page) {
       this.currentPage = page
       this.Loading = true
-      this.$axios.get(GetPerformWebTaskList, {
+      this.$axios.get(GetProjectList, {
         params: Object.assign({}, this.Query, {
           PageIndex: page,
           PageSize: this.pageSize
@@ -196,22 +229,49 @@ export default {
         this.$message.error(err)
       })
     },
+    BatchExport () {
+      this.$confirm(`您确定要批量导出当前列表项目明细吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        this.ExportLoading = true
+        this.$axios.get(ProjectDetailExcel, {
+          params: Object.assign({}, this.Query)
+        }).then(res => {
+          this.ExportLoading = false
+          if (res.errorCode === '200') {
+            window.location.href = reqURL + '/' + res.msg
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => {
+          this.ExportLoading = false
+          this.$message.error(err)
+        })
+      })
+    },
+    handleExport (index, row) {
+      this.$confirm(`您确定要导出当前项目资料吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        window.location.href = reqURL + '/' + row.excelurl
+      })
+    },
     handleWrite (state, row) {
       let data = {
-        id: row.project_id,
+        id: row.id,
         state: state,
         taskstate: row.taskstatename,
-        from: 'MyProject'
+        from: 'CompletedProject'
       }
       this.setSurveyInfo(data)
       if (row.constructionmodename === '存量站') {
         this.$router.push({name: 'StockStation'})
-        this.$emit('handleChange', 'StockStation', '296a0c73-6a8a-450a-9e3e-f1ac571a695d')
-        this.setSurveyInfoType(3)
+        this.$emit('handleChange', 'StockStation', '68574cc1-6d88-4d03-a9c0-4493b0c0754b')
+        this.setSurveyInfoType(4)
       } else if (row.constructionmodename === '新建站') {
         this.$router.push({name: 'NewBuildStation'})
-        this.$emit('handleChange', 'NewBuildStation', '296a0c73-6a8a-450a-9e3e-f1ac571a695d')
-        this.setSurveyInfoType(3)
+        this.$emit('handleChange', 'NewBuildStation', '68574cc1-6d88-4d03-a9c0-4493b0c0754b')
+        this.setSurveyInfoType(4)
       }
     },
     changeSize (page) {
@@ -219,7 +279,7 @@ export default {
       this.getMore(this.currentPage)
     },
     ...mapMutations({
-      setSurveyInfo: 'SET_MYPROJECT_INFO',
+      setSurveyInfo: 'SET_COMPLETEDPROJECT_INFO',
       setSurveyInfoType: 'SET_SURVEYINFOTYPE'
     })
   },

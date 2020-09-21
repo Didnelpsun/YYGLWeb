@@ -150,6 +150,7 @@ export default {
     },
     // 重置按钮
     resetQueryForm () {
+      console.log(123)
       Object.assign(this.$data.query, this.$options.data().query)
       // Object.assign(this.$data.AreaList, this.$options.data().AreaList)
       this.getRoleList()

@@ -125,10 +125,12 @@ export default {
       let fileObj = param.file // 相当于input里取得的files
       let fd = new FormData()// FormData 对象
       fd.append('file', fileObj)// 文件对象
+      let timeout = parseInt(1800000)
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
-        }
+        },
+        timeout: timeout
       }
       this.ImportLoading = true
       this.$axios.post(this.uploadURL, fd, config).then((res) => {

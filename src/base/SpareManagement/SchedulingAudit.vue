@@ -58,12 +58,12 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">出库存放点</div></td>
-              <td><div class="cell">{{WriteData.depots}}</div></td>
+              <td><div class="cell">{{WriteData.outdepotname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">入库存放点 </div></td>
-              <td><div class="cell">{{WriteData.indepots}}</div></td>
+              <td><div class="cell">{{WriteData.indepotname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -98,7 +98,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>关联借用备件</div></td>
-              <td v-if="WriteData.isborrow"><div class="cell" @click="showisborrow">是</div></td>
+              <td v-if="WriteData.isborrow"><div class="cell" style="cursor: pointer" @click="showisborrow">是</div></td>
               <td v-if="!WriteData.isborrow"><div class="cell">否</div></td>
               <td></td>
             </tr>
@@ -137,8 +137,8 @@
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
    <div v-if="show">
-      <el-dialog top="1%" :visible.sync="show" title="借用备件详情" width="80%" :before-close="showClose">
-        <SelBorrowerDetails/>
+      <el-dialog top="1%" :visible.sync="show"  title="借用备件还件详情" width="80%" :before-close="showClose">
+        <SelBorrowerDetails ref="SelBorrowerDetails" :id="WriteData.alsorecordsid" @SelBorrowerDetails="showClose"/>
       </el-dialog>
     </div>
   </div>

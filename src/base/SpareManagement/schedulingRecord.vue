@@ -118,7 +118,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState==2">
               <td><div class="cell">审核状态</div></td>
-              <td><div class="cell">{{WriteData.outauditstatus===4? '通过' :'不通过'}}</div></td>
+              <td><div class="cell">{{WriteData.outauditstatus===4? '通过' :WriteData.outauditstatus===3?'不通过':WriteData.outauditstatus===2?"待审核" : ''}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>

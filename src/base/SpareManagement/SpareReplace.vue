@@ -99,7 +99,7 @@
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp} from 'api/BJGL'
+import {GetIdSpareTypList} from 'api/BJGL'
 import Details from 'base/SpareManagement/SpareReplaceDetail'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
@@ -243,22 +243,6 @@ export default {
           })
         } */
     }
-    /* handle2 (row) {
-        this.$confirm(`您确定要删除 ${row.code} 设备吗？`, '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$axios.delete(DeleteSpareTyp, {
-            params: {id: row.id}
-          }).then(res => {
-            if (res.errorCode === '200') {
-              this.getMore(this.currentPage)
-              this.$message.success('删除成功！')
-            } else {
-              this.$message.error(res.msg)
-            }
-          })
-        })
-      } */
 
   },
   components: {

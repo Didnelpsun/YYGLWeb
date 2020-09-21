@@ -82,7 +82,7 @@
                 <div v-if="WriteState == 2">{{WriteData.orgname}}</div>
                 <div v-if="WriteState !== 2" @click="orgidshow=true">
                   <el-form-item prop="orgname" class="form-item">
-                  <el-input v-model="WriteData.orgname" readonly placeholder="请填写存放点单位"></el-input>
+                  <el-input v-model="WriteData.orgname" readonly placeholder="请选择存放点单位"></el-input>
                   </el-form-item>
                 </div></div>
               </td>
@@ -281,6 +281,7 @@ export default {
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
       obj.areaid = obj.AreaList[2]
+      this.$forceUpdate()
     },
     setArea (list, key = 'csArea') {
       this.nodes = list
@@ -295,10 +296,8 @@ export default {
       return list
     },
     ResetWrite () {
-      Object.assign(this.$data.WriteData, this.$options.data().WriteData)
+      Object.assign(this.$data, this.$options.data.call(this))
       this.$refs.WriteForm.resetFields()
-      this.administratoridname = null
-      this.WriteData.reamrk = null
     },
     setWriteData (data) {
       this.WriteData = data[0]
@@ -351,7 +350,6 @@ export default {
           if (this.administratoridname === '') return this.$message.error('请选择存放点管理员！')
           return this.$message.error('请补全信息！')
         } else {
-          console.log(1)
           this.Loading = true
           this.$axios.post(Addwarehouse, this.WriteData).then(res => {
             this.Loading = false

@@ -39,6 +39,7 @@
           </el-col>
           <el-col :span="12">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleSpareparts(0)"  type="success" :disabled="Loading">上站</el-button>
               <el-button @click="handleSpareparts(1)"  type="success" :disabled="Loading" >替换</el-button>
               <el-button @click="handleSpareparts(2)"  type="success" :disabled="Loading" >点验</el-button>
@@ -103,14 +104,16 @@
         <SelectSpareconMode :istrue="true"  :sparetypeid="Query.sparepartstypeid" :sparemanufacturerid="Query.manufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>
       </el-dialog>
     </div>
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetsparepartsList, GetsparepartsidList, Deletespareparts} from 'api/BJGL'
+import {GetsparepartsList, GetsparepartsidList, Deletespareparts, sparepartsImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/Spareparts'
 import SpareCheck from 'base/SpareManagement/SpareCheck'
 import SpareReplace from 'base/SpareManagement/SpareReplace'
@@ -150,8 +153,15 @@ export default {
   activated () {
     this.getData1()
     this.getDic()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = sparepartsImport
+      this.$refs.ImportBox.fileName = '错误备件调度管理备件列表导入数据'
+    },
     sparetypeClose () { this.sparetypeShow = !this.sparetypeShow },
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
@@ -273,7 +283,8 @@ export default {
     SpareReplace,
     Selectsparetype,
     Selectmanufacturer,
-    SelectSpareconMode
+    SelectSpareconMode,
+    Import
   }
 }
 </script>

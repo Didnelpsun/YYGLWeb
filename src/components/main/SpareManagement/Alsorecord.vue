@@ -10,19 +10,19 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="sparepartstypeid" label="备件类型"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="manufacturerid" label="备件厂家"></el-table-column>
-        <el-table-column prop="sparemodelid" label="备件型号"></el-table-column>
-        <el-table-column prop="depotsid" label="存放点"></el-table-column>
+        <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
+        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
+        <el-table-column prop="depotsname" label="存放点"></el-table-column>
         <el-table-column prop="units" label="权属"></el-table-column>
-        <el-table-column prop="borrowerid" label="借用人"></el-table-column>
+        <el-table-column prop="borrowername" label="借用人"></el-table-column>
         <el-table-column prop="borrowtime" label="借用时间"></el-table-column>
         <el-table-column prop="alsocode" label="还件编码"></el-table-column>
-        <el-table-column prop="createtime" label="还件存放点"></el-table-column>
+        <el-table-column prop="alsodepotsname" label="还件存放点"></el-table-column>
         <el-table-column prop="alsounits" label="还件权属"></el-table-column>
         <el-table-column prop="alsopersontime" label="还件时间"></el-table-column>
-        <el-table-column prop="alsopersonid" label="还件人"></el-table-column>
+        <el-table-column prop="alsopersonname" label="还件人"></el-table-column>
        <!-- <el-table-column label="操作" width="140">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>

@@ -42,11 +42,13 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell">维修厂家</div></td>
+              <td><div class="cell"><i class="must">*</i>维修厂家</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.manufacturername}}</div>
                 <div v-if="WriteState !== 2" @click="manufactureridShow=true">
+                  <el-form-item class="form-item" prop="manufacturername">
                   <el-input v-model="WriteData.manufacturername" readonly placeholder="请选择维修厂家"></el-input>
+                  </el-form-item>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -100,10 +102,18 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>维修期</div></td>
+              <td><div class="cell"><i class="must">*</i>维修时间</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
-                <el-form-item class="form-item" prop="maintenancettime">
-                  <el-input v-model="WriteData.maintenancettime" type="number"  placeholder="请填写维修期" clearable></el-input>
+                <el-form-item class="form-item" prop="maintenancettime"><!--
+                  <el-date-picker
+                    v-model="WriteData.maintenancettime"
+                    type="datetimerange"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+                  </el-date-picker>-->
+                  <el-date-picker v-model="WriteData.maintenancettime" type="datetime" format="yyyy-MM-dd HH:mm"   value-format="yyyy-MM-dd HH:mm" placeholder="请填写维修时间"></el-date-picker>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.maintenancettime}}</div></td>
@@ -114,7 +124,17 @@
               <td><div class="cell"><i class="must">*</i>保修期</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="warrantyperiod">
-                  <el-input v-model="WriteData.warrantyperiod" type="number"  placeholder="请填写保修期" clearable></el-input>
+                 <!-- <el-date-picker
+                    v-model="WriteData.warrantyperiod"
+                    type="datetimerange"
+                    format="yyyy-MM-dd dd"
+                    value-format="yyyy-MM-dd"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :default-time="['12:00:00']">
+                  </el-date-picker>-->
+                  <el-input v-model="WriteData.warrantyperiod" placeholder="请填写保修期"></el-input>
+                <!--  <el-date-picker v-model="WriteData.warrantyperiod" type="datetime" format="yyyy-MM-dd HH:mm"   value-format="yyyy-MM-dd HH:mm" placeholder="请填写保修期"></el-date-picker>-->
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.warrantyperiod}}</div></td>
@@ -166,7 +186,7 @@ import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
 import SelAfterSaleContract from 'base/SpareManagement/SelAfterSaleContract'
-
+import {valiNumbers} from 'common/js/validata'
 import {Editmaintenanceconfig, Addmaintenanceconfig} from 'api/BJGL'
 import {AreaList} from 'api/api'
 export default {
@@ -212,6 +232,8 @@ export default {
           }
         }
       },
+      warrantyperiod: null,
+      maintenancettime: null,
       manufactureridShow: false,
       sparetypeShow: false,
       sparemodelShow: false,
@@ -234,20 +256,20 @@ export default {
 
       },
       Rules: {
-        price: [{ required: true, message: '请填写维修单价', trigger: 'change' }],
+        price: [{ required: true, message: '请填写维修单价', trigger: 'change' },
+          {validator: valiNumbers, trigger: 'change'}],
         typename: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
         sparemodel: [{ required: true, message: '请选择备件型号', trigger: 'change' }],
         warrantyperiod: [{ required: true, message: '请填写保修期', trigger: 'change' }],
         maintenancettime: [{ required: true, message: '请填写维修期', trigger: 'change' }],
-        name: [{ required: true, message: '请选择厂家', trigger: 'change' }]
-
+        name: [{ required: true, message: '请选择备件厂家', trigger: 'change' }],
+        manufacturername: [{ required: true, message: '请选择维修厂家', trigger: 'change' }]
       }
     }
   },
 
   methods: {
     changecityArea (obj) {
-      // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
     },
@@ -314,6 +336,7 @@ export default {
       this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali || this.WriteData.AreaList.length === 0) {
           if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
+          if (msg.price) { return this.$message(msg.price[0].message) }
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true

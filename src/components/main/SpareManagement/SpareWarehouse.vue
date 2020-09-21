@@ -35,6 +35,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -73,15 +74,16 @@
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="Details"></Details>
 
     </div>
-
+    <Import ref="ImportBox" @fatherGetData="getMore(1)"></Import>
   </div>
 </template>
 
 <script>
+import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
 import {DictionaryInfoList} from 'api/api'
-import {GetwarehouseList, GetwarehouseIdList, Deletewarehouse} from 'api/BJGL'
+import {GetwarehouseList, GetwarehouseIdList, Deletewarehouse, warehouseImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/SpareWarehouse'
 export default {
   name: 'SpareWarehouse',
@@ -113,8 +115,15 @@ export default {
   activated () {
     this.getData1()
     this.getDic()
+    this.$refs.ImportBox.searchName = ''
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = warehouseImport
+      this.$refs.ImportBox.fileName = '错误备件存放点详情导入数据'
+    },
     Showwarehousetype (val) {
       val = parseInt(val.warehousetype)
       return val === 1 ? '市公司备件库' : val === 2 ? '市公司维修库' : val === 3 ? '市公司报废库' : '工作备件库'
@@ -209,7 +218,8 @@ export default {
   },
   components: {
     layuiTitle,
-    Details
+    Details,
+    Import
   }
 }
 </script>

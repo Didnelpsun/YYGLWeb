@@ -69,6 +69,19 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--任务单号-->
+            <tr class="el-table__row">
+              <td>
+                <div class="cell">任务单号</div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div>{{tableData2.taskno}}</div>
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
             <!--需求单号-->
             <tr class="el-table__row">
               <td>
@@ -1182,6 +1195,17 @@
               <!-- <td><div class="cell"></div></td> -->
               <td><div class="cell"></div></td>
             </tr>
+            <!--电表照片-->
+            <tr class="el-table__row">
+              <td><div class="cell">电表照片</div></td>
+              <td>
+                <div class="cell" @click="OpenImgBox('electricmeterimg')">
+                  {{formatString(tableData.electricmeterimg)}}
+                </div>
+              </td>
+              <!-- <td><div class="cell"></div></td> -->
+              <td><div class="cell"></div></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -1193,23 +1217,39 @@
       <el-button v-if="WriteState === 1" @click="SubmitAuit" type="primary" icon="el-icon-back">提交审核</el-button>
       <el-button v-if="WriteState === 1" @click="SubmitSave" type="primary" icon="el-icon-back">保存</el-button>
       <el-button @click="closeWrite" type="primary" icon="el-icon-back">返回</el-button>
-      <el-button type="warning" @click="subAuit(2)" v-if="SurveyInfoType===2">审核打回</el-button>
+      <el-button type="warning" @click="subAuit(2)" v-if="SurveyInfoType===2">审核退回</el-button>
       <el-button type="success" @click="subAuit(1)" v-if="SurveyInfoType===2">审核通过</el-button>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
     <EnvironmentImgBox ref="EnvironmentImgBox"></EnvironmentImgBox>
-    <el-dialog title="审核" :visible.sync="auitShow" center width="30%" @close="auitClose">
+    <el-dialog title="审核退回" v-loading="dialogLoading" :visible.sync="auitShow" center width="30%" @close="auitClose">
       <el-form :data="auitData">
         <el-row style="margin-bottom:15px">
-          <el-col :span="6">项目名称</el-col>
-          <el-col :span="16">{{tableData2.resourcename}}</el-col>
+          <el-form-item label="审核意见：">
+            <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见，退回必填" v-model="auitData.remark"></el-input>
+          </el-form-item>
         </el-row>
-        <el-row style="margin-bottom:15px">
-          <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见，打回必填" v-model="auitData.remark"></el-input>
-        </el-row>
-        <el-row type="flex" justify="end">
+        <el-row type="flex" justify="center">
           <el-button type="success" @click="handleAuit(2)">提交</el-button>
           <el-button type="primary" @click="auitShow = false">返回</el-button>
+        </el-row>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="审核通过" v-loading="dialogLoading" :visible.sync="auitPassShow" center width="30%" @close="auitPassClose">
+      <el-form :data="auitData">
+        <el-row style="margin-bottom:15px">
+          <el-form-item label="需求单号：" v-if="tableData2.taskstatename === '地市审核'">
+            <el-input v-model="auitData.demandno" placeholder="请输入需求单号"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row style="margin-bottom:15px">
+          <el-form-item label="审核意见：">
+            <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入审核意见，退回必填" v-model="auitData.remark"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row type="flex" justify="center">
+          <el-button type="success" @click="handleAuit(1)">提交</el-button>
+          <el-button type="primary" @click="auitPassShow = false">返回</el-button>
         </el-row>
       </el-form>
     </el-dialog>
@@ -1233,7 +1273,7 @@ import layuiTitle from 'base/layui-title'
 import {GlobalRes} from 'common/js/mixins'
 
 export default {
-  name: 'ReservepoverDe',
+  name: 'NewBuildStationDe',
   mixins: [GlobalRes],
   data () {
     return {
@@ -1382,7 +1422,8 @@ export default {
         environment: [],
         housingconstruction: [],
         roofing: [],
-        sketch: []
+        sketch: [],
+        electricmeterimg: []
       },
       Rules1: {
         resourceaddress: [
@@ -1516,10 +1557,13 @@ export default {
       },
       // 审核弹窗
       auitShow: false,
+      auitPassShow: false,
+      dialogLoading: false,
       // 审核数据
       auitData: {
         taskid: '',
-        remark: ''
+        remark: '',
+        demandno: ''
       }
     }
   },
@@ -1530,6 +1574,8 @@ export default {
       this.SurveyInfo = this.TaskSurveyInfo
     } else if (this.SurveyInfoType === 3) {
       this.SurveyInfo = this.MyProject
+    } else if (this.SurveyInfoType === 4) {
+      this.SurveyInfo = this.CompletedProject
     }
     this.WriteState = this.SurveyInfo.state
     this.ViewTabIndex = '0'
@@ -1645,6 +1691,8 @@ export default {
       this.tableData.housingconstruction = this.tableData.housingconstruction.filter(i => i.url)
       this.tableData.roofing = this.tableData.roofing.filter(i => i.url)
       this.tableData.sketch = this.tableData.sketch.filter(i => i.url)
+      this.tableData.electricmeterimg = this.tableData.electricmeterimg.filter(i => i.url)
+      this.tableData.demanddistance = this.tableData.demanddistance === '请选择经纬度后计算' ? null : this.tableData.demanddistance
       this.$axios.put(UpdateNewResourceCensus, this.tableData).then(res => {
         this.WriteLoading = false
         if (res.errorCode === '200') {
@@ -1675,6 +1723,8 @@ export default {
       this.tableData.housingconstruction = this.tableData.housingconstruction.filter(i => i.url)
       this.tableData.roofing = this.tableData.roofing.filter(i => i.url)
       this.tableData.sketch = this.tableData.sketch.filter(i => i.url)
+      this.tableData.electricmeterimg = this.tableData.electricmeterimg.filter(i => i.url)
+      this.tableData.demanddistance = this.tableData.demanddistance === '请选择经纬度后计算' ? null : this.tableData.demanddistance
       return this.$axios.put(UpdateNewResourceCensus, this.tableData).then((res) => {
         return Promise.resolve(res)
       })
@@ -1837,6 +1887,26 @@ export default {
           }
           this.$refs.ImgBox.SetData('勘察草图', 'sketch', this.tableData.sketch, true)
           break
+        case 'electricmeterimg':
+          if (this.WriteState === 1) {
+            this.getImgTitle('电表照片').then((res) => {
+              if (res.data.total) {
+                res.data.list.forEach(item => {
+                  if (!this.tableData.electricmeterimg.filter(it => it.title === item.title).length) {
+                    const obj = {
+                      field_name: 'electricmeterimg',
+                      remarks: '',
+                      title: item.title,
+                      url: ''
+                    }
+                    this.tableData.electricmeterimg.push(obj)
+                  }
+                })
+              }
+            })
+          }
+          this.$refs.ImgBox.SetData('电表照片', 'electricmeterimg', this.tableData.electricmeterimg, true)
+          break
       }
       this.$refs.ImgBox.Open()
       this.WriteState === 2 ? this.$refs.ImgBox.Flag = true : this.$refs.ImgBox.Flag = false
@@ -1860,6 +1930,9 @@ export default {
       } else if (this.SurveyInfo.from === 'MyProject') {
         this.$router.push({name: 'MyProject'})
         this.$emit('handleChange', 'MyProject', '296a0c73-6a8a-450a-9e3e-f1ac571a695d')
+      } else if (this.SurveyInfo.from === 'CompletedProject') {
+        this.$router.push({name: 'CompletedProject'})
+        this.$emit('handleChange', 'CompletedProject', '68574cc1-6d88-4d03-a9c0-4493b0c0754b')
       }
     },
     subAuit (s) {
@@ -1869,25 +1942,30 @@ export default {
       if (s === 2) {
         this.auitShow = true
       } else {
-        this.$confirm('您确认要通过审核吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.handleAuit(s)
-        })
+        this.auitPassShow = true
       }
     },
     handleAuit (state) {
       if (!this.auitData.remark && state === 2) return this.$message.warning('请输入审核意见')
+      if (!this.auitData.demandno && state === 1 && this.tableData2.taskstatename === '地市审核') return this.$message.warning('请输入需求单号')
+      this.dialogLoading = true
       this.$axios.get(AuitTask, {
         params: {
           taskid: this.auitData.taskid,
           state: state,
-          remark: this.auitData.remark
+          remark: this.auitData.remark,
+          demandno: this.auitData.demandno
         }
       }).then(res => {
+        this.dialogLoading = false
         if (res.errorCode === '200') {
-          state === 1 ? this.$message.success('审核成功') : this.$message.success('打回成功')
-          this.auitShow = false
+          if (state === 1) {
+            this.$message.success('审核成功')
+            this.auitPassShow = false
+          } else {
+            this.$message.success('退回成功')
+            this.auitShow = false
+          }
           this.closeWrite()
         } else {
           this.$message.warning(res.msg)
@@ -1895,6 +1973,10 @@ export default {
       })
     },
     auitClose () {
+      this.auitData.remark = ''
+    },
+    auitPassClose () {
+      this.auitData.demandno = ''
       this.auitData.remark = ''
     },
     formatString (val) {
@@ -1961,7 +2043,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType', 'MyProject'])
+    ...mapGetters(['ProjectSurveyInfo', 'TaskSurveyInfo', 'SurveyInfoType', 'MyProject', 'CompletedProject'])
   },
   watch: {
     SurveyInfoType (newd, old) {
@@ -1972,6 +2054,8 @@ export default {
           this.SurveyInfo = this.TaskSurveyInfo
         } else if (this.SurveyInfoType === 3) {
           this.SurveyInfo = this.MyProject
+        } else if (this.SurveyInfoType === 4) {
+          this.SurveyInfo = this.CompletedProject
         }
         this.ViewTabIndex = '0'
         this.getTableData()

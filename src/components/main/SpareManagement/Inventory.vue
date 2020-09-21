@@ -140,6 +140,7 @@ export default {
     handleWrite (state, row) {
       this.WriteState = state
       this.showWrite = true
+      this.$refs.Details.open(state)
       if (state) {
         this.$refs.Details.Loading = true
         this.$axios.get(GetIdInventoryTaskList, {

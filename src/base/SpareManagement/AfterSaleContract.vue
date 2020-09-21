@@ -35,7 +35,7 @@
               <td><div class="cell">城市</div></td>
               <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader :key="key" v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader :key="key" v-model="WriteData.AreaList"  placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -45,7 +45,7 @@
               <td><div class="cell">厂家编码</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="code">
-                  <el-input v-model="WriteData.code"  placeholder="请填写厂家编码" clearable></el-input>
+                  <el-input v-model="WriteData.code"   @input="update" placeholder="请填写厂家编码" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.code}}</div></td>
@@ -56,7 +56,7 @@
               <td><div class="cell"><i class="must">*</i>厂家名称</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="name">
-                  <el-input v-model="WriteData.name"  placeholder="请填写厂家名称" clearable></el-input>
+                  <el-input v-model="WriteData.name"   @input="update" placeholder="请填写厂家名称" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.name}}</div></td>
@@ -67,7 +67,7 @@
               <td><div class="cell"><i class="must">*</i>合同编号</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="contractno">
-                  <el-input v-model="WriteData.contractno"  placeholder="请填写合同编号" clearable></el-input>
+                  <el-input v-model="WriteData.contractno"   @input="update" placeholder="请填写合同编号" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.contractno}}</div></td>
@@ -78,7 +78,7 @@
               <td><div class="cell"><i class="must">*</i>合同年度</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item label-width="0" class="form-item" prop="year">
-                  <el-input v-model="WriteData.year"  placeholder="请填写合同年度"></el-input>
+                  <el-input v-model="WriteData.year"  @input="update" placeholder="请填写合同年度"></el-input>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.year}}</div></td>
@@ -116,10 +116,10 @@
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>管理员姓名</div></td>
               <td><div class="cell">
-                <div v-if="WriteState == 2">{{WriteData.administratorname}}</div>
+                <div v-if="WriteState == 2">{{administratorname}}</div>
                 <div v-if="WriteState !== 2" @click="administratorShow=true">
-                  <el-form-item prop="administratorname" class="form-item">
-                  <el-input v-model="WriteData.administratorname" readonly placeholder="请选择管理员联系电话"></el-input>
+                  <el-form-item  class="form-item">
+                  <el-input v-model="administratorname" readonly placeholder="请选择管理员联系电话"></el-input>
                   </el-form-item>
                 </div></div>
               </td>
@@ -216,6 +216,7 @@ export default {
         }
       },
       key: 1,
+      administratorname: null,
       administratorShow: false,
       isShow: false,
       Loading: false,
@@ -230,19 +231,22 @@ export default {
       },
       Rules: {
         year: [{ required: true, message: '请填入合同年度', trigger: 'change' },
-          { type: 'number', message: '必须为数字类型' }],
+          { type: 'number', message: '合同年度内容必须填入数字' }],
         code: [{ required: true, message: '请填入厂家编码', trigger: 'change' }],
         name: [{ required: true, message: '请填入厂家名称', trigger: 'change' }],
-        contractno: [{ required: true, message: '请填入合同编号', trigger: 'change' }],
-        administrator: [{ required: true, message: '请选择负责人', trigger: 'blur' }]
+        contractno: [{ required: true, message: '请填入合同编号', trigger: 'change' }]
+
       }
     }
   },
 
   methods: {
+    update () {
+      this.$forceUpdate()
+    },
     Chooseusr (id, name, phone) {
       this.administratorShow = false
-      this.WriteData.administratorname = name
+      this.administratorname = name
       this.WriteData.phonenum = phone
       this.WriteData.administrator = id
     },
@@ -257,6 +261,7 @@ export default {
       // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
+      this.$forceUpdate()
     },
     _normalizeCityAreaLevel (list) {
       for (let i in list) {
@@ -269,7 +274,7 @@ export default {
       this.$refs.WriteForm.resetFields()
       this.ImgList1 = []
       this.WriteData.phonenum = ''
-      this.WriteData.administratorname = ''
+      this.administratorname = null
     },
     setWriteData (data) {
       //   console.log(data)
@@ -281,6 +286,7 @@ export default {
       if (parseInt(this.WriteState) === 2) {
         this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'
       }
+      this.administratorname = this.WriteData.administratorname
     },
     setImgList (list) {
       if (list === null) return
@@ -297,14 +303,20 @@ export default {
       this.$emit('fatherClose')
     },
     SubWrite () {
-      this.WriteData.year = parseInt(this.WriteData.year)
+      if (this.WriteData.year) {
+        this.WriteData.year = parseInt(this.WriteData.year)
+      }
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali || this.ImgList1.length === 0) {
+        if (!vali || this.ImgList1.length === 0 || this.administratorname === null) {
           if (this.ImgList1.length === 0) return this.$message.warning('请上传合同照片')
+          if (this.administratorname === null) return this.$message.warning('请选择管理员')
+          if (msg.year) {
+            return this.$message.error(msg.year[0].message)
+          }
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
