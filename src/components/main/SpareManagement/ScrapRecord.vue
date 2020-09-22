@@ -5,19 +5,19 @@
         <p class="SearchResult">查询结果</p>
       </el-col>
       <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
-        <el-table-column label="序号" width="50">
+        <el-table-column label="序号" width="45">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
-        <el-table-column prop="cityname" label="地市"></el-table-column>
-        <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="sparepartstypeid" label="备件类型"></el-table-column>
+        <el-table-column prop="cityname"  label="地市"></el-table-column>
+        <el-table-column prop="areaname" width="70px" label="区域"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="manufacturerid" label="备件厂家"></el-table-column>
-        <el-table-column prop="sparemodelid" label="备件型号"></el-table-column>
+        <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
+        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
         <el-table-column prop="assetsencoding" label="资产编码"></el-table-column>
         <el-table-column prop="warrantycode" label="质保编码"></el-table-column>
-        <el-table-column prop="baomaintenancetime" label="报废时间"></el-table-column>
-        <el-table-column prop="repairuserid" label="报废人"></el-table-column>
+        <el-table-column prop="applicanttime" label="报废时间"></el-table-column>
+        <el-table-column prop="realityname" width="70px" label="报废人"></el-table-column>
         <!-- <el-table-column label="操作" width="140">
            <template slot-scope="scope">
              <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>

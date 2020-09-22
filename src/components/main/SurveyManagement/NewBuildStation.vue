@@ -937,7 +937,7 @@
             <tbody>
             <!--拟建机房类型-->
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>建站模式</div></td>
+              <td><div class="cell"><i class="must">*</i>拟建机房类型</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="roomtype">
                   <el-select v-model="tableData.roomtype">

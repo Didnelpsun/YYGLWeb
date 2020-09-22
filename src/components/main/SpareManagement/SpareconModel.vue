@@ -30,6 +30,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
               <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
@@ -77,9 +78,10 @@
 
 <script>
 import Import from 'base/Import'
+import {exportMethod} from 'api/YDSZ'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig, SpareConfigImport} from 'api/BJGL'
+import {GetSpareConfigList, GetSpareConfigIdList, DeleteSpareConfig, SpareConfigImport, SpareConfigExport} from 'api/BJGL'
 import Details from 'base/SpareManagement/SpareconModel'
 import Selsparetypeid from 'base/SpareManagement/Selsparetypeid'
 export default {
@@ -110,6 +112,19 @@ export default {
     this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'post',
+          url: SpareConfigExport,
+          fileName: '备件型号',
+          data: this.Query.sparetypeid
+        }
+        exportMethod(myObj)
+      })
+    },
     showImport () {
       this.$refs.ImportBox.Open()
       this.$refs.ImportBox.uploadURL = SpareConfigImport

@@ -7,7 +7,7 @@ export const DeleteSpareTyp = `${reqURL}/BJGL/SpareType/DeleteSpareTyp` // 删�
 export const EditSpareTyp = `${reqURL}/BJGL/SpareType/EditSpareTyp` // 修改备件类型
 export const AddSpareTyp = `${reqURL}/BJGL/SpareType/AddSpareTyp` // 添加备件类型
 export const SpareTypeImport = `${reqURL}/BJGL/SpareType/ImportBBUExcel` // 备件类型列表导入
-
+export const SpareTypeExport = `${reqURL}/BJGL/SpareType/ExportExcel` // 备件类型列表导出
 // 备件型号列表
 export const GetSpareConfigList = `${reqURL}/BJGL/SpareConfig/GetSpareConfigList` // 获取备件型号列表
 export const DeleteSpareConfig = `${reqURL}/BJGL/SpareConfig/DeleteSpareConfig` // 删除备件型号
@@ -15,6 +15,7 @@ export const EditSpareConfig = `${reqURL}/BJGL/SpareConfig/EditSpareConfig` // �
 export const AddSpareConfig = `${reqURL}/BJGL/SpareConfig/AddSpareConfig` // 添加备件型号
 export const GetSpareConfigIdList = `${reqURL}/BJGL/SpareConfig/GetSpareConfigIdList` // 根据id备件型号详情
 export const SpareConfigImport = `${reqURL}/BJGL/SpareConfig/ImportBBUExcel` // 备件型号列表导入
+export const SpareConfigExport = `${reqURL}/BJGL/SpareConfig/ExportExcel` // 备件型号列表导出
 
 // 备件厂家
 export const Addsparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufacturerSevice/Addsparepartsmanufacturer` // 添加备件厂家
@@ -23,6 +24,7 @@ export const Deletesparepartsmanufacturer = `${reqURL}/BJGL/sparepartsmanufactur
 export const GetsparepartsmanufacturerList = `${reqURL}/BJGL/sparepartsmanufacturerSevice/GetsparepartsmanufacturerList` //  获取备件厂家列表
 export const GetIdsparepartsmanufacturerList = `${reqURL}/BJGL/sparepartsmanufacturerSevice/GetIdsparepartsmanufacturerList` //  根据id备件厂家详情
 export const manufacturerImport = `${reqURL}/BJGL/sparepartsmanufacturerSevice/ImportBBUExcel` //  备件厂家列表导入
+export const manufacturerExport = `${reqURL}/BJGL/sparepartsmanufacturerSevice/ExportExcel` //  备件厂家列表导出
 // 备件存放点
 export const Addwarehouse = `${reqURL}/BJGL/warehouseSevcie/Addwarehouse` // 添加存放点
 export const Editwarehouse = `${reqURL}/BJGL/warehouseSevcie/Editwarehouse` // 修改存放点
@@ -30,10 +32,11 @@ export const Deletewarehouse = `${reqURL}/BJGL/warehouseSevcie/Deletewarehouse` 
 export const GetwarehouseList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseList` //  获取存放点列表
 export const GetwarehouseIdList = `${reqURL}/BJGL/warehouseSevcie/GetwarehouseIdList` //  根据id获取存放点
 export const warehouseImport = `${reqURL}/BJGL/warehouseSevcie/ImportBBUExcel` //  存放点列表导入
+export const warehouseExport = `${reqURL}/BJGL/warehouseSevcie/ExportExcel` //  存放点列表导出
 // 备件管理维修厂家(售后合同)
 export const Addmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Addmanufacturerinfo` // 添加备件管理维修厂家
 export const Editmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Editmanufacturerinfo` // 编辑备件管理维修厂家
-export const Deletemanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Deletemanufacturerinfo` // 删除编辑备件管理维修厂家
+export const Deletemanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Deletemanufacturerinfo` // 删除备件管理维修厂家
 export const Getmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Getmanufacturerinfo` // 获取备件管理维修厂家
 export const Getidmanufacturerinfo = `${reqURL}/BJGL/manufacturerinfoServcie/Getidmanufacturerinfo` // 根据id获取详情
 export const manufacturerinfoImport = `${reqURL}/BJGL/manufacturerinfoServcie/ImportBBUExcel` // 导入
@@ -80,7 +83,7 @@ export const Addinventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/Addinv
 export const GetInventoryrecords = `${reqURL}/BJGL/inventoryrecordsSevice/GetInventoryrecords` // 获取盘存
 // 还件记录
 export const GetAlsorecord = `${reqURL}/BJGL/AlsorecordSevcie/GetAlsorecord` // 还件记录
-export const Getdetails = `${reqURL}/BJGL/AlsorecordSevcie/Getdetails` // 还件记录
+export const Getdetails = `${reqURL}/BJGL/AlsorecordSevcie/Getdetails` // 还件详情
 // 维修记录
 export const Maintenancerecord = `${reqURL}/BJGL/maintenance/Maintenancerecord` // 维修记录
 // 报废记录

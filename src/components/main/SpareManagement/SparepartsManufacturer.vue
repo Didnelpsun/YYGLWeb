@@ -33,6 +33,7 @@
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
+              <el-button @click="handleExport" type="success" icon="el-icon-download">导出</el-button>
               <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
@@ -76,10 +77,11 @@
 
 <script>
 import Import from 'base/Import'
+import {exportMethod} from 'api/YDSZ'
 import { GlobalRes } from 'common/js/mixins'
 import {AreaList} from 'api/api'
 import layuiTitle from 'base/layui-title'
-import {GetsparepartsmanufacturerList, Deletesparepartsmanufacturer, GetIdsparepartsmanufacturerList, manufacturerImport} from 'api/BJGL'
+import {GetsparepartsmanufacturerList, Deletesparepartsmanufacturer, GetIdsparepartsmanufacturerList, manufacturerImport, manufacturerExport} from 'api/BJGL'
 import Details from 'base/SpareManagement/SparepartsManufacturer'
 export default {
   name: 'SparepartsManufacturer',
@@ -137,6 +139,19 @@ export default {
     this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    handleExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'post',
+          url: manufacturerExport,
+          fileName: '备件厂家',
+          data: null
+        }
+        exportMethod(myObj)
+      })
+    },
     showImport () {
       this.$refs.ImportBox.Open()
       this.$refs.ImportBox.uploadURL = manufacturerImport

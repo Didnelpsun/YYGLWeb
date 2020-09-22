@@ -5,6 +5,11 @@
         <!--选择器-->
         <el-col :span="18">
           <el-col :span="8">
+            <el-form-item label="区域：" label-width="80px">
+              <el-cascader v-model="query.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(query)" ref="csArea" clearable></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="厂家编码：">
               <el-input class="searchSelect" v-model="query.code" placeholder="请输入厂家编码" @keyup.enter.native="getTableData1More(1)"></el-input>
             </el-form-item>
@@ -52,7 +57,7 @@
 <script>
 import {GetsparepartsmanufacturerList} from 'api/BJGL'
 import { GlobalRes } from 'common/js/mixins'
-
+import {AreaList} from 'api/api'
 export default {
   name: 'SpareconModel',
   mixins: [GlobalRes],
@@ -71,9 +76,38 @@ export default {
     }
   },
   data () {
+    var _this = this
     return {
+      cityareaProps: {
+        lazy: true,
+        label: 'name',
+        value: 'id',
+        lazyLoad (node, resolve) {
+          if (!node.level) {
+            _this.$axios.post(AreaList, {parentid: null}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          } else {
+            if (!node.hasChildren) return resolve([])
+            _this.$axios.post(AreaList, {parentid: node.data.id}).then((res) => {
+              if (res.error) {
+                _this.$message.error(res.errorMessage)
+              } else {
+                resolve(_this._normalizeCityAreaLevel(res.data))
+              }
+            })
+          }
+        }
+      },
       // 查询相关属性
       query: {
+        AreaList: [],
+        provinceid: null,
+        cityid: null,
         name: '', // 厂家名称
         code: '' // 厂家编码
       },
@@ -106,6 +140,16 @@ export default {
         this.tableList = res.data.list
         this.pagination.total = res.data.total
       })
+    },
+    changecityArea (obj) {
+      obj.provinceid = obj.AreaList[0]
+      obj.cityid = obj.AreaList[1]
+    },
+    _normalizeCityAreaLevel (list) {
+      for (let i in list) {
+        if (list[i].leveltype >= 2) list[i].leaf = true
+      }
+      return list
     },
     // 分页处理函数
     handelSizeChange (page) {

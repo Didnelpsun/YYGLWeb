@@ -10,21 +10,21 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="typeencoding" label="备件类型"></el-table-column>
+        <el-table-column prop="typename" label="备件类型"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
-        <el-table-column prop="manufacturerid" label="备件厂家"></el-table-column>
-        <el-table-column prop="sparemodelid" label="备件型号"></el-table-column>
-        <el-table-column prop="baomaintenancetime" label="报修时间"></el-table-column>
-        <el-table-column prop="repairuserid" label="报修人"></el-table-column>
-        <el-table-column prop="songmaintenancetime" label="送修时间"></el-table-column>
-        <el-table-column prop="senduserid" label="送修人"></el-table-column>
-        <el-table-column prop="repairmanufacturerid" label="维修厂家"></el-table-column>
+        <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
+        <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
+        <el-table-column prop="" label="报修时间"></el-table-column>
+        <el-table-column prop="repairsusername" label="报修人"></el-table-column>
+        <el-table-column prop="" label="送修时间"></el-table-column>
+        <el-table-column prop="sendusername" label="送修人"></el-table-column>
+        <el-table-column prop="repairmanufacturername" label="维修厂家"></el-table-column>
         <el-table-column prop="maintenancetime" label="返修时间"></el-table-column>
         <el-table-column prop="maintenanceday" label="维修时长"></el-table-column>
         <el-table-column prop="maintenanceprice" label="维修价格"></el-table-column>
         <el-table-column prop="" label="保修期"></el-table-column>
-        <el-table-column prop="cityname" label="返修编码"></el-table-column>
-        <el-table-column prop="typename" label="返修状态"></el-table-column>
+        <el-table-column prop="" label="返修编码"></el-table-column>
+        <el-table-column prop="" label="返修状态"></el-table-column>
         <!-- <el-table-column label="操作" width="140">
            <template slot-scope="scope">
              <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>

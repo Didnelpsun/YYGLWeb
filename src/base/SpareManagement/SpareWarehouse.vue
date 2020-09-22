@@ -239,7 +239,7 @@ export default {
         ]
       },
       Rules: {
-        warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'blur' }],
+        warehousetype: [{ required: true, message: '请选择存放点类型', trigger: 'change' }],
         name: [{ required: true, message: '请填入存放点名称', trigger: 'change' }],
         code: [{ required: true, message: '请填入存放点编码', trigger: 'change' }]
       /*  orgname: [{ required: true, message: '请填入存放点单位', trigger: 'change' }] */

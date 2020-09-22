@@ -86,6 +86,8 @@ import BBUEquipment from 'components/main/YDSZ/BBUEquipment' // BBU设备管理
 import EquipmentManagement from 'components/main/YDSZ/EquipmentManagement' // 设备管理
 import ElectricityMeter from 'components/main/YDSZ/ElectricityMeter' // 电表管理
 import EquipmentComparison from 'components/main/YDSZ/EquipmentComparison' // 设备找站
+import SiteComparison from 'components/main/YDSZ/SiteComparison' // 站址找设备
+import DeviceCoordinate from 'components/main/YDSZ/DeviceCoordinate' // 设备坐标更新
 
 // 勘察管理
 import ProjectManagement from 'components/main/SurveyManagement/ProjectManagement' // 项目管理
@@ -494,6 +496,16 @@ export default new Router({
           path: 'EquipmentComparison',
           name: 'EquipmentComparison',
           component: EquipmentComparison
+        },
+        {
+          path: 'SiteComparison',
+          name: 'SiteComparison',
+          component: SiteComparison
+        },
+        {
+          path: 'DeviceCoordinate',
+          name: 'DeviceCoordinate',
+          component: DeviceCoordinate
         },
         {
           path: 'NYTaskStatistics',

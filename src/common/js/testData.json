@@ -70,22 +70,5 @@
       "id": 2
     }
   ],
-  "Redirect": {
-    "url": "/main/UserList",
-    "parentid": "5d3980fc-aaba-457a-8e81-db22517f1be7",
-    "parentname": null,
-    "parenticon": null,
-    "name": "系统用户",
-    "menutype": 2,
-    "sort": 8,
-    "enabled": true,
-    "resourceid": "c3047ce8-83ea-4afd-87e7-a127f5b2a96a",
-    "icon": "string",
-    "id": "0efafd67-7edc-446f-a067-28734a3102e9",
-    "createuserid": "",
-    "createtime": "2020-06-11 ",
-    "updateuserid": "6808eaf4-914f-4091-85a6-eee862c23b9b",
-    "updatetime": "2020-06-20 ",
-    "enable": true
-  }
+  "Redirect": {"id":"4edba85c-bab5-4be5-b72b-89392f6e4ac2","name":"统计","parentid":"6780903c-1269-4862-a0ed-9bc35d201489","menutype":2,"icon":"","sort":1,"url":"/main/Statistics"}
 }

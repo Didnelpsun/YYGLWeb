@@ -148,7 +148,6 @@ export default {
   activated () {
     // this.check(AreaList)
     this.getMore(1)
-    this.getState()
   },
   methods: {
     getState () {

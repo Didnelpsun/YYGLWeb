@@ -23,7 +23,7 @@
         </el-col>
         <el-col :span="6" style="margin-top: 11px">
           <div class="fr">
-            <el-button type="primary"  @click="SelChange">选择</el-button>
+            <el-button type="primary"  icon="el-icon-check" @click="SelChange">选择</el-button>
           </div>
         </el-col>
       </el-row>

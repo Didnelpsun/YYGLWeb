@@ -47,10 +47,19 @@ export const GetElectricMeterExcel = `${reqURL}/YDSZ/ElectricMeter/GetElectricMe
 
 // 设备找站
 export const ImportEquipmentExcel = `${reqURL}/YDSZ/YDSZEquipment/ImportEquipmentExcel` // 导入设备
+export const ImportSiteNetWorksExcel = `${reqURL}/YDSZ/YDSZEquipment/ImportSiteNetWorksExcel` // 导入网元站址
+export const ImportOrderSiteExcel = `${reqURL}/YDSZ/YDSZEquipment/ImportOrderSiteExcel` // 导入网元站址
+export const ImportStationlatitudeExcel = `${reqURL}/YDSZ/YDSZEquipment/ImportStationlatitudeExcel` // 导入逻辑站坐标
+export const EquipmenExport = `${reqURL}/YDSZ/YDSZEquipment/EquipmenExport` // 设备找站导出
 export const EquipmenTcontrastList = `${reqURL}/YDSZ/YDSZEquipment/EquipmenTcontrastList` // 逻辑站列表
 export const SitenetWorkList = `${reqURL}/YDSZ/YDSZEquipment/SitenetWorkList` // 网元列表
 export const OrderSiteList = `${reqURL}/YDSZ/YDSZEquipment/OrderSiteList` // 订单站址
-export const UpdateEquipmenTcontrast = `${reqURL}/YDSZ/YDSZEquipment/UpdateEquipmenTcontrast` // 批量修改逻辑站数据
+export const EmptyEquipmentSite = `${reqURL}/YDSZ/YDSZEquipment/EmptyEquipmentSite` // 设备清空站址
+export const UpdateEquipmenTcontrast = `${reqURL}/YDSZ/YDSZEquipment/UpdateEquipmenTcontrast` // 订单站址批量修改逻辑站数据
+export const UpdateSitenetWorkEquipmenTcontrast = `${reqURL}/YDSZ/YDSZEquipment/UpdateSitenetWorkEquipmenTcontrast` // 网元站址批量修改逻辑站数据
+export const GetScopeEquipmentList = `${reqURL}/YDSZ/YDSZEquipment/GetScopeEquipmentList` // 通过站址找对应范围的设备
+export const Modifycoordinates = `${reqURL}/YDSZ/YDSZEquipment/Modifycoordinates` // 批量修改坐标
+export const Removecoordinates = `${reqURL}/YDSZ/YDSZEquipment/Removecoordinates` // 清除坐标
 
 export function exportMethod (data) {
   axios({
