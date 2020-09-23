@@ -121,7 +121,7 @@
         <el-table-column prop="latitude" label="纬度"></el-table-column>
         <el-table-column prop="" label="操作" width="140" align="center">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="Delete(scope.$index)">剔除</el-button>
+            <el-button type="text" size="mini" @click="Delete(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

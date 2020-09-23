@@ -137,6 +137,7 @@ export default {
             this.fullscreenLoading = false
             this.Logging = false
             this.$message.error(res.errorMessage)
+            this.handleVailImg()
           }, 1000)
           return
         }

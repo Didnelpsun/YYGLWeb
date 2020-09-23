@@ -69,7 +69,7 @@
         <el-table-column prop="sitecode" label="站址编码" width="120"></el-table-column>
         <el-table-column prop="deviation" label="距离偏差(M)" width=""></el-table-column>
         <el-table-column prop="power" label="功率" width=""></el-table-column>
-        <el-table-column prop="ifmatches" label="是否匹配站址" :formatter="formatBoolean"></el-table-column>
+        <el-table-column prop="issite" label="是否匹配站址" :formatter="formatBoolean"></el-table-column>
         <el-table-column prop="" label="操作" width="60" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="FindSite(scope.row)">找站</el-button>
@@ -92,7 +92,12 @@
                 <el-input v-model.trim="MatchQuery.logicalstanding" placeholder="请填写逻辑站名称"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8" style="margin-left: 30px">
+            <el-col :span="8">
+              <el-form-item label="设备类型：">
+                <el-input v-model.trim="MatchQuery.devicetype" placeholder="请填写设备类型"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" style="margin-left: 30px">
               <el-button @click="getMatchList(3)" :disabled="Loading1" :icon="Loading1 ? 'el-icon-loading' : 'el-icon-search'">查询</el-button>
               <el-button @click="ResetMatchQuery" icon="el-icon-refresh">重置</el-button>
             </el-col>
@@ -108,10 +113,11 @@
         <el-table-column prop="areaid" label="区域" width=""></el-table-column>
         <el-table-column prop="deviation" label="距离偏差(M)" width=""></el-table-column>
         <el-table-column prop="power" label="功率" width=""></el-table-column>
-        <el-table-column prop="ifmatches" label="是否匹配站址" :formatter="formatBoolean"></el-table-column>
-        <el-table-column prop="" label="操作" width="90" align="center">
+        <el-table-column prop="issite" label="是否匹配站址" :formatter="formatBoolean"></el-table-column>
+        <el-table-column prop="" label="操作" width="130" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="deleteSite(scope.row)">清空站址</el-button>
+            <el-button type="text" size="mini" @click="Delete(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -141,6 +147,8 @@
           <el-table :data="orderSiteList" v-loading="Loading1">
             <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage[1] - 1) * pageSize[1] + 1}}</template></el-table-column>
             <el-table-column prop="logicalstanding" label="逻辑站"></el-table-column>
+            <el-table-column prop="operators" label="运营商"></el-table-column>
+            <el-table-column prop="orderstatus" label="订单状态"></el-table-column>
             <el-table-column prop="sitename" label="站址名称"></el-table-column>
             <el-table-column prop="sitecode" label="站址编码"></el-table-column>
             <el-table-column prop="productconfiguration" label="产品配置"></el-table-column>
@@ -232,7 +240,8 @@ export default {
         logicalstanding: ''
       },
       MatchQuery: {
-        logicalstanding: ''
+        logicalstanding: '',
+        devicetype: ''
       },
       showWrite: false,
       Loading1: false,
@@ -322,6 +331,7 @@ export default {
       }
       this.$axios.get(EquipmenTcontrastList, {params: Object.assign({}, {
         logicalstanding: val === 1 ? this.MatchQuery.logicalstanding : this.MatchLogicstandname,
+        devicetype: this.MatchQuery.devicetype,
         WhetherSite: true
       })}).then(res => {
         this.Loading = false
@@ -361,7 +371,7 @@ export default {
       this.getMore3(this.currentPage[2])
     },
     SubWrite (val) {
-      const arr = this.matchList.filter(item => !item.ifmatches)
+      const arr = this.matchList.filter(item => !item.issite)
       return this.$axios.put(val === 1 ? UpdateEquipmenTcontrast : UpdateSitenetWorkEquipmenTcontrast, arr, {
         params: {
           contrast: false
@@ -369,6 +379,9 @@ export default {
       }).then((res) => {
         return Promise.resolve(res)
       })
+    },
+    Delete (index) {
+      this.matchList.splice(index, 1)
     },
     deleteSite (row) {
       this.$confirm(`您确定要清空站址？`, '提示', {
@@ -390,7 +403,7 @@ export default {
     },
     orderSubmit (row) {
       this.matchList.forEach(item => {
-        if (!item.ifmatches) {
+        if (!item.issite) {
           item.matchingsource = '订单'
           item.matchkeywords = this.Keywords.logicalstanding
           item.sitecode = row.sitecode
@@ -411,7 +424,7 @@ export default {
     },
     networkSubmit (row) {
       this.matchList.forEach(item => {
-        if (!item.ifmatches) {
+        if (!item.issite) {
           item.matchingsource = '网元'
           item.matchkeywords = this.Keywords.logicalstanding
           item.sitecode = row.sitecode
@@ -503,7 +516,7 @@ export default {
       this.$refs.ImportBox.fileName = val === 1 ? '错误设备数据' : val === 2 ? '错误网元站址数据' : val === 3 ? '错误订单站址数据' : '错误逻辑站坐标数据'
     },
     formatBoolean (row) {
-      return row.ifmatches ? '是' : '否'
+      return row.issite ? '是' : '否'
     }
   },
   components: {

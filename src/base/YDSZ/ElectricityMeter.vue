@@ -184,7 +184,6 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import ResourceList from 'base/Resource/ResourceList'
-import {GetEnergyListAsync, AddOperatorSite, UpdateOperatorSite} from 'api/api'
 
 export default {
   mixins: [GlobalRes],
@@ -257,7 +256,7 @@ export default {
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.clearValidate()
       // this.setArea([])
-    },
+    }
   },
   components: {
     ResourceList

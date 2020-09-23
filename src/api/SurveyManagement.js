@@ -47,14 +47,14 @@ export const GetTaskElectricMeterInfo = `${reqURL}/ZYGL/ElectricMeter/GetTaskEle
 export const UpdateTaskElectricMeter = `${reqURL}/ZYGL/ElectricMeter/UpdateTaskElectricMeter` // 修改电表任务设备
 export const GetHiddenDangerList = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerList` // 获取隐患列表
 export const GetHiddenDangerInfo = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerInfo` // 获取隐患详情
+export const GetHiddenDangerExcel = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerExcel` // 隐患台账导出
 export const UpdateHiddenDanger = `${reqURL}/ZYGL/HiddenDanger/UpdateHiddenDanger` // 修改隐患详情
 export const AddHiddenDanger = `${reqURL}/ZYGL/HiddenDanger/AddHiddenDanger` // 添加隐患
-export const GetHiddenDangerExcel = `${reqURL}/ZYGL/HiddenDanger/GetHiddenDangerExcel` // 隐患台账导出
 export const GetMaintainList = `${reqURL}/ZYGL/Maintain/GetMaintainList` // 获取上站维护列表
 export const GetMaintainInfo = `${reqURL}/ZYGL/Maintain/GetMaintainInfo` // 获取上站维护详情
+export const GetMaintainExcel = `${reqURL}/ZYGL/Maintain/GetMaintainExcel` // 上站维护导出
 export const UpdateMaintain = `${reqURL}/ZYGL/Maintain/UpdateMaintain` // 修改上站维护详情
 export const AddMaintain = `${reqURL}/ZYGL/Maintain/AddMaintain` // 添加上站维护
-export const GetMaintainExcel = `${reqURL}/ZYGL/Maintain/GetMaintainExcel` // 上站维护导出
 export const GetTaskState = `${reqURL}/ZYGL/Task/GetTaskState` // 查看任务状态
 
 // 能源统计
