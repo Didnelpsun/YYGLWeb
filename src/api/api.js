@@ -1,4 +1,5 @@
-export let reqURL = 'http://111.47.173.162:8051'// 线上接口
+export let reqURL = 'http://111.47.173.162:8051'// 测试环境
+// export const reqURL = 'http://119.96.226.157:8004' // 正式环境
 // export const reqURL = 'http://192.163.0.162:8051' // 阮
 // export const reqURL = 'http://192.163.0.162:8051' // 赵
 // export const reqURL = 'http://localhost:5000'// 本地接口
@@ -7,7 +8,7 @@ export let reqURL = 'http://111.47.173.162:8051'// 线上接口
 // 赵
 // process.env.NODE_ENV === 'production' ? reqURL = 'http://111.47.173.162:8051' : reqURL = 'http://192.168.0.131:5000'
 // 阮
-// process.env.NODE_ENV === 'production' ? reqURL = 'http://192.168.0.50:8081' : reqURL = 'http://192.168.0.50:8081'
+process.env.NODE_ENV === 'production' ? reqURL = 'http://192.168.0.50:8081' : reqURL = 'http://192.168.0.50:8081'
 
 export const test = `${reqURL}`
 

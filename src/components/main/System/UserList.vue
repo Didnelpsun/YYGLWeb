@@ -75,12 +75,12 @@
               <el-input v-model="AddForm.realityname"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :sm="12" :md="9">
+          <el-col :sm="12" :md="9" v-if="userInfoType === 'add'">
             <el-form-item label="登录密码：" prop="password">
               <el-input v-model="AddForm.password" type="password"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :sm="12" :md="9">
+          <el-col :sm="12" :md="9" v-if="userInfoType === 'add'">
             <el-form-item label="确认密码：" prop="rpassword">
               <el-input v-model="AddForm.rpassword" type="password"></el-input>
             </el-form-item>

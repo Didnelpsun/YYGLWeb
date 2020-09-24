@@ -488,7 +488,7 @@ export default {
         this.$axios.post(AuthorizeRole, {
           targettype: 1,
           targetid: this.ViewRoleId,
-          resourceid: [row.id]
+          resourceid: [row.resourcesid]
         }).then((res) => {
           if (res.error) {
             this.$message.error(res.errorMessage)

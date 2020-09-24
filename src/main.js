@@ -53,7 +53,7 @@ axios.interceptors.response.use(response => {
         sessionStorage.clear()
         break
       case 409: //  没权限
-        ElementUI.Message.error('发生错误，请联系管理员！')
+        ElementUI.Message.error('没有操作权限，请联系管理员！')
         break
       case 404:
         ElementUI.Message.error('发生错误，请联系管理员！')

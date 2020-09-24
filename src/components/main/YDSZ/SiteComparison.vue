@@ -48,7 +48,7 @@
         <el-table-column prop="areaid" label="区域" width=""></el-table-column>
         <el-table-column prop="operators" label="运营商"></el-table-column>
         <el-table-column prop="operatorname" label="运营商站点名称" width=""></el-table-column>
-        <el-table-column prop="logicalstanding" label="逻辑站名称" width=""></el-table-column>
+        <el-table-column prop="logicalstanding" label="站址名称" width=""></el-table-column>
         <el-table-column prop="sitecode" label="站址编码" width="140"></el-table-column>
         <el-table-column prop="bbu" label="BBU数量"></el-table-column>
         <el-table-column prop="rru" label="RRU数量"></el-table-column>
