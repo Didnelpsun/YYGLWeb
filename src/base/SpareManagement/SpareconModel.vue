@@ -33,7 +33,7 @@
             <tbody>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>城市</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
                   <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
@@ -239,11 +239,12 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
-      this.setArea(this.WriteData.AreaList, 'csArea')
+      if (this.WriteState !== 2) {
+        this.WriteData.AreaList = [ data.provinceid, data.cityid ]
+        this.setArea(this.WriteData.AreaList, 'csArea')
+      }
     },
     WriteClose () {
-      this.setArea([])
       this.ResetWrite()
       this.$emit('fatherClose')
     },

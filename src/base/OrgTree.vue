@@ -58,9 +58,16 @@ export default {
         if (res.error) {
           this.$message.error(res.errorMessage)
         } else {
+          res.data.list = this.formatParentId(res.data.list)
           this.list = _normalizeTreeData(res.data.list, 'id', 'parentorg_id', 'child', null)
         }
       })
+    },
+    formatParentId (list) {
+      list.forEach(i => {
+        if (!list.find(j => j.id === i.parentorg_id)) i.parentorg_id = null
+      })
+      return list
     },
     CheckChange (data, check) {
       if (this.isRadio) { // 单选

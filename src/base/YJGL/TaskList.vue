@@ -34,10 +34,10 @@
                 </colgroup>
                 <tbody>
                   <tr class="el-table__row">
+                    <td><div class="cell">地市</div></td>
+                    <td><div class="cell">{{tableData1.towns}}</div></td>
                     <td><div class="cell">区域</div></td>
                     <td><div class="cell">{{tableData1.area}}</div></td>
-                    <td><div class="cell">乡镇</div></td>
-                    <td><div class="cell">{{tableData1.town}}</div></td>
                     <td><div class="cell">站点名称</div></td>
                     <td><div class="cell">{{tableData1.sitename}}</div></td>
                     <td><div class="cell">站点编码</div></td>
@@ -94,9 +94,9 @@
                     <td><div class="cell">{{tableData1.DaiWeicompany}}</div></td>
                     <td><div class="cell">网格</div></td>
                     <td><div class="cell"></div></td>
-                    <td><div class="cell">发电员</div></td>
+                    <td><div class="cell">发电员姓名</div></td>
                     <td><div class="cell"></div></td>
-                    <td><div class="cell">姓名电话</div></td>
+                    <td><div class="cell">电话</div></td>
                     <td><div class="cell"></div></td>
                   </tr>
                   <tr class="el-table__row">

@@ -143,7 +143,6 @@ export default {
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
       Sparepartstate: 0, // 0为上站 1为替换 2点验
-      WriteLoading: false,
       DicList: {storestate: []},
       sparetypeShow: false,
       SparemanufacturerShow: false,
@@ -204,7 +203,6 @@ export default {
         }
       })
     },
-    formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
       this.Loading = true
       this.$axios.get(GetsparepartsList, {

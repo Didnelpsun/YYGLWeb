@@ -60,7 +60,7 @@
               <td><div class="cell">备件数量</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="sparenumber">
-                  <el-input v-model="WriteData.sparenumber"   placeholder="请填写备件数量" clearable></el-input>
+                  <el-input v-model="WriteData.sparenumber" type="number"   placeholder="请填写备件数量" clearable></el-input>
                 </el-form-item>
               </div></td>
               <td v-show="WriteState == 2"><div class="cell">{{WriteData.sparenumber}}</div></td>
@@ -260,7 +260,7 @@ export default {
       WriteLoading: false,
       Rules: {
         /* depotsname: [{ required: true, message: '请选择存放点', trigger: 'change' }] */
-        sparenumber: [{type: 'number', message: '备件数量只允许输入数字'}]
+        sparenumber: [{required: 'true', message: '备件数量不能为空', trigger: 'change'}]
       },
       DicList: {}
     }

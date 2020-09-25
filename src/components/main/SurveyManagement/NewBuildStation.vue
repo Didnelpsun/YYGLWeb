@@ -1674,6 +1674,7 @@ export default {
       this.Loading = false
     },
     SubmitSave () {
+      if (!this.tableData.websitebuildingmode) return this.$message.error('请选择建站模式！')
       this.WriteLoading = true
       if (this.tableData.websitebuildingmode === 1) {
         if (this.tableData.newtower.length) {
@@ -1703,6 +1704,9 @@ export default {
           this.tableData.ownedoperator = this.tableData.ownedoperator ? this.tableData.ownedoperator.split(',') : this.tableData.ownedoperator.split('')
           this.$message.error(res.msg)
         }
+      }).catch(error => {
+        this.WriteLoading = false
+        console.log(error)
       })
     },
     SubmitSaveAsync () {
@@ -1970,6 +1974,9 @@ export default {
         } else {
           this.$message.warning(res.msg)
         }
+      }).catch(error => {
+        this.dialogLoading = false
+        console.log(error)
       })
     },
     auitClose () {
@@ -2016,9 +2023,9 @@ export default {
           }
         }).then(res => {
           if (res.errorCode === '200') {
-            if (res.data) {
-              this.tableData.demanddistance = res.data.toFixed(2)
-            }
+            // if (res.data) {
+            this.tableData.demanddistance = res.data.toFixed(2)
+            // }
           } else {
             this.$message.warning(res.msg)
           }

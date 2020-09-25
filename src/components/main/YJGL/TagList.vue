@@ -4,11 +4,11 @@
       <el-form :data="query" ref="NodeQueryForm">
         <el-row>
           <el-col :span="18">
-            <el-col :span="8">
+           <!-- <el-col :span="8">
               <el-form-item label="产权单位：" label-width="100px">
                 <el-input class="searchSelect" v-model="query.propertyunit" placeholder="请输入产权单位" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col>-->
             <el-col :span="8">
               <el-form-item label="区域：">
                 <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>

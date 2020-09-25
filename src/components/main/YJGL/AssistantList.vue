@@ -83,7 +83,6 @@ export default {
     return {
       // 查询相关属性
       query: {
-        swver: '',
         isaudit: true
       },
       // 加载

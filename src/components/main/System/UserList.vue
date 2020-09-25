@@ -265,7 +265,7 @@
       </div>
     </div>
 
-    <OrgTree :showCheckBox="true" :checkStrictly="true" :isRadio="true" :expandAll="true" @Confirm="ConfirmOrg" ref="OrgTree"></OrgTree>
+    <OrgTree :showCheckBox="true" :checkStrictly="true" :isRadio="true" :expandAll="false" @Confirm="ConfirmOrg" ref="OrgTree"></OrgTree>
 
   </div>
 

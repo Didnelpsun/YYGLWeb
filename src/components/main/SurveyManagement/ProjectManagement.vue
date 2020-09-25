@@ -567,6 +567,9 @@ export default {
         } else {
           this.$message.error(res.msg)
         }
+      }).catch(error => {
+        this.Loading = false
+        console.log(error)
       })
     },
     getData1 () {
@@ -583,6 +586,9 @@ export default {
         } else {
           this.$message.error(res.msg)
         }
+      }).catch(error => {
+        this.Loading = false
+        console.log(error)
       })
     },
     changeSize1 (page) {
@@ -626,6 +632,9 @@ export default {
               this.WriteData.constructionmode === 1 ? this.WriteData.stockstationresults = '最近存量站' : this.WriteData.stockstationresults = '存量站不存在'
             }
             this.WriteData.recentlyresource_id = res.data[0].id
+          }).catch(error => {
+            this.DialogLoading = false
+            console.log(error)
           })
         }
       })
@@ -674,6 +683,9 @@ export default {
               this.WriteData.demandside = this.WriteData.demandside.split(',')
               this.$message.error(res.msg)
             }
+          }).catch(error => {
+            this.Loading = false
+            console.log(error)
           })
         }
       })
@@ -706,6 +718,9 @@ export default {
               this.WriteData.demandside = this.WriteData.demandside.split(',')
               this.$message.error(res.msg)
             }
+          }).catch(error => {
+            this.Loading = false
+            console.log(error)
           })
         }
       })
@@ -780,6 +795,9 @@ export default {
         this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : null
         this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
         this.WriteData.demandside = this.WriteData.demandside.split(',')
+      }).catch(error => {
+        this.Loading = false
+        console.log(error)
       })
     },
     // 导出数据
@@ -837,6 +855,7 @@ export default {
       this.$refs.WriteForm.clearValidate()
       this.showWrite = false
       this.isStockStation = false
+      this.Loading = false
     },
     handleChange (val) {
       if (val === 1 || val === 0) {
@@ -876,6 +895,7 @@ export default {
           link.click()
           document.body.removeChild(link)
         }).catch(error => {
+          this.ExportLoading = false
           console.log(error)
         })
       })

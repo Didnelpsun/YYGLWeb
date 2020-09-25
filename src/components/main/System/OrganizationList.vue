@@ -33,7 +33,7 @@
       </el-row>
 
       <el-table :data="tableData1" v-loading="table1Loading"
-                row-key="id" :tree-props="{children: 'child'}" default-expand-all style="margin-top: 15px;">
+                row-key="id" :tree-props="{children: 'child'}" style="margin-top: 15px;">
         <el-table-column prop="orgname" label="部门名称" width="200"></el-table-column>
         <el-table-column prop="orgtype" label="部门类型" width="200" :formatter="formatOrgType"></el-table-column>
         <el-table-column prop="orgcode" label="部门编号" width="150"></el-table-column>
@@ -213,10 +213,17 @@ export default {
         if (res.error) {
           this.$message.error(res.errorMessage)
         } else {
+          res.data.list = this.formatParentId(res.data.list)
           this.tableData1 = _normalizeTreeData(res.data.list, 'id', 'parentorg_id', 'child', null)
           this.List = this.tableData1
         }
       })
+    },
+    formatParentId (list) {
+      list.forEach(i => {
+        if (!list.find(j => j.id === i.parentorg_id)) i.parentorg_id = null
+      })
+      return list
     },
     formatOrgType (row) { return this.OrgType[row.orgtype - 1] },
 

@@ -21,8 +21,8 @@
         <el-table-column prop="planpowertime" label="计划结束停电时间" width="150"></el-table-column>
         <el-table-column prop="alarmtime" label="告警时间" width=""></el-table-column>
         <el-table-column prop="sendsingletime" label="派单时间" width=""></el-table-column>
-        <el-table-column prop="name" label="协管员" width=""></el-table-column>
-        <el-table-column prop="" label="是否有固定油机" width=""></el-table-column>
+        <el-table-column prop="assistantname" label="协管员" width=""></el-table-column>
+        <el-table-column prop="ifixplace" :formatter="ifixplaceshow" label="是否有固定油机" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机编号" width=""></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
         <el-table-column label="操作" width="150" fixed="right">
@@ -86,6 +86,9 @@ export default {
   created () {
   },
   methods: {
+    ifixplaceshow (val) {
+      return val.ifixplace ? '是' : '否'
+    },
     handleDetails (row) {
       console.log(row)
       let params = { id: row.workorderid }

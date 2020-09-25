@@ -148,7 +148,6 @@
 
 <script>
 import {GlobalRes} from 'common/js/mixins'
-
 import {Editspareparts} from 'api/BJGL'
 export default {
   name: 'SpareReplaceDetail',
@@ -174,11 +173,7 @@ export default {
         assetsencoding: null,
         warrantycode: null,
         qrcode: null,
-        reamrk: null,
-        realityname: '',
-        createtime: null,
-        typename: '', // 存放点名称
-        warehouseid: ''// 存放点di
+        reamrk: null
       },
       Rules: {
         code: [{ required: true, message: '请扫备件编码', trigger: 'change' }],
@@ -208,6 +203,9 @@ export default {
               return this.$message.error('请补全信息！')
             } else {
               this.Loading = true
+              let params={code:this.WriteData.code,warrantycode:this.WriteData.warrantycode,
+              assetsencoding:this.WriteData.assetsencoding,warrantycode:this.WriteData.warrantycode
+             qrcode:this.WriteData.qrcode,id:this.WriteData.id,depotsid:this.WriteData.depotsid }
               this.$axios.post(Editspareparts, this.WriteData).then(res => {
                 this.Loading = false
                 if (res.errorCode !== '200') return this.$message.error(res.msg)

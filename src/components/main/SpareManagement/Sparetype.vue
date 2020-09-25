@@ -127,7 +127,6 @@ export default {
       tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      WriteLoading: false,
       DicList: {Belongtype: []}
     }
   },

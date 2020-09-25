@@ -29,7 +29,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="工单状态：">
-                <el-input v-model="query.workorderstatus" placeholder="请输入工单状态" @keyup.enter.native="getMore(1)"></el-input>
+                <el-input v-model="query.Workorderstatus" placeholder="请输入工单状态" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -120,7 +120,7 @@ export default {
       query: {
         areaname: '',
         code: '',
-        workorderstatus: '',
+        Workorderstatus: '',
         isarchived: false,
         ishistory: false,
         sitecode: '',

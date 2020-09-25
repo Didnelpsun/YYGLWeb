@@ -187,10 +187,7 @@ export default {
         instate: []
       },
       Rules: {
-        /* AreaList: [{ required: true, message: '请选择区域', trigger: 'change' }],
-          typename: [{ required: true, message: '请填入类型名称', trigger: 'change' }],
-          Belongtype: [{ required: true, message: '请选择所属类型', trigger: 'blur' }],
-          typeencoding: [{ required: true, message: '请填入类型编码', trigger: 'change' }] */
+        /* schedulingtype: [{ required: true, message: '请选择调度类型', trigger: 'blur' }] */
       }
     }
   },

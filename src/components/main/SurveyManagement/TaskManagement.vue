@@ -179,6 +179,7 @@ export default {
           }
         })
         .catch(error => {
+          this.Loading = false
           console.log(error)
         })
     },

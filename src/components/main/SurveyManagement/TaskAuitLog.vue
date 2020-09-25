@@ -137,6 +137,7 @@ export default {
           this.pagination.total = res.data.total
         })
         .catch(error => {
+          this.Loading = false
           console.log(error)
         })
     },

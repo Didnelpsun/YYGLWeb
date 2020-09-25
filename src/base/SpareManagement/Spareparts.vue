@@ -385,8 +385,10 @@ export default {
           return this.$message.error('请补全信息！')
         } else {
           this.Loading = true
+          this.showloading = false
           this.$axios.post(Addspareparts, this.WriteData).then(res => {
             this.Loading = false
+            this.showloading = true
             if (res.errorCode !== '200') return this.$message.error(res.msg)
             this.$message.success('添加成功!')
             this.$emit('fatheretMore')

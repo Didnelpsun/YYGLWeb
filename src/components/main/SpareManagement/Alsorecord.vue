@@ -53,8 +53,7 @@ export default {
       Loading: false,
       tableData: [],
       tableLoading: false,
-      showWrite: false,
-      WriteLoading: false
+      showWrite: false
     }
   },
   activated () {

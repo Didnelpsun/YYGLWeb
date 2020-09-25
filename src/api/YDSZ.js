@@ -60,6 +60,7 @@ export const UpdateSitenetWorkEquipmenTcontrast = `${reqURL}/YDSZ/YDSZEquipment/
 export const GetScopeEquipmentList = `${reqURL}/YDSZ/YDSZEquipment/GetScopeEquipmentList` // 通过站址找对应范围的设备
 export const Modifycoordinates = `${reqURL}/YDSZ/YDSZEquipment/Modifycoordinates` // 批量修改坐标
 export const Removecoordinates = `${reqURL}/YDSZ/YDSZEquipment/Removecoordinates` // 清除坐标
+export const ExportOrders = `${reqURL}/YDSZ/YDSZEquipment/ExportOrders` // 站址找设备导出
 
 export function exportMethod (data) {
   axios({

@@ -206,6 +206,7 @@ export default {
           this.$message.error(res.msg)
         }
       }).catch(err => {
+        this.Loading = false
         this.$message.error(err)
       })
     },
@@ -223,6 +224,7 @@ export default {
           this.tableData = res.data.list
           this.total = res.data.total
         } else {
+          this.Loading = false
           this.$message.error(res.msg)
         }
       }).catch(err => {

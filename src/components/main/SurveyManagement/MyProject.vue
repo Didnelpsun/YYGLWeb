@@ -173,6 +173,7 @@ export default {
           this.$message.error(res.msg)
         }
       }).catch(err => {
+        this.Loading = false
         this.$message.error(err)
       })
     },
@@ -193,6 +194,7 @@ export default {
           this.$message.error(res.msg)
         }
       }).catch(err => {
+        this.Loading = false
         this.$message.error(err)
       })
     },

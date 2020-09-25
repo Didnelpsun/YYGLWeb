@@ -387,9 +387,9 @@ export default{
       },
       // 表单验证
       Rules: {
-        AreaList: [
+        /* AreaList: [
           { required: true, message: '请选择区域', trigger: 'blur' }
-        ],
+        ], */
         swver: [{ required: true, message: '请选择采集器', trigger: 'change' }]
       }
     }
@@ -415,6 +415,7 @@ export default{
     async add () {
       this.$refs.tableForm.validate((valid, msg) => {
         if (!valid) {
+          if (this.tableData.AreaList.length === 0) { return this.$message.warning('请选择区域') }
           this.$message.warning('请补全信息')
         } else {
           this.WriteLoading = true

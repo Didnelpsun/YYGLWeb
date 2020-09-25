@@ -101,8 +101,7 @@ export default {
       tableData: [],
       tableLoading: false,
       showWrite: false,
-      WriteLoading: false,
-      DicList: {Belongtype: []}
+      DicList: {}
     }
   },
   activated () {

@@ -114,7 +114,6 @@ export default {
       tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      WriteLoading: false,
       DicList: {Belongtype: []}
     }
   },
@@ -159,7 +158,6 @@ export default {
         }
       })
     },
-    formatState (row) { return this.DicList.state[row.state] },
     getData1 () {
       this.Loading = true
       this.$axios.get(maintenanceconfig, {

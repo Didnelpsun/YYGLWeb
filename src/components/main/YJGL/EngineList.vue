@@ -25,17 +25,23 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="厂家：">
-                <el-input v-model="query.manufactor" placeholder="请输入厂家"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-select class="tableSelect" v-model="query.manufactor" placeholder="请选择厂家">
+                  <el-option v-for="item in dictionaryList.manufactorList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号：">
-                <el-input v-model="query.model" placeholder="请输入型号"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-select class="tableSelect" v-model="query.model" placeholder="请选择型号">
+                  <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="燃油类型：">
-                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-select class="tableSelect" v-model="query.Fueltype" placeholder="请选择燃油类型">
+                  <el-option v-for="item in dictionaryList.fueltypeList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-col>

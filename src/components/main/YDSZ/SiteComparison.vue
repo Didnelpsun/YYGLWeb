@@ -25,6 +25,15 @@
                 <el-input v-model.trim="Query.logicalstanding" placeholder="请填写逻辑站名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="是否归属设备：" label-width="120px">
+                <el-select v-model="Query.issites">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="是" :value="true"></el-option>
+                  <el-option label="否" :value="false"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-col>
           <el-col :span="6">
             <div class="fr" style="margin-top: 0">
@@ -39,6 +48,7 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
+            <el-button @click="SiteExport" type="success" icon="el-icon-download">导出</el-button>
           </div>
         </el-col>
       </el-row>
@@ -87,7 +97,7 @@
         <el-table-column prop="areaid" label="区域" width=""></el-table-column>
         <el-table-column prop="operators" label="运营商"></el-table-column>
         <el-table-column prop="operatorname" label="运营商站点名称" width=""></el-table-column>
-        <el-table-column prop="logicalstanding" label="逻辑站名称" width=""></el-table-column>
+        <el-table-column prop="logicalstanding" label="站址名称" width=""></el-table-column>
         <el-table-column prop="sitecode" label="站址编码" width="140"></el-table-column>
         <el-table-column prop="bbu" label="BBU数量"></el-table-column>
         <el-table-column prop="rru" label="RRU数量"></el-table-column>
@@ -133,7 +143,7 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {OrderSiteList, UpdateEquipmenTcontrast, GetScopeEquipmentList} from 'api/YDSZ'
+import {OrderSiteList, UpdateEquipmenTcontrast, GetScopeEquipmentList, exportMethod, ExportOrders} from 'api/YDSZ'
 export default {
   name: 'SiteComparison',
   mixins: [GlobalRes],
@@ -147,7 +157,8 @@ export default {
         provinceid: null, // 省份
         cityid: null, // 城市
         areaid: null, // 区域
-        issite: true
+        issite: true,
+        issites: ''
       },
       showWrite: false,
       Loading1: false,
@@ -314,6 +325,19 @@ export default {
     },
     formatDistance (row) {
       return row.M.toFixed(2)
+    },
+    SiteExport () {
+      this.$confirm(`您确定要导出吗？`, '提示', {
+        type: 'info'
+      }).then(() => {
+        let myObj = {
+          method: 'post',
+          url: ExportOrders,
+          fileName: '站址找设备',
+          data: this.Query
+        }
+        exportMethod(myObj)
+      })
     }
   },
   components: {

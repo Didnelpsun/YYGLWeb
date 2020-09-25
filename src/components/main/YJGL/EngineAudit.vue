@@ -21,12 +21,16 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号：">
-                <el-input v-model="query.model" placeholder="请输入型号"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-select class="tableSelect" v-model="query.model" placeholder="请选择型号">
+                  <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="燃油类型：">
-                <el-input v-model="query.Fueltype" placeholder="请输入燃油类型"  @keyup.enter.native="getMore(1)"></el-input>
+                <el-select class="tableSelect" v-model="query.Fueltype" placeholder="请选择燃油类型">
+                  <el-option v-for="item in dictionaryList.fueltypeList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-col>
@@ -78,6 +82,7 @@
 </template>
 
 <script>
+import { DictionaryInfoList } from 'api/api'
 import { MachineauditList, MachineauditInfo } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/EngineAudit'
@@ -110,14 +115,37 @@ export default {
         total: 0,
         pageSize: 10,
         currentPage: 1
-      }
+      },
+      dictionaryList: {}
     }
   },
   activated () {
     // this.check(AreaList)
     this.getMore(1)
+    this.getList()
   },
   methods: {
+    getList () {
+      let s = [
+        '油机调度型号',
+        '油机燃油类型'
+      ]
+      this.Loading = true
+      this.$axios.post(DictionaryInfoList, s).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.dictionaryList.modelList = data.filter(i => {
+            return i.type === '油机调度型号'
+          })
+          this.dictionaryList.fueltypeList = data.filter(i => {
+            return i.type === '油机燃油类型'
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+      this.Loading = false
+    },
     OpenImgBox (title, name, list) {
       this.$refs.ImgBox.SetData(title, name, list)
       this.$refs.ImgBox.Open()
@@ -145,6 +173,7 @@ export default {
         })
         .then(res => {
           this.Loading = false
+          this.getList()
           this.tableList = res.data.list
           this.pagination.total = res.data.total
         })

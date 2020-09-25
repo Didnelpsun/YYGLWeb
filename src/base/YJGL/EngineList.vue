@@ -446,9 +446,8 @@ export default{
         if (this.machinebatchnoImgList.length === 0) {
           return this.$message.warning('油机缸号照片必须上传')
         }
-
-        if (!valid || this.tableData.AreaList.length === 0) {
-          if (this.tableData.AreaList.length === 0) return this.$message.warning('请选择区域')
+        if (this.WriteState !== 3 && this.tableData.AreaList.length === 0) return this.$message.warning('请选择区域')
+        if (!valid) {
           return this.$message.warning('请补全信息')
         } else {
           this.tableData.applicanttype = 2

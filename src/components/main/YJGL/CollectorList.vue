@@ -23,11 +23,11 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <!--<el-col :span="8">
               <el-form-item label="厂家：" label-width="125px">
                 <el-input v-model="query.faccode" placeholder="请输入厂家" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col>-->
             <!--<el-col :span="8">
               <el-form-item label="设备名称：" label-width="125px">
                 <el-input v-model="query.swver" placeholder="请输入设备名称" @keyup.enter.native="getMore(1)"></el-input>
@@ -192,14 +192,13 @@ export default {
     // 处理编辑函数
     handleWrite (state, row) {
       this.$refs.Details.WriteLoading = true
-      if (this.$data.tableData !== null || this.$data.tableData !== undefined) {
+      /*  if (this.$data.tableData !== null || this.$data.tableData !== undefined) {
         // this.$data.tableData = {}
         Object.assign(this.$data.tableData, this.$options.data().tableData)
-      }
+      } */
       // console.log(this.tableData)
       this.WriteState = state
-      if (state === 0) this.showWrite = true
-      else {
+      if (state === 0) { this.showWrite = true } else {
         this.setData(state, row.id)
       }
       this.$refs.Details.WriteLoading = false

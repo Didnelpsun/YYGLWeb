@@ -1734,6 +1734,9 @@ export default {
           this.StockStationInfo.ownedoperator = this.StockStationInfo.ownedoperator ? this.StockStationInfo.ownedoperator.split(',') : this.StockStationInfo.ownedoperator.split('')
           this.$message.error(res.msg)
         }
+      }).catch(error => {
+        this.WriteLoading = false
+        console.log(error)
       })
     },
     SubmitSaveAsync () {
@@ -2082,6 +2085,9 @@ export default {
         } else {
           this.$message.warning(res.msg)
         }
+      }).catch(error => {
+        this.dialogLoading = false
+        console.log(error)
       })
     },
     auitClose () {
@@ -2131,9 +2137,9 @@ export default {
           }
         }).then(res => {
           if (res.errorCode === '200') {
-            if (res.data) {
-              this.StockStationInfo.demanddistance = res.data.toFixed(2)
-            }
+            // if (res.data) {
+            this.StockStationInfo.demanddistance = res.data.toFixed(2)
+            // }
           } else {
             this.$message.warning(res.msg)
           }

@@ -432,6 +432,7 @@ export default {
       this.ViewTabIndex = '1'
       this.ViewRoleId = 0
       this.showView = false
+      this.ViewResource = []
     },
     handleTabs () {
       if (this.ViewTabIndex === '1') { this.tabs1() }

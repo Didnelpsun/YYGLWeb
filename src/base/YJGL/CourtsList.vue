@@ -211,7 +211,6 @@ export default{
       areaOption: [],
       // 表单验证
       Rules: {
-        AreaList: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         name: [
           { required: true, message: '请输入台区名称', trigger: 'change' }
         ],
@@ -220,9 +219,6 @@ export default{
         ],
         powersupplycontact: [
           { required: true, message: '请输入供电联系人', trigger: 'change' }
-        ],
-        stationname: [
-          { required: true, message: '请选择站点ID', trigger: 'change' }
         ]
       }
     }
@@ -260,6 +256,8 @@ export default{
     async add () {
       this.$refs.tableForm.validate((valid, msg) => {
         if (!valid) {
+          if (this.tableData.AreaList.length === 0) { return this.$message.error('请选择区域！') }
+          if (this.tableData.stationname === '') { return this.$message.error('请选择站点名称！') }
           return this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true

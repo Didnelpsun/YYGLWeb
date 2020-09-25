@@ -204,7 +204,7 @@ export default {
       sparetypeShow: false,
       sparemodelShow: false,
       SparemanufacturerShow: false,
-      check: 1,
+      check: 8,
       Show: false,
       Loading: false,
       WriteData: {
@@ -218,11 +218,6 @@ export default {
         assetsencoding: null,
         warrantycode: null,
         qrcode: null,
-        reamrk: null,
-        realityname: '',
-        createtime: null,
-        typename: '', // 存放点名称
-        warehouseid: '', // 存放点di
         sparepartstype: null, // 备件类型名称
         sparepartstypeid: '', // 备件类型id
         manufacturerid: '', // 备件厂家id
@@ -256,6 +251,7 @@ export default {
       this.$emit('fatherClose')
     },
     SelectUserOperation (operation, name, id) {
+      this.Show = false
       this.WriteData.operation = name
       this.WriteData.operationid = id
     },
@@ -290,7 +286,10 @@ export default {
             return this.$message.error('请补全信息！')
           } else {
             this.Loading = true
-            this.$axios.post(Editspareparts, this.WriteData).then(res => {
+            let params={depotsid:this.WriteData.depotsid,code:this.WriteData.code,sparepartstypeid:this.WriteData.sparepartstypeid,manufacturerid:this.WriteData.manufacturerid,
+                        warrantycode:this.WriteData.warrantycode,assetsencoding:this.WriteData.assetsencoding,qrcode:this.WriteData.qrcode,reamrk:this.WriteData.reamrk,,id:this.WriteData.id
+            }
+            this.$axios.post(Editspareparts, params).then(res => {
               this.Loading = false
               if (res.errorCode !== '200') return this.$message.error(res.msg)
               this.$message.success('添加成功!')

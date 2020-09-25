@@ -301,9 +301,11 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data[0]
-      this.i++
       this.administratoridname = this.WriteData.administrators.map(item => item.administrator).toString()
-      this.WriteData.AreaList = [data[0].provinceid, data[0].cityid, data[0].areaid]
+      if (this.WriteState !== 2) {
+        this.WriteData.AreaList = [data[0].provinceid, data[0].cityid, data[0].areaid]
+        this.i++
+      }
       /*   this.setArea(this.WriteData.AreaList, 'csArea') */
       if (this.WriteState === 2) {
         switch (this.WriteData.warehousetype) {
