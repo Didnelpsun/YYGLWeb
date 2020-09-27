@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-loading="ExportLoading" element-loading-text="正在导出,请等待！" element-loading-background="rgba(0, 0, 0, 0.8)">
     <div class="main" v-show="!showWrite">
       <el-form :model="Query" size="mini">
         <el-row>
@@ -21,8 +21,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="逻辑站名称：" label-width="120px">
-                <el-input v-model.trim="Query.logicalstanding" placeholder="请填写逻辑站名称"  @keyup.enter.native="getMore(1)"></el-input>
+              <el-form-item label="运营商站点名称：" label-width="130px">
+                <el-input v-model.trim="Query.logicalstanding" placeholder="请填写运营商站点名称"  @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -143,7 +143,7 @@
 <script>
 import {GlobalRes} from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {OrderSiteList, UpdateEquipmenTcontrast, GetScopeEquipmentList, exportMethod, ExportOrders} from 'api/YDSZ'
+import {OrderSiteList, UpdateEquipmenTcontrast, GetScopeEquipmentList, ExportOrders} from 'api/YDSZ'
 export default {
   name: 'SiteComparison',
   mixins: [GlobalRes],
@@ -176,7 +176,8 @@ export default {
       Loading: false,
       MatchLogicstandname: '',
       selectList: {},
-      ordersiteid: ''
+      ordersiteid: '',
+      ExportLoading: false
     }
   },
   activated () {
@@ -319,7 +320,7 @@ export default {
       this.showWrite = true
       this.selectList = row
       this.ordersiteid = row.id
-      this.MatchLogicstandname = row.logicalstanding
+      this.MatchLogicstandname = row.operatorname
       this.getMatchList()
       this.getDeviceList()
     },
@@ -336,7 +337,29 @@ export default {
           fileName: '站址找设备',
           data: this.Query
         }
-        exportMethod(myObj)
+        this.exportMethod(myObj)
+      })
+    },
+    exportMethod (data) {
+      this.ExportLoading = true
+      this.$axios({
+        method: data.method,
+        url: data.url,
+        params: data.data,
+        responseType: 'blob'
+      }).then((res) => {
+        this.ExportLoading = false
+        const link = document.createElement('a')
+        let blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        link.download = data.fileName + '.xls' // 下载的文件名  注意：加.xls是兼容火狐浏览器
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }).catch(error => {
+        this.ExportLoading = false
+        console.log(error)
       })
     }
   },

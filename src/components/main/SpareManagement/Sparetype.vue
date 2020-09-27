@@ -41,7 +41,7 @@
         </el-row>
       </el-form>
       <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
-        <el-table-column label="序号" width="50">
+        <el-table-column label="序号" width="50px">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
@@ -49,8 +49,8 @@
         <el-table-column prop="typeencoding" label="类型编码"></el-table-column>
         <el-table-column prop="remark" label="说明"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
-        <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column prop="createtime" label="提交时间" width="120px"></el-table-column>
+        <el-table-column label="操作" width="130px">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
@@ -80,7 +80,7 @@ import Import from 'base/Import'
 import {exportMethod} from 'api/YDSZ'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {AreaList, DictionaryInfoList} from 'api/api'
+import {AreaList} from 'api/api'
 import {GetSpareTypList, GetIdSpareTypList, DeleteSpareTyp, SpareTypeImport, SpareTypeExport} from 'api/BJGL'
 import Details from 'base/SpareManagement/Sparetype'
 export default {
@@ -132,7 +132,6 @@ export default {
   },
   activated () {
     this.getData1()
-    this.getDic()
     this.$refs.ImportBox.searchName = ''
     this.$refs.ImportBox.GetTemplateInfo()
   },
@@ -168,18 +167,6 @@ export default {
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
-      this.getDic()
-    },
-    getDic () {
-      let arr = ['备件类型']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          let data = res.data
-          this.DicList.Belongtype = data.filter(i => { return i.type === '备件类型' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
     },
     getData1 () {
       this.Loading = true
@@ -202,7 +189,6 @@ export default {
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
-        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total

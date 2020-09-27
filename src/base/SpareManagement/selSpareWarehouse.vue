@@ -32,21 +32,21 @@
     <el-table :data="tableData" v-loading="Table1Loading" @selection-change="handleSelectionChange" style="margin-top: 15px;">
       <el-table-column
         type="selection"
-        width="55"></el-table-column>
-      <el-table-column label="序号" width="50">
+        width="45px"></el-table-column>
+      <el-table-column label="序号" width="50px">
         <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
       </el-table-column>
       <el-table-column prop="username" label="用户账号" ></el-table-column>
       <el-table-column prop="realityname" label="用户名称" ></el-table-column>
-      <el-table-column prop="mobile_no" label="用户电话" ></el-table-column>
+      <el-table-column prop="mobile_no" label="用户电话" width="100px" ></el-table-column>
       <el-table-column prop="email" label="email" ></el-table-column>
       <el-table-column prop="orgname" label="部门" ></el-table-column>
-      <el-table-column prop="createtime" label="注册时间" ></el-table-column>
-      <!--<el-table-column label="操作" width="">
+      <el-table-column prop="createtime" label="注册时间"  width="120px"></el-table-column>
+      <el-table-column label="操作" width="50px">
         <template slot-scope="scope">
-          <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>
+          <el-button type="text" size="mini" @click="handleSelect(scope.row)">选择</el-button>
         </template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
     <div class="center">
       <el-pagination @current-change="getRoleMore(this.currentPage)" @size-change="handelSizeChange" :current-page="currentPage"
@@ -150,15 +150,12 @@ export default {
     },
     // 重置按钮
     resetQueryForm () {
-      console.log(123)
       Object.assign(this.$data.query, this.$options.data().query)
-      // Object.assign(this.$data.AreaList, this.$options.data().AreaList)
       this.getRoleList()
     },
-    /* handleChoose (index, row) {
+    handleSelect (row) {
       this.$emit('Chooseusr', row)
-      Object.assign(this.$data.tableData, this.$options.data().tableData)
-    }, */
+    },
     handleSelectionChange (val) {
       this.SelectionChange = val
     },

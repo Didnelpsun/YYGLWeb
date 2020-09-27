@@ -277,11 +277,12 @@ export default {
       this.administratorname = null
     },
     setWriteData (data) {
-      //   console.log(data)
       this.WriteData = data
       this.setImgList(data.imglist)
-      this.key++
-      this.WriteData.AreaList = [data.provinceid, data.cityid]
+      if (this.WriteState !== 2) {
+        this.WriteData.AreaList = [data.provinceid, data.cityid]
+        this.key++
+      }
       /*   this.setArea(this.WriteData.AreaList, 'csArea') */
       if (parseInt(this.WriteState) === 2) {
         this.WriteData.belongtype !== 2 ? this.WriteData.belongtype = '资源' : this.WriteData.belongtype = '备件'

@@ -118,12 +118,11 @@ export default {
       // 查询相关属性
       query: {
         ifarchived: true,
-        AreaList: [
-        ],
-        machinebatchno: '',
-        manufactor: '',
-        model: '',
-        Fueltype: ''
+        AreaList: [],
+        machinebatchno: null,
+        manufactor: null,
+        model: null,
+        Fueltype: null
       },
       // 判断归档查询状态
       ifarchivedState: true,

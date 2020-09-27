@@ -49,7 +49,7 @@
               <td><div class="cell">备件编码</div></td>
               <td><div class="cell">
                 <div >
-                  <el-input v-model="WriteData.code" clearable placeholder="请扫备件编码"></el-input>
+                  <el-input v-model="WriteData.code"  placeholder="请扫备件编码"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
@@ -58,8 +58,8 @@
               <td><div class="cell"><i class="must">*</i>备件类型</div></td>
               <td><div class="cell">
                 <div @click="sparetypeShow=true">
-                  <el-form-item class="form-item" prop="sparepartstype">
-                  <el-input v-model="WriteData.sparepartstype" readonly placeholder="请选择备件类型"></el-input>
+                  <el-form-item class="form-item" prop="typename">
+                  <el-input v-model="WriteData.typename" readonly placeholder="请选择备件类型"></el-input>
                   </el-form-item>
                 </div></div>
               </td>
@@ -70,8 +70,8 @@
               <td><div class="cell"><i class="must">*</i>备件厂家</div></td>
               <td><div class="cell">
                 <div  @click="SparemanufacturerShow=true">
-                  <el-form-item class="form-item" prop="manufacturer">
-                  <el-input v-model="WriteData.manufacturer" readonly placeholder="请选择厂家"></el-input>
+                  <el-form-item class="form-item" prop="manufacturername">
+                  <el-input v-model="WriteData.manufacturername" readonly placeholder="请选择厂家"></el-input>
                   </el-form-item>
                 </div></div>
               </td>
@@ -79,7 +79,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">权属</div></td>
-              <td><div class="cell">{{WriteData.units}}</div></td>
+              <td><div class="cell">{{WriteData.unitname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -105,19 +105,25 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">存放点 </div></td>
-              <td><div class="cell">{{WriteData.depotsid}}</div></td>
+              <td><div class="cell">{{WriteData.depotsname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">存放点类型</div></td>
-              <td><div class="cell">{{WriteData.depotstype}}</div></td>
+              <td><div class="cell">
+                <el-form-item class="form-item" prop="depotstype">
+                  <el-select v-model="WriteData.depotstype">
+                    <el-option v-for="i in DicList.warehousetype" :key="i.id" :label="i.text" :value="i.value" placeholder="请选择存放点类型"></el-option>
+                  </el-select>
+                </el-form-item>
+                </div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件质保编号</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="warrantycode">
-                  <el-input v-model="WriteData.warrantycode"  clearable placeholder="请扫备件质保编号"></el-input>
+                  <el-input v-model="WriteData.warrantycode"   placeholder="请扫备件质保编号"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -127,7 +133,7 @@
               <td><div class="cell">资产编码</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="assetsencoding">
-                  <el-input v-model="WriteData.assetsencoding"  clearable placeholder="请扫备件资产编码"></el-input>
+                  <el-input v-model="WriteData.assetsencoding"   placeholder="请扫备件资产编码"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -137,7 +143,7 @@
               <td><div class="cell">二维码</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="qrcode">
-                  <el-input v-model="WriteData.qrcode"  clearable placeholder="请扫二维码"></el-input>
+                  <el-input v-model="WriteData.qrcode"   placeholder="请扫二维码"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -195,10 +201,14 @@ import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
-import {Editspareparts} from 'api/BJGL'
+
 export default {
   name: 'SpareCheck',
   mixins: [GlobalRes],
+  props: {
+    DicList: {warehousetype: []},
+    Loading: false
+  },
   data () {
     return {
       sparetypeShow: false,
@@ -206,7 +216,7 @@ export default {
       SparemanufacturerShow: false,
       check: 8,
       Show: false,
-      Loading: false,
+      SpareReplaceDetail: false,
       WriteData: {
         id: null,
         code: null,
@@ -218,17 +228,17 @@ export default {
         assetsencoding: null,
         warrantycode: null,
         qrcode: null,
-        sparepartstype: null, // 备件类型名称
+        typename: null, // 备件类型名称
         sparepartstypeid: '', // 备件类型id
         manufacturerid: '', // 备件厂家id
         sparemodel: '', // 备件型号名称
         sparemodelid: '', // 备件型号id
-        manufacturer: '' // 备件厂家名称
+        manufacturername: '' // 备件厂家名称
       },
       Rules: {
         operation: [{ required: true, message: '请选择存放点', trigger: 'change' }],
-        sparepartstype: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
-        manufacturer: [{ required: true, message: '请选择厂家', trigger: 'change' }],
+        typename: [{ required: true, message: '请选择备件类型', trigger: 'change' }],
+        manufacturername: [{ required: true, message: '请选择厂家', trigger: 'change' }],
         sparemodel: [{ required: true, message: '请选择备件型号', trigger: 'change' }],
         code: [{ required: true, message: '请扫备件编码', trigger: 'change' }],
         warrantycode: [{ required: true, message: '请扫备件质保编码', trigger: 'change' }],
@@ -258,14 +268,14 @@ export default {
     Selsparetypeid (name, id) {
       this.sparetypeShow = false
       this.WriteData.sparepartstypeid = id
-      this.WriteData.sparepartstype = name
+      this.WriteData.typename = name
       this.WriteData.sparemodelid = null
       this.WriteData.sparemodel = null
     },
     Selmanufacturerid (name, id) {
       this.SparemanufacturerShow = false
       this.WriteData.manufacturerid = id
-      this.WriteData.manufacturer = name
+      this.WriteData.manufacturername = name
       this.WriteData.sparemodelid = null
       this.WriteData.sparemodel = null
     },

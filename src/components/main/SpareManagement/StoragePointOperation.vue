@@ -137,13 +137,14 @@ export default {
       this.getData1()
     },
     getDic () {
-      let arr = ['存放点操作用途']
+      let arr = ['存放点操作用途', '备件存放点类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.operation = data.filter(i => {
             return i.type === '存放点操作用途'
           })
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
         } else {
           this.$message.error(res.msg)
         }

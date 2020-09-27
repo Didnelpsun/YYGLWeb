@@ -194,7 +194,7 @@
       <el-button v-show="!showWrite" @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker  @SpareWarehousePicker="SpareWarehousePickers"/>
+      <SpareWarehousePicker :DicList="DicList"  @SpareWarehousePicker="SpareWarehousePickers"/>
     </el-dialog>
     <div class="write" v-show="showWrite">
       <layuiTitle :title="WriteState1 === 0 ? '添加盘存记录' : WriteState1 === 1 ? '编辑盘存记录' : '盘存记录详情'"></layuiTitle>
@@ -305,11 +305,12 @@ export default {
       })
     },
     getDic () {
-      let arr = ['备件状态']
+      let arr = ['备件状态', '备件存放点类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.newsparepartsstate = data.filter(i => { return i.type === '备件状态' })
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
         } else {
           this.$message.error(res.msg)
         }

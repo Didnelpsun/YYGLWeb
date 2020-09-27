@@ -61,7 +61,6 @@
 <script>
 import {Getmanufacturerinfo} from 'api/BJGL'
 import { GlobalRes } from 'common/js/mixins'
-
 export default {
   name: 'SelAfterSaleContract',
   mixins: [GlobalRes],
@@ -116,8 +115,6 @@ export default {
         this.tableList = res.data.list
         this.pagination.total = res.data.total
       })
-      this.tableList = [{name: '123'}]
-      this.pagination.total = 1
     },
     // 分页处理函数
     handelSizeChange (page) {

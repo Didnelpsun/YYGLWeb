@@ -135,7 +135,7 @@
       </el-dialog>
     </div>
     <el-dialog top="1%" :visible.sync="Show" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :DicList="DicList" :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
     <div v-if="SelectUserOperationShow">
     <el-dialog top="1%" :visible.sync="SelectUserOperationShow" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
@@ -184,7 +184,6 @@ export default {
         unitsname: ''// 权属名称
       },
       DicList: {
-        instate: []
       },
       Rules: {
         /* schedulingtype: [{ required: true, message: '请选择调度类型', trigger: 'blur' }] */
@@ -231,12 +230,13 @@ export default {
     manufacturerClose () { this.SparemanufacturerShow = !this.SparemanufacturerShow },
     sparemodelClose () { this.sparemodelShow = !this.sparemodelShow },
     getDic () {
-      let arr = ['备件状态', '备件调度类型']
+      let arr = ['备件状态', '备件调度类型', '备件存放点类型']
       this.$axios.post(DictionaryInfoList, arr).then(res => {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.instate = data.filter(i => { return i.type === '备件状态' })
           this.DicList.schedulingtype = data.filter(i => { return i.type === '备件调度类型' })
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
         } else {
           this.$message.error(res.msg)
         }

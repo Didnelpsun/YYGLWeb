@@ -36,7 +36,7 @@
         <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
       </el-table-column>
       <el-table-column prop="cityname" label="地市"></el-table-column>
-      <el-table-column prop="warehousetype" label="存放点类型"></el-table-column>
+      <el-table-column prop="warehousetype" label="存放点类型" :formatter="warehousetypeshow"></el-table-column>
       <el-table-column prop="name" label="存放点名称"></el-table-column>
       <el-table-column prop="code" label="存放点编码"></el-table-column>
       <el-table-column prop="administrators" :formatter="changeadministrator" label="负责人"></el-table-column>
@@ -59,7 +59,6 @@
 
 <script>
 import {GetwarehouseList} from 'api/BJGL'
-import {DictionaryInfoList} from 'api/api'
 import { GlobalRes } from 'common/js/mixins'
 
 export default {
@@ -78,7 +77,13 @@ export default {
       type: Number,
       default: null
     },
-    check: null
+    check: null,
+    DicList: {
+      type: Object,
+      default () {
+        return []
+      }
+    }
 
   },
   data () {
@@ -97,30 +102,19 @@ export default {
         currentPage: 1,
         PageIndex: 1
       },
-      DetailDialogVisible: false,
-      Table1Loading: false,
-      selectId: [],
-      DicList: [{warehousetype: null}]
+      Table1Loading: false
     }
   },
   created () {
     this._getTableData1()
-    this.getDic()
   },
   methods: {
+    warehousetypeshow (val) {
+      val = val.warehousetype
+      return val === 1 ? '市公司备件库' : val === 2 ? '市公司维修库' : val === 3 ? '市公司报废库' : '工作备件库'
+    },
     changeadministrator (val) {
       return val.administrators.map(item => item.administrator).toString()
-    },
-    getDic () {
-      let arr = ['备件存放点类型']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          let data = res.data
-          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
     },
     _getTableData1 () {
       this.Table1Loading = true

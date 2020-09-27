@@ -39,10 +39,7 @@
           </el-col>
           <el-col :span="12">
             <div class="fr" style="margin-top: 0">
-              <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
-              <el-button @click="handleSpareparts(0)"  type="success" :disabled="Loading">上站</el-button>
-              <el-button @click="handleSpareparts(1)"  type="success" :disabled="Loading" >替换</el-button>
-              <el-button @click="handleSpareparts(2)"  type="success" :disabled="Loading" >点验</el-button>
+              <el-button @click="showImport" type="success"  :disabled="Loading" icon="el-icon-upload2">导入</el-button>
               <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
@@ -65,11 +62,14 @@
         <el-table-column prop="qrcode" label="二维码"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="130"  fixed="right">
-          <template slot-scope="scope" >
+        <el-table-column label="操作" width="140px"   fixed="right" align="center">
+          <template slot-scope="scope"  >
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
+            <el-button type="text"  size="mini">上站</el-button>
+            <el-button @click="handleSpareparts(1,scope.row)"  type="text"  size="mini">替换</el-button>
+            <el-button @click="handleSpareparts(2,scope.row)"  type="text"  size="mini">点验</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -88,10 +88,10 @@
     </div>
     <div class="write" v-show="handleShow">
       <layuiTitle :title="Sparepartstate === 0 ? '上站' : Sparepartstate === 1 ? '替换' : '点验'"></layuiTitle>
-      <SpareCheck   v-show="Sparepartstate === 2" :WriteState="WriteState" :DicList="DicList"
+      <SpareCheck   v-if="Sparepartstate === 2" :DicList="DicList" :Loading="Loading"
                @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareCheck"></SpareCheck>
-      <SpareReplace  v-show="Sparepartstate === 1" :WriteState="WriteState" :DicList="DicList"
-                  @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareReplace"></SpareReplace>
+      <SpareReplaceDetail  v-if="Sparepartstate === 1" :Loading="Loading"
+                  @fatheretMore="getMore(currentPage)" @fatherClose="WriteClose" ref="SpareReplaceDetail"></SpareReplaceDetail>
     </div>
     <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
       <Selectsparetype    @Selsparetypeid="Selsparetypeid"/>
@@ -112,14 +112,14 @@
 import Import from 'base/Import'
 import { GlobalRes } from 'common/js/mixins'
 import layuiTitle from 'base/layui-title'
-import {DictionaryInfoList} from 'api/api'
 import {GetsparepartsList, GetsparepartsidList, Deletespareparts, sparepartsImport} from 'api/BJGL'
 import Details from 'base/SpareManagement/Spareparts'
 import SpareCheck from 'base/SpareManagement/SpareCheck'
-import SpareReplace from 'base/SpareManagement/SpareReplace'
+import SpareReplaceDetail from 'base/SpareManagement/SpareReplaceDetail'
 import Selectsparetype from 'base/SpareManagement/Selsparetypeid'
 import Selectmanufacturer from 'base/SpareManagement/Selmanufacturerid'
 import SelectSpareconMode from 'base/SpareManagement/SelSpareconModelid'
+import {DictionaryInfoList} from 'api/api'
 export default {
   name: 'Spareparts',
   mixins: [GlobalRes],
@@ -133,20 +133,20 @@ export default {
         manufacturerid: null,
         manufacturer: null
       },
+      DicList: {},
       handleShow: false,
       currentPage: 1,
       pageSize: 10,
       total: 0,
       Loading: false,
       tableData: [],
-      tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
       Sparepartstate: 0, // 0为上站 1为替换 2点验
-      DicList: {storestate: []},
       sparetypeShow: false,
       SparemanufacturerShow: false,
       sparemodelShow: false
+
     }
   },
   activated () {
@@ -156,6 +156,17 @@ export default {
     this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
+    getDic () {
+      let arr = ['备件存放点类型']
+      this.$axios.post(DictionaryInfoList, arr).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     showImport () {
       this.$refs.ImportBox.Open()
       this.$refs.ImportBox.uploadURL = sparepartsImport
@@ -183,25 +194,29 @@ export default {
       this.Query.sparemodelid = id
       this.Query.sparemodel = name
     },
-    handleSpareparts (val) {
+    handleSpareparts (val, row) {
       this.Sparepartstate = val
       this.showWrite = true
       this.handleShow = true
+      this.Loading = true
+      this.$axios.get(GetsparepartsidList, {
+        params: {
+          Id: row.id
+        }
+      }).then(res => {
+        this.Loading = false
+        if (val === 2) {
+          this.$refs.SpareCheck.setWriteData(res.data)
+        } else if (val === 1) {
+          this.$refs.SpareReplaceDetail.setWriteData(res.data)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getData1()
-    },
-    getDic () {
-      let arr = ['备件状态']
-      this.$axios.post(DictionaryInfoList, arr).then(res => {
-        if (res.errorCode === '200') {
-          let data = res.data
-          this.DicList.storestate = data.filter(i => { return i.type === '备件状态' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
     },
     getData1 () {
       this.Loading = true
@@ -224,7 +239,6 @@ export default {
         PageSize: this.pageSize
       })}).then(res => {
         this.Loading = false
-        this.getDic()
         if (res.errorCode !== '200') return this.$message.error(res.msg)
         this.tableData = res.data.list
         this.total = res.data.total
@@ -278,7 +292,7 @@ export default {
     layuiTitle,
     Details,
     SpareCheck,
-    SpareReplace,
+    SpareReplaceDetail,
     Selectsparetype,
     Selectmanufacturer,
     SelectSpareconMode,

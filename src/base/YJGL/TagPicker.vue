@@ -24,8 +24,9 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="provincename" label="省份" width=""></el-table-column>
         <el-table-column prop="cityname" label="地市" width=""></el-table-column>
-        <el-table-column prop="propertyunitname" label="产权单位" width=""></el-table-column>
-        <el-table-column prop="modulecode" label="编码" width=""></el-table-column>
+        <el-table-column prop="modulecode" label="标签编码" width=""></el-table-column>
+        <el-table-column prop="username" label="提交人" width=""></el-table-column>
+        <el-table-column prop="registrationtime" label="提交时间" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>

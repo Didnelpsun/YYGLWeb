@@ -245,19 +245,19 @@
               <td><div class="cell"></div></td>
             </tr>
             <!--存量筛查结果-->
-            <tr class="el-table__row">
+            <!--<tr class="el-table__row">
               <td><div class="cell">存量筛查结果</div></td>
               <td>
                 <div class="cell">
                   <div>{{tableData2.stockstationresults}}</div>
                 </div>
               </td>
-              <!-- <td><div class="cell"></div></td> -->
+              &lt;!&ndash; <td><div class="cell"></div></td> &ndash;&gt;
               <td><div class="cell"></div></td>
-            </tr>
-            <!--存量站筛查站点编码-->
+            </tr>-->
+            <!--最近站点编码-->
             <tr class="el-table__row">
-              <td><div class="cell">存量站筛查站点编码</div></td>
+              <td><div class="cell">最近站点编码</div></td>
               <td>
                 <div class="cell">
                   <div>{{tableData2.recentlyresourcecode}}</div>
@@ -1321,7 +1321,7 @@ export default {
         // 覆盖目标
         coveringtarget: '',
         // 存量筛查结果
-        stockstationresults: '',
+        // stockstationresults: '',
         // 存量站筛查站点编码
         recentlyresourcecode: ''
       },

@@ -71,6 +71,7 @@ export const GetProjectExcel = `${reqURL}/KCGL/Project/GetProjectExcel` // 项�
 export const ProjectDetailExcel = `${reqURL}/KCGL/Project/ProjectDetailExcel` // 项目管理批量导出
 export const GetKCProjectExcel = `${reqURL}/KCGL/Project/GetKCProjectExcel` // 项目管理项目资料导出
 export const GetDistance = `${reqURL}/KCGL/Project/GetDistance` // 通过两个经纬度获取距离（返回数据为M）
+export const ImportKCProject = `${reqURL}/KCGL/Project/ImportKCProject` // 勘察项目导入
 
 // 勘察任务管理
 export const GetWebTaskList = `${reqURL}/KCGL/Task/GerWebTaskList` // 获取勘察任务管理列表

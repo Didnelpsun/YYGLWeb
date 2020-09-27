@@ -46,7 +46,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell"><i class="must">*</i>区域</div></td>
-              <td v-show="WriteState !== 2"><div class="cell">
+              <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
                   <el-cascader :key="i" v-model="WriteData.AreaList" placeholder="请选择区域" :props="areaProps" @change="changeArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
@@ -167,6 +167,7 @@
 </template>
 
 <script>
+
 import {GlobalRes} from 'common/js/mixins'
 import {AreaList} from 'api/api'
 import {Addwarehouse, Editwarehouse} from 'api/BJGL'
@@ -258,18 +259,17 @@ export default {
     },
     Chooseusr (arr) {
       this.administratorShow = false
-      if (arr) {
-        var users = []
-        var administrators = []
-        for (var i in arr) {
-          users[i] = arr[i].realityname
-          administrators.push({administratorid: arr[i].id, administrator: arr[i].realityname, phonenum: arr[i].mobile_no})
-        }
+      this.WriteData.administrators = []
+      this.administratoridname = ''
+      if (arr.length > 0) {
+        this.WriteData.administrators = arr.map(function (item) {
+          return {administratorid: item.id, administrator: item.realityname, phonenum: item.mobile_no}
+        })
+        this.administratoridname = arr.map(item => item.realityname).toString()
+      } else {
+        this.WriteData.administrators[0] = {administratorid: arr.id, administrator: arr.realityname, phonenum: arr.mobile_no}
+        this.administratoridname = arr.realityname
       }
-      this.administratoridname = users.join(',')
-      this.WriteData.administrators = administrators
-      users = null
-      administrators = null
     },
     administratorClose () { this.administratorShow = !this.administratorShow },
     /* changenum (i, value) {
@@ -277,7 +277,6 @@ export default {
       console.log(value)
     }, */
     changeArea (obj) {
-      // console.log(obj)
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
       obj.areaid = obj.AreaList[2]

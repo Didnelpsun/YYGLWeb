@@ -246,7 +246,7 @@
     </el-dialog>
     </div>
     <el-dialog top="1%" :visible.sync="unitsShow" title="选择存放点" width="80%" :before-close="SpareWarehousePickerClose">
-      <SpareWarehousePicker   @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker :DicList="DicList"  @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
   </div>
 </template>
@@ -358,7 +358,7 @@ export default {
     },
     SelectUserOperation (operation, name, Warehousesid) {
       this.SpareWarehouseShow = false
-      this.WriteData.depotsname = name.trim()
+      this.WriteData.depotsname = name
       this.WriteData.depotsid = Warehousesid
     },
     SpareWarehousePicker (name, code, id) {

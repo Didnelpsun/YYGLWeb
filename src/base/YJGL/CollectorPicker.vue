@@ -38,11 +38,11 @@
         <el-table-column prop="faccode" label="手机卡号" width=""></el-table-column>
         <el-table-column prop="swver" label="IMSI" width=""></el-table-column>
         <el-table-column prop="faccode" label="IMEI" width=""></el-table-column>
-        <el-table-column prop="datetime" label="注册时间" width=""></el-table-column>
+        <el-table-column prop="creatortime" label="注册时间" width=""></el-table-column>
         <el-table-column prop="type" label="通信状态" width=""></el-table-column>
         <el-table-column prop="swver" label="标签编码" width=""></el-table-column>
-        <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
-        <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>
+      <!--  <el-table-column prop="machinenumber" label="油机编号" width=""></el-table-column>
+        <el-table-column prop="machinebatchno" label="油机缸号" width=""></el-table-column>-->
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>

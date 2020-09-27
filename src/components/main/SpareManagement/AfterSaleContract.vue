@@ -40,7 +40,7 @@
         </el-row>
       </el-form>
       <el-table :data="tableData" v-loading="Loading" ref="table1" style="margin-top: 15px;">
-        <el-table-column label="序号" width="50">
+        <el-table-column label="序号" width="50px">
           <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
@@ -53,7 +53,7 @@
         <el-table-column prop="endtime" label="结束时间"></el-table-column>
         <el-table-column prop="createusername" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="130px">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>

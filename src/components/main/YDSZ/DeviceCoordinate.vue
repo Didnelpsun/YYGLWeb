@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="write" v-show="showWrite" v-loading="boxLoading">
-      <layuiTitle title="站址找设备"></layuiTitle>
+      <layuiTitle title="设备查询"></layuiTitle>
       <el-form :model="MatchQuery" size="mini" style="margin-top: 20px;">
         <el-row>
           <el-col :span="24">

@@ -130,11 +130,16 @@
         <el-row>
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="逻辑站关键字：" label-width="110px">
+              <el-form-item label="站址范围：">
+                <el-input v-model.trim="Keywords.Scope" placeholder="请填写站址范围"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="逻辑站关键字：" label-width="130px">
                 <el-input v-model.trim="Keywords.logicalstanding" placeholder="请填写逻辑站关键字"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8" style="margin-left: 30px">
+            <el-col :span="6" style="margin-left: 30px">
               <el-button @click="getKeywordsList" :disabled="Loading1" :icon="Loading1 ? 'el-icon-loading' : 'el-icon-search'">查询</el-button>
               <el-button @click="ResetKeywords" icon="el-icon-refresh">重置</el-button>
             </el-col>
@@ -146,10 +151,10 @@
           <p style="margin-bottom: 10px;">订单站址列表</p>
           <el-table :data="orderSiteList" v-loading="Loading1">
             <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage[1] - 1) * pageSize[1] + 1}}</template></el-table-column>
-            <el-table-column prop="logicalstanding" label="逻辑站"></el-table-column>
+            <el-table-column prop="operatorname" label="逻辑站"></el-table-column>
             <el-table-column prop="operators" label="运营商"></el-table-column>
             <el-table-column prop="orderstatus" label="订单状态"></el-table-column>
-            <el-table-column prop="sitename" label="站址名称"></el-table-column>
+            <el-table-column prop="logicalstanding" label="站址名称"></el-table-column>
             <el-table-column prop="sitecode" label="站址编码"></el-table-column>
             <el-table-column prop="productconfiguration" label="产品配置"></el-table-column>
             <el-table-column prop="areaid" label="区域" width=""></el-table-column>
@@ -237,7 +242,8 @@ export default {
         issite: ''
       },
       Keywords: {
-        logicalstanding: ''
+        logicalstanding: '',
+        Scope: 50
       },
       MatchQuery: {
         logicalstanding: '',
@@ -256,7 +262,9 @@ export default {
       currentPage: [1, 1, 1],
       PageIndex: [1, 1, 1],
       Loading: false,
-      MatchLogicstandname: ''
+      MatchLogicstandname: '',
+      Matchlongitude: '',
+      Matchlatitude: ''
     }
   },
   activated () {
@@ -311,9 +319,10 @@ export default {
     getMore3 (e) {
       this.Loading2 = true
       this.currentPage[2] = e
-      this.$axios.get(SitenetWorkList, {params: Object.assign({}, this.Keywords, {
+      this.$axios.get(SitenetWorkList, {params: Object.assign({}, {
         PageIndex: e,
-        PageSize: this.pageSize[2]
+        PageSize: this.pageSize[2],
+        logicalstanding: this.Keywords.logicalstanding
       })}).then(res => {
         this.Loading2 = false
         if (res.errorCode === '200') {
@@ -405,7 +414,7 @@ export default {
       this.matchList.forEach(item => {
         if (!item.issite) {
           item.matchingsource = '订单'
-          item.matchkeywords = this.Keywords.logicalstanding
+          item.matchkeywords = row.operatorname
           item.sitecode = row.sitecode
           item.areaid = row.areaid
         }
@@ -426,7 +435,7 @@ export default {
       this.matchList.forEach(item => {
         if (!item.issite) {
           item.matchingsource = '网元'
-          item.matchkeywords = this.Keywords.logicalstanding
+          item.matchkeywords = row.logicalstanding
           item.sitecode = row.sitecode
           item.areaid = row.areaid
         }
@@ -444,13 +453,16 @@ export default {
       })
     },
     getKeywordsList () {
-      if (!this.Keywords.logicalstanding) return this.$message.error('请填写逻辑站关键字!')
+      // if (!this.Keywords.logicalstanding) return this.$message.error('请填写逻辑站关键字!')
       this.Loading1 = true
       this.$axios.get(OrderSiteList, {
         params: {
           PageIndex: 1,
           PageSize: this.pageSize[0],
           logicalstanding: this.Keywords.logicalstanding,
+          Scope: this.Keywords.Scope,
+          longitude: this.Matchlongitude,
+          latitude: this.Matchlatitude,
           issite: false
         }
       }).then(res => {
@@ -462,22 +474,30 @@ export default {
           this.$message.error(res.msg)
         }
       })
-      this.Loading2 = true
-      this.$axios.get(SitenetWorkList, {
-        params: {
-          PageIndex: 1,
-          PageSize: this.pageSize[0],
-          logicalstanding: this.Keywords.logicalstanding
-        }
-      }).then(res => {
-        this.Loading2 = false
-        if (res.errorCode === '200') {
-          this.networkList = res.data.list
-          this.total[2] = res.data.total
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      if (this.Keywords.logicalstanding) {
+        this.Loading2 = true
+        this.$axios.get(SitenetWorkList, {
+          params: {
+            PageIndex: 1,
+            PageSize: this.pageSize[0],
+            logicalstanding: this.Keywords.logicalstanding
+          }
+        }).then(res => {
+          this.Loading2 = false
+          if (res.errorCode === '200') {
+            this.networkList = res.data.list
+            this.total[2] = res.data.total
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        this.networkList = []
+        this.total[2] = 0
+        this.pageSize[2] = 10
+        this.currentPage[2] = 1
+        this.PageIndex[2] = 1
+      }
     },
     WriteClose () {
       Object.assign(this.$data.Keywords, this.$options.data().Keywords)
@@ -486,6 +506,16 @@ export default {
       this.orderSiteList = []
       this.MatchLogicstandname = []
       this.showWrite = false
+      this.Matchlongitude = ''
+      this.Matchlatitude = ''
+      this.total[1] = 0
+      this.pageSize[1] = 10
+      this.currentPage[1] = 1
+      this.PageIndex[1] = 1
+      this.total[2] = 0
+      this.pageSize[2] = 10
+      this.currentPage[2] = 1
+      this.PageIndex[2] = 1
       this.getData1()
     },
     formatDate (row) {
@@ -508,6 +538,8 @@ export default {
       this.showWrite = true
       this.MatchQuery.logicalstanding = row.logicalstanding
       this.MatchLogicstandname = row.logicalstanding
+      this.Matchlongitude = row.longitude
+      this.Matchlatitude = row.latitude
       this.getMatchList(1)
     },
     showImport (val) {

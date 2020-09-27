@@ -144,14 +144,14 @@
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
                 </tr>
-                <tr class="el-table__row">
+                <!--<tr class="el-table__row">
                   <td><div class="cell">存量筛查结果 </div></td>
                   <td><div class="cell">{{WriteData.stockstationresults}}</div></td>
-                  <!--<td><div class="cell"></div></td>-->
+                  &lt;!&ndash;<td><div class="cell"></div></td>&ndash;&gt;
                   <td><div class="cell"></div></td>
-                </tr>
+                </tr>-->
                 <tr class="el-table__row">
-                  <td><div class="cell">存量站筛查站点编码 </div></td>
+                  <td><div class="cell">最近站点编码 </div></td>
                   <td><div class="cell">{{WriteData.recentlyresourcecode}}</div></td>
                   <!--<td><div class="cell"></div></td>-->
                   <td><div class="cell"></div></td>
@@ -1348,7 +1348,7 @@ export default {
         createconstructionarea: '',
         hotdataarea: '',
         coveringtarget: '',
-        stockstationresults: '',
+        // stockstationresults: '',
         recentlyresourcecode: ''
       },
       StockStationInfo: {

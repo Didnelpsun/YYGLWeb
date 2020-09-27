@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市" width=""></el-table-column>
         <el-table-column prop="areaname" label="区域" width=""></el-table-column>
-        <el-table-column prop="code" label="设备编码" width=""></el-table-column>
+        <el-table-column prop="computerroomcode" label="机房编码" width=""></el-table-column>
         <el-table-column prop="resourcename" label="站点名称" width=""></el-table-column>
         <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
         <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>

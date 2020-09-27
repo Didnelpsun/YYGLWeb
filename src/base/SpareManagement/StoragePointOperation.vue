@@ -67,7 +67,7 @@
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
     <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker :DicList="DicList" :provinceid="WriteData.provinceid"  :cityid="WriteData.cityid" @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
   </div>
 </template>

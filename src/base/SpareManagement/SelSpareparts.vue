@@ -67,12 +67,16 @@
                      :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" :total="pagination.total"
                      background layout="total, prev, pager, next, sizes"></el-pagination>
     </div>
+    <div v-if="sparetypeShow">
     <el-dialog top="1%" :visible.sync="sparetypeShow" title="选择备件类型" width="80%" :before-close="sparetypeClose">
       <Selectsparetype    @Selsparetypeid="Selsparetypeid"/>
     </el-dialog>
+    </div>
+    <div v-if="SparemanufacturerShow">
     <el-dialog top="1%" :visible.sync="SparemanufacturerShow" title="选择备件厂家" width="80%" :before-close="manufacturerClose">
       <Selectmanufacturer  @Selmanufacturerid="Selmanufacturerid"/>
     </el-dialog>
+    </div>
     <div v-if="sparemodelShow">
       <el-dialog top="1%" :visible.sync="sparemodelShow" title="选择备件型号" width="80%" :before-close="sparemodelClose">
         <SelectSpareconMode   :sparetypeid="Query.sparepartstypeid" :sparemanufacturerid="Query.manufacturerid"  @SelSpareconModelid="SelSpareconModelid"/>

@@ -31,7 +31,7 @@
         </el-col>
       </el-row>
 
-      <el-table :data="tableData" v-loading="tableLoading" :tree-props="{children: 'child'}" row-key="id" style="margin-top: 15px;">
+      <el-table :data="tableData" v-loading="tableLoading"  :tree-props="{children: 'child'}" row-key="id" style="margin-top: 15px;">
         <el-table-column prop="name" label="资源名称" width="150" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="resourcetype" label="资源类型" width="70" :formatter="formatResType"></el-table-column>
         <el-table-column prop="menutype" label="平台类型" width="70" :formatter="formatMenuType"></el-table-column>

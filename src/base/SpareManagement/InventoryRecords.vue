@@ -165,7 +165,7 @@
       </el-dialog>
     </div>
     <el-dialog top="1%" :visible.sync="SpareWarehouseShow" title="选择存放点" width="80%" :before-close="SpareWarehousClose">
-      <SpareWarehousePicker   @SpareWarehousePicker="SpareWarehousePicker"/>
+      <SpareWarehousePicker :DicList="DicList"  @SpareWarehousePicker="SpareWarehousePicker"/>
     </el-dialog>
   </div>
 </template>
@@ -255,9 +255,6 @@ export default {
     },
     setWriteData (data) {
       this.WriteData = data
-      this.WriteData.AreaList = [ data.provinceid, data.cityid ]
-      this.setArea(this.WriteData.AreaList, 'csArea')
-      console.log(this.DicList)
     },
     WriteClose () {
       this.ResetWrite()

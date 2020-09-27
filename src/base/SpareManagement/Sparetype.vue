@@ -197,7 +197,6 @@ export default {
       }
     },
     WriteClose () {
-      /*   this.setArea([]) */
       this.ResetWrite()
       this.$emit('fatherClose')
     },
@@ -239,11 +238,6 @@ export default {
           })
         }
       })
-    }
-  },
-  watch: {
-    WriteData () {
-      console.log(this.WriteData)
     }
   }
 }

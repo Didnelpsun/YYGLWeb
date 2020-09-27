@@ -31,6 +31,17 @@
               <col width="100"/>
             </colgroup>
             <tbody>
+            <tr class="el-table__row">
+              <td><div class="cell">存放点</div></td>
+              <td><div class="cell" >
+                <div  @click="Show=true">
+                  <el-form-item class="form-item">
+                    <el-input v-model="operation" readonly placeholder="请选择存放点"></el-input>
+                  </el-form-item>
+                </div>
+              </div></td>
+              <td><div class="cell"></div></td>
+            </tr>
             <tr class="el-table__row" >
               <td colspan="3" style="background-color: rgb(230, 189, 189)"><div class="cell">扫码:单条扫码单条提交</div></td>
             </tr>
@@ -38,29 +49,29 @@
               <td><div class="cell">备件编码</div></td>
               <td><div class="cell">
                 <div >
-                  <el-input v-model="WriteData.code" clearable placeholder="请扫备件编码"></el-input>
+                  <el-input v-model="WriteData.code"  placeholder="请扫备件编码"></el-input>
                 </div></div>
               </td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件类型</div></td>
-              <td><div class="cell">{{WriteData.sparepartstypeid}}</div></td>
+              <td><div class="cell">{{WriteData.typename}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">厂家</div></td>
-              <td><div class="cell">{{WriteData.manufacturerid}}</div></td>
+              <td><div class="cell">{{WriteData.manufacturername}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">权属</div></td>
-              <td><div class="cell">{{WriteData.units}}</div></td>
+              <td><div class="cell">{{WriteData.unitname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件型号</div></td>
-              <td><div class="cell">{{WriteData.sparemodelid}}</div></td>
+              <td><div class="cell">{{WriteData.sparemodel}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -70,7 +81,7 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">状态</div></td>
-              <td><div class="cell">{{WriteData.areaname}}</div></td>
+              <td><div class="cell">{{WriteData.storestate |state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
@@ -80,19 +91,14 @@
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">存放点 </div></td>
-              <td><div class="cell">{{WriteData.depotsid}}</div></td>
-              <td><div class="cell"></div></td>
-            </tr>
-            <tr class="el-table__row">
-              <td><div class="cell">存放点类型</div></td>
-              <td><div class="cell">{{WriteData.depotstype}}</div></td>
+              <td><div class="cell">{{WriteData.depotsname}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
               <td><div class="cell">备件质保编号</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="warrantycode">
-                  <el-input v-model="WriteData.warrantycode"  clearable placeholder="请扫备件质保编号"></el-input>
+                  <el-input v-model="WriteData.warrantycode"   placeholder="请扫备件质保编号"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -102,7 +108,7 @@
               <td><div class="cell">资产编码</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="assetsencoding">
-                  <el-input v-model="WriteData.assetsencoding"  clearable placeholder="请扫备件资产编码"></el-input>
+                  <el-input v-model="WriteData.assetsencoding"   placeholder="请扫备件资产编码"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -112,7 +118,7 @@
               <td><div class="cell">二维码</div></td>
               <td><div class="cell">
                 <el-form-item  class="form-item" prop="qrcode">
-                  <el-input v-model="WriteData.qrcode"  clearable placeholder="请扫二维码"></el-input>
+                  <el-input v-model="WriteData.qrcode"   placeholder="请扫二维码"></el-input>
                 </el-form-item>
               </div>
               </td>
@@ -142,23 +148,27 @@
       <el-button  @click="SubAdd()" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
-
+    <el-dialog top="1%"  :visible.sync="Show" title="选择存放点" width="80%" :before-close="SelectUserOperationClose">
+      <SelectUserOperation :check="check"  @SelectUserOperation="SelectUserOperation"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import SelectUserOperation from 'base/SpareManagement/SelectUserOperation'
 import {GlobalRes} from 'common/js/mixins'
 import {Editspareparts} from 'api/BJGL'
 export default {
   name: 'SpareReplaceDetail',
   mixins: [GlobalRes],
   props: {
-
+    Loading: false
   },
   data () {
     return {
+      check: 6,
+      operation: null,
       Show: false,
-      Loading: false,
       WriteData: {
         id: null,
         code: null,
@@ -175,6 +185,7 @@ export default {
         qrcode: null,
         reamrk: null
       },
+
       Rules: {
         code: [{ required: true, message: '请扫备件编码', trigger: 'change' }],
         warrantycode: [{ required: true, message: '请扫备件质保编码', trigger: 'change' }],
@@ -186,7 +197,14 @@ export default {
   },
 
   methods: {
+    SelectUserOperationClose () { this.Show = false },
+    SelectUserOperation (operation, name, id) {
+      this.Show = false
+      this.operation = name
+      this.WriteData.operationid = id
+    },
     ResetWrite () {
+      this.operation = null
       Object.assign(this.$data.WriteData, this.$options.data().WriteData)
       this.$refs.WriteForm.resetFields()
     },
@@ -218,7 +236,13 @@ export default {
     }
   },
   components: {
-
+    SelectUserOperation
+  },
+  filters: {
+    state (val) {
+      val = parseInt(val)
+      return val === 1 ? '在网' : val === 2 ? '备件' : val === 3 ? '故障' : val === 4 ? '维修' : '报废'
+    }
   }
 }
 </script>

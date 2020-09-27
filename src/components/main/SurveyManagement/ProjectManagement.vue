@@ -85,6 +85,7 @@
         <el-col :span="4" class="SearchResult">查询结果</el-col>
         <el-col :offset="2" :span="18" class="fr">
           <div class="fr">
+            <el-button @click="showImport" type="success" icon="el-icon-upload2">导入</el-button>
             <el-button @click="SiteExport" type="success" icon="el-icon-download">导出</el-button>
             <el-button @click="handleAdd" type="success" icon="el-icon-plus">添加</el-button>
             <el-button @click="BatchSend" type="success" icon="el-icon-plus">派发</el-button>
@@ -337,26 +338,26 @@
                 <!--<td><div class="cell"></div></td>-->
                 <td><div class="cell"></div></td>
               </tr>
-              <tr v-if="WriteData.stockstationresults" class="el-table__row">
+              <!--<tr v-if="WriteData.stockstationresults" class="el-table__row">
                 <td><div class="cell">{{WriteData.constructionmode === 1 ? '最近站点验证结果' : '存量筛查结果'}}</div></td>
                 <td><div class="cell">{{WriteData.stockstationresults}}</div></td>
-                <!--<td><div class="cell"></div></td>-->
+                &lt;!&ndash;<td><div class="cell"></div></td>&ndash;&gt;
                 <td><div class="cell"></div></td>
-              </tr>
+              </tr>-->
               </tbody>
             </table>
           </div>
         </el-form>
       </div>
       <div class="center" style="padding-bottom: 10px">
-        <el-button v-show="WriteState !==2" @click="selectResource" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'">{{WriteData.constructionmode === 1 ? '最近站点验证' : '存量筛查'}}</el-button>
+        <!--<el-button v-show="WriteState !==2" @click="selectResource" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'">{{WriteData.constructionmode === 1 ? '最近站点验证' : '存量筛查'}}</el-button>-->
         <el-button v-show="WriteState !==2" @click="SubWrite" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
         <el-button @click="WriteClose" type="primary" icon="el-icon-arrow-left">返回</el-button>
       </div>
     </div>
 
     <el-dialog top="1%" :visible.sync="DialogVisible" :title="showUser ? '选择用户' : '存量站筛查'" width="60%" :before-close="DialogClose" append-to-body>
-      <div v-if="showSite">
+      <!--<div v-if="showSite">
         <div style="height: 30px;font-size: 16px;text-align: center">
           <span style="float: left;">站点编码:{{WriteData.resourcecode}}</span>
           建站方式:{{WriteData.constructionmode === 1 ? '新建站' : '存量站'}}
@@ -368,10 +369,11 @@
           <el-table-column prop="resourcecode" label="站点编码" width=""></el-table-column>
           <el-table-column prop="M" label="需求距离（m）" width="" :formatter="formatDistance"></el-table-column>
         </el-table>
-      </div>
+      </div>-->
       <SelectUser v-if="showUser" @selectUser="selectUser"></SelectUser>
     </el-dialog>
     <GoogleMap v-if="showMap" ref="GoogleMap" @fatherGetData="getMapData"></GoogleMap>
+    <Import ref="ImportBox" @fatherGetData="getData1"></Import>
   </div>
 </template>
 
@@ -379,11 +381,13 @@
 import {GlobalRes} from 'common/js/mixins'
 import GoogleMap from 'base/GoogleMap'
 import layuiTitle from 'base/layui-title'
+import Import from 'base/Import'
 import {mapMutations} from 'vuex'
 import {DictionaryInfoList, AreaList} from 'api/api'
 import SelectUser from 'base/TaskEquipment/SelectUser'
 import {exportMethod} from 'api/YDSZ'
-import {GetKCProjectExcel, AddProject, GetProjectList, GetProjectInfo, UpdateProject, DelProject, GetResourceList, GetDistributeProject, GetProjectExcel} from 'api/SurveyManagement'
+import {GetKCProjectExcel, AddProject, GetProjectList, GetProjectInfo, UpdateProject, ImportKCProject,
+  DelProject, GetResourceList, GetDistributeProject, GetProjectExcel} from 'api/SurveyManagement'
 export default {
   name: 'ProjectManagement',
   mixins: [GlobalRes],
@@ -452,8 +456,8 @@ export default {
         createconstructionarea: '',
         hotdataarea: '',
         coveringtarget: '',
-        stockstationresults: '',
-        recentlyresource_id: '',
+        /* stockstationresults: '',
+        recentlyresource_id: '', */
         id: ''
       },
       Rules: {
@@ -514,6 +518,8 @@ export default {
   activated () {
     this.getData1()
     this.initDictionariesArray()
+    this.$refs.ImportBox.searchName = '勘察项目导入模板'
+    this.$refs.ImportBox.GetTemplateInfo()
   },
   methods: {
     changeArea (obj) {
@@ -645,13 +651,13 @@ export default {
       this.showUser = false
     },
     SubWrite () {
-      if (!this.WriteData.stockstationresults) {
+      /* if (!this.WriteData.stockstationresults) {
         if (this.WriteData.constructionmode === 1) {
           return this.$message.error('未进行最近站点验证！')
         } else if (this.WriteData.constructionmode === 2) {
           return this.$message.error('未进行存量筛查！')
         }
-      }
+      } */
       if (this.WriteState === 0) this.SubAdd()
       if (this.WriteState === 1) this.SubEdit()
     },
@@ -684,6 +690,8 @@ export default {
               this.$message.error(res.msg)
             }
           }).catch(error => {
+            this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
+            this.WriteData.demandside = this.WriteData.demandside.split(',')
             this.Loading = false
             console.log(error)
           })
@@ -719,6 +727,8 @@ export default {
               this.$message.error(res.msg)
             }
           }).catch(error => {
+            this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
+            this.WriteData.demandside = this.WriteData.demandside.split(',')
             this.Loading = false
             console.log(error)
           })
@@ -800,6 +810,11 @@ export default {
         console.log(error)
       })
     },
+    showImport () {
+      this.$refs.ImportBox.Open()
+      this.$refs.ImportBox.uploadURL = ImportKCProject
+      this.$refs.ImportBox.fileName = '错误勘察项目数据'
+    },
     // 导出数据
     SiteExport () {
       this.$confirm(`您确定要导出吗？`, '提示', {
@@ -871,8 +886,8 @@ export default {
         this.Rules.resourcename[0].required = true
         // this.WriteData.rawoperator = []
       }
-      this.WriteData.stockstationresults = ''
-      this.WriteData.recentlyresource_id = ''
+      /* this.WriteData.stockstationresults = ''
+      this.WriteData.recentlyresource_id = '' */
     },
     handleExport (index, row) {
       this.$confirm(`您确定要导出项目资料吗？`, '提示', {
@@ -928,7 +943,7 @@ export default {
     })
   },
   watch: {
-    'WriteData.resourcecode': function (newv, oldv) {
+    /* 'WriteData.resourcecode': function (newv, oldv) {
       if (!oldv) return
       if (newv !== oldv) {
         this.WriteData.stockstationresults = ''
@@ -948,12 +963,13 @@ export default {
         this.WriteData.stockstationresults = ''
         this.WriteData.recentlyresource_id = ''
       }
-    }
+    } */
   },
   components: {
     layuiTitle,
     SelectUser,
-    GoogleMap
+    GoogleMap,
+    Import
   }
 }
 </script>

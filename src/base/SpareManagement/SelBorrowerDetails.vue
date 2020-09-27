@@ -62,7 +62,7 @@
               </tr>
               <tr class="el-table__row">
                 <td><div class="cell">备件类型</div></td>
-                <td><div class="cell">{{WriteData.sparepartstype}}</div></td>
+                <td><div class="cell">{{WriteData.alsotypename}}</div></td>
                 <td><div class="cell"></div></td>
               </tr>
               <tr class="el-table__row">
