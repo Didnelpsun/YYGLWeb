@@ -33,13 +33,12 @@
       <el-table-column label="序号" width="50">
         <template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template>
       </el-table-column>
-      <el-table-column prop="cityname" label="地市"></el-table-column>
-      <el-table-column prop="typename" label="类型名称"></el-table-column>
-      <el-table-column prop="typeencoding" label="类型编码"></el-table-column>
-      <el-table-column prop="remark" label="说明"></el-table-column>
-      <el-table-column prop="realityname" label="提交人"></el-table-column>
-      <el-table-column prop="createtime" label="提交时间"></el-table-column>
-
+      <el-table-column prop="cityname" label="地市" width="170" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="typename" label="类型名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="typeencoding" label="类型编码" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="remark" label="说明" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="realityname" label="提交人"  width="150" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="createtime" label="提交时间" width="120"></el-table-column>
       <el-table-column prop="" label="操作" width="50">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="handleChoose(scope.$index, scope.row)">选择</el-button>

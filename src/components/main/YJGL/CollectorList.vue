@@ -81,6 +81,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加采集器' : WriteState === 1 ? '编辑采集器' : '采集器详情'"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite" :showIsbinding="showIsbinding" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
   </div>
@@ -90,7 +91,7 @@
 import { GetcollectorIdInfo, GetcollectorList, Deletecollector } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/CollectorList'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'CollectorList',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -180,7 +181,6 @@ export default {
             this.showWrite = true
             try {
               this.tableData = res.data
-              console.log(res.data)
               this.$refs.Details.setWriteData(this.tableData)
             } catch (e) {
               console.log(e)
@@ -226,7 +226,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    layuiTitle
   }
 }
 </script>

@@ -25,7 +25,7 @@
         <el-table-column prop="ifixplace" :formatter="ifixplaceshow" label="是否有固定油机" width=""></el-table-column>
         <el-table-column prop="machinebatchno" label="油机编号" width=""></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width=""></el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleDetails( scope.row)">详情</el-button>
            <!-- <el-button type="text" size="mini" @click="handleWrite(1, scope.row)" v-if="!scope.row.Isbinding">编辑</el-button>-->
@@ -42,6 +42,7 @@
     </div>
 
     <div v-show="showWrite&&!isShow">
+      <layuiTitle title="添加停电预警"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
     <div v-show="isShow">
@@ -55,7 +56,7 @@ import { GetIdPowerwarningInfo, GetPowerwarningList, DeletePowerwarning } from '
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/PowerWarningList'
 import PowerWarningListDetails from 'base/YJGL/PowerWarningListDetails'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'PowerWarningList',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -90,9 +91,7 @@ export default {
       return val.ifixplace ? '是' : '否'
     },
     handleDetails (row) {
-      console.log(row)
       let params = { id: row.workorderid }
-
       this.$refs.WarningListDetails.WriteLoading = true
       this.isShow = true
       this.showWrite = true
@@ -209,7 +208,8 @@ export default {
   },
   components: {
     Details,
-    PowerWarningListDetails
+    PowerWarningListDetails,
+    layuiTitle
   }
 }
 </script>

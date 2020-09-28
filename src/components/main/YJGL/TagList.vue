@@ -9,9 +9,9 @@
                 <el-input class="searchSelect" v-model="query.propertyunit" placeholder="请输入产权单位" @keyup.enter.native="getMore(1)"></el-input>
               </el-form-item>
             </el-col>-->
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="区域：">
-                <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>
+                <el-cascader  v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>
               </el-form-item>
             </el-col>
           </el-col>
@@ -57,6 +57,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加标签' : WriteState === 1 ? '编辑标签' : '标签详情'"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)" :dictionaryList="dictionaryList" />
     </div>
   </div>
@@ -67,7 +68,7 @@ import { DictionaryInfoList } from 'api/api'
 import { GetTagListInfo, GetTagIdListInfo, DelteTag } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/TagList'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'Battery',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -223,7 +224,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    layuiTitle
   }
 }
 </script>

@@ -43,12 +43,12 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="name" label="姓名" width="100"></el-table-column>
         <el-table-column prop="cardnum" label="身份证号" width=""></el-table-column>
-        <el-table-column prop="mobilnum" label="手机号" width="125"></el-table-column>
-        <el-table-column prop="sparemobile" label="备用手机号" width="125"></el-table-column>
+        <el-table-column prop="mobilnum" label="手机号" width="110"></el-table-column>
+        <el-table-column prop="sparemobile" label="备用手机号" width="110"></el-table-column>
         <el-table-column prop="address" label="住址" width=""></el-table-column>
-        <el-table-column prop="realityname" label="提交人" width="100"></el-table-column>
-        <el-table-column prop="dateIdinfo" label="提交时间" width=""></el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column prop="realityname" label="提交人"></el-table-column>
+        <el-table-column prop="dateIdinfo" label="提交时间" width="120"></el-table-column>
+        <el-table-column label="操作" width="130" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
@@ -65,6 +65,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加协管员' : WriteState === 1 ? '编辑协管员' : '协管员详情'"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
   </div>
@@ -74,7 +75,7 @@
 import { GetIdAssistantInfo, GetAssistantInfoList, GetIdscope, DeleteAssistant } from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/AssistantList'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'AssistantList',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -246,7 +247,8 @@ export default {
     }
   },
   components: {
-    Details
+    Details,
+    layuiTitle
   }
 }
 </script>

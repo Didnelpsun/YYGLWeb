@@ -183,7 +183,6 @@ export default{
         applicanttype: 0,
         applicantname: '',
         applytime: '',
-        auditorstate: 4,
         auditopinion: '',
         imglist: []
       },
@@ -216,27 +215,29 @@ export default{
       if (val === 1) this.$emit('fatherOpenImgBox', '油机缸号', 'machinebatchno', this.ImgList1)
     },
     auditData () {
-      if (!this.tableData.auditorstate) {
-        console.log(this.tableData.auditorstate)
-        this.$message.warning('请选择审核状态')
-      } else {
-        this.$axios.put(Machineaudit, {
-          id: this.tableData.id,
-          auditorstate: this.tableData.auditorstate,
-          auditopinion: this.tableData.auditopinion
-        }).then(res => {
-          if (res.success === false) {
-            this.$message.error(res.msg)
-          }
-          if (res.success === true) {
-            this.$message.success('审核成功！')
-            this.closeWrite()
-            this.ResetWrite()
-          }
-        }).catch(error => {
-          console.log(error)
-        })
-      }
+      if (this.tableData.auditopinion === '' || this.tableData.auditopinion === undefined || this.tableData.auditopinion === null) return this.$message.error('请填写审核意见！')
+      this.$refs.tableForm.validate((vali, msg) => {
+        if (!vali) {
+          return this.$message.error('请选择审核状态！')
+        } else {
+          this.$axios.put(Machineaudit, {
+            id: this.tableData.id,
+            auditorstate: this.tableData.auditorstate,
+            auditopinion: this.tableData.auditopinion
+          }).then(res => {
+            if (res.success === false) {
+              this.$message.error(res.msg)
+            }
+            if (res.success === true) {
+              this.$message.success('审核成功！')
+              this.closeWrite()
+              this.ResetWrite()
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+      })
     },
     // 返回关闭编辑函数
     closeWrite () {

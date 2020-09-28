@@ -58,6 +58,7 @@
                 </div></td>
                 <td v-if="WriteState == 2"><div class="cell">{{tableData.cityname}}</div></td>
                 <td><div class="cell"></div></td>
+                <td><div class="cell"></div></td>
               </tr>
               <!--身份证号-->
               <tr class="el-table__row">

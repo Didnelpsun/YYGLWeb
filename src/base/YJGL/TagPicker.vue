@@ -1,24 +1,32 @@
 <template>
   <div class="content">
+    <div class="main">
       <el-form :model="query">
-        <el-row :gutter="20">
+        <el-row>
           <!--选择器-->
-          <el-col :sm="12" :md="8">
-            <el-form-item label="产权单位：" label-width="120px">
-              <el-input class="searchSelect" v-model="query.propertyunit" placeholder="请输入产权单位"></el-input>
+          <el-col :span="16">
+            <el-col :span="8">
+            <el-form-item label="区域：" style="width: 300px">
+              <el-cascader v-model="query.AreaList"  :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>
             </el-form-item>
-          </el-col>
-          <el-col :sm="12" :md="8">
-            <el-form-item label="区域：" label-width="100px">
-              <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>
-            </el-form-item>
+            </el-col>
           </el-col>
           <el-col :span="8">
+            <div class="fr">
             <el-button type="primary" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'" @click="getMore(1)">查询</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
+            </div>
           </el-col>
         </el-row>
       </el-form>
+    <el-row style="margin: 5px 0px">
+      <el-col :span="4" class="SearchResult">查询结果</el-col>
+      <el-col :offset="2" :span="18" class="fr">
+        <div class="fr">
+
+        </div>
+      </el-col>
+    </el-row>
       <el-table :data="tableList" v-loading="Loading">
         <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
@@ -38,7 +46,8 @@
                        :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" :total="pagination.total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>
-  </div>
+    </div>
+      </div>
 </template>
 
 <script>
@@ -52,7 +61,6 @@ export default {
     return {
       // 查询相关属性
       query: {
-        propertyunit: '',
         AreaList: [
         ]
       },
@@ -93,12 +101,12 @@ export default {
           PageSize: this.pagination.pageSize
         })
       }).then(res => {
+        this.Loading = false
         this.tableList = res.data.list
         this.pagination.total = res.data.total
       }).catch(error => {
         console.log(error)
       })
-      this.Loading = false
     },
     // 重置按钮
     resetQueryForm () {

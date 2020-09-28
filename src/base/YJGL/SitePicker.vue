@@ -25,7 +25,7 @@
         </el-row>
       </el-form>
       <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
-      <el-table :data="tableList" v-loading="Loading" @selection-change="handleSelectionChange">
+      <el-table :data="tableList" v-loading="Loading" ref="multipleTable" @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
           width="55">

@@ -1,7 +1,7 @@
 <template>
   <div class="write">
     <el-tabs class="content-card" v-model="ViewTabIndex"  v-loading="WriteLoading" @tab-click="changeTab">
-      <el-tab-pane :label="WriteState===0? '油机新增':WriteState===1?'油机编辑':'油机详情'">
+      <el-tab-pane :label="WriteState===0? '油机新增':WriteState===1?'油机编辑':WriteState===2?'油机详情':'油机绑定' ">
         <div class="el-table el-table--striped el-table--enable-row-hover el-table--border el-table--enable-row-transition el-table--small">
           <!--表头-->
           <div class="el-table__header-wrapper">

@@ -209,6 +209,7 @@ export default{
       stationidname: [],
       params: {},
       areaOption: [],
+      oncetime: false,
       // 表单验证
       Rules: {
         name: [
@@ -305,16 +306,35 @@ export default{
     },
     selectSite (row) {
       this.isShow = false
+      this.tableData.stationid = []
+      this.stationidname = []
+      this.tableData.stationname = null
       if (row.length > 0) {
-        this.tableData.stationid = []
-        this.stationidname = ''
         this.tableData.stationid = row.map(item => item.id)
         this.stationidname = row.map(item => item.name)
-        this.tableData.stationname = this.stationidname.join(',')
+        /*   this.tableData.stationname = this.stationidname.join(',') */
       } else {
-        this.tableData.stationid = []
         this.tableData.stationid[0] = row.id
-        this.tableData.stationname = row.name
+        this.stationidname[0] = row.name
+        /*   this.tableData.stationname = row.name */
+      }
+
+      if (this.tableData.station !== undefined) {
+        this.tableData.station.forEach(item => {
+          let index = this.tableData.stationid.findIndex(value => value === item.stationid)
+          if (index !== -1) {
+            this.oncetime = true
+            console.log(1)
+            this.tableData.stationid = this.tableData.stationid.splice(index + 1, 1)
+            this.stationidname = this.stationidname.splice(index + 1, 1)
+          }
+        })
+      }
+      this.tableData.stationname = this.stationidname.join(',')
+      console.log(this.oncetime)
+      if (this.oncetime) {
+        this.oncetime = false
+        return this.$message.warning('请不要选择已有站点,已有站点不能添加！')
       }
     },
     DetailhandleClose () {

@@ -10,6 +10,7 @@
       </el-submenu>
       <el-menu-item index="1"><i class="message el-icon-message"></i></el-menu-item>
     </el-menu>
+    <div v-if="UserInfo.usertype" class="userType">用户类型：{{UserInfo.usertype === 1 ? '超级管理员' : UserInfo.usertype === 2 ? '运营管理员' : UserInfo.usertype === 3 ? '租户管理员' : '普通用户'}}</div>
   </div>
 </template>
 
@@ -65,7 +66,7 @@ export default {
     float: left;
   }
   .header .header-nav {
-    margin: 0 20px;
+    margin-right: 20px;
     background: #3CA0EC;
     float: right;
   }
@@ -74,5 +75,10 @@ export default {
     color: #fff;
     font-size: 20px;
   }
-
+  .userType {
+    float: right;
+    color: #fff;
+    font-size: 14px;
+    line-height: 50px;
+  }
 </style>

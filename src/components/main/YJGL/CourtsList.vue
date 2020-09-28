@@ -29,7 +29,7 @@
         <el-table-column prop="powersupplycontact" label="供电联系人" width=""></el-table-column>
         <el-table-column prop="createusername" label="提交人" width=""></el-table-column>
         <el-table-column prop="createdatetime" label="提交时间" width=""></el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="130" fixed="right">
           <template slot-scope="scope">
             <!-- <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button> -->
             <el-button type="text" size="mini" @click="handleWrite(3,scope.row)">添加</el-button>
@@ -47,6 +47,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加台区' : WriteState === 1 ? '编辑台区' : '添加台区站点'"></layuiTitle>
       <Details :WriteState="WriteState" :id="id" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(1)" />
     </div>
     <el-dialog top="1%" :visible.sync="isShow" title="选择站点ID" width="80%" :before-close="DetailhandleClose">
@@ -60,7 +61,7 @@ import { GetCourtsList, GetIdCourtsInfo, GetCourtsIdScope, DeleteCourts } from '
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/CourtsList'
 import SitePicker from 'base/YJGL/SitePicker'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'CourtsList',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -220,7 +221,8 @@ export default {
   },
   components: {
     Details,
-    SitePicker
+    SitePicker,
+    layuiTitle
   }
 }
 </script>

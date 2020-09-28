@@ -56,10 +56,10 @@
         <el-table-column prop="areaname" label="区域" ></el-table-column>
         <el-table-column prop="name" label="存放点名称"></el-table-column>
         <el-table-column prop="code" label="存放点编码"></el-table-column>
-        <el-table-column prop="operation" label="操作"></el-table-column>
+        <el-table-column prop="operation" label="操作"  width="100"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
-        <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column prop="createtime" label="提交时间"  width="120"></el-table-column>
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
             <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>

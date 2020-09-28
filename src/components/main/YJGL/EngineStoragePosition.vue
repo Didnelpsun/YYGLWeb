@@ -37,6 +37,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle :title="WriteState === 0 ? '添加固定油机部署' : WriteState === 1 ? '编辑固定油机部署' : '固定油机部署详情'"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite"  @fatherOpenImgBox="OpenImgBox" ref="Details" @fatheretMore="getMore(pagination.currentPage)"/>
     </div>
     <ImgBox ref="ImgBox"></ImgBox>
@@ -48,7 +49,7 @@ import { EnginestoragepositionInfo, EnginestoragepositionList, DeteleEnginestora
 import { GlobalRes } from 'common/js/mixins'
 import Details from 'base/YJGL/EngineStoragePosition'
 import ImgBox from 'base/ImgBox'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'EngineStoragePosition',
   // 合并对象，必须以文件名:[导出对象名]的格式
@@ -195,7 +196,8 @@ export default {
   },
   components: {
     Details,
-    ImgBox
+    ImgBox,
+    layuiTitle
   }
 }
 </script>

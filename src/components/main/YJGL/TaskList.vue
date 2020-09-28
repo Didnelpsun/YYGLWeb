@@ -97,6 +97,7 @@
     </div>
 
     <div v-show="showWrite">
+      <layuiTitle title="添加发电任务" v-if="WriteState === 0"></layuiTitle>
       <Details :WriteState="WriteState" @fatherClose="closeWrite" ref="Details" @fatheretMore="getMore(pagination.currentPage)"
       @fathersetData1="setData1" @fathersetData2="setData2"  @fathersetData3="setData3" @fathersetData4="setData4"/>
     </div>
@@ -109,7 +110,7 @@ import {JobList, JobInfo, TaskIdMonitoring, TaskIdOperationLog, ImportBBUExcel, 
 import {GlobalRes} from 'common/js/mixins'
 import Details from 'base/YJGL/TaskList'
 import Import from 'base/Import'
-
+import layuiTitle from 'base/layui-title'
 export default {
   name: 'TaskList',
   mixins: [GlobalRes],
@@ -320,7 +321,8 @@ export default {
   },
   components: {
     Details,
-    Import
+    Import,
+    layuiTitle
   }
 }
 </script>

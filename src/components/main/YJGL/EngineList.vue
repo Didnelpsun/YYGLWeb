@@ -284,7 +284,6 @@ export default {
                 this.tableData.swver = null
                 this.tableData.modulecode = null
                 this.tableData.collectorid = null
-                this.tableData.collectorid = null
                 this.tableData.tagid = null
                 this.tableData.imglist = null
               }

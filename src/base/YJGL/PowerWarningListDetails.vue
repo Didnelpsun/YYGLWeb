@@ -1,7 +1,7 @@
 <template>
   <div class="write">
     <el-row style="margin: 15px 0px;">
-      <el-col :span="4" class="SearchResult">查询结果</el-col>
+      <el-col :span="4" class="SearchResult">停电预警详情</el-col>
       <el-col :offset="2" :span="18" class="fr">
         <div class="fr">
         </div>
