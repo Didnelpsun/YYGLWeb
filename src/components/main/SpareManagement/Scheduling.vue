@@ -166,7 +166,7 @@ export default {
       SparemanufacturerShow: false,
       SelectUserOperationShow: false,
       isShow: false,
-      Loading: false,
+      Loading: true,
       ImgList1: [],
       WriteData: {
         schedulingtype: null,
@@ -240,6 +240,7 @@ export default {
         } else {
           this.$message.error(res.msg)
         }
+        this.Loading = false
       })
     },
     ResetWrite () {
@@ -250,7 +251,7 @@ export default {
       this.WriteData = data
     },
     SubAdd () {
-      this.$refs.WriteForm.validate((vali, msg) => {
+    /*  this.$refs.WriteForm.validate((vali, msg) => {
         if (!vali) {
           return this.$message.error('请补全信息！')
         } else {
@@ -262,7 +263,7 @@ export default {
             this.ResetWrite()
           })
         }
-      })
+      }) */
     }
   },
   components: {

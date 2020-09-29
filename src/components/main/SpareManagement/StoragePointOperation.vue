@@ -44,7 +44,7 @@
         </el-col>
         <el-col :span="6">
           <div class="fr" style="margin-top: 0">
-            <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
+            <el-button @click="handleWrite(0)"  type="success"  icon="el-icon-plus">添加</el-button>
           </div>
         </el-col>
       </el-row>
@@ -56,7 +56,7 @@
         <el-table-column prop="areaname" label="区域" ></el-table-column>
         <el-table-column prop="name" label="存放点名称"></el-table-column>
         <el-table-column prop="code" label="存放点编码"></el-table-column>
-        <el-table-column prop="operation" label="操作"  width="100"></el-table-column>
+        <el-table-column prop="operation" label="操作"  width="80"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"  width="120"></el-table-column>
         <el-table-column label="操作" width="100">

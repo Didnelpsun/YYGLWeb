@@ -296,7 +296,6 @@ export default {
       }
     }
     var validatePass2 = (rule, value, callback) => {
-      console.log(rule, value)
       if (value === '') {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.AddForm.password) {
@@ -448,15 +447,10 @@ export default {
       this.$refs.AddForm.resetFields()
     },
     SubAdd () {
-      console.log(0)
-      console.log(this.$refs.AddForm)
       this.$refs.AddForm.validate((valid, msg) => {
-        console.log(valid, msg)
         if (!valid) {
-          console.log(1)
           this.$message.warning('请补全完整信息！')
         } else {
-          console.log(2)
           this.UserInfoLoading = true
           this.$axios.post(AddUser, this.AddForm).then((res) => {
             this.UserInfoLoading = false
@@ -693,7 +687,6 @@ export default {
       }
     },
     changeResourceSwitch (row) {
-      console.log(row)
       if (row.isope) {
         this.$axios.post(UserAuthorizeRoleAsync, {
           targettype: 2,
@@ -705,6 +698,7 @@ export default {
             row.isope = !row.isope
           } else {
             this.$message.success('授权成功！')
+            row.permissionid = res.data
           }
         })
       } else {
@@ -716,6 +710,7 @@ export default {
             row.isope = !row.isope
           } else {
             this.$message.warning('取消授权！')
+            row.permissionid = ''
           }
         })
       }

@@ -1,52 +1,63 @@
 <template>
   <div class="content">
       <el-form :model="query">
-        <el-row :gutter="20">
+        <el-row>
           <!--选择器-->
+          <el-col :span="19">
           <el-col :sm="12" :md="8">
-            <el-form-item label="区域：" label-width="100px">
+            <el-form-item label="区域：">
               <el-cascader v-model="query.AreaList" :props="QareaProps" @change="changeArea(query)" ref="queryInput" :options="queryOption"></el-cascader>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8">
-            <el-form-item label="油机缸号：" label-width="120px">
+            <el-form-item label="油机缸号：">
               <el-input class="searchSelect" v-model="query.machinebatchno" placeholder="请输入油机缸号"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8">
-            <el-form-item label="厂家编号：" label-width="120px">
-              <el-input class="searchSelect" v-model.number="query.manufactor" placeholder="请输入厂家编号"></el-input>
+            <el-form-item label="厂家：">
+              <el-select class="tableSelect" v-model="query.manufactor" placeholder="请选择厂家">
+                <el-option v-for="item in dictionaryList.manufactorList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8" v-if="!stickArchive">
-            <el-form-item label="审核状态：" label-width="150px">
+            <el-form-item label="审核状态：">
               <el-select v-model="query.auditsuccess" placeholder="请选择审核状态">
+                <el-option label="请选择" :value="null"></el-option>
                 <el-option label="审核成功" :value="4"></el-option>
                 <el-option label="审核打回" :value="3"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8">
-            <el-form-item label="型号：" label-width="120px">
-              <el-input class="searchSelect" v-model.number="query.model" placeholder="请输入型号"></el-input>
+            <el-form-item label="型号：">
+              <el-select class="tableSelect" v-model="query.model" placeholder="请选择型号">
+                <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8">
-            <el-form-item label="燃油类型：" label-width="120px">
-              <el-input class="searchSelect" v-model.number="query.Fueltype" placeholder="请输入燃油类型"></el-input>
+            <el-form-item label="燃油类型：">
+              <el-select class="tableSelect" v-model="query.Fueltype" placeholder="请选择燃油类型">
+                <el-option v-for="item in dictionaryList.fueltypeList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :sm="12" :md="8" v-if="!stickArchive">
-            <el-form-item label="是否归档：" label-width="150px">
+            <el-form-item label="是否归档：">
               <el-select v-model="query.ifarchived" placeholder="请选择是否归档">
                 <el-option label="已归档" :value="true"></el-option>
                 <el-option label="未归档" :value="false"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          </el-col>
+          <el-col :span="5">
+            <div class="fr">
             <el-button type="primary" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-search'" @click="getMore(1)">查询</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
+            </div>
           </el-col>
         </el-row>
       </el-form>
@@ -79,7 +90,7 @@
 <script>
 import {GetEngineListInfo} from 'api/YJGL'
 import { GlobalRes } from 'common/js/mixins'
-
+import { DictionaryInfoList } from 'api/api'
 export default {
   name: 'EnginePicker',
   mixins: [GlobalRes],
@@ -95,9 +106,9 @@ export default {
       query: {
         AreaList: [
         ],
-        machinebatchno: '',
+        machinebatchno: null,
         manufactor: null,
-        auditsuccess: 4,
+        /*        auditsuccess: 4, */
         model: null,
         Fueltype: null,
         ifarchived: true
@@ -111,14 +122,44 @@ export default {
         currentPage: 1,
         PageIndex: 1
       },
-      Loading: false
+      Loading: false,
+      dictionaryList: {}
     }
   },
   created () {
     this.getMore(1)
+    this.getList()
     // this.initDictionariesArray()
   },
   methods: {
+    getList () {
+      let s = [
+        '油机归属单位',
+        '油机调度厂家',
+        '油机调度型号',
+        '油机状态',
+        '油机燃油类型'
+      ]
+      this.$axios.post(DictionaryInfoList, s).then(res => {
+        if (res.errorCode === '200') {
+          let data = res.data
+          this.dictionaryList.manufactorList = data.filter(i => {
+            return i.type === '油机调度厂家'
+          })
+          this.dictionaryList.modelList = data.filter(i => {
+            return i.type === '油机调度型号'
+          })
+          this.dictionaryList.enginestateList = data.filter(i => {
+            return i.type === '油机状态'
+          })
+          this.dictionaryList.fueltypeList = data.filter(i => {
+            return i.type === '油机燃油类型'
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     // 分页处理函数
     changeSize (page) {
       this.pagination.pageSize = page
@@ -127,28 +168,30 @@ export default {
     async getMore (page) {
       this.pagination.currentPage = page
       this.Loading = true
-      let area = {
+      /* let area = {
         'provinceid': this.query.AreaList[0],
         'cityid': this.query.AreaList[1],
         'areaid': this.query.AreaList[2]
-      }
+      } */
       this.$axios.get(GetEngineListInfo, {
-        params: Object.assign({}, area, {
+        params: Object.assign({}, this.query, {
           PageIndex: page,
           PageSize: this.pagination.pageSize
         })
       }).then(res => {
         this.tableList = res.data.list
         this.pagination.total = res.data.total
+        this.Loading = false
       }).catch(error => {
+        this.Loading = false
         console.log(error)
       })
-      this.Loading = false
     },
     // 重置按钮
     resetQueryForm () {
       this.query.AreaList.splice(0, this.query.AreaList.length)
       Object.assign(this.$data.query, this.$options.data().query)
+      this.auditsuccess = null
       this.queryOption = []
       this.getMore(1)
     },

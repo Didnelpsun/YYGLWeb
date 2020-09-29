@@ -170,6 +170,9 @@ export default {
           this.ImportResult = true
           this.isSccess = false
         }
+      }).catch(error => {
+        this.ImportLoading = false
+        console.log(error)
       })
     }
   }

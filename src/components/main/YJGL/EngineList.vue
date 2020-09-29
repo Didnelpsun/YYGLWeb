@@ -6,7 +6,7 @@
           <!--区域级联选择器-->
           <el-col :span="18">
             <el-col :span="8">
-              <el-form-item label="审核状态：">
+              <el-form-item label="是否归档：">
                 <el-select v-model="query.ifarchived" placeholder="请选择是否归档">
                   <el-option label="已归档" :value="true"></el-option>
                   <el-option label="未归档" :value="false"></el-option>
@@ -32,10 +32,10 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号：">
-                <el-select class="tableSelect" v-model="query.model" placeholder="请选择型号">
-                  <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
+              <el-select class="tableSelect" v-model="query.model" placeholder="请选择型号">
+                <el-option v-for="item in dictionaryList.modelList" :key="item.id" :label="item.text" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="燃油类型：">

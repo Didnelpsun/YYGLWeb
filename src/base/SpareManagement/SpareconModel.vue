@@ -35,7 +35,7 @@
               <td><div class="cell"><i class="must">*</i>城市</div></td>
               <td v-if="WriteState !== 2"><div class="cell">
                 <el-form-item  class="form-item" prop="AreaList">
-                  <el-cascader v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
+                  <el-cascader :key="key" v-model="WriteData.AreaList" placeholder="请选择区域" :props="cityareaProps" @change="changecityArea(WriteData)" ref="csArea"></el-cascader>
                 </el-form-item>
               </div></td>
               <td v-if="WriteState == 2"><div class="cell">{{WriteData.cityname}}</div></td>
@@ -169,6 +169,7 @@ export default {
       manufactureridShow: false,
       sparetypeidShow: false,
       sparemodelShow: false,
+      key: 1,
       WriteData: {
         AreaList: [],
         provinceid: null,
@@ -198,12 +199,6 @@ export default {
       obj.provinceid = obj.AreaList[0]
       obj.cityid = obj.AreaList[1]
       this.$forceUpdate()
-    },
-    setArea (list, key = 'csArea') {
-      this.nodes = list
-      this.$refs[key].panel.activePath = []
-      this.$refs[key].panel.loadCount = 0
-      this.$refs[key].panel.lazyLoad()
     },
     _normalizeCityAreaLevel (list) {
       for (let i in list) {
@@ -241,12 +236,13 @@ export default {
       this.WriteData = data
       if (this.WriteState !== 2) {
         this.WriteData.AreaList = [ data.provinceid, data.cityid ]
-        this.setArea(this.WriteData.AreaList, 'csArea')
+        this.key++
       }
     },
     WriteClose () {
       this.ResetWrite()
       this.$emit('fatherClose')
+      this.key = 1
     },
     SubWrite () {
       if (this.WriteState === 0) this.SubAdd()

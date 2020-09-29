@@ -25,10 +25,10 @@
         </el-row>
       </el-form>
       <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
-      <el-table :data="tableList" v-loading="Loading" ref="multipleTable" @selection-change="handleSelectionChange">
+      <el-table :data="tableList" v-loading="Loading"    :row-key="getRowKey"  ref="multipleTable" @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="55">
+          width="55" :reserve-selection="true" >
         </el-table-column>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <!-- <el-table-column prop="provincename" label="省份" width=""></el-table-column> -->
@@ -80,6 +80,9 @@ export default {
         currentPage: 1,
         PageIndex: 1
       },
+      getRowKey (row) {
+        return row.id
+      },
       Loading: false,
       DicList: {
         classify: []
@@ -93,6 +96,7 @@ export default {
   methods: {
     select () {
       this.$emit('selectSite', this.info)
+      this.$refs.multipleTable.clearSelection()
     },
     handleSelectionChange (val) {
       this.info = val
@@ -126,11 +130,12 @@ export default {
     // 重置按钮
     resetQueryForm () {
       Object.assign(this.$data.query, this.$options.data().query)
-      // Object.assign(this.$data.AreaList, this.$options.data().AreaList)
       this.getMore(1)
+      this.$refs.multipleTable.clearSelection()
     },
     handleChoose (row) {
       this.$emit('selectSite', row)
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

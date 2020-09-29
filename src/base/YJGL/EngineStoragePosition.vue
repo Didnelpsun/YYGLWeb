@@ -198,6 +198,7 @@ import { AddEnginestorageposition, EditEnginestorageposition } from 'api/YJGL'
 import SitePicker from 'base/YJGL/SitesPicker'
 import EnginePicker from 'base/YJGL/EnginePicker'
 import {GlobalRes} from 'common/js/mixins'
+import {emptyarr} from 'common/js/validata'
 
 export default{
   name: 'EngineStoragePosition',
@@ -240,7 +241,7 @@ export default{
       // 表单验证
       Rules: {
         AreaList: [
-          { required: true, message: '请选择区域', trigger: 'change' }
+          { validator: emptyarr, trigger: 'blur' }
         ],
         machinenumber: [
           { required: true, message: '请选择油机', trigger: 'change' }
@@ -317,9 +318,7 @@ export default{
     },
     // 提交函数
     handleData (event, check) {
-      if (check) {
-        this.tableData.issubmit = check
-      }
+      this.tableData.issubmit = check
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()
     },

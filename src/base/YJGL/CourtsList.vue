@@ -228,6 +228,10 @@ export default{
     // 在进行提交新增时赋值方法，在父组件中调用该方法
     setWriteData (data) {
       this.tableData = data
+      if (this.WriteState === 1) {
+        this.tableData.stationname = data.station.map(val => val.stationname).join(',')
+        this.tableData.stationid = data.station.map(val => val.stationid)
+      }
     },
     // 提交函数
     subData () {
@@ -236,29 +240,27 @@ export default{
       if (this.WriteState === 3) this.sendadd()
     },
     sendadd () {
-      this.$refs.tableForm.validate((valid, msg) => {
-        if (this.tableData.stationname === undefined) {
-          return this.$message.error('请补全信息！')
-        } else {
-          this.WriteLoading = true
-          this.params = {stationid: this.tableData.stationid, id: this.id}
-          this.$axios.post(AddCourts, this.params).then(res => {
-            this.WriteLoading = false
-            if (res.errorCode !== '200') return this.$message.error(res.msg)
-            this.$message.success('添加成功!')
-            this.$emit('fatheretMore')
-            this.closeWrite()
-          }
-          )
+      if (this.tableData.stationname === undefined || this.tableData.stationname === '' || this.tableData.stationname === null) {
+        return this.$message.error('请选择站点！')
+      } else {
+        this.WriteLoading = true
+        this.params = {stationid: this.tableData.stationid, id: this.id}
+        this.$axios.post(AddCourts, this.params).then(res => {
+          this.WriteLoading = false
+          if (res.errorCode !== '200') return this.$message.error(res.msg)
+          this.$message.success('添加成功!')
+          this.$emit('fatheretMore')
+          this.closeWrite()
         }
-      })
+        )
+      }
     },
     // 添加提交
     async add () {
       this.$refs.tableForm.validate((valid, msg) => {
         if (!valid) {
           if (this.tableData.AreaList.length === 0) { return this.$message.error('请选择区域！') }
-          if (this.tableData.stationname === '') { return this.$message.error('请选择站点名称！') }
+          if (this.tableData.stationname === undefined || this.tableData.stationname === '' || this.tableData.stationname === null) { return this.$message.error('请选择站点名称！') }
           return this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
@@ -275,7 +277,7 @@ export default{
     // 修改提交
     async edit () {
       this.$refs.tableForm.validate((valid, msg) => {
-        if (this.tableData.stationname === undefined || this.tableData.name === '' || this.tableData.powersubstation === '' || this.tableData.powersupplycontact === '') {
+        if (!valid) {
           return this.$message.error('请补全信息！')
         } else {
           this.WriteLoading = true
@@ -312,29 +314,24 @@ export default{
       if (row.length > 0) {
         this.tableData.stationid = row.map(item => item.id)
         this.stationidname = row.map(item => item.name)
-        /*   this.tableData.stationname = this.stationidname.join(',') */
       } else {
         this.tableData.stationid[0] = row.id
         this.stationidname[0] = row.name
-        /*   this.tableData.stationname = row.name */
       }
-
-      if (this.tableData.station !== undefined) {
+      if (this.tableData.station !== undefined && this.WriteState === 3) {
         this.tableData.station.forEach(item => {
           let index = this.tableData.stationid.findIndex(value => value === item.stationid)
           if (index !== -1) {
             this.oncetime = true
-            console.log(1)
-            this.tableData.stationid = this.tableData.stationid.splice(index + 1, 1)
-            this.stationidname = this.stationidname.splice(index + 1, 1)
+            this.tableData.stationid.splice(index, 1)
+            this.stationidname.splice(index, 1)
           }
         })
       }
       this.tableData.stationname = this.stationidname.join(',')
-      console.log(this.oncetime)
       if (this.oncetime) {
         this.oncetime = false
-        return this.$message.warning('请不要选择已有站点,已有站点不能添加！')
+        return this.$message.warning('请不要选择已有站点,已有站点无法添加！')
       }
     },
     DetailhandleClose () {

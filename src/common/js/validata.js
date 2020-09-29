@@ -27,3 +27,10 @@ export const valiNumbers = (rule, value, callback) => {
     callback()
   }
 }
+export const emptyarr = (rule, value, callback) => {
+  if (value.length === 0 || value === null || value === '' || value === undefined) {
+    callback(new Error('请补全信息'))
+  } else {
+    callback()
+  }
+}

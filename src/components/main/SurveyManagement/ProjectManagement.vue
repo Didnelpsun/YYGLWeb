@@ -798,9 +798,9 @@ export default {
       }).then(res => {
         this.Loading = false
         this.WriteData = res.data
+        res.data.constructionmode === 2 ? this.isStockStation = true : this.isStockStation = false
         this.WriteData.AreaList = [ res.data.provinceid, res.data.cityid, res.data.areaid ]
         this.setArea(this.WriteData.AreaList, 'csArea')
-        this.isStockStation = false
         this.WriteData.planninglongitude = this.WriteData.planninglongitude ? this.WriteData.planninglongitude : null
         this.WriteData.planninglatitude = this.WriteData.planninglatitude ? this.WriteData.planninglatitude : null
         this.WriteData.rawoperator = this.WriteData.rawoperator ? this.WriteData.rawoperator.split(',') : this.WriteData.rawoperator.split('')
@@ -874,16 +874,10 @@ export default {
     },
     handleChange (val) {
       if (val === 1 || val === 0) {
-        this.Rules.resourcecode[0].required = false
-        this.Rules.rawoperator[0].required = false
-        this.Rules.resourcename[0].required = false
         this.isStockStation = false
         // this.WriteData.rawoperator = ''
       } else {
         this.isStockStation = true
-        this.Rules.resourcecode[0].required = true
-        this.Rules.rawoperator[0].required = true
-        this.Rules.resourcename[0].required = true
         // this.WriteData.rawoperator = []
       }
       /* this.WriteData.stockstationresults = ''
@@ -943,6 +937,17 @@ export default {
     })
   },
   watch: {
+    isStockStation (val) {
+      if (val) {
+        this.Rules.resourcecode[0].required = true
+        this.Rules.rawoperator[0].required = true
+        this.Rules.resourcename[0].required = true
+      } else {
+        this.Rules.resourcecode[0].required = false
+        this.Rules.rawoperator[0].required = false
+        this.Rules.resourcename[0].required = false
+      }
+    }
     /* 'WriteData.resourcecode': function (newv, oldv) {
       if (!oldv) return
       if (newv !== oldv) {

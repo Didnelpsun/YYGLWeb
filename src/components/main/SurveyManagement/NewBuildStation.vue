@@ -1614,8 +1614,8 @@ export default {
         if (res.data != null) {
           this.tableData = res.data
           this.tableData.websitebuildingmode = this.tableData.websitebuildingmode === 0 ? null : this.tableData.websitebuildingmode
-          this.tableData.demanddistance = this.tableData.demanddistance ? this.tableData.demanddistance : '请选择经纬度后计算'
-          this.tableData.resourcedistance = this.tableData.resourcedistance ? this.tableData.resourcedistance.toFixed(2) : ''
+          this.tableData.demanddistance = this.tableData.demanddistance ? this.tableData.demanddistance : this.tableData.demanddistance === 0 ? this.tableData.demanddistance : '请选择经纬度后计算'
+          this.tableData.resourcedistance = this.tableData.resourcedistance ? this.tableData.resourcedistance.toFixed(2) : 0
           if (this.WriteState === 1) {
             if (this.tableData.websitebuildingmode === 1) {
               this.tableData.newtower = this.tableData.newtower ? this.tableData.newtower.split(',') : this.tableData.newtower === null ? [] : this.tableData.newtower.split('')

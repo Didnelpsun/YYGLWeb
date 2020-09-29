@@ -495,6 +495,7 @@ export default {
             this.$message.error(res.errorMessage)
           } else {
             this.$message.success('授权成功！')
+            row.permissionid = res.data
           }
         })
       } else { // 取消授权（删除授权）
@@ -505,6 +506,7 @@ export default {
             this.$message.error(res.errorMessage)
           } else {
             this.$message.success('取消授权！')
+            row.permissionid = ''
           }
         })
       }

@@ -144,7 +144,7 @@
 <script>
 import { AddTag, EditTag } from 'api/YJGL'
 import {GlobalRes} from 'common/js/mixins'
-
+import {emptyarr} from 'common/js/validata'
 export default{
   name: 'TagList',
   mixins: [GlobalRes],
@@ -176,11 +176,11 @@ export default{
       areaOption: [],
       // 表单验证
       Rules: {
-        AreaList: [
-          { required: true, message: '请选择区域', trigger: 'blur' }
-        ],
         modulecode: [
           { required: true, message: '请选择编码', trigger: 'blur' }
+        ],
+        AreaList: [
+          { validator: emptyarr, trigger: 'blur' }
         ]
       }
     }
@@ -200,7 +200,7 @@ export default{
     async add () {
       this.$refs.tableForm.validate((valid, msg) => {
         if (!valid) {
-          return this.$message.warning('请补全信息')
+          return this.$message.warning('请补全消息')
         } else {
           this.WriteLoading = true
           this.$axios.post(AddTag, this.tableData).then(res => {
@@ -216,8 +216,8 @@ export default{
     // 修改提交
     async edit () {
       this.$refs.tableForm.validate((valid, msg) => {
-        if (this.tableData.modulecode === undefined || this.tableData.modulecode === '') {
-          return this.$message.warning('请补全信息')
+        if (!valid) {
+          return this.$message.warning('请填写标签编码')
         } else {
           this.WriteLoading = true
           this.$axios.put(EditTag, this.tableData).then(res => {

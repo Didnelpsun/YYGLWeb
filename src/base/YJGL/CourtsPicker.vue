@@ -4,11 +4,11 @@
         <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="cityname" label="地市" width=""></el-table-column>
-        <el-table-column prop="areanaem" label="区域" width=""></el-table-column>
+        <el-table-column prop="areaname" label="区域" width=""></el-table-column>
         <el-table-column prop="name" label="台区名称" width=""></el-table-column>
         <el-table-column prop="powersubstation" label="供电所" width=""></el-table-column>
         <el-table-column prop="powersupplycontact" label="供电联系人" width=""></el-table-column>
-        <el-table-column prop="creausername" label="提交人" width=""></el-table-column>
+        <el-table-column prop="createusername" label="提交人" width=""></el-table-column>
         <el-table-column prop="createdatetime" label="提交时间" width=""></el-table-column>
         <el-table-column prop="" label="操作" width="50">
           <template slot-scope="scope">

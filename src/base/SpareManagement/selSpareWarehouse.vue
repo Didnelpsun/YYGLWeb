@@ -17,7 +17,7 @@
         </el-col>
         <el-col :span="6">
           <div class="fr">
-            <el-button type="primary"  icon="el-icon-search" @click="getRoleMore(1)">查询</el-button>
+            <el-button type="primary"  :disabled="Table1Loading" :icon="Table1Loading ? 'el-icon-loading' : 'el-icon-search'" @click="getRoleMore(1)">查询</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
           </div>
         </el-col>
@@ -29,10 +29,10 @@
       </el-row>
     </el-form>
     <!--<layuiTitle :title="'站点列表'"></layuiTitle>-->
-    <el-table :data="tableData" v-loading="Table1Loading" @selection-change="handleSelectionChange" style="margin-top: 15px;">
+    <el-table :data="tableData" v-loading="Table1Loading" :row-key="getRowKey"  ref="multipleTable" @selection-change="handleSelectionChange" style="margin-top: 15px;">
       <el-table-column
         type="selection"
-        width="45px"></el-table-column>
+        width="45px" :reserve-selection="true"></el-table-column>
       <el-table-column label="序号" width="50px">
         <template slot-scope="scope">{{scope.$index+(currentPage - 1) * pageSize + 1}}</template>
       </el-table-column>
@@ -88,7 +88,9 @@ export default {
       params: null,
       tableData: [],
       // 分页相关属性
-
+      getRowKey (row) {
+        return row.id
+      },
       total: 0,
       pageSize: 10,
       currentPage: 1,
@@ -152,9 +154,11 @@ export default {
     resetQueryForm () {
       Object.assign(this.$data.query, this.$options.data().query)
       this.getRoleList()
+      this.$refs.multipleTable.clearSelection()
     },
     handleSelect (row) {
       this.$emit('Chooseusr', row)
+      this.$refs.multipleTable.clearSelection()
     },
     handleSelectionChange (val) {
       this.SelectionChange = val
@@ -162,6 +166,7 @@ export default {
     SelChange () {
       this.$emit('Chooseusr', this.SelectionChange)
       this.SelectionChange = null
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

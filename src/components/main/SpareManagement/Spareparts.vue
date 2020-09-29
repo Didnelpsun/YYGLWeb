@@ -39,8 +39,8 @@
           </el-col>
           <el-col :span="12">
             <div class="fr" style="margin-top: 0">
-              <el-button @click="showImport" type="success"  :disabled="Loading" icon="el-icon-upload2">导入</el-button>
-              <el-button @click="handleWrite(0)"  type="success" :disabled="Loading" icon="el-icon-plus">添加</el-button>
+              <el-button @click="showImport" type="success"  icon="el-icon-upload2">导入</el-button>
+              <el-button @click="handleWrite(0)"  type="success"  icon="el-icon-plus">添加</el-button>
             </div>
           </el-col>
         </el-row>

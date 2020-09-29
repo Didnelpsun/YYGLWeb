@@ -182,6 +182,7 @@ export default {
             try {
               this.tableData = res.data
               this.$refs.Details.setWriteData(this.tableData)
+              this.$refs.Details.WriteLoading = false
             } catch (e) {
               console.log(e)
             }
@@ -191,7 +192,6 @@ export default {
     },
     // 处理编辑函数
     handleWrite (state, row) {
-      this.$refs.Details.WriteLoading = true
       /*  if (this.$data.tableData !== null || this.$data.tableData !== undefined) {
         // this.$data.tableData = {}
         Object.assign(this.$data.tableData, this.$options.data().tableData)
@@ -201,7 +201,6 @@ export default {
       if (state === 0) { this.showWrite = true } else {
         this.setData(state, row.id)
       }
-      this.$refs.Details.WriteLoading = false
     },
     handleDelete (row) {
       this.$confirm(`您确定要删除 ${row.machinenumber} 模块吗？`, '提示', {

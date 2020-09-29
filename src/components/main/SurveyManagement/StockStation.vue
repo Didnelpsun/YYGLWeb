@@ -1686,7 +1686,7 @@ export default {
         if (res.data != null) {
           this.StockStationInfo = res.data
           this.StockStationInfo.websitebuildingmode = this.StockStationInfo.websitebuildingmode === 0 ? null : this.StockStationInfo.websitebuildingmode
-          this.StockStationInfo.demanddistance = this.StockStationInfo.demanddistance ? this.StockStationInfo.demanddistance : '请选择经纬度后计算'
+          this.StockStationInfo.demanddistance = this.StockStationInfo.demanddistance ? this.StockStationInfo.demanddistance : this.StockStationInfo.demanddistance === 0 ? this.StockStationInfo.demanddistance : '请选择经纬度后计算'
           if (this.WriteState === 1) {
             if (this.StockStationInfo.websitebuildingmode === 1) {
               this.StockStationInfo.rawtower = this.StockStationInfo.rawtower ? this.StockStationInfo.rawtower.split(',') : this.StockStationInfo.rawtower === null ? [] : this.StockStationInfo.rawtower.split('')

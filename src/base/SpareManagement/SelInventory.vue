@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="6">
           <div class="fr">
-            <el-button type="primary"  icon="el-icon-search" @click="getTableData1More(1)">查询</el-button>
+            <el-button type="primary" :disabled="Table1Loading" :icon="Table1Loading ? 'el-icon-loading' : 'el-icon-search'" @click="getTableData1More(1)">查询</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="resetQueryForm">重置</el-button>
           </div>
         </el-col>
