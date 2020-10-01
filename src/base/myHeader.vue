@@ -3,14 +3,13 @@
     <div class="logo"><span>生产辅助协同平台</span></div>
     <el-menu class="header-nav" @select="handleSelect" mode="horizontal" background-color="#3CA0EC" text-color="#fff" active-text-color="#fff">
       <el-submenu index="0">
-        <template slot="title">当前用户：{{UserInfo.username}}</template>
+        <template slot="title">当前用户：{{UserInfo.username}} &nbsp ({{UserInfo.usertype === 1 ? '超级管理员' : UserInfo.usertype === 2 ? '运营管理员' : UserInfo.usertype === 3 ? '租户管理员' : '普通用户'}})</template>
         <el-menu-item index="0-1"><router-link tag="div" to="">个人资料</router-link></el-menu-item>
         <el-menu-item index="0-2">修改密码</el-menu-item>
         <el-menu-item index="0-3"><router-link tag="div" to="">安全退出</router-link></el-menu-item>
       </el-submenu>
       <el-menu-item index="1"><i class="message el-icon-message"></i></el-menu-item>
     </el-menu>
-    <div v-if="UserInfo.usertype" class="userType">用户类型：{{UserInfo.usertype === 1 ? '超级管理员' : UserInfo.usertype === 2 ? '运营管理员' : UserInfo.usertype === 3 ? '租户管理员' : '普通用户'}}</div>
   </div>
 </template>
 
@@ -74,11 +73,5 @@ export default {
   .header .message {
     color: #fff;
     font-size: 20px;
-  }
-  .userType {
-    float: right;
-    color: #fff;
-    font-size: 14px;
-    line-height: 50px;
   }
 </style>

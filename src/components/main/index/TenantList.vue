@@ -353,13 +353,16 @@ export default {
 
     // 查询字段
     async searchTable1 () {
+      this.currentPage = 1
       this.QueryLoading = true
+      this.Table1Loading = true
       let data = Object.assign({}, this.Query, { page: 1, pageSize: this.pageSize })
       const res = await this.$axios.post(TenantList, data)
       if (res.error) return this.$message.error(res.errorMessage)
       this.Table1 = res.data.list
       this.total = res.data.total
       this.QueryLoading = false
+      this.Table1Loading = false
     },
     // 请求数据
     async getTableData1 () {

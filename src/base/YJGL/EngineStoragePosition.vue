@@ -167,7 +167,7 @@
                 <td><div class="cell">提交时间</div></td>
                 <td>
                   <div class="cell">
-                  <div>{{tableData.dateIdinfo}}</div>
+                  <div>{{tableData.dateinfo}}</div>
                   </div>
                 </td>
                 <td><div class="cell"></div></td>
@@ -247,7 +247,7 @@ export default{
           { required: true, message: '请选择油机', trigger: 'change' }
         ],
         stationname: [
-          { required: true, message: '请选择站点', trigger: 'change' }
+          { required: true, message: '请选择站点', trigger: ['change', 'blur'] }
         ]/*,
         storageplacetype: [
           { required: true, message: '请选择存放位置类型', trigger: 'blur' }

@@ -249,12 +249,12 @@ export default{
         'mobilnum': '',
         'sparemobile': '',
         'address': '',
-        'professional': '',
+        /* 'professional': '', */
         'AreaList': [],
         'provinceid': null,
         'cityid': null,
         'areaid': null,
-        'resource': [
+        /*   'resource': [
           {
             type: 1,
             resourcesname: '',
@@ -265,12 +265,12 @@ export default{
             resourcescode: '',
             resourcesname: ''
           }
-        ],
+        ], */
         'siteid': [],
         'sitename': '',
-        'engineid': [],
+        /*   'engineid': [],
         'enginename': [],
-        'remark': '',
+        'remark': '', */
         'issubmit': false
       },
       // 分页数据
@@ -329,7 +329,7 @@ export default{
       this.tableData = Object.assign({}, this.tableData, data)
       this.tableData.AreaList = [ data.provinceid, data.cityid, data.areaid ]
       this.setArea(this.tableData.AreaList, 'csArea')
-      for (let i = 0; i < this.tableData.resource.length; i++) {
+      /* for (let i = 0; i < this.tableData.resource.length; i++) {
         if (this.tableData.resource[i]['resourcescode']) {
           if (this.tableData.resource[i]['type'] === 1) {
             this.tableData.siteid.push(this.tableData.resource[i]['resourcescode'])
@@ -339,7 +339,14 @@ export default{
             this.tableData.enginename.push(this.tableData.resource[i]['resourcesname'])
           }
         }
+      } */
+      this.tableData.sitename = []
+      for (let i = 0; i < this.tableData.resource.length; i++) {
+        this.tableData.siteid.push(this.tableData.resource[i].resourcescode)
+        this.tableData.sitename[i] = this.tableData.resource[i].resourcesname
       }
+      console.log(this.tableData.sitename)
+      this.tableData.sitename = this.tableData.sitename.toString()
     },
     siteOpen () {
       this.siteShow = true
@@ -374,8 +381,6 @@ export default{
     handleData (issubmit) {
       if (issubmit) {
         this.tableData.issubmit = issubmit
-      } else {
-        this.tableData.issubmit = false
       }
       if (this.WriteState === 0) this.add()
       if (this.WriteState === 1) this.edit()

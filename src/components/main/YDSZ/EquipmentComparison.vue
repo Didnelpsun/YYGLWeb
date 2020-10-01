@@ -26,6 +26,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="逻辑站类型：" label-width="120px">
+                <el-input v-model.trim="Query.classification" placeholder="请填写逻辑站类型"  @keyup.enter.native="getMore(1)"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="是否匹配站址：" label-width="120px">
                 <el-select v-model="Query.issite">
                   <el-option label="全部" value=""></el-option>
@@ -61,6 +66,7 @@
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(currentPage[0] - 1) * pageSize[0] + 1}}</template></el-table-column>
         <el-table-column prop="areaid" label="区域" width="80"></el-table-column>
         <el-table-column prop="logicalstanding" label="逻辑站"></el-table-column>
+        <el-table-column prop="classification" label="逻辑站类型"></el-table-column>
         <el-table-column prop="manufacturerid" label="设备厂家" width=""></el-table-column>
         <el-table-column prop="devicetype" label="设备类型" width=""></el-table-column>
         <el-table-column prop="equipmentmodel" label="设备型号" width="140"></el-table-column>
@@ -239,7 +245,8 @@ export default {
         provinceid: null, // 省份
         cityid: null, // 城市
         areaid: null, // 区域
-        issite: ''
+        issite: '',
+        classification: ''
       },
       Keywords: {
         logicalstanding: '',

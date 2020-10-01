@@ -170,7 +170,7 @@ export default {
       this.showWrite = !this.showWrite
     },
     setData (state, id) {
-      if (state) {
+      /*    if (state) {
         this.id = id
         this.$axios.get(GetcollectorIdInfo, {
           params: {
@@ -188,6 +188,21 @@ export default {
             }
           } else { this.$message.error('查询详情失败') }
         })
+      } */
+      if (state) {
+        this.id = id
+        this.showWrite = true
+        this.$axios.get(GetcollectorIdInfo, {
+          params: {
+            Id: this.id
+          }
+        }).then(res => {
+          this.$refs.Details.WriteLoading = false
+          this.$refs.Details.setWriteData(res.data)
+        }).catch(err => {
+          this.$refs.Details.WriteLoading = false
+          console.log(err)
+        })
       }
     },
     // 处理编辑函数
@@ -200,6 +215,7 @@ export default {
       this.WriteState = state
       if (state === 0) { this.showWrite = true } else {
         this.setData(state, row.id)
+        this.$refs.Details.WriteLoading = true
       }
     },
     handleDelete (row) {

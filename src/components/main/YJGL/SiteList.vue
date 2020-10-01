@@ -47,12 +47,12 @@
         <el-table-column prop="" label="机房类型" width=""></el-table-column>
         <el-table-column prop="" label="起租" width=""></el-table-column>
         <!-- <el-table-column prop="address" label="详细地址" width=""></el-table-column> -->
-        <el-table-column prop="ispower" label="是否注册发电点" width="125" :formatter="isPowerFormat"></el-table-column>
+        <el-table-column prop="ispower" label="是否注册发电点" width="105" :formatter="isPowerFormat"></el-table-column>
         <el-table-column prop="assistantname" label="协管员" width=""></el-table-column>
         <el-table-column prop="" label="保障级别" width=""></el-table-column>
         <el-table-column prop="" label="发电功率" width=""></el-table-column>
         <el-table-column prop="accessdate" label="录入时间" width=""></el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        <el-table-column label="操作" width="50" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2, scope.row)">详情</el-button>
             <!-- <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button> -->

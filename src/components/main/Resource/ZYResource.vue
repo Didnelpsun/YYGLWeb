@@ -200,22 +200,22 @@
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
               </tr>
               <!--设备类型-->
-              <!--<tr class="el-table__row" v-if="pageType === '新增'">
+              <tr class="el-table__row" v-if="pageType === '新增'">
                 <td class="el-table_8_column_60"><div class="cell">设备类型</div></td>
                 <td class="el-table_8_column_61">
                   <div class="cell">
                     <el-form-item label-width="0" :class="[isValid?'mb_reset':'']" prop="equipmenttype_id">
                       <el-select v-model="tableData.equipmenttype_id" multiple @change="selectDisposeCode" placeholder="请选择" size="small">
-                        &lt;!&ndash;<el-option label="请选择" :value="0"></el-option>&ndash;&gt;
+                        <!--<el-option label="请选择" :value="0"></el-option>-->
                         <el-option v-for="(i,index) in EquipmentTypeList" :key="index" :label="i.name" :value="i.id"></el-option>
                       </el-select>
                     </el-form-item>
                   </div>
                 </td>
                 <td class="el-table_8_column_62"><div class="cell"></div></td>
-                &lt;!&ndash; <td class="el-table_8_column_63"><div class="cell"></div></td> &ndash;&gt;
+                <!-- <td class="el-table_8_column_63"><div class="cell"></div></td> -->
                 <td class="el-table_8_column_64"><div class="cell"></div></td>
-              </tr>-->
+              </tr>
               <!--经度-->
               <tr class="el-table__row" v-if="tableData.classify === 1">
                 <td class="el-table_8_column_60"><div class="cell"><i class="must">*</i>经度</div></td>
@@ -917,7 +917,9 @@ export default {
         params: {
           classify: 1,
           PageIndex: 1,
-          PageSize: 200
+          PageSize: 200,
+          resourcetype: 2,
+          level: 1
         }
       })
       if (res.errorCode !== '200') {

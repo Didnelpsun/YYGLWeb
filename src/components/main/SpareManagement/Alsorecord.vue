@@ -10,7 +10,7 @@
         </el-table-column>
         <el-table-column prop="cityname" label="地市"></el-table-column>
         <el-table-column prop="areaname" label="区域"></el-table-column>
-        <el-table-column prop="typename" label="备件类型"></el-table-column>
+        <el-table-column prop="typeencoding" label="备件类型编码"></el-table-column>
         <el-table-column prop="code" label="备件编码"></el-table-column>
         <el-table-column prop="manufacturername" label="备件厂家"></el-table-column>
         <el-table-column prop="sparemodel" label="备件型号"></el-table-column>
@@ -32,7 +32,7 @@
         </el-table-column>-->
       </el-table>
       <div class="center">
-        <el-pagination @current-change="getData1(this.currentPage)" @size-change="changeSize1" :current-page="currentPage"
+        <el-pagination @current-change="getData1" @size-change="changeSize1" :current-page="currentPage"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>

@@ -27,16 +27,14 @@
     <el-table :data="tableList" v-loading="Loading">
       <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
       <!-- <el-table-column prop="provincename" label="省份" width=""></el-table-column> -->
-      <el-table-column prop="cityname" label="城市" width=""></el-table-column>
-      <el-table-column prop="areaname" label="区域" width=""></el-table-column>
-      <el-table-column prop="code" label="站点编码" width=""></el-table-column>
-      <el-table-column prop="name" label="站点名称" width=""></el-table-column>
-      <!-- <el-table-column prop="classifyname" label="站点分类" width=""></el-table-column> -->
-      <el-table-column prop="resourcetypename" label="站点类型" width=""></el-table-column>
+      <el-table-column prop="cityname" label="城市" width="80"></el-table-column>
+      <el-table-column prop="areaname" label="区域" width="80"></el-table-column>
+      <el-table-column prop="name" label="站点名称" width="" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="code" label="站点编码" width="" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="classifyname" label="站点分类" width=""></el-table-column>
       <el-table-column prop="accessdate" label="入网日期" width=""></el-table-column>
-      <el-table-column prop="propertyrights" label="产权性质" width=""></el-table-column>
-      <el-table-column prop="computerroomposition" label="机房位置" width=""></el-table-column>
-      <el-table-column prop="address" label="地址" width=""></el-table-column>
+      <el-table-column prop="createtime" label="创建时间" width=""></el-table-column>
+      <el-table-column prop="createusername" label="创建人" width=""></el-table-column>
       <el-table-column prop="" label="操作" width="50">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="handleChoose(scope.row)">选择</el-button>

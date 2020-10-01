@@ -65,8 +65,8 @@
       </el-row>
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
-        <el-table-column prop="area" label="区域" width="80"></el-table-column>
-        <el-table-column prop="towns" label="乡镇" width="200" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="towns" label="地市" width="80"></el-table-column>
+        <el-table-column prop="area" label="区域" width="100" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="code" label="工单编号" width="190" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="workorderstatus" label="工单状态" width="82"></el-table-column>
         <el-table-column prop="sitetype" label="站点类型" width="70" :show-overflow-tooltip="true"></el-table-column>

@@ -34,7 +34,7 @@
          </el-table-column>-->
       </el-table>
       <div class="center">
-        <el-pagination @current-change="getData1(this.currentPage)" @size-change="changeSize1" :current-page="currentPage"
+        <el-pagination @current-change="getData1" @size-change="changeSize1" :current-page="currentPage"
                        :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" :total="total"
                        background layout="total, prev, pager, next, sizes"></el-pagination>
       </div>

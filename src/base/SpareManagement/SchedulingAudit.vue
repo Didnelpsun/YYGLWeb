@@ -133,7 +133,7 @@
       </el-form>
     </div>
     <div class="center">
-      <el-button @click="Audit" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">保存</el-button>
+      <el-button @click="Audit" :disabled="Loading" :icon="Loading ? 'el-icon-loading' : 'el-icon-check'">提交</el-button>
       <el-button @click="WriteClose" icon="el-icon-arrow-left">返回</el-button>
     </div>
    <div v-if="show">

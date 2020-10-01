@@ -62,8 +62,8 @@
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <el-table-column prop="dispatchtype" label="调度类型" width=""></el-table-column>
-        <el-table-column prop="positiondeviation" label="位置偏差" width=""></el-table-column>
-        <el-table-column prop="power" label="功率" width="60"></el-table-column>
+        <el-table-column prop="positiondeviation" label="位置偏差" :formatter="fixedshow" width=""></el-table-column>
+        <el-table-column prop="power" label="功率" width="60"  ></el-table-column>
         <el-table-column prop="frequency" label="频率" width="50"></el-table-column>
         <el-table-column prop="voltage" label="电压" width="50"></el-table-column>
         <el-table-column prop="seemingmain" label="疑似市电" width=""></el-table-column>
@@ -126,6 +126,9 @@ export default {
   created () {
   },
   methods: {
+    fixedshow (val, col, cellValue) {
+      return cellValue.toFixed(2)
+    },
     ResetQuery () {
       Object.assign(this.$data, this.$options.data.call(this))
       this.getMore(1)

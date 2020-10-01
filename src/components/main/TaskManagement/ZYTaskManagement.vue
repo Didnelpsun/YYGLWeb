@@ -172,6 +172,7 @@
             <el-table-column prop="audittime" label="审核时间" :formatter="formatDate"></el-table-column>
             <el-table-column label="操作" width="200" align="center">
               <template slot-scope="scope">
+                <el-button type="text" size="mini" v-if="scope.row.equipmenttypename === '机房'" @click="ComputerRoomEquipment(scope.$index, scope.row)">机房设备</el-button>
                 <el-button type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 2)">详情</el-button>
                 <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="showDeviceDetail(scope.$index, scope.row, 1)">修改</el-button>
                 <el-button v-if="showType !== 1 && scope.row.censusstatename === '待执行'" type="text" size="mini" @click="handleExamine(scope.$index, scope.row, 1, 1)">提交审核</el-button>
@@ -588,6 +589,9 @@
           </el-row>
         </el-form>
       </el-dialog>
+      <el-dialog append-to-body :visible.sync="showComRoomEqu" width="80%" title="机房设备列表" :close-on-click-modal="false" :before-close="ComRoomEquClose">
+        <ComputerRoomEquipment v-if="showComRoomEqu" :resource_id="editSiteId"></ComputerRoomEquipment>
+      </el-dialog>
     </div>
 
     <el-dialog title="审核"  :visible.sync="auitShow" v-loading="table1Loading" center width="30%" @close="auitClose">
@@ -649,6 +653,7 @@ import StorageBattery from 'base/ZYResource/StorageBattery'
 import PowerAndEnvironment from 'base/ZYResource/PowerAndEnvironment'
 import RectifierModule from 'base/ZYResource/RectifierModule'
 import Ammeter from 'base/ZYResource/Ammeter'
+import ComputerRoomEquipment from 'base/ZYResource/ComputerRoomEquipment'
 import CommunicationAndLocation from 'base/ZYResource/CommunicationAndLocation'
 import HiddenDanger from 'base/TaskEquipment/HiddenDanger'
 import Maintain from 'base/TaskEquipment/Maintain'
@@ -761,6 +766,7 @@ export default {
       showHiddenDanger: false, // 隐患详情
       showMaintain: false,
       showTaskDialog: false, // 选择任务设备类型弹框
+      showComRoomEqu: false, // 机房设备列表弹框
       ViewTabIndex: 0,
       DicList: {},
       WriteState: null,
@@ -1238,6 +1244,9 @@ export default {
       this.SelectDeviceType = ''
       this.showTaskDialog = false
     },
+    ComRoomEquClose () {
+      this.showComRoomEqu = false
+    },
     checkAddDevise (id) {
       return this.$axios.get(GetTaskResourceEquipment, {
         params: {
@@ -1502,6 +1511,9 @@ export default {
       this.showDialog = true
       this.setTitle('上站维护')
       this.showMaintain = true
+    },
+    ComputerRoomEquipment (index, row) {
+      this.showComRoomEqu = true
     },
     showDeviceDetail (index, row, type) {
       this.WriteState = type
@@ -1838,7 +1850,8 @@ export default {
     Maintain,
     RectifierModule,
     CommunicationAndLocation,
-    Ammeter
+    Ammeter,
+    ComputerRoomEquipment
   }
 }
 </script>

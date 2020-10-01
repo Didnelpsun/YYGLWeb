@@ -1,9 +1,9 @@
 <template>
   <div class="content">
     <div class="main" v-show="!showWrite">
-      <el-form :data="query" ref="NodeQueryForm">
+   <!--   <el-form :data="query" ref="NodeQueryForm">
         <el-row>
-          <el-col :span="18">
+         <el-col :span="18">
             <el-col :span="8">
               <el-form-item label="是否提交审核：" label-width="150px">
                 <el-select v-model="query.isaudit" placeholder="请选择是否提交审核">
@@ -20,14 +20,14 @@
             </div>
           </el-col>
         </el-row>
-      </el-form>
+      </el-form>-->
       <el-row>
-        <el-col :span="4" class="SearchResult">查询结果</el-col>
+        <el-col :span="6" class="SearchResult">查询结果</el-col>
       </el-row>
       <el-table :data="tableList" v-loading="Loading" style="margin-top: 15px">>
         <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index+(pagination.currentPage - 1) * pagination.pageSize + 1}}</template></el-table-column>
         <!-- <el-table-column prop="provincename" label="省份" width="75"></el-table-column> -->
-        <el-table-column prop="name" label="姓名" width="100"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="60"></el-table-column>
         <el-table-column prop="cardnum" label="身份证号" width="150"></el-table-column>
         <el-table-column prop="mobilnum" label="手机号" width="100"></el-table-column>
         <el-table-column prop="sparemobile" label="备用手机号" width="100"></el-table-column>
@@ -36,8 +36,8 @@
         <el-table-column prop="resourcesname" label="资源名" width=""></el-table-column>
         <el-table-column prop="resourcescode" label="资源编码" width=""></el-table-column>
         <el-table-column prop="realityname" label="提交人" width="75"></el-table-column>
-        <el-table-column prop="dateIdinfo" label="提交时间" width=""></el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        <el-table-column prop="dateIdinfo" label="提交时间" width="120"></el-table-column>
+        <el-table-column label="操作" width="50" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="Audit(scope.row)">审核</el-button>
           </template>

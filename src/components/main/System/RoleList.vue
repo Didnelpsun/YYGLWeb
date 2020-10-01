@@ -308,6 +308,7 @@ export default {
     // 搜索模块
     searchQueryData () {
       this.tableLoading = true
+      this.currentPage = 1
       const data = Object.assign({}, this.query, {
         page: 1,
         pagesize: this.pageSize

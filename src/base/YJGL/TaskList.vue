@@ -67,15 +67,15 @@
                     <td><div class="cell">站点地址</div></td>
                     <td colspan="5"><div class="cell">{{tableData1.address}}</div></td>
                     <td><div class="cell">起租情况</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell">{{tableData1.situation}}</div></td>
                   </tr>
                   <tr class="el-table__row">
                     <td><div class="cell">机房类型</div></td>
                     <td><div class="cell">{{tableData1.roomtype}}</div></td>
                     <td><div class="cell">保障级别</div></td>
-                    <td><div class="cell"></div></td>
+                    <td><div class="cell">{{tableData1.securitylevel}}</div></td>
                     <td><div class="cell">发电功率</div></td>
-                    <td><div class="cell"> </div></td>
+                    <td><div class="cell">{{tableData1.power}} </div></td>
                     <td><div class="cell">协管员</div></td>
                     <td><div class="cell">{{tableData1.assistantname}}:{{tableData1.mobilnum}}</div></td>
                   </tr>
@@ -94,7 +94,7 @@
                     <td><div class="cell">{{tableData1.DaiWeicompany}}</div></td>
                     <td><div class="cell">网格</div></td>
                     <td><div class="cell"></div></td>
-                    <td><div class="cell">发电员姓名</div></td>
+                    <td><div class="cell">发电员</div></td>
                     <td><div class="cell"></div></td>
                     <td><div class="cell">电话</div></td>
                     <td><div class="cell"></div></td>
@@ -200,7 +200,7 @@
           <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
           <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
           <el-table-column prop="swver" label="采集器ID" width=""></el-table-column>
-          <el-table-column prop="" label="IP" width=""></el-table-column>
+          <el-table-column prop="ipaddress" label="IP" width=""></el-table-column>
           <el-table-column prop="mobilnum" label="手机卡号" width=""></el-table-column>
           <el-table-column prop="imsi" label="IMSI" width=""></el-table-column>
           <el-table-column prop="imei" label="IMEI" width=""></el-table-column>
@@ -214,7 +214,7 @@
         <el-table :data="tableData4" v-loading="WriteLoading" >
           <!-- <el-table-column v-if="isSite=='1'" type="selection" width="40"></el-table-column> -->
           <el-table-column label="序号" width="50"><template slot-scope="scope">{{scope.$index + 1}}</template></el-table-column>
-          <el-table-column prop="" label="运营商" width=""></el-table-column>
+          <el-table-column prop="affiliatedoperator " label="运营商" width=""></el-table-column>
           <el-table-column prop="systemcode" label="系统编码" width=""></el-table-column>
           <el-table-column prop="systemname" label="系统名称" width=""></el-table-column>
           <el-table-column prop="openingdate" label="开通日期" width=""></el-table-column>

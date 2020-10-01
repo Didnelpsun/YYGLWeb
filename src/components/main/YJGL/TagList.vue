@@ -78,8 +78,7 @@ export default {
       // 查询相关属性
       query: {
         AreaList: [
-        ],
-        propertyunit: ''
+        ]
       },
       queryOption: [],
       // 加载

@@ -294,7 +294,7 @@
             </tr>
             <!-- 能否上站发电 -->
             <tr class="el-table__row">
-              <td><div class="cell">是否警示标识</div></td>
+              <td><div class="cell">能否上站发电</div></td>
               <td v-show="WriteState !== 2"><div class="cell">
                 <el-form-item class="form-item" prop="powergeneration">
                   <el-select v-model="WriteData.powergeneration">
