@@ -312,8 +312,7 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali || this.ImgList1.length === 0 || this.administratorname === null) {
-          if (this.ImgList1.length === 0) return this.$message.warning('请上传合同照片')
+        if (!vali || this.administratorname === null) {
           if (this.administratorname === null) return this.$message.warning('请选择管理员')
           if (msg.year) {
             return this.$message.error(msg.year[0].message)
@@ -333,9 +332,8 @@ export default {
     },
     SubEdit () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali || this.ImgList1.length === 0) {
+        if (!vali) {
           this.$message.error('请补全信息！')
-          if (this.ImgList1.length === 0) return this.$message.warning('请上传合同照片')
         } else {
           this.Loading = true
           this.$axios.put(Editmanufacturerinfo, this.WriteData).then(res => {

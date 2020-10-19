@@ -141,7 +141,7 @@
             </tr>
             <tr class="el-table__row" v-show="WriteState1==2">
               <td><div class="cell">盘存状态</div></td>
-              <td><div class="cell">{{WriteData.newsparepartsstate}}</div></td>
+              <td><div class="cell">{{WriteData.newsparepartsstate |state}}</div></td>
               <td><div class="cell"></div></td>
             </tr>
             </tbody>
@@ -306,6 +306,12 @@ export default {
     Selectmanufacturer,
     SelectSpareconMode,
     SpareWarehousePicker
+  },
+  filters: {
+    state (val) {
+      val = parseInt(val)
+      return val === 1 ? '盘增' : val === 2 ? '盘平' : val === 3 ? '盘错' : val === 4 ? '盘减' : ''
+    }
   }
 }
 </script>

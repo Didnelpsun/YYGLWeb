@@ -77,7 +77,7 @@
               <td><div class="cell"></div></td>
             </tr>
             <tr class="el-table__row">
-              <td><div class="cell"><i class="must">*</i>存放点单位</div></td>
+              <td><div class="cell">存放点单位</div></td>
               <td><div class="cell">
                 <div v-if="WriteState == 2">{{WriteData.orgname}}</div>
                 <div v-if="WriteState !== 2" @click="orgidshow=true">
@@ -184,7 +184,7 @@ export default {
     DicList: {
       type: Object,
       default () {
-        return []
+        return {}
       }
     }
   },
@@ -345,9 +345,8 @@ export default {
     },
     SubAdd () {
       this.$refs.WriteForm.validate((vali, msg) => {
-        if (!vali || this.WriteData.AreaList.length === 0 || this.WriteData.orgname === '' || this.administratoridname === '') {
+        if (!vali || this.WriteData.AreaList.length === 0 || this.administratoridname === '') {
           if (this.WriteData.AreaList.length === 0) return this.$message.error('请选择区域！')
-          if (this.WriteData.orgname === '') return this.$message.error('请选择存放点单位！')
           if (this.administratoridname === '') return this.$message.error('请选择存放点管理员！')
           return this.$message.error('请补全信息！')
         } else {

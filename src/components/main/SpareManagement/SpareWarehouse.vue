@@ -109,7 +109,9 @@ export default {
       tableLoading: false,
       showWrite: false,
       WriteState: 0, // 0为添加 1为编辑 2为查看
-      DicList: {}
+      DicList: {
+        warehousetype: []
+      }
     }
   },
   activated () {
@@ -155,6 +157,7 @@ export default {
         if (res.errorCode === '200') {
           let data = res.data
           this.DicList.warehousetype = data.filter(i => { return i.type === '备件存放点类型' })
+
         } else {
           this.$message.error(res.msg)
         }

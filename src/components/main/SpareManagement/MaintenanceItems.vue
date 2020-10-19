@@ -51,11 +51,11 @@
         <el-table-column prop="warrantyperiod" label="保修期"></el-table-column>
         <el-table-column prop="realityname" label="提交人"></el-table-column>
         <el-table-column prop="createtime" label="提交时间"></el-table-column>
-        <el-table-column label="操作" width="50">
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="handleWrite(2,scope.row)">详情</el-button>
-          <!--  <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>
-            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>-->
+          <!--  <el-button type="text" size="mini" @click="handleWrite(1, scope.row)">编辑</el-button>-->
+            <el-button type="text" size="mini" @click="handle2(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
